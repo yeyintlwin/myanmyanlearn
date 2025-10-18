@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MYAN MYAN LEARN - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .show {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans text-gray-800 flex flex-col"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-18">
+          <!-- Brand Section -->
+          <div class="flex items-center gap-2 group cursor-pointer">
+            <div class="relative">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+              ></div>
+              <div
+                class="relative p-2 group-hover:scale-105 transition-all duration-300"
+              >
+                <img
+                  th:src="@{/images/logo.svg}"
+                  alt="Myan Myan Learn"
+                  class="w-12 h-12 drop-shadow-lg"
+                />
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div
+                class="text-white font-bold text-xl brand-font tracking-wide"
+              >
+                Myan Myan Learn
+              </div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+              >
+                Learning Platform
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <!-- Language Selector -->
+            <div
+              class="relative cursor-pointer h-14 px-4 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white text-sm font-medium transition-all duration-300 flex items-center gap-3 hover:bg-white/20 hover:scale-105 hover:shadow-lg border border-white/20 group"
+              id="languageMenu"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+              ></div>
+              <div class="relative flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"
+                >
+                  <span id="currentLanguageFlag" class="text-lg">🇺🇸</span>
+                </div>
+                <div class="flex flex-col">
+                  <span id="currentLanguage" class="font-bold text-sm"
+                    >English</span
+                  >
+                  <span class="text-xs opacity-70">Language</span>
+                </div>
+                <i
+                  class="fas fa-chevron-down text-xs opacity-75 transition-transform duration-200"
+                ></i>
+              </div>
+
+              <div
+                class="absolute top-full right-0 mt-3 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl min-w-[280px] overflow-hidden opacity-0 invisible transform -translate-y-2.5 transition-all duration-300 z-[1001] border border-white/20"
+                id="languageDropdown"
+              >
+                <!-- Language Header -->
+                <div
+                  class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center"
+                    >
+                      <i class="fas fa-globe text-white text-lg"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-sm">Select Language</h3>
+                      <p class="text-xs opacity-90">
+                        Choose your preferred language
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Language Options -->
+                <div class="py-2 max-h-80 overflow-y-auto">
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-white/10 hover:text-white group border-l-4 border-transparent hover:border-white/50 language-item"
+                    data-lang="en"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇺🇸</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">English</div>
+                      <div class="text-xs text-gray-500">United States</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-green-50 hover:text-green-600 group border-l-4 border-transparent hover:border-green-500 language-item"
+                    data-lang="my"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇲🇲</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">မြန်မာ</div>
+                      <div class="text-xs text-gray-500">Myanmar</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-red-50 hover:text-red-600 group border-l-4 border-transparent hover:border-red-500 language-item"
+                    data-lang="zh"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇨🇳</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">中文</div>
+                      <div class="text-xs text-gray-500">China</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-orange-50 hover:text-orange-600 group border-l-4 border-transparent hover:border-orange-500 language-item"
+                    data-lang="ne"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center group-hover:bg-orange-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇳🇵</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">नेपाली</div>
+                      <div class="text-xs text-gray-500">Nepal</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-yellow-50 hover:text-yellow-600 group border-l-4 border-transparent hover:border-yellow-500 language-item"
+                    data-lang="vi"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-yellow-100 flex items-center justify-center group-hover:bg-yellow-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇻🇳</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">Tiếng Việt</div>
+                      <div class="text-xs text-gray-500">Vietnam</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-yellow-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-teal-50 hover:text-teal-600 group border-l-4 border-transparent hover:border-teal-500 language-item"
+                    data-lang="uz"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-teal-100 flex items-center justify-center group-hover:bg-teal-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇺🇿</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">O'zbek</div>
+                      <div class="text-xs text-gray-500">Uzbekistan</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-purple-50 hover:text-purple-600 group border-l-4 border-transparent hover:border-purple-500 language-item"
+                    data-lang="si"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇱🇰</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">සිංහල</div>
+                      <div class="text-xs text-gray-500">Sri Lanka</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-indigo-50 hover:text-indigo-600 group border-l-4 border-transparent hover:border-indigo-500 language-item"
+                    data-lang="hi"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center group-hover:bg-indigo-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇮🇳</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">हिन्दी</div>
+                      <div class="text-xs text-gray-500">India</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-pink-50 hover:text-pink-600 group border-l-4 border-transparent hover:border-pink-500 language-item"
+                    data-lang="ja"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center group-hover:bg-pink-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇯🇵</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">日本語</div>
+                      <div class="text-xs text-gray-500">Japan</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-4 px-5 py-3 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-green-50 hover:text-green-600 group border-l-4 border-transparent hover:border-green-500 language-item"
+                    data-lang="bd"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors duration-200"
+                    >
+                      <span class="text-lg">🇧🇩</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">বাংলা</div>
+                      <div class="text-xs text-gray-500">Bangladesh</div>
+                    </div>
+                    <i
+                      class="fas fa-check text-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notification Icon -->
+            <div
+              class="relative w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300 text-white text-lg hover:bg-white/20 hover:scale-105 hover:shadow-lg border border-white/20 group"
+              id="notificationIcon"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-300"
+              ></div>
+              <div class="relative">
+                <i class="fas fa-bell drop-shadow-lg"></i>
+                <div
+                  class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold border-2 border-white shadow-lg animate-pulse"
+                  id="notificationBadge"
+                >
+                  3
+                </div>
+              </div>
+            </div>
+
+            <!-- User Profile -->
+            <div
+              class="relative flex items-center gap-4 h-14 px-4 py-3 bg-white/10 backdrop-blur-sm rounded-2xl cursor-pointer transition-all duration-300 text-white font-medium text-sm hover:bg-white/20 hover:scale-105 hover:shadow-lg border border-white/20 group"
+              id="profileMenu"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+              ></div>
+              <div class="relative flex items-center gap-4">
+                <div
+                  class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-xl ring-2 ring-white/30 group-hover:ring-white/50 transition-all duration-300"
+                >
+                  JD
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold">John Doe</span>
+                  <div class="flex items-center gap-1">
+                    <i class="fas fa-crown text-yellow-400 text-xs"></i>
+                    <span class="text-xs opacity-80 font-medium">Premium</span>
+                  </div>
+                </div>
+                <i
+                  class="fas fa-chevron-down text-xs opacity-75 transition-transform duration-200"
+                ></i>
+              </div>
+
+              <div
+                class="absolute top-full right-0 mt-3 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl min-w-[320px] overflow-hidden opacity-0 invisible transform -translate-y-2.5 transition-all duration-300 z-[1001] border border-white/20"
+                id="profileDropdown"
+              >
+                <!-- Profile Header -->
+                <div
+                  class="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 text-white p-6"
+                >
+                  <div
+                    class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"
+                  ></div>
+                  <div class="relative z-10">
+                    <div
+                      class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-4 text-white font-bold text-2xl shadow-xl ring-4 ring-white/20"
+                    >
+                      JD
+                    </div>
+                    <div class="text-center">
+                      <h3 class="text-lg font-bold mb-1">John Doe</h3>
+                      <p class="text-sm opacity-90 mb-2">
+                        john.doe@example.com
+                      </p>
+                      <div
+                        class="inline-flex items-center gap-1 px-3 py-1 bg-white/20 rounded-full text-xs font-medium"
+                      >
+                        <i class="fas fa-crown text-yellow-300"></i>
+                        Premium Member
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Menu Items -->
+                <div class="py-3">
+                  <a
+                    href="#"
+                    class="flex items-center gap-4 px-6 py-4 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-white/10 hover:text-white group border-l-4 border-transparent hover:border-white/50"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200"
+                    >
+                      <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">My Profile</div>
+                      <div class="text-xs text-gray-500">
+                        View and edit profile
+                      </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                  </a>
+
+                  <a
+                    href="#"
+                    class="flex items-center gap-4 px-6 py-4 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-green-50 hover:text-green-600 group border-l-4 border-transparent hover:border-green-500"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors duration-200"
+                    >
+                      <i class="fas fa-cog text-green-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">Settings</div>
+                      <div class="text-xs text-gray-500">
+                        Account preferences
+                      </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                  </a>
+
+                  <a
+                    href="#"
+                    class="flex items-center gap-4 px-6 py-4 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-purple-50 hover:text-purple-600 group border-l-4 border-transparent hover:border-purple-500"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-200"
+                    >
+                      <i class="fas fa-chart-line text-purple-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">Progress</div>
+                      <div class="text-xs text-gray-500">
+                        Learning analytics
+                      </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                  </a>
+
+                  <a
+                    href="#"
+                    class="flex items-center gap-4 px-6 py-4 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-yellow-50 hover:text-yellow-600 group border-l-4 border-transparent hover:border-yellow-500"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-yellow-100 flex items-center justify-center group-hover:bg-yellow-200 transition-colors duration-200"
+                    >
+                      <i class="fas fa-trophy text-yellow-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">Achievements</div>
+                      <div class="text-xs text-gray-500">
+                        Badges and rewards
+                      </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                  </a>
+
+                  <div
+                    class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-3"
+                  ></div>
+
+                  <a
+                    href="#"
+                    class="flex items-center gap-4 px-6 py-4 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-indigo-50 hover:text-indigo-600 group border-l-4 border-transparent hover:border-indigo-500"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center group-hover:bg-indigo-200 transition-colors duration-200"
+                    >
+                      <i class="fas fa-question-circle text-indigo-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">Help & Support</div>
+                      <div class="text-xs text-gray-500">Get assistance</div>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                  </a>
+
+                  <a
+                    href="/login"
+                    class="flex items-center gap-4 px-6 py-4 text-red-600 no-underline transition-all duration-200 text-sm hover:bg-red-50 hover:text-red-700 group border-l-4 border-transparent hover:border-red-500"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors duration-200"
+                    >
+                      <i class="fas fa-sign-out-alt text-red-600"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold">Logout</div>
+                      <div class="text-xs text-red-500">
+                        Sign out of account
+                      </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-xs text-red-400"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+      <div
+        class="max-w-6xl mx-auto px-5 py-24 flex items-center justify-center flex-1"
+      >
+        <div class="text-center">
+          <h1
+            class="text-5xl font-black text-white mb-4 tracking-wider drop-shadow-lg"
+          >
+            Home Screen
+          </h1>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      class="bg-gradient-to-r from-slate-700 to-slate-800 text-white py-5 mt-auto"
+    >
+      <div class="text-center text-gray-300 text-sm max-w-6xl mx-auto px-5">
+        <p class="flex items-center justify-center gap-2">
+          Myan Myan Learn made with
+          <i class="far fa-heart text-red-400"></i> by Bar Lar Lar Team |
+          Copyright © 2024
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Language selector functionality
+      const languageMenu = document.getElementById("languageMenu");
+      const languageDropdown = document.getElementById("languageDropdown");
+      const currentLanguage = document.getElementById("currentLanguage");
+      const currentLanguageFlag = document.getElementById(
+        "currentLanguageFlag"
+      );
+      const languageItems = document.querySelectorAll(".language-item");
+
+      // Toggle language dropdown on click
+      languageMenu.addEventListener("click", function (e) {
+        e.stopPropagation();
+        languageDropdown.classList.toggle("show");
+
+        // Rotate chevron icon
+        const chevron = languageMenu.querySelector(".fa-chevron-down");
+        if (languageDropdown.classList.contains("show")) {
+          chevron.style.transform = "rotate(180deg)";
+        } else {
+          chevron.style.transform = "rotate(0deg)";
+        }
+      });
+
+      // Handle language selection
+      languageItems.forEach((item) => {
+        item.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          // Remove active class from all items
+          languageItems.forEach((lang) => lang.classList.remove("active"));
+
+          // Add active class to selected item
+          this.classList.add("active");
+
+          // Update current language display
+          const languageName = this.querySelector(".font-semibold").textContent;
+          const languageFlag = this.querySelector("span").textContent;
+          currentLanguage.textContent = languageName;
+          currentLanguageFlag.textContent = languageFlag;
+
+          // Store language preference
+          const langCode = this.getAttribute("data-lang");
+          localStorage.setItem("selectedLanguage", langCode);
+
+          // Close dropdown
+          languageDropdown.classList.remove("show");
+
+          // Show language change confirmation
+          alert(`Language changed to ${languageName}!`);
+        });
+      });
+
+      // Close language dropdown when clicking outside
+      document.addEventListener("click", function (e) {
+        if (!languageMenu.contains(e.target)) {
+          languageDropdown.classList.remove("show");
+
+          // Reset chevron rotation
+          const chevron = languageMenu.querySelector(".fa-chevron-down");
+          chevron.style.transform = "rotate(0deg)";
+        }
+      });
+
+      // Prevent language dropdown from closing when clicking inside it
+      languageDropdown.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+
+      // Load saved language preference on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        const savedLanguage = localStorage.getItem("selectedLanguage");
+        if (savedLanguage) {
+          const savedItem = document.querySelector(
+            `[data-lang="${savedLanguage}"]`
+          );
+          if (savedItem) {
+            // Remove active from all items
+            languageItems.forEach((lang) => lang.classList.remove("active"));
+
+            // Set active on saved language
+            savedItem.classList.add("active");
+
+            // Update display
+            const languageName =
+              savedItem.querySelector(".font-semibold").textContent;
+            const languageFlag = savedItem.querySelector("span").textContent;
+            currentLanguage.textContent = languageName;
+            currentLanguageFlag.textContent = languageFlag;
+          }
+        }
+      });
+
+      // Notification functionality
+      const notificationIcon = document.getElementById("notificationIcon");
+      const notificationBadge = document.getElementById("notificationBadge");
+
+      // Notification click handler
+      notificationIcon.addEventListener("click", function (e) {
+        e.stopPropagation();
+        alert("You have 3 new notifications!");
+
+        // Simulate marking notifications as read
+        notificationBadge.style.display = "none";
+
+        // You could also redirect to a notifications page
+        // window.location.href = "/notifications";
+      });
+
+      // Profile dropdown functionality
+      const profileMenu = document.getElementById("profileMenu");
+      const profileDropdown = document.getElementById("profileDropdown");
+
+      // Toggle dropdown on click
+      profileMenu.addEventListener("click", function (e) {
+        e.stopPropagation();
+        profileDropdown.classList.toggle("show");
+
+        // Rotate chevron icon
+        const chevron = profileMenu.querySelector(".fa-chevron-down");
+        if (profileDropdown.classList.contains("show")) {
+          chevron.style.transform = "rotate(180deg)";
+        } else {
+          chevron.style.transform = "rotate(0deg)";
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (e) {
+        if (!profileMenu.contains(e.target)) {
+          profileDropdown.classList.remove("show");
+
+          // Reset chevron rotation
+          const chevron = profileMenu.querySelector(".fa-chevron-down");
+          chevron.style.transform = "rotate(0deg)";
+        }
+      });
+
+      // Close dropdown when clicking on dropdown items
+      const dropdownItems = document.querySelectorAll(".dropdown-item");
+      dropdownItems.forEach((item) => {
+        item.addEventListener("click", function (e) {
+          // Don't close for logout link, let it navigate
+          if (!this.href.includes("/login")) {
+            e.preventDefault();
+            profileDropdown.classList.remove("show");
+
+            // Handle different menu items
+            const text = this.textContent.trim();
+            if (text.includes("My Profile")) {
+              alert("Profile page coming soon!");
+            } else if (text.includes("Settings")) {
+              alert("Settings page coming soon!");
+            } else if (text.includes("Progress")) {
+              alert("Progress page coming soon!");
+            } else if (text.includes("Achievements")) {
+              alert("Achievements page coming soon!");
+            } else if (text.includes("Help & Support")) {
+              alert("Help & Support page coming soon!");
+            }
+          }
+        });
+      });
+
+      // Prevent dropdown from closing when clicking inside it
+      profileDropdown.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MYAN MYAN LEARN - Password Changed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center p-6"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-18">
+          <!-- Brand Section -->
+          <div class="flex items-center gap-2 group cursor-pointer">
+            <div class="relative">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+              ></div>
+              <div
+                class="relative p-2 group-hover:scale-105 transition-all duration-300"
+              >
+                <img
+                  th:src="@{/images/logo.svg}"
+                  alt="Myan Myan Learn"
+                  class="w-12 h-12 drop-shadow-lg"
+                />
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div
+                class="text-white font-bold text-xl brand-font tracking-wide"
+              >
+                Myan Myan Learn
+              </div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+              >
+                Learning Platform
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Success Card -->
+    <div
+      class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl mt-20 relative overflow-hidden"
+    >
+      <!-- Decorative Background -->
+      <div
+        class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-full -translate-y-16 translate-x-16"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-500/20 to-pink-500/20 rounded-full translate-y-12 -translate-x-12"
+      ></div>
+
+      <!-- Header Section -->
+      <div class="relative z-10 text-center mb-8">
+        <div
+          class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 text-4xl text-white shadow-2xl animate-pulse"
+        >
+          <i class="fas fa-check text-2xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-white mb-3">Password Changed!</h1>
+        <p class="text-base text-white/80 mb-8 leading-relaxed">
+          Your password has been successfully updated. You can now sign in with
+          your new password.
+        </p>
+      </div>
+
+      <!-- Success Message -->
+      <div class="relative z-10 mb-8">
+        <div
+          class="bg-white/10 border-2 border-white/30 rounded-2xl p-6 text-left"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <div
+              class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"
+            >
+              <i class="fas fa-check text-white text-sm"></i>
+            </div>
+            <h4 class="text-white text-sm font-bold">
+              Password Successfully Updated
+            </h4>
+          </div>
+          <p class="text-white/80 text-sm leading-relaxed">
+            Your account is now secured with your new password. All your data
+            remains safe and accessible.
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="relative z-10 flex flex-col gap-3 mb-8">
+        <a
+          href="/login"
+          class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20 text-center no-underline"
+          id="loginBtn"
+        >
+          <i class="fas fa-sign-in-alt mr-2"></i>
+          Sign In Now
+        </a>
+        <a
+          href="/"
+          class="w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/20 hover:border-white/50 text-center no-underline"
+        >
+          <i class="fas fa-home mr-2"></i>
+          Go to Home
+        </a>
+      </div>
+
+      <!-- Security Tips -->
+      <div class="relative z-10 mb-6">
+        <div
+          class="bg-white/10 border-2 border-white/30 rounded-2xl p-6 text-left"
+        >
+          <div class="flex items-center gap-2 mb-4">
+            <i class="fas fa-shield-alt text-white/80"></i>
+            <h5 class="text-white text-sm font-bold">Security Tips:</h5>
+          </div>
+          <ul class="text-white/80 text-sm leading-relaxed space-y-2">
+            <li class="flex items-center gap-2">
+              <i class="fas fa-arrow-right text-white/80 text-xs"></i>
+              Keep your password private and don't share it
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fas fa-arrow-right text-white/80 text-xs"></i>
+              Use a unique password for this account
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fas fa-arrow-right text-white/80 text-xs"></i>
+              Consider enabling two-factor authentication
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fas fa-arrow-right text-white/80 text-xs"></i>
+              Log out from all devices if you suspect unauthorized access
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Countdown -->
+      <div class="relative z-10 text-center">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full"
+        >
+          <i class="fas fa-clock text-white/80 text-sm"></i>
+          <span class="text-sm text-white/80 font-semibold" id="countdown">
+            Redirecting to login in
+            <span id="timer" class="text-white font-bold">5</span> seconds...
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let timeLeft = 5;
+      const timerElement = document.getElementById("timer");
+      const countdownElement = document.getElementById("countdown");
+
+      function updateCountdown() {
+        timerElement.textContent = timeLeft;
+
+        if (timeLeft <= 3) {
+          countdownElement.classList.add("highlight");
+        }
+
+        if (timeLeft <= 0) {
+          window.location.href = "/login";
+          return;
+        }
+
+        timeLeft--;
+        setTimeout(updateCountdown, 1000);
+      }
+
+      // Start countdown
+      updateCountdown();
+
+      // Manual login button click
+      document
+        .getElementById("loginBtn")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          window.location.href = "/login";
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MYAN MYAN LEARN - Select Language</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans pt-20 overflow-y-auto"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-18">
+          <!-- Brand Section -->
+          <div class="flex items-center gap-2 group cursor-pointer">
+            <div class="relative">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+              ></div>
+              <div
+                class="relative p-2 group-hover:scale-105 transition-all duration-300"
+              >
+                <img
+                  th:src="@{/images/logo.svg}"
+                  alt="Myan Myan Learn"
+                  class="w-12 h-12 drop-shadow-lg"
+                />
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div
+                class="text-white font-bold text-xl brand-font tracking-wide"
+              >
+                Myan Myan Learn
+              </div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+              >
+                Learning Platform
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div
+      class="w-full max-w-6xl mx-auto px-6 py-12 flex flex-col items-center min-h-screen"
+    >
+      <!-- Header Section -->
+      <div class="text-center mb-12">
+        <div
+          class="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl mb-6 shadow-xl"
+        >
+          <i class="fas fa-globe text-white text-3xl"></i>
+        </div>
+        <h1 class="text-5xl font-black text-white mb-4 tracking-wide">
+          Choose Your Language
+        </h1>
+        <p
+          class="text-lg text-white/90 font-light tracking-wide max-w-2xl mx-auto"
+        >
+          Select your preferred language to continue your learning journey
+        </p>
+      </div>
+
+      <!-- Language Grid -->
+      <div
+        class="grid grid-cols-4 gap-6 w-full max-w-5xl mb-12 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+      >
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="en"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇺🇸</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              English
+            </div>
+            <div class="text-sm text-white/80 font-medium">United States</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="my"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇲🇲</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              မြန်မာ
+            </div>
+            <div class="text-sm text-white/80 font-medium">Myanmar</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="zh"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇨🇳</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              中文
+            </div>
+            <div class="text-sm text-white/80 font-medium">Chinese</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="ne"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-yellow-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇳🇵</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              नेपाली
+            </div>
+            <div class="text-sm text-white/80 font-medium">Nepalese</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="vi"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇻🇳</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              Tiếng Việt
+            </div>
+            <div class="text-sm text-white/80 font-medium">Vietnamese</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="uz"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇺🇿</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              O'zbek
+            </div>
+            <div class="text-sm text-white/80 font-medium">Uzbek</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="si"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇱🇰</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              සිංහල
+            </div>
+            <div class="text-sm text-white/80 font-medium">Sinhala</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="hi"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇮🇳</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              हिन्दी
+            </div>
+            <div class="text-sm text-white/80 font-medium">Hindi</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="ja"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇯🇵</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              日本語
+            </div>
+            <div class="text-sm text-white/80 font-medium">Japanese</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+
+        <a
+          href="#"
+          class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+          data-lang="bd"
+        >
+          <!-- Background Gradient -->
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-green-500/20 to-red-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></div>
+
+          <!-- Flag Container -->
+          <div
+            class="relative z-10 w-16 h-16 flex items-center justify-center mb-4"
+          >
+            <span
+              class="text-5xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110"
+              >🇧🇩</span
+            >
+          </div>
+
+          <!-- Language Name -->
+          <div class="relative z-10 text-center">
+            <div
+              class="text-lg font-bold mb-1 text-white group-hover:text-white transition-colors duration-300"
+            >
+              বাংলা
+            </div>
+            <div class="text-sm text-white/80 font-medium">Bangladeshi</div>
+          </div>
+
+          <!-- Selection Indicator -->
+          <div
+            class="selection-indicator absolute top-3 right-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center opacity-0 transition-all duration-300"
+          >
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </a>
+      </div>
+
+      <!-- Continue Button -->
+      <div class="relative">
+        <button
+          class="group relative w-full max-w-sm bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-8 py-4 text-lg font-bold cursor-pointer transition-all duration-300 relative overflow-hidden tracking-wide disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none disabled:text-gray-200 hover:enabled:-translate-y-1 hover:enabled:scale-105 hover:enabled:shadow-2xl hover:enabled:bg-white/30 hover:enabled:border-white/50"
+          id="continueBtn"
+          disabled
+        >
+          <!-- Background Effect -->
+          <div
+            class="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          ></div>
+
+          <!-- Button Content -->
+          <div class="relative flex items-center justify-center gap-3">
+            <i class="fas fa-arrow-right text-lg"></i>
+            <span>Continue</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let selectedLanguage = null;
+
+      // Language selection handler
+      document.querySelectorAll(".language-option").forEach((option) => {
+        option.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          // Remove previous selection
+          document.querySelectorAll(".language-option").forEach((opt) => {
+            opt.classList.remove("ring-2", "ring-white", "ring-opacity-50");
+            opt.style.background = "rgba(255, 255, 255, 0.1)";
+            opt.style.borderColor = "rgba(255, 255, 255, 0.2)";
+            opt.style.transform = "none";
+            opt.style.boxShadow = "none";
+            // Hide check mark
+            const indicator = opt.querySelector(".selection-indicator");
+            if (indicator) {
+              indicator.style.opacity = "0";
+            }
+          });
+
+          // Select current option
+          this.classList.add("ring-2", "ring-white", "ring-opacity-50");
+          this.style.background = "rgba(255, 255, 255, 0.2)";
+          this.style.borderColor = "rgba(255, 255, 255, 0.4)";
+          this.style.transform = "translateY(-12px) scale(1.05)";
+          this.style.boxShadow = "0 25px 50px rgba(255, 255, 255, 0.2)";
+
+          // Show check mark
+          const indicator = this.querySelector(".selection-indicator");
+          if (indicator) {
+            indicator.style.opacity = "1";
+          }
+
+          selectedLanguage = this.getAttribute("data-lang");
+          document.getElementById("continueBtn").disabled = false;
+        });
+      });
+
+      // Continue button handler
+      document
+        .getElementById("continueBtn")
+        .addEventListener("click", function () {
+          if (selectedLanguage) {
+            // Store language preference
+            localStorage.setItem("selectedLanguage", selectedLanguage);
+
+            // Redirect to app introduction screen
+            window.location.href = "/intro";
+          }
+        });
+    </script>
+  </body>
+</html>

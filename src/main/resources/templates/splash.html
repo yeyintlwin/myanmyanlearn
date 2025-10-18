@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MYAN MYAN LEARN - Loading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .shimmer-animation {
+        animation: shimmer 1.5s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body
+    class="h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center overflow-hidden"
+  >
+    <div class="w-full max-w-4xl px-8 flex flex-col items-center text-center">
+      <img
+        th:src="@{/images/logo.svg}"
+        alt="Myan Myan Learn"
+        class="w-48 h-auto mb-8 drop-shadow-lg"
+      />
+      <div
+        class="text-4xl font-black text-white mb-8 tracking-wider brand-font"
+      >
+        Myan Myan Learn
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="w-full max-w-xs">
+        <div
+          class="bg-white/20 backdrop-blur-sm rounded-full h-2 overflow-hidden relative"
+        >
+          <div
+            class="bg-white/80 h-full rounded-full transition-all duration-300 relative overflow-hidden"
+            id="progressBar"
+            style="width: 0%"
+          >
+            <!-- Loading animation shimmer effect -->
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse shimmer-animation"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Progress bar animation - 0% to 100% in 3 seconds
+      const progressBar = document.getElementById("progressBar");
+      const totalDuration = 3000; // 3 seconds in milliseconds
+      const startTime = Date.now();
+
+      function updateProgress() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min((elapsed / totalDuration) * 100, 100);
+
+        progressBar.style.width = progress + "%";
+
+        if (progress < 100) {
+          requestAnimationFrame(updateProgress);
+        } else {
+          // Auto transition after 3 seconds
+          setTimeout(function () {
+            window.location.href = "/lang";
+          }, 100);
+        }
+      }
+
+      // Start the animation
+      requestAnimationFrame(updateProgress);
+    </script>
+  </body>
+</html>

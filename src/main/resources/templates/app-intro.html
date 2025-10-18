@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Myan Myan Learn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex flex-col"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-18">
+          <!-- Brand Section -->
+          <div class="flex items-center gap-2 group cursor-pointer">
+            <div class="relative">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+              ></div>
+              <div
+                class="relative p-2 group-hover:scale-105 transition-all duration-300"
+              >
+                <img
+                  th:src="@{/images/logo.svg}"
+                  alt="Myan Myan Learn"
+                  class="w-12 h-12 drop-shadow-lg"
+                />
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div
+                class="text-white font-bold text-xl brand-font tracking-wide"
+              >
+                Myan Myan Learn
+              </div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+              >
+                Learning Platform
+              </div>
+            </div>
+          </div>
+          <!-- Skip Introduction Button -->
+          <div class="flex items-center">
+            <a
+              href="/login"
+              class="group relative inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-semibold no-underline transition-all duration-300 hover:bg-white/20 hover:border-white/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-white/10"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
+              <div class="relative flex items-center gap-2">
+                <i class="fas fa-forward text-xs"></i>
+                <span>Skip Introduction</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div
+      class="w-full max-w-6xl px-5 py-32 text-white mx-auto flex-1 flex flex-col justify-center"
+    >
+      <div
+        class="relative w-full h-[32rem] overflow-hidden rounded-2xl shadow-2xl mb-8"
+      >
+        <!-- Carousel Slides -->
+        <div
+          class="flex w-full h-full transition-transform duration-500 ease-in-out"
+          id="carouselSlides"
+        >
+          <!-- Slide 1: Welcome -->
+          <div
+            class="slide w-1/4 h-full flex flex-col items-center justify-center px-8 text-center bg-gradient-to-br from-primary-500 to-primary-700"
+          >
+            <div class="text-8xl mb-6 text-white/90">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h2 class="text-4xl font-bold mb-4 text-white leading-tight">
+              Welcome to Myan Myan Learn
+            </h2>
+            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto">
+              Your gateway to multilingual learning. Discover a world of
+              knowledge and connect with learners from around the globe.
+            </p>
+          </div>
+
+          <!-- Slide 2: Multi-Language -->
+          <div
+            class="slide w-1/4 h-full flex flex-col items-center justify-center px-8 text-center bg-gradient-to-br from-pink-500 to-red-500"
+          >
+            <div class="text-8xl mb-6 text-white/90">
+              <i class="fas fa-globe"></i>
+            </div>
+            <h2 class="text-4xl font-bold mb-4 text-white leading-tight">
+              Multi-Language Support
+            </h2>
+            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto">
+              Learn in 9+ languages including English, Myanmar, Chinese, Hindi,
+              Japanese, and more. Choose your preferred language.
+            </p>
+          </div>
+
+          <!-- Slide 3: Expert Courses -->
+          <div
+            class="slide w-1/4 h-full flex flex-col items-center justify-center px-8 text-center bg-gradient-to-br from-blue-500 to-cyan-500"
+          >
+            <div class="text-8xl mb-6 text-white/90">
+              <i class="fas fa-book-open"></i>
+            </div>
+            <h2 class="text-4xl font-bold mb-4 text-white leading-tight">
+              Expert Courses
+            </h2>
+            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto">
+              Access high-quality educational content created by language
+              experts and native speakers from around the world.
+            </p>
+          </div>
+
+          <!-- Slide 4: Community & Progress -->
+          <div
+            class="slide w-1/4 h-full flex flex-col items-center justify-center px-8 text-center bg-gradient-to-br from-green-500 to-teal-500"
+          >
+            <div class="text-8xl mb-6 text-white/90">
+              <i class="fas fa-users"></i>
+            </div>
+            <h2 class="text-4xl font-bold mb-4 text-white leading-tight">
+              Community & Progress
+            </h2>
+            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto">
+              Join a vibrant community of learners, practice with native
+              speakers, and track your progress with detailed analytics.
+            </p>
+          </div>
+        </div>
+
+        <!-- Previous Button -->
+        <button
+          class="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm border border-white/30 text-white w-12 h-12 rounded-full cursor-pointer flex items-center justify-center text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+          id="prevBtn"
+          onclick="changeSlide(-1)"
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <!-- Indicators -->
+        <div
+          class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2"
+        >
+          <span
+            class="pager-dot w-4 h-4 rounded-full bg-white/40 cursor-pointer transition-all duration-300 hover:bg-white/60 hover:scale-110"
+            onclick="currentSlide(1)"
+            id="dot-1"
+          ></span>
+          <span
+            class="pager-dot w-4 h-4 rounded-full bg-white/40 cursor-pointer transition-all duration-300 hover:bg-white/60 hover:scale-110"
+            onclick="currentSlide(2)"
+            id="dot-2"
+          ></span>
+          <span
+            class="pager-dot w-4 h-4 rounded-full bg-white/40 cursor-pointer transition-all duration-300 hover:bg-white/60 hover:scale-110"
+            onclick="currentSlide(3)"
+            id="dot-3"
+          ></span>
+          <span
+            class="pager-dot w-4 h-4 rounded-full bg-white/40 cursor-pointer transition-all duration-300 hover:bg-white/60 hover:scale-110"
+            onclick="currentSlide(4)"
+            id="dot-4"
+          ></span>
+        </div>
+
+        <!-- Next Button -->
+        <button
+          class="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm border border-white/30 text-white w-12 h-12 rounded-full cursor-pointer flex items-center justify-center text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+          id="nextBtn"
+          onclick="changeSlide(1)"
+        >
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <button
+        class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 rounded-full text-lg font-bold cursor-pointer transition-all duration-300 flex items-center gap-2.5 mx-auto shadow-2xl hover:-translate-y-1 hover:shadow-3xl hover:bg-white/30 hover:border-white/50"
+        onclick="continueToLogin()"
+      >
+        <i class="fas fa-arrow-right text-base"></i> Get Started
+      </button>
+    </div>
+
+    <style>
+      .pager-dot.active {
+        background-color: white !important;
+        transform: scale(1.25);
+      }
+
+      .pager-dot {
+        transition: all 0.3s ease;
+      }
+
+      .pager-dot:hover {
+        transform: scale(1.1);
+      }
+
+      .slide {
+        flex-shrink: 0;
+        width: 25% !important;
+      }
+
+      #carouselSlides {
+        width: 400% !important;
+      }
+
+      /* Individual Button Styling */
+      #prevBtn,
+      #nextBtn {
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      #prevBtn:hover:not(:disabled),
+      #nextBtn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.3) !important;
+        transform: translateY(-50%) scale(1.1) !important;
+        box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3) !important;
+      }
+
+      #prevBtn:disabled,
+      #nextBtn:disabled {
+        opacity: 0.4 !important;
+        cursor: not-allowed !important;
+        transform: translateY(-50%) !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+    </style>
+
+    <script>
+      let currentSlideIndex = 1;
+      const totalSlides = 4;
+
+      function showSlide(n) {
+        const slides = document.getElementById("carouselSlides");
+        const dots = document.querySelectorAll('[id^="dot-"]');
+
+        if (n > totalSlides) currentSlideIndex = 1;
+        if (n < 1) currentSlideIndex = totalSlides;
+
+        slides.style.transform = `translateX(-${
+          (currentSlideIndex - 1) * 25
+        }%)`;
+
+        // Update dots - remove all active states
+        dots.forEach((dot) => {
+          dot.classList.remove("active");
+        });
+
+        // Add active state to current dot
+        const activeDot = document.getElementById(`dot-${currentSlideIndex}`);
+        if (activeDot) {
+          activeDot.classList.add("active");
+        }
+
+        // Update navigation buttons
+        document.getElementById("prevBtn").disabled = currentSlideIndex === 1;
+        document.getElementById("nextBtn").disabled =
+          currentSlideIndex === totalSlides;
+      }
+
+      function changeSlide(direction) {
+        currentSlideIndex += direction;
+        showSlide(currentSlideIndex);
+      }
+
+      function currentSlide(n) {
+        currentSlideIndex = n;
+        showSlide(currentSlideIndex);
+      }
+
+      function continueToLogin() {
+        // Add a smooth transition effect
+        document.body.style.opacity = "0.8";
+        setTimeout(function () {
+          window.location.href = "/login";
+        }, 300);
+      }
+
+      // Initialize carousel
+      document.addEventListener("DOMContentLoaded", function () {
+        showSlide(1);
+
+        // Ensure first dot is active on load
+        const firstDot = document.getElementById("dot-1");
+        if (firstDot) {
+          firstDot.classList.add("active");
+        }
+
+        // Auto-advance slides every 5 seconds
+        setInterval(function () {
+          if (currentSlideIndex < totalSlides) {
+            changeSlide(1);
+          } else {
+            currentSlide(1); // Loop back to first slide
+          }
+        }, 5000);
+      });
+
+      // Touch/swipe support for mobile
+      let startX = 0;
+      let endX = 0;
+
+      document
+        .getElementById("carouselSlides")
+        .addEventListener("touchstart", function (e) {
+          startX = e.touches[0].clientX;
+        });
+
+      document
+        .getElementById("carouselSlides")
+        .addEventListener("touchend", function (e) {
+          endX = e.changedTouches[0].clientX;
+          handleSwipe();
+        });
+
+      function handleSwipe() {
+        const threshold = 50;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > threshold) {
+          if (diff > 0) {
+            // Swipe left - next slide
+            changeSlide(1);
+          } else {
+            // Swipe right - previous slide
+            changeSlide(-1);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

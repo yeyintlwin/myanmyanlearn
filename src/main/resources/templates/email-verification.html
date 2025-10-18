@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MYAN MYAN LEARN - Email Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center p-6"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-18">
+          <!-- Brand Section -->
+          <div class="flex items-center gap-2 group cursor-pointer">
+            <div class="relative">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+              ></div>
+              <div
+                class="relative p-2 group-hover:scale-105 transition-all duration-300"
+              >
+                <img
+                  th:src="@{/images/logo.svg}"
+                  alt="Myan Myan Learn"
+                  class="w-12 h-12 drop-shadow-lg"
+                />
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div
+                class="text-white font-bold text-xl brand-font tracking-wide"
+              >
+                Myan Myan Learn
+              </div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+              >
+                Learning Platform
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Verification Card -->
+    <div
+      class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl mt-20 relative overflow-hidden"
+    >
+      <!-- Decorative Background -->
+      <div
+        class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full -translate-y-16 translate-x-16"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-500/20 to-pink-500/20 rounded-full translate-y-12 -translate-x-12"
+      ></div>
+
+      <!-- Header Section -->
+      <div class="relative z-10 text-center mb-8">
+        <div
+          class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+        >
+          <i class="fas fa-envelope text-white text-xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-white mb-2">Verify Your Email</h1>
+        <p class="text-sm text-white/80">
+          We've sent a 6-digit verification code to your email address
+        </p>
+      </div>
+
+      <!-- Email Display -->
+      <div class="relative z-10 mb-8">
+        <div
+          class="bg-white/10 border-2 border-white/30 rounded-2xl px-6 py-4 text-center"
+        >
+          <div class="flex items-center justify-center gap-2 mb-2">
+            <i class="fas fa-envelope text-white/80"></i>
+            <span class="text-sm font-semibold text-white/80"
+              >Email Sent To:</span
+            >
+          </div>
+          <div class="text-lg font-bold text-white">user@example.com</div>
+        </div>
+      </div>
+
+      <form method="post" action="/verification-success" class="relative z-10">
+        <!-- OTP Input Fields -->
+        <div class="mb-8">
+          <label
+            class="block text-sm font-semibold text-white mb-4 text-center"
+          >
+            <i class="fas fa-key text-white/80 mr-2"></i>
+            Enter Verification Code
+          </label>
+          <div class="flex justify-center gap-3">
+            <input
+              type="text"
+              class="otp-input w-14 h-14 border-2 border-white/30 rounded-2xl text-center text-2xl font-bold text-white bg-white/10 backdrop-blur-sm outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:scale-105 hover:border-white/50"
+              maxlength="1"
+              required
+            />
+            <input
+              type="text"
+              class="otp-input w-14 h-14 border-2 border-white/30 rounded-2xl text-center text-2xl font-bold text-white bg-white/10 backdrop-blur-sm outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:scale-105 hover:border-white/50"
+              maxlength="1"
+              required
+            />
+            <input
+              type="text"
+              class="otp-input w-14 h-14 border-2 border-white/30 rounded-2xl text-center text-2xl font-bold text-white bg-white/10 backdrop-blur-sm outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:scale-105 hover:border-white/50"
+              maxlength="1"
+              required
+            />
+            <input
+              type="text"
+              class="otp-input w-14 h-14 border-2 border-white/30 rounded-2xl text-center text-2xl font-bold text-white bg-white/10 backdrop-blur-sm outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:scale-105 hover:border-white/50"
+              maxlength="1"
+              required
+            />
+            <input
+              type="text"
+              class="otp-input w-14 h-14 border-2 border-white/30 rounded-2xl text-center text-2xl font-bold text-white bg-white/10 backdrop-blur-sm outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:scale-105 hover:border-white/50"
+              maxlength="1"
+              required
+            />
+            <input
+              type="text"
+              class="otp-input w-14 h-14 border-2 border-white/30 rounded-2xl text-center text-2xl font-bold text-white bg-white/10 backdrop-blur-sm outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:scale-105 hover:border-white/50"
+              maxlength="1"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Verify Button -->
+        <div class="mb-6">
+          <button
+            type="submit"
+            class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none disabled:text-gray-200"
+            id="verifyBtn"
+            disabled
+          >
+            <i class="fas fa-check mr-2"></i>
+            Verify Email
+          </button>
+        </div>
+
+        <!-- Resend Section -->
+        <div class="text-center">
+          <p class="text-sm text-white/80 mb-3">
+            Didn't receive the code?
+            <a
+              href="#"
+              class="text-white/80 font-semibold hover:text-white hover:underline transition-colors duration-200"
+              id="resendLink"
+              >Resend Code</a
+            >
+          </p>
+          <div
+            class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full"
+          >
+            <i class="fas fa-clock text-white/80 text-sm"></i>
+            <span class="text-xs text-white/80">
+              Resend available in
+              <span id="timer" class="font-bold text-white">30</span> seconds
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const otpInputs = document.querySelectorAll(".otp-input");
+      const verifyBtn = document.getElementById("verifyBtn");
+      const resendLink = document.getElementById("resendLink");
+
+      // OTP input handling
+      otpInputs.forEach((input, index) => {
+        input.addEventListener("input", function (e) {
+          const value = e.target.value;
+
+          if (value.length === 1) {
+            // Move to next input
+            if (index < otpInputs.length - 1) {
+              otpInputs[index + 1].focus();
+            }
+          }
+
+          // Update filled state
+          if (value) {
+            input.classList.add("filled");
+          } else {
+            input.classList.remove("filled");
+          }
+
+          checkAllFilled();
+        });
+
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Backspace" && !e.target.value && index > 0) {
+            otpInputs[index - 1].focus();
+          }
+        });
+      });
+
+      function checkAllFilled() {
+        const allFilled = Array.from(otpInputs).every(
+          (input) => input.value.length === 1
+        );
+        verifyBtn.disabled = !allFilled;
+      }
+
+      // Resend code functionality
+      let resendTimer = 30;
+      resendLink.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        if (resendTimer > 0) return;
+
+        // Reset timer
+        resendTimer = 30;
+        updateResendTimer();
+
+        // Simulate resend
+        alert("Verification code has been resent to your email.");
+      });
+
+      function updateResendTimer() {
+        if (resendTimer > 0) {
+          resendLink.textContent = `Resend Code (${resendTimer}s)`;
+          resendTimer--;
+          setTimeout(updateResendTimer, 1000);
+        } else {
+          resendLink.textContent = "Resend Code";
+        }
+      }
+
+      // Start timer on page load
+      updateResendTimer();
+    </script>
+  </body>
+</html>
