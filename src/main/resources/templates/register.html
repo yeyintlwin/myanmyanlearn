@@ -251,19 +251,32 @@
 
         <!-- Terms and Conditions -->
         <div class="mb-6">
-          <label class="flex items-start cursor-pointer">
-            <input
-              type="checkbox"
-              class="w-4 h-4 text-white bg-white/20 border-white/30 rounded focus:ring-white/50 focus:ring-2 mt-1"
-              required
-            />
-            <span class="ml-3 text-sm text-white/80">
+          <label class="flex items-start cursor-pointer group">
+            <div class="relative">
+              <input type="checkbox" class="sr-only" required />
+              <div
+                class="w-5 h-5 bg-white/10 border-2 border-white/30 rounded-md flex items-center justify-center transition-all duration-200 group-hover:bg-white/20 group-hover:border-white/50 group-hover:scale-105"
+              >
+                <svg
+                  class="w-3 h-3 text-white opacity-0 transition-opacity duration-200"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <span class="ml-3 text-sm text-white/80 group-hover:text-white transition-colors duration-200">
               I agree to the
-              <a href="#" class="text-white/80 hover:text-white underline"
+              <a href="#" class="text-white/80 hover:text-white underline transition-colors duration-200"
                 >Terms of Service</a
               >
               and
-              <a href="#" class="text-white/80 hover:text-white underline"
+              <a href="#" class="text-white/80 hover:text-white underline transition-colors duration-200"
                 >Privacy Policy</a
               >
             </span>
@@ -318,6 +331,34 @@
           passwordToggle.classList.add("fa-eye");
         }
       }
+
+      // Handle custom checkbox
+      document.addEventListener("DOMContentLoaded", function () {
+        const checkbox = document.querySelector('input[type="checkbox"]');
+        const checkboxVisual = checkbox.nextElementSibling;
+        const checkmark = checkboxVisual.querySelector("svg");
+
+        checkbox.addEventListener("change", function () {
+          if (this.checked) {
+            checkboxVisual.classList.add("bg-white/20", "border-white/50");
+            checkboxVisual.classList.remove("bg-white/10", "border-white/30");
+            checkmark.classList.remove("opacity-0");
+            checkmark.classList.add("opacity-100");
+          } else {
+            checkboxVisual.classList.remove("bg-white/20", "border-white/50");
+            checkboxVisual.classList.add("bg-white/10", "border-white/30");
+            checkmark.classList.remove("opacity-100");
+            checkmark.classList.add("opacity-0");
+          }
+        });
+
+        // Handle click on visual checkbox
+        checkboxVisual.addEventListener("click", function (e) {
+          e.preventDefault();
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event("change"));
+        });
+      });
     </script>
   </body>
 </html>
