@@ -60,6 +60,28 @@
     </div>
 
     <script>
+      // Function to get cookie value
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+        return null;
+      }
+
+      // Check for existing language preference
+      function checkLanguagePreference() {
+        const savedLanguage =
+          getCookie("selectedLanguage") ||
+          localStorage.getItem("selectedLanguage");
+        return savedLanguage;
+      }
+
+      // Check if intro has been completed
+      function checkIntroCompletion() {
+        const introCompleted = getCookie("introCompleted");
+        return introCompleted;
+      }
+
       // Progress bar animation - 0% to 100% in 3 seconds
       const progressBar = document.getElementById("progressBar");
       const totalDuration = 3000; // 3 seconds in milliseconds
@@ -74,9 +96,22 @@
         if (progress < 100) {
           requestAnimationFrame(updateProgress);
         } else {
+          // Check for existing language preference and intro completion
+          const savedLanguage = checkLanguagePreference();
+          const introCompleted = checkIntroCompletion();
+
           // Auto transition after 3 seconds
           setTimeout(function () {
-            window.location.href = "/lang";
+            if (introCompleted) {
+              // Intro already completed, go directly to login
+              window.location.href = "/login";
+            } else if (savedLanguage) {
+              // Language selected but intro not completed, go to intro
+              window.location.href = "/intro";
+            } else {
+              // No language selected, go to language selection
+              window.location.href = "/lang";
+            }
           }, 100);
         }
       }

@@ -525,8 +525,15 @@
         .getElementById("continueBtn")
         .addEventListener("click", function () {
           if (selectedLanguage) {
-            // Store language preference
+            // Store language preference in both localStorage and cookie
             localStorage.setItem("selectedLanguage", selectedLanguage);
+
+            // Set cookie with 30 days expiration
+            const expirationDate = new Date();
+            expirationDate.setTime(
+              expirationDate.getTime() + 30 * 24 * 60 * 60 * 1000
+            );
+            document.cookie = `selectedLanguage=${selectedLanguage}; expires=${expirationDate.toUTCString()}; path=/`;
 
             // Redirect to app introduction screen
             window.location.href = "/intro";
