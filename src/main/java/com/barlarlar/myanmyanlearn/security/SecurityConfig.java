@@ -9,12 +9,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.barlarlar.myanmyanlearn.security.CustomAuthenticationSuccessHandler;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+        @Autowired
+        private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
         // add support for JDBC ... no more hardcoded users :-)
 
@@ -54,7 +60,7 @@ public class SecurityConfig {
                                 .anyRequest().authenticated())
                                 .formLogin(form -> form.loginPage("/showMyLoginPage")
                                                 .loginProcessingUrl("/authenticateTheUser")
-                                                .defaultSuccessUrl("/home", true)
+                                                .successHandler(customAuthenticationSuccessHandler)
                                                 .failureUrl("/showMyLoginPage?error=true")
                                                 .permitAll())
                                 .logout(logout -> logout

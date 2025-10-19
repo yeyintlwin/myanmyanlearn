@@ -16,6 +16,7 @@ import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.barlarlar.myanmyanlearn.service.LoginAttemptService;
+import com.barlarlar.myanmyanlearn.service.RegistrationService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +26,9 @@ public class LoginController {
 
     @Autowired
     private LoginAttemptService loginAttemptService;
+
+    @Autowired
+    private RegistrationService registrationService;
 
     @GetMapping("/showMyLoginPage")
     public String showMyLoginPage(@RequestParam(value = "error", required = false) String error,
@@ -106,8 +110,26 @@ public class LoginController {
 
                 redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
             } else {
-                // Successful login - record success
-                loginAttemptService.recordSuccessfulAttempt(ipAddress, username);
+                // Successful authentication - check email verification
+                try {
+                    // Check if user's email is verified
+                    if (username != null && !registrationService.isEmailVerified(username)) {
+                        // User is authenticated but email not verified - force email verification
+                        redirectAttributes.addFlashAttribute("errorMessage",
+                                "Please verify your email address before logging in. Check your email for the verification code.");
+                        redirectAttributes.addFlashAttribute("email", getEmailForUser(username));
+                        redirectAttributes.addFlashAttribute("forceVerification", true);
+                        return "redirect:/email-verification";
+                    }
+
+                    // Email is verified - record successful login
+                    loginAttemptService.recordSuccessfulAttempt(ipAddress, username);
+                } catch (Exception e) {
+                    // If we can't check email verification, allow login but log the issue
+                    System.err.println(
+                            "Could not check email verification for user: " + username + " - " + e.getMessage());
+                    loginAttemptService.recordSuccessfulAttempt(ipAddress, username);
+                }
             }
         }
 
@@ -129,5 +151,17 @@ public class LoginController {
         }
 
         return request.getRemoteAddr();
+    }
+
+    /**
+     * Get email address for a user
+     */
+    private String getEmailForUser(String username) {
+        try {
+            return registrationService.getUserByUsername(username).getEmail();
+        } catch (Exception e) {
+            System.err.println("Could not get email for user: " + username + " - " + e.getMessage());
+            return username; // Fallback to username
+        }
     }
 }

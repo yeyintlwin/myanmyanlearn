@@ -93,9 +93,20 @@ public class SignUpController {
     }
 
     @GetMapping("/email-verification")
-    public String emailVerification(Model model) {
-        // Get email from flash attributes if available
-        // The email should be passed via flash attributes from registration
+    public String emailVerification(@RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "forceVerification", required = false) String forceVerification,
+            @RequestParam(value = "otpSent", required = false) String otpSent,
+            Model model) {
+        // Get email from URL parameter or flash attributes
+        if (email != null) {
+            model.addAttribute("email", email);
+        }
+        if (forceVerification != null) {
+            model.addAttribute("forceVerification", true);
+        }
+        if (otpSent != null) {
+            model.addAttribute("success", "A new verification code has been sent to your email address.");
+        }
         return "email-verification";
     }
 

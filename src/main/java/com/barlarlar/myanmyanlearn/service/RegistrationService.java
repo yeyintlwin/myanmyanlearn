@@ -155,4 +155,25 @@ public class RegistrationService {
         return memberRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with user ID: " + userId));
     }
+
+    /**
+     * Get user by username (user_id)
+     */
+    public Member getUserByUsername(String username) {
+        return memberRepository.findById(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+    }
+
+    /**
+     * Check if user's email is verified
+     */
+    public boolean isEmailVerified(String username) {
+        try {
+            Member member = getUserByUsername(username);
+            return member.getEmailVerified();
+        } catch (Exception e) {
+            System.err.println("Error checking email verification for user: " + username + " - " + e.getMessage());
+            return false; // Default to not verified if we can't check
+        }
+    }
 }
