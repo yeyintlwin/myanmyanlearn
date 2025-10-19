@@ -42,7 +42,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
             // Check if email is verified
             if (!member.getEmailVerified()) {
-                System.out.println("User email not verified, sending new OTP and redirecting to email verification");
+                System.out.println("User email not verified, clearing session and redirecting to email verification");
+
+                // Clear any existing session for unverified users - NO SESSION STORAGE
+                request.getSession().invalidate();
 
                 try {
                     System.out.println("Attempting to send OTP to: " + member.getEmail());
@@ -66,11 +69,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                     // Continue with redirect even if OTP sending fails
                 }
 
-                // Store email in session for email verification
-                request.getSession().setAttribute("pendingVerificationEmail", member.getEmail());
-                request.getSession().setAttribute("pendingVerificationUserId", username);
-
                 // Redirect to email verification page with email parameter and success message
+                // NO SESSION STORAGE for unverified users
                 response.sendRedirect(
                         "/email-verification?email=" + member.getEmail() + "&forceVerification=true&otpSent=true");
                 return;

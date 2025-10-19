@@ -114,7 +114,9 @@ public class LoginController {
                 try {
                     // Check if user's email is verified
                     if (username != null && !registrationService.isEmailVerified(username)) {
-                        // User is authenticated but email not verified - force email verification
+                        // User is authenticated but email not verified - clear session and force email
+                        // verification
+                        request.getSession().invalidate(); // Clear session for unverified users
                         redirectAttributes.addFlashAttribute("errorMessage",
                                 "Please verify your email address before logging in. Check your email for the verification code.");
                         redirectAttributes.addFlashAttribute("email", getEmailForUser(username));
