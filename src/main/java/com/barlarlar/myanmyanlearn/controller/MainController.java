@@ -6,34 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-    @GetMapping("/")
-    public String splash() {
-        return "home";
-    }
-
-    @GetMapping("/home")
-    public String home() {
-        return "home";
-    }
-    /*
-     * @GetMapping("/intro")
-     * public String appIntro() {
-     * return "app-intro";
-     * }
-     * 
-     * @GetMapping("/forget-password")
-     * public String forgetPassword() {
-     * return "forget-password";
-     * }
-     * 
-     * @GetMapping("/reset-password")
-     * public String resetPassword() {
-     * return "reset-password";
-     * }
-     * 
-     * @GetMapping("/reset-success")
-     * public String resetSuccess() {
-     * return "reset-success";
-     * }
-     */
+    // This controller is kept for potential future use
+    // All endpoints have been moved to their respective controllers:
+    // - SplashController: handles / and /splash
+    // - HomeController: handles /home
+    // - LoginController: handles login functionality
+    // - SignUpController: handles registration and email verification
 }

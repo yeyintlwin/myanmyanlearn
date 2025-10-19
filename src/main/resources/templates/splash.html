@@ -100,18 +100,9 @@
           const savedLanguage = checkLanguagePreference();
           const introCompleted = checkIntroCompletion();
 
-          // Auto transition after 3 seconds
+          // Auto redirect to home page after splash animation completes
           setTimeout(function () {
-            if (introCompleted) {
-              // Intro already completed, go directly to login
-              window.location.href = "/showMyLoginPage";
-            } else if (savedLanguage) {
-              // Language selected but intro not completed, go to intro
-              window.location.href = "/intro";
-            } else {
-              // No language selected, go to language selection
-              window.location.href = "/lang";
-            }
+            window.location.href = "/home";
           }, 100);
         }
       }

@@ -49,12 +49,13 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http, DataSource dataSource) throws Exception {
 
                 http.authorizeHttpRequests(configurer -> configurer
-                                .requestMatchers("/showMyLoginPage", "/register", "/register-test",
+                                .requestMatchers("/", "/showMyLoginPage", "/register", "/register-test",
                                                 "/email-verification",
                                                 "/resend-otp",
                                                 "/forget-password", "/reset-password", "/reset-success",
                                                 "/verification-success",
-                                                "/test-email", "/test-otp", "/images/**", "/css/**", "/js/**",
+                                                "/splash",
+                                                "/images/**", "/css/**", "/js/**",
                                                 "/webjars/**")
                                 .permitAll()
                                 .anyRequest().authenticated())

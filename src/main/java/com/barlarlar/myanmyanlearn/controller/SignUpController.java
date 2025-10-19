@@ -165,18 +165,4 @@ public class SignUpController {
         return "verification-success";
     }
 
-    @GetMapping("/forget-password")
-    public String forgetPassword() {
-        return "forget-password";
-    }
-
-    @GetMapping("/reset-password")
-    public String resetPassword() {
-        return "reset-password";
-    }
-
-    @GetMapping("/reset-success")
-    public String resetSuccess() {
-        return "reset-success";
-    }
 }
