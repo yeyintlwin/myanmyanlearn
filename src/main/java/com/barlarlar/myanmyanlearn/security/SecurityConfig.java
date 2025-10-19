@@ -49,7 +49,7 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http, DataSource dataSource) throws Exception {
 
                 http.authorizeHttpRequests(configurer -> configurer
-                                .requestMatchers("/", "/showMyLoginPage", "/register", "/register-test",
+                                .requestMatchers("/", "/login", "/register", "/register-test",
                                                 "/email-verification",
                                                 "/resend-otp",
                                                 "/forget-password", "/reset-password", "/reset-success",
@@ -59,14 +59,14 @@ public class SecurityConfig {
                                                 "/webjars/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
-                                .formLogin(form -> form.loginPage("/showMyLoginPage")
+                                .formLogin(form -> form.loginPage("/login")
                                                 .loginProcessingUrl("/authenticateTheUser")
                                                 .successHandler(customAuthenticationSuccessHandler)
-                                                .failureUrl("/showMyLoginPage?error=true")
+                                                .failureUrl("/login?error=true")
                                                 .permitAll())
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
-                                                .logoutSuccessUrl("/showMyLoginPage?logout=true")
+                                                .logoutSuccessUrl("/login?logout=true")
                                                 .deleteCookies("remember-me", "JSESSIONID")
                                                 .invalidateHttpSession(true)
                                                 .clearAuthentication(true)

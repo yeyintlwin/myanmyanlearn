@@ -30,7 +30,7 @@ public class LoginController {
     @Autowired
     private RegistrationService registrationService;
 
-    @GetMapping("/showMyLoginPage")
+    @GetMapping("/login")
     public String showMyLoginPage(@RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
             @RequestParam(value = "locked", required = false) String locked,
@@ -67,7 +67,7 @@ public class LoginController {
             int remainingMinutes = loginAttemptService.getIpRateLimitRemainingMinutes(ipAddress);
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Too many login attempts from this IP. Please try again in " + remainingMinutes + " minutes.");
-            return "redirect:/showMyLoginPage?error=true";
+            return "redirect:/login?error=true";
         }
 
         // Check if user is locked
@@ -77,7 +77,7 @@ public class LoginController {
                     "Your account has been temporarily locked due to too many failed attempts. Please try again in "
                             + remainingMinutes + " minutes.");
             redirectAttributes.addFlashAttribute("locked", true);
-            return "redirect:/showMyLoginPage?error=true";
+            return "redirect:/login?error=true";
         }
 
         HttpSession session = request.getSession(false);
@@ -135,7 +135,7 @@ public class LoginController {
             }
         }
 
-        return "redirect:/showMyLoginPage?error=true";
+        return "redirect:/login?error=true";
     }
 
     /**

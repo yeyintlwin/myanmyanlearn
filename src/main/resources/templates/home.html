@@ -558,7 +558,7 @@
       dropdownItems.forEach((item) => {
         item.addEventListener("click", function (e) {
           // Don't close for logout link, let it navigate
-          if (!this.href.includes("/showMyLoginPage")) {
+          if (!this.href.includes("/login")) {
             e.preventDefault();
             profileDropdown.classList.remove("show");
 
