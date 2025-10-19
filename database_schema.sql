@@ -30,6 +30,9 @@ CREATE TABLE `members` (
   `last_name` varchar(100) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `profile_image` varchar(500) DEFAULT NULL,
+  `email_verified` tinyint(1) DEFAULT '0',
+  `otp_code` varchar(6) DEFAULT NULL,
+  `otp_expires_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -41,8 +44,40 @@ CREATE TABLE `members` (
 
 LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
-INSERT INTO `members` VALUES ('admin','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Admin','User','admin@myanmyanlearn.com',NULL),('employee','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Employee','User','employee@myanmyanlearn.com',NULL),('manager','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Manager','User','manager@myanmyanlearn.com',NULL);
+INSERT INTO `members` VALUES ('admin','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Admin','User','admin@myanmyanlearn.com',NULL,1,NULL,NULL),('employee','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Employee','User','employee@myanmyanlearn.com',NULL,1,NULL,NULL),('manager','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Manager','User','manager@myanmyanlearn.com',NULL,1,NULL,NULL);
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `otp_verifications`
+--
+
+DROP TABLE IF EXISTS `otp_verifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `otp_verifications` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(50) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `otp_code` varchar(6) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `expires_at` timestamp NOT NULL,
+  `verified` tinyint(1) DEFAULT '0',
+  `verified_at` timestamp NULL DEFAULT NULL,
+  `attempts` int DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `otp_verifications_ibfk_1` (`user_id`),
+  CONSTRAINT `otp_verifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `members` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `otp_verifications`
+--
+
+LOCK TABLES `otp_verifications` WRITE;
+/*!40000 ALTER TABLE `otp_verifications` DISABLE KEYS */;
+/*!40000 ALTER TABLE `otp_verifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
