@@ -100,26 +100,30 @@ public class SignUpController {
             @RequestParam(value = "otpSent", required = false) String otpSent,
             HttpServletRequest request,
             Model model) {
-        // Check if user has proper session attributes for email verification
+        // Check if user has proper session attributes for email verification (from
+        // login flow)
         String pendingEmail = (String) request.getSession().getAttribute("pendingVerificationEmail");
         String pendingUserId = (String) request.getSession().getAttribute("pendingVerificationUserId");
 
-        // If no session attributes and no email parameter, redirect to login
-        if (pendingEmail == null && pendingUserId == null && email == null) {
-            return "redirect:/showMyLoginPage?error=verification_required";
-        }
-
         // Get email from URL parameter, session, or flash attributes
         String userEmail = email != null ? email : pendingEmail;
-        if (userEmail != null) {
-            model.addAttribute("email", userEmail);
+
+        // If no email available from any source, redirect to registration
+        if (userEmail == null) {
+            return "redirect:/register?error=verification_required";
         }
+
+        // Set email in model
+        model.addAttribute("email", userEmail);
+
+        // Handle different verification scenarios
         if (forceVerification != null) {
             model.addAttribute("forceVerification", true);
         }
         if (otpSent != null) {
             model.addAttribute("success", "A new verification code has been sent to your email address.");
         }
+
         return "email-verification";
     }
 

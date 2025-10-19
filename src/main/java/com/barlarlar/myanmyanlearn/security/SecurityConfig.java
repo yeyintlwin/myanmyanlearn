@@ -50,13 +50,13 @@ public class SecurityConfig {
 
                 http.authorizeHttpRequests(configurer -> configurer
                                 .requestMatchers("/showMyLoginPage", "/login", "/register", "/register-test",
+                                                "/email-verification",
                                                 "/resend-otp",
                                                 "/forget-password", "/reset-password", "/reset-success",
                                                 "/verification-success",
                                                 "/test-email", "/test-otp", "/images/**", "/css/**", "/js/**",
                                                 "/webjars/**")
                                 .permitAll()
-                                .requestMatchers("/email-verification").hasAnyRole("EMPLOYEE", "MANAGER", "ADMIN")
                                 .anyRequest().authenticated())
                                 .formLogin(form -> form.loginPage("/showMyLoginPage")
                                                 .loginProcessingUrl("/authenticateTheUser")
