@@ -173,6 +173,20 @@
           </div>
         </div>
 
+        <!-- Verification Required Message -->
+        <div
+          th:if="${verificationRequired}"
+          class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-2xl backdrop-blur-sm"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-shield-alt text-yellow-400 mr-3"></i>
+            <div class="text-yellow-200 text-sm font-medium">
+              Email verification is required to access this page. Please login
+              first to complete email verification.
+            </div>
+          </div>
+        </div>
+
         <!-- General Error Message (for JavaScript validation) -->
         <div
           class="general-error hidden mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-2xl backdrop-blur-sm"

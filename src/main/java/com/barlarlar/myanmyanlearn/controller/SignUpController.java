@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 public class SignUpController {
 
@@ -96,10 +98,21 @@ public class SignUpController {
     public String emailVerification(@RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "forceVerification", required = false) String forceVerification,
             @RequestParam(value = "otpSent", required = false) String otpSent,
+            HttpServletRequest request,
             Model model) {
-        // Get email from URL parameter or flash attributes
-        if (email != null) {
-            model.addAttribute("email", email);
+        // Check if user has proper session attributes for email verification
+        String pendingEmail = (String) request.getSession().getAttribute("pendingVerificationEmail");
+        String pendingUserId = (String) request.getSession().getAttribute("pendingVerificationUserId");
+
+        // If no session attributes and no email parameter, redirect to login
+        if (pendingEmail == null && pendingUserId == null && email == null) {
+            return "redirect:/showMyLoginPage?error=verification_required";
+        }
+
+        // Get email from URL parameter, session, or flash attributes
+        String userEmail = email != null ? email : pendingEmail;
+        if (userEmail != null) {
+            model.addAttribute("email", userEmail);
         }
         if (forceVerification != null) {
             model.addAttribute("forceVerification", true);
