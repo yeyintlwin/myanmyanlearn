@@ -100,18 +100,6 @@
         <span th:text="${success}"></span>
       </div>
 
-      <!-- Verification Required Message -->
-      <div
-        th:if="${param.verification_required}"
-        class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-xl text-yellow-200 text-sm"
-      >
-        <i class="fas fa-shield-alt mr-2"></i>
-        <span
-          >Email verification is required to access that page. Please complete
-          your registration first.</span
-        >
-      </div>
-
       <form method="post" action="/register" class="relative z-10">
         <input
           type="hidden"

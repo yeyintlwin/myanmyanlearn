@@ -36,7 +36,6 @@ public class LoginController {
             @RequestParam(value = "locked", required = false) String locked,
             @RequestParam(value = "disabled", required = false) String disabled,
             @RequestParam(value = "expired", required = false) String expired,
-            @RequestParam(value = "verification_required", required = false) String verificationRequired,
             Model model) {
 
         if (error != null) {
@@ -53,9 +52,6 @@ public class LoginController {
         }
         if (expired != null) {
             model.addAttribute("expired", true);
-        }
-        if (verificationRequired != null) {
-            model.addAttribute("verificationRequired", true);
         }
 
         return "login";
