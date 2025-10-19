@@ -26,7 +26,12 @@ CREATE TABLE `members` (
   `user_id` varchar(50) NOT NULL,
   `pw` char(68) NOT NULL,
   `active` tinyint NOT NULL,
-  PRIMARY KEY (`user_id`)
+  `first_name` varchar(100) DEFAULT NULL,
+  `last_name` varchar(100) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `profile_image` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -36,7 +41,7 @@ CREATE TABLE `members` (
 
 LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
-INSERT INTO `members` VALUES ('admin','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1),('employee','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1),('manager','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1);
+INSERT INTO `members` VALUES ('admin','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Admin','User','admin@myanmyanlearn.com',NULL),('employee','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Employee','User','employee@myanmyanlearn.com',NULL),('manager','{bcrypt}$2a$10$hLRtXyCL2Gso8EFl61SRTu21aMHjkbVs7SqxdQFsJcxrUr3d3LMaW',1,'Manager','User','manager@myanmyanlearn.com',NULL);
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
 UNLOCK TABLES;
 
