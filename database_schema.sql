@@ -3,6 +3,9 @@
 -- Host: localhost    Database: user_directory
 -- ------------------------------------------------------
 -- Server version	9.4.0
+--
+-- Clean database structure for Myan Myan Learn application
+-- Tables: members (users), roles (authorities), otp_verifications (email verification)
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
