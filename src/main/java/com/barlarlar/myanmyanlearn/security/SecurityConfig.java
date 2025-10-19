@@ -39,7 +39,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(configurer -> configurer
                 .requestMatchers("/showMyLoginPage", "/login", "/register", "/forget-password", "/reset-password",
                         "/reset-success",
-                        "/verification-success", "/images/**", "/css/**", "/js/**", "/webjars/**")
+                        "/verification-success", "/test-email", "/test-otp", "/images/**", "/css/**", "/js/**", "/webjars/**")
                 .permitAll()
                 .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/showMyLoginPage")

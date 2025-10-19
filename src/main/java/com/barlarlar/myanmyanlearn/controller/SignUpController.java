@@ -16,21 +16,6 @@ public class SignUpController {
         return "email-verification";
     }
 
-    @GetMapping("/forget-password")
-    public String forgetPassword() {
-        return "forget-password";
-    }
-
-    @GetMapping("/reset-password")
-    public String resetPassword() {
-        return "reset-password";
-    }
-
-    @GetMapping("/reset-success")
-    public String resetSuccess() {
-        return "reset-success";
-    }
-
     @GetMapping("/verification-success")
     public String verificationSuccess() {
         return "verification-success";
