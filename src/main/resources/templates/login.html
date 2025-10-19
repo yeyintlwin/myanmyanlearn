@@ -122,8 +122,65 @@
         >
           <div class="flex items-center">
             <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
-            <div class="text-red-200 text-sm font-medium">
+            <div
+              class="text-red-200 text-sm font-medium"
+              th:text="${errorMessage ?: 'Invalid username or password. Please try again.'}"
+            >
               Invalid username or password. Please try again.
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Locked Message -->
+        <div
+          th:if="${locked}"
+          class="mb-6 p-4 bg-orange-500/20 border border-orange-500/30 rounded-2xl backdrop-blur-sm"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-lock text-orange-400 mr-3"></i>
+            <div class="text-orange-200 text-sm font-medium">
+              Your account has been locked. Please contact support for
+              assistance.
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Disabled Message -->
+        <div
+          th:if="${disabled}"
+          class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-2xl backdrop-blur-sm"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-user-slash text-yellow-400 mr-3"></i>
+            <div class="text-yellow-200 text-sm font-medium">
+              Your account has been disabled. Please contact support for
+              assistance.
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Expired Message -->
+        <div
+          th:if="${expired}"
+          class="mb-6 p-4 bg-purple-500/20 border border-purple-500/30 rounded-2xl backdrop-blur-sm"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-clock text-purple-400 mr-3"></i>
+            <div class="text-purple-200 text-sm font-medium">
+              Your account or password has expired. Please contact support or
+              reset your password.
+            </div>
+          </div>
+        </div>
+
+        <!-- General Error Message (for JavaScript validation) -->
+        <div
+          class="general-error hidden mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-2xl backdrop-blur-sm"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
+            <div class="text-red-200 text-sm font-medium">
+              Please fix the errors above before submitting.
             </div>
           </div>
         </div>
@@ -308,6 +365,184 @@
           checkbox.checked = !checkbox.checked;
           checkbox.dispatchEvent(new Event("change"));
         });
+      });
+
+      // Login Form Validation
+      const loginForm = document.querySelector(
+        'form[th\\:action="@{/authenticateTheUser}"]'
+      );
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+      const submitButton = document.querySelector('button[type="submit"]');
+
+      // Real-time validation
+      function validateUsername(username) {
+        if (!username || username.trim().length === 0) {
+          return { valid: false, message: "Username is required" };
+        }
+        if (username.length < 3) {
+          return {
+            valid: false,
+            message: "Username must be at least 3 characters",
+          };
+        }
+        if (username.length > 50) {
+          return {
+            valid: false,
+            message: "Username must be less than 50 characters",
+          };
+        }
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+          return {
+            valid: false,
+            message:
+              "Username can only contain letters, numbers, and underscores",
+          };
+        }
+        return { valid: true, message: "" };
+      }
+
+      function validatePassword(password) {
+        if (!password || password.length === 0) {
+          return { valid: false, message: "Password is required" };
+        }
+        if (password.length < 6) {
+          return {
+            valid: false,
+            message: "Password must be at least 6 characters",
+          };
+        }
+        if (password.length > 100) {
+          return {
+            valid: false,
+            message: "Password must be less than 100 characters",
+          };
+        }
+        return { valid: true, message: "" };
+      }
+
+      function showFieldError(field, message) {
+        // Remove existing error
+        const existingError = field.parentNode.querySelector(".field-error");
+        if (existingError) {
+          existingError.remove();
+        }
+
+        // Add error message
+        const errorDiv = document.createElement("div");
+        errorDiv.className =
+          "field-error text-red-300 text-xs mt-1 flex items-center";
+        errorDiv.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i>${message}`;
+        field.parentNode.appendChild(errorDiv);
+
+        // Add error styling to field
+        field.classList.add("border-red-400", "bg-red-500/10");
+        field.classList.remove("border-white/30", "bg-white/10");
+      }
+
+      function clearFieldError(field) {
+        const existingError = field.parentNode.querySelector(".field-error");
+        if (existingError) {
+          existingError.remove();
+        }
+        field.classList.remove("border-red-400", "bg-red-500/10");
+        field.classList.add("border-white/30", "bg-white/10");
+      }
+
+      // Username validation
+      usernameInput.addEventListener("blur", function () {
+        const validation = validateUsername(this.value);
+        if (!validation.valid) {
+          showFieldError(this, validation.message);
+        } else {
+          clearFieldError(this);
+        }
+      });
+
+      usernameInput.addEventListener("input", function () {
+        if (this.classList.contains("border-red-400")) {
+          const validation = validateUsername(this.value);
+          if (validation.valid) {
+            clearFieldError(this);
+          }
+        }
+      });
+
+      // Password validation
+      passwordInput.addEventListener("blur", function () {
+        const validation = validatePassword(this.value);
+        if (!validation.valid) {
+          showFieldError(this, validation.message);
+        } else {
+          clearFieldError(this);
+        }
+      });
+
+      passwordInput.addEventListener("input", function () {
+        if (this.classList.contains("border-red-400")) {
+          const validation = validatePassword(this.value);
+          if (validation.valid) {
+            clearFieldError(this);
+          }
+        }
+      });
+
+      // Form submission validation
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        const usernameValidation = validateUsername(username);
+        const passwordValidation = validatePassword(password);
+
+        let hasErrors = false;
+
+        if (!usernameValidation.valid) {
+          showFieldError(usernameInput, usernameValidation.message);
+          hasErrors = true;
+        } else {
+          clearFieldError(usernameInput);
+        }
+
+        if (!passwordValidation.valid) {
+          showFieldError(passwordInput, passwordValidation.message);
+          hasErrors = true;
+        } else {
+          clearFieldError(passwordInput);
+        }
+
+        if (hasErrors) {
+          // Show general error message
+          const generalError = document.querySelector(".general-error");
+          if (generalError) {
+            generalError.textContent =
+              "Please fix the errors above before submitting.";
+            generalError.classList.remove("hidden");
+          }
+          return;
+        }
+
+        // If all validations pass, submit the form
+        this.submit();
+      });
+
+      // Clear general error when user starts typing
+      [usernameInput, passwordInput].forEach((input) => {
+        input.addEventListener("input", function () {
+          const generalError = document.querySelector(".general-error");
+          if (generalError) {
+            generalError.classList.add("hidden");
+          }
+        });
+      });
+
+      // Add loading state to submit button
+      loginForm.addEventListener("submit", function () {
+        submitButton.disabled = true;
+        submitButton.innerHTML =
+          '<i class="fas fa-spinner fa-spin mr-2"></i>Signing In...';
       });
     </script>
   </body>

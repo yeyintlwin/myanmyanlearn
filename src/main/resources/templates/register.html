@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MYAN MYAN LEARN - Register</title>
+    <!-- Debug: Thymeleaf test -->
+    <meta
+      name="debug"
+      th:content="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -78,7 +83,29 @@
         </p>
       </div>
 
-      <form method="post" action="/email-verification" class="relative z-10">
+      <!-- Flash Messages -->
+      <div
+        th:if="${error}"
+        class="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-200 text-sm"
+      >
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        <span th:text="${error}"></span>
+      </div>
+
+      <div
+        th:if="${success}"
+        class="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-xl text-green-200 text-sm"
+      >
+        <i class="fas fa-check-circle mr-2"></i>
+        <span th:text="${success}"></span>
+      </div>
+
+      <form method="post" action="/register" class="relative z-10">
+        <input
+          type="hidden"
+          th:name="${_csrf.parameterName}"
+          th:value="${_csrf.token}"
+        />
         <!-- Name Fields -->
         <div class="grid grid-cols-2 gap-4 mb-6">
           <div>
@@ -96,6 +123,7 @@
                 type="text"
                 class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
                 placeholder="John"
+                th:value="${firstName ?: ''}"
                 required
               />
               <div
@@ -120,6 +148,7 @@
                 type="text"
                 class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
                 placeholder="Doe"
+                th:value="${lastName ?: ''}"
                 required
               />
               <div
@@ -147,6 +176,7 @@
               type="text"
               class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
               placeholder="johndoe123"
+              th:value="${username ?: ''}"
               required
             />
             <div
@@ -173,6 +203,7 @@
               type="email"
               class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
               placeholder="you@example.com"
+              th:value="${email ?: ''}"
               required
             />
             <div
@@ -214,6 +245,48 @@
               >
                 <i class="fas fa-eye" id="passwordToggle"></i>
               </button>
+            </div>
+            <!-- Password Strength Indicator -->
+            <div id="passwordStrength" class="mt-2 hidden">
+              <div class="flex items-center mb-2">
+                <span class="text-xs text-white/60 mr-2"
+                  >Password Strength:</span
+                >
+                <span id="strengthText" class="text-xs font-medium"></span>
+              </div>
+              <div class="w-full bg-white/10 rounded-full h-2">
+                <div
+                  id="strengthBar"
+                  class="h-2 rounded-full transition-all duration-300"
+                ></div>
+              </div>
+              <div id="strengthRequirements" class="mt-2 text-xs text-white/60">
+                <div id="lengthReq" class="flex items-center mb-1">
+                  <i class="fas fa-check text-green-400 mr-2 hidden"></i>
+                  <i class="fas fa-times text-red-400 mr-2"></i>
+                  <span>At least 8 characters</span>
+                </div>
+                <div id="upperReq" class="flex items-center mb-1">
+                  <i class="fas fa-check text-green-400 mr-2 hidden"></i>
+                  <i class="fas fa-times text-red-400 mr-2"></i>
+                  <span>One uppercase letter</span>
+                </div>
+                <div id="lowerReq" class="flex items-center mb-1">
+                  <i class="fas fa-check text-green-400 mr-2 hidden"></i>
+                  <i class="fas fa-times text-red-400 mr-2"></i>
+                  <span>One lowercase letter</span>
+                </div>
+                <div id="numberReq" class="flex items-center mb-1">
+                  <i class="fas fa-check text-green-400 mr-2 hidden"></i>
+                  <i class="fas fa-times text-red-400 mr-2"></i>
+                  <span>One number</span>
+                </div>
+                <div id="specialReq" class="flex items-center mb-1">
+                  <i class="fas fa-check text-green-400 mr-2 hidden"></i>
+                  <i class="fas fa-times text-red-400 mr-2"></i>
+                  <span>One special character</span>
+                </div>
+              </div>
             </div>
           </div>
           <div>
@@ -363,6 +436,168 @@
           e.preventDefault();
           checkbox.checked = !checkbox.checked;
           checkbox.dispatchEvent(new Event("change"));
+        });
+
+        // Password strength validation
+        const passwordInput = document.getElementById("password");
+        const passwordStrength = document.getElementById("passwordStrength");
+        const strengthText = document.getElementById("strengthText");
+        const strengthBar = document.getElementById("strengthBar");
+
+        passwordInput.addEventListener("input", function () {
+          const password = this.value;
+
+          if (password.length > 0) {
+            passwordStrength.classList.remove("hidden");
+            updatePasswordStrength(password);
+          } else {
+            passwordStrength.classList.add("hidden");
+          }
+        });
+
+        function updatePasswordStrength(password) {
+          const requirements = {
+            length: password.length >= 8,
+            upper: /[A-Z]/.test(password),
+            lower: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+          };
+
+          // Update requirement indicators
+          updateRequirement("lengthReq", requirements.length);
+          updateRequirement("upperReq", requirements.upper);
+          updateRequirement("lowerReq", requirements.lower);
+          updateRequirement("numberReq", requirements.number);
+          updateRequirement("specialReq", requirements.special);
+
+          // Calculate strength score
+          const score = Object.values(requirements).filter(Boolean).length;
+          const strength = getStrengthLevel(score);
+
+          // Update strength text and bar
+          strengthText.textContent = strength.text;
+          strengthText.className = `text-xs font-medium ${strength.color}`;
+          strengthBar.className = `h-2 rounded-full transition-all duration-300 ${strength.bgColor}`;
+          strengthBar.style.width = `${(score / 5) * 100}%`;
+        }
+
+        function updateRequirement(elementId, isValid) {
+          const element = document.getElementById(elementId);
+          const checkIcon = element.querySelector(".fa-check");
+          const timesIcon = element.querySelector(".fa-times");
+
+          if (isValid) {
+            checkIcon.classList.remove("hidden");
+            timesIcon.classList.add("hidden");
+          } else {
+            checkIcon.classList.add("hidden");
+            timesIcon.classList.remove("hidden");
+          }
+        }
+
+        function getStrengthLevel(score) {
+          if (score < 2)
+            return {
+              text: "Very Weak",
+              color: "text-red-400",
+              bgColor: "bg-red-500",
+            };
+          if (score < 3)
+            return {
+              text: "Weak",
+              color: "text-orange-400",
+              bgColor: "bg-orange-500",
+            };
+          if (score < 4)
+            return {
+              text: "Medium",
+              color: "text-yellow-400",
+              bgColor: "bg-yellow-500",
+            };
+          if (score < 5)
+            return {
+              text: "Strong",
+              color: "text-blue-400",
+              bgColor: "bg-blue-500",
+            };
+          return {
+            text: "Very Strong",
+            color: "text-green-400",
+            bgColor: "bg-green-500",
+          };
+        }
+
+        // Password confirmation validation
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+
+        function showFieldError(field, message) {
+          // Remove existing error
+          const existingError = field.parentNode.querySelector(".field-error");
+          if (existingError) {
+            existingError.remove();
+          }
+
+          // Add error message
+          const errorDiv = document.createElement("div");
+          errorDiv.className =
+            "field-error text-red-300 text-xs mt-1 flex items-center";
+          errorDiv.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i>${message}`;
+          field.parentNode.appendChild(errorDiv);
+
+          // Add error styling to field
+          field.classList.add("border-red-400", "bg-red-500/10");
+          field.classList.remove("border-white/30", "bg-white/10");
+        }
+
+        function clearFieldError(field) {
+          const existingError = field.parentNode.querySelector(".field-error");
+          if (existingError) {
+            existingError.remove();
+          }
+          field.classList.remove("border-red-400", "bg-red-500/10");
+          field.classList.add("border-white/30", "bg-white/10");
+        }
+
+        function validatePasswordConfirmation() {
+          const password = passwordInput.value;
+          const confirmPassword = confirmPasswordInput.value;
+
+          if (confirmPassword && password !== confirmPassword) {
+            showFieldError(confirmPasswordInput, "Passwords do not match");
+            return false;
+          } else {
+            clearFieldError(confirmPasswordInput);
+            return true;
+          }
+        }
+
+        // Real-time password confirmation validation
+        confirmPasswordInput.addEventListener("input", function () {
+          validatePasswordConfirmation();
+        });
+
+        passwordInput.addEventListener("input", function () {
+          if (confirmPasswordInput.value) {
+            validatePasswordConfirmation();
+          }
+        });
+
+        // Form submission validation
+        document.querySelector("form").addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const password = passwordInput.value;
+          const confirmPassword = confirmPasswordInput.value;
+
+          // Validate password confirmation
+          if (password !== confirmPassword) {
+            showFieldError(confirmPasswordInput, "Passwords do not match");
+            return;
+          }
+
+          // If validation passes, submit the form
+          this.submit();
         });
       });
     </script>
