@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MYAN MYAN LEARN - Link Expired</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center p-6"
+  >
+    <!-- Card -->
+    <div
+      class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl mt-4 relative overflow-hidden"
+    >
+      <div class="relative z-10 text-center">
+        <div
+          class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+        >
+          <i class="fas fa-link-slash text-white text-xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-white mb-2">Link expired</h1>
+        <p class="text-sm text-white/80 max-w-sm mx-auto">
+          The password reset link is invalid or has expired. Please request a
+          new password reset link.
+        </p>
+
+        <!-- Actions -->
+        <div class="mt-8 flex flex-col gap-3">
+          <a
+            href="/forget-password"
+            class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20 text-center no-underline"
+          >
+            <i class="fas fa-paper-plane mr-2"></i>
+            Request new link
+          </a>
+
+          <a
+            href="/login"
+            class="w-full bg-transparent text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-white/50 text-center no-underline"
+          >
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            Back to Sign In
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
