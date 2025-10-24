@@ -56,7 +56,7 @@ public class SecurityConfig {
                                                 "/reset-link-expired",
                                                 "/reset-success",
                                                 "/verification-success",
-                                                "/splash",
+                                                "/splash", "/language", "/intro",
                                                 "/images/**", "/css/**", "/js/**",
                                                 "/webjars/**")
                                 .permitAll()
