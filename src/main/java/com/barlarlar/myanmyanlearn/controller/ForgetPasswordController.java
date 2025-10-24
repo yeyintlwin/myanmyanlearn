@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
+import com.barlarlar.myanmyanlearn.repository.PasswordResetTokenRepository;
 import com.barlarlar.myanmyanlearn.service.EmailService;
 import com.barlarlar.myanmyanlearn.service.JwtService;
 import com.barlarlar.myanmyanlearn.entity.Member;
+import com.barlarlar.myanmyanlearn.entity.PasswordResetToken;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +22,9 @@ public class ForgetPasswordController {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Autowired
     private EmailService emailService;
@@ -39,29 +45,71 @@ public class ForgetPasswordController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
+        System.out.println("=== Forget Password Request ===");
+        System.out.println("Email: " + email);
+
         boolean exists = memberRepository.existsByEmail(email);
+        System.out.println("Email exists: " + exists);
+
         if (!exists) {
+            System.out.println("Email not found, returning to form");
             model.addAttribute("error", "Email not found. Please check and try again.");
             model.addAttribute("email", email);
             return "forget-password";
         }
 
-        // Generate JWT reset token (self-contained)
-        String token = jwtService.generatePasswordResetToken(email);
+        try {
+            // Generate JWT reset token
+            System.out.println("Generating JWT token...");
+            String token = jwtService.generatePasswordResetToken(email);
+            System.out.println("Token generated: " + token.substring(0, 20) + "...");
 
-        // Build reset link with JWT
-        String resetLink = "/reset-password?token="
-                + java.net.URLEncoder.encode(token, java.nio.charset.StandardCharsets.UTF_8);
+            // Store token in database with 1 hour expiry
+            Instant expireTime = Instant.now().plusSeconds(3600); // 1 hour
+            System.out.println("Creating PasswordResetToken...");
+            PasswordResetToken resetToken = new PasswordResetToken(token, email, expireTime);
+            passwordResetTokenRepository.save(resetToken);
+            System.out.println("Token saved to database");
 
-        // Send email
-        emailService.sendPasswordResetEmail(email, resetLink);
+            // Build reset link with JWT
+            String resetLink = "/reset-password?token="
+                    + java.net.URLEncoder.encode(token, java.nio.charset.StandardCharsets.UTF_8);
+            System.out.println("Reset link: " + resetLink);
 
-        return "redirect:/reset-link-sent";
+            // Send email
+            System.out.println("Sending email...");
+            emailService.sendPasswordResetEmail(email, resetLink);
+            System.out.println("Email sent successfully");
+
+            System.out.println("Redirecting to reset-link-sent");
+            return "redirect:/reset-link-sent";
+        } catch (Exception e) {
+            System.err.println("Error in forget password: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("error", "An error occurred. Please try again.");
+            model.addAttribute("email", email);
+            return "forget-password";
+        }
     }
 
     @GetMapping("/reset-password")
     public String showResetPasswordPage(@RequestParam("token") String token, Model model) {
-        // With JWT, verify signature/expiry and extract email
+        // Check if token exists in database
+        var tokenOpt = passwordResetTokenRepository.findByToken(token);
+        if (tokenOpt.isEmpty()) {
+            return "reset-link-expired";
+        }
+
+        PasswordResetToken resetToken = tokenOpt.get();
+
+        // Check if token has expired
+        if (resetToken.getExpireTime().isBefore(Instant.now())) {
+            // Delete expired token
+            passwordResetTokenRepository.delete(resetToken);
+            return "reset-link-expired";
+        }
+
+        // Verify JWT signature and extract email
         String emailFromToken;
         try {
             emailFromToken = jwtService.parsePasswordResetEmail(token);
@@ -71,6 +119,7 @@ public class ForgetPasswordController {
         if (emailFromToken == null) {
             return "reset-link-expired";
         }
+
         model.addAttribute("token", token);
         return "reset-password";
     }
@@ -78,9 +127,24 @@ public class ForgetPasswordController {
     @PostMapping("/reset-password")
     public String handleResetPassword(@RequestParam("token") String token,
             @RequestParam("password") String newPassword,
-            Model model,
             RedirectAttributes redirectAttributes) {
 
+        // Check if token exists in database
+        var tokenOpt = passwordResetTokenRepository.findByToken(token);
+        if (tokenOpt.isEmpty()) {
+            return "reset-link-expired";
+        }
+
+        PasswordResetToken resetToken = tokenOpt.get();
+
+        // Check if token has expired
+        if (resetToken.getExpireTime().isBefore(Instant.now())) {
+            // Delete expired token
+            passwordResetTokenRepository.delete(resetToken);
+            return "reset-link-expired";
+        }
+
+        // Verify JWT signature and extract email
         String emailFromToken;
         try {
             emailFromToken = jwtService.parsePasswordResetEmail(token);
@@ -102,11 +166,19 @@ public class ForgetPasswordController {
         member.setPassword(hashed);
         memberRepository.save(member);
 
+        // Delete the token from database after successful password reset
+        passwordResetTokenRepository.delete(resetToken);
+
         return "redirect:/reset-success";
     }
 
     @GetMapping("/reset-link-sent")
     public String showResetLinkSentPage() {
         return "reset-link-sent";
+    }
+
+    @GetMapping("/reset-success")
+    public String showResetSuccessPage() {
+        return "reset-success";
     }
 }

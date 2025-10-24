@@ -23,11 +23,20 @@ public class PasswordResetToken {
     @Column(nullable = false, length = 255)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 128)
+    @Column(nullable = false, unique = true, length = 500)
     private String token;
 
     @Column(name = "expire_time", nullable = false)
     private Instant expireTime;
+
+    public PasswordResetToken() {
+    }
+
+    public PasswordResetToken(String token, String email, Instant expireTime) {
+        this.token = token;
+        this.email = email;
+        this.expireTime = expireTime;
+    }
 
     public Long getId() {
         return id;

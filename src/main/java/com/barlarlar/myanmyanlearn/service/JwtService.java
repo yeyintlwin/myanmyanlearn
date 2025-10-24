@@ -23,7 +23,7 @@ public class JwtService {
     public JwtService(
             @Value("${app.jwt.reset.secret}") String resetSecret,
             @Value("${app.jwt.reset.expiry-minutes}") long resetExpiryMinutes) {
-        // Use raw bytes; if you want base64, switch to Decoders.BASE64.decode
+        // Use raw bytes for JWT key
         this.resetSecretKey = Keys.hmacShaKeyFor(resetSecret.getBytes(StandardCharsets.UTF_8));
         this.resetExpiryMillis = resetExpiryMinutes * 60_000L;
     }
