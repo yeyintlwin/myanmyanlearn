@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Reset Link Sent</title>
+    <title th:text="#{resetSent.title}">MYAN MYAN LEARN - Reset Link Sent</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -32,11 +32,8 @@
         >
           <i class="fas fa-envelope-circle-check text-white text-xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2">Check your email</h1>
-        <p class="text-sm text-white/80 max-w-sm mx-auto">
-          If an account exists for the email you entered, we've sent a password
-          reset link. The link will expire in 60 minutes.
-        </p>
+        <h1 class="text-3xl font-bold text-white mb-2" th:text="#{resetSent.header}">Check your email</h1>
+        <p class="text-sm text-white/80 max-w-sm mx-auto" th:text="#{resetSent.message}">If an account exists for the email you entered, we've sent a password reset link. The link will expire in 60 minutes.</p>
 
         <!-- Actions -->
         <div class="mt-8 flex flex-col gap-3">
@@ -45,7 +42,7 @@
             class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20 text-center no-underline"
           >
             <i class="fas fa-sign-in-alt mr-2"></i>
-            Back to Sign In
+            <span th:text="#{resetSent.backToSignIn}">Back to Sign In</span>
           </a>
 
           <a
@@ -53,7 +50,7 @@
             class="w-full bg-transparent text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-white/50 text-center no-underline"
           >
             <i class="fas fa-paper-plane mr-2"></i>
-            Send again
+            <span th:text="#{resetSent.sendAgain}">Send again</span>
           </a>
         </div>
       </div>

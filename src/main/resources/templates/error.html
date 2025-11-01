@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Page Not Found - Myan Myan Learn</title>
+    <title th:text="#{error.title}">Page Not Found - Myan Myan Learn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -42,11 +42,7 @@
               >
                 Myan Myan Learn
               </div>
-              <div
-                class="text-white/70 text-xs font-medium tracking-wider uppercase"
-              >
-                Learning Platform
-              </div>
+              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
             </div>
           </div>
         </div>
@@ -58,8 +54,8 @@
       <!-- Error Code -->
       <div class="mb-8">
         <h1 class="text-6xl font-black text-white mb-4 brand-font">404</h1>
-        <h2 class="text-2xl font-bold text-white mb-4">Page Not Found</h2>
-        <p class="text-white/80">The page you're looking for doesn't exist.</p>
+        <h2 class="text-2xl font-bold text-white mb-4" th:text="#{error.header}">Page Not Found</h2>
+        <p class="text-white/80" th:text="#{error.message}">The page you're looking for doesn't exist.</p>
       </div>
 
       <!-- Action Button -->
@@ -68,7 +64,7 @@
           href="/"
           class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-xl px-6 py-3 font-bold transition-all duration-300 hover:bg-white/30 hover:border-white/50"
         >
-          Go Home
+          <span th:text="#{error.goHome}">Go Home</span>
         </a>
       </div>
     </div>

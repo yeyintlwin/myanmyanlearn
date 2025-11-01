@@ -57,6 +57,8 @@ public class SecurityConfig {
                                                 "/reset-success",
                                                 "/verification-success",
                                                 "/splash", "/language", "/intro",
+                                                "/contents", "/contents/**",
+                                                "/error",
                                                 "/images/**", "/css/**", "/js/**",
                                                 "/webjars/**")
                                 .permitAll()

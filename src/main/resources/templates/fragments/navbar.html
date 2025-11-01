@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <!-- Reusable Navbar Fragment (full Home navbar) -->
+    <nav th:fragment="appNavbar(subtitle)"
+         class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-18">
+          <!-- Brand Section -->
+          <a th:href="@{/}" class="flex items-center gap-2 group cursor-pointer no-underline">
+            <div class="relative">
+              <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+              <div class="relative p-2 group-hover:scale-105 transition-all duration-300">
+                <img th:src="@{/images/logo.svg}" alt="Myan Myan Learn" class="w-12 h-12 drop-shadow-lg" />
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div class="text-white font-bold text-xl brand-font tracking-wide">Myan Myan Learn</div>
+              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
+            </div>
+          </a>
+          <div class="flex items-center gap-4">
+            <!-- User Profile (structure only) -->
+            <div class="relative flex items-center gap-3 h-12 px-3 py-2 rounded-xl cursor-pointer transition-all duration-300 text-white font-medium text-sm hover:bg-white/15 hover:scale-105 hover:shadow-xl border border-white/10 group"
+                 id="profileMenu">
+              <div class="relative flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
+                  <span th:text="${userInitials ?: 'U'}">U</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-semibold" th:text="${userFullName ?: username ?: 'User'}"></span>
+                  <span class="text-xs opacity-70" th:text="#{nav.member}">Member</span>
+                </div>
+                <i class="fas fa-chevron-down text-xs opacity-60 transition-transform duration-200"></i>
+              </div>
+              <div class="absolute top-full right-0 mt-2 shadow-2xl min-w-[280px] overflow-visible opacity-0 invisible transform -translate-y-2 transition-all duration-300 z-[1001]"
+                   id="profileDropdown">
+                <div class="rounded-xl border border-gray-200 bg-white">
+                  <div class="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-4 rounded-t-xl overflow-hidden">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                      <span th:text="${userInitials ?: 'U'}">U</span>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-sm" th:text="${userFullName ?: username}"></h3>
+                      <p class="text-xs opacity-80" th:text="${userEmail ?: 'user@example.com'}"></p>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="py-2">
+                  <a href="/profile" class="flex items-center gap-3 px-4 py-2 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-slate-50 hover:text-slate-800 group">
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><i class="fas fa-user text-blue-600 text-sm"></i></div>
+                    <div class="flex-1"><div class="font-medium text-sm" th:text="#{nav.profile}">My Profile</div></div>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                  </a>
+                  <!-- Languages submenu (hover to open) -->
+                  <div class="relative group mt-1">
+                    <div class="flex items-center gap-3 px-4 py-2 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-slate-50 hover:text-slate-800 cursor-default"
+                         id="languagesItem">
+                      <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                        <i class="fas fa-globe text-emerald-600 text-sm"></i>
+                      </div>
+                      <div class="flex-1">
+                        <div class="font-medium text-sm" th:text="#{nav.languages}">Languages</div>
+                        <div class="text-xs text-gray-500" th:text="#{nav.chooseLanguage}">Choose language</div>
+                      </div>
+                      <span id="currentLanguageSmall" class="text-xs text-gray-500 mr-2">EN</span>
+                      <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                    </div>
+                    <!-- Submenu panel -->
+                    <div id="languageSubmenu"
+                         class="absolute top-0 right-full mr-2 bg-white rounded-xl shadow-2xl min-w-[240px] overflow-hidden opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-[1002] border border-gray-200">
+                      <div class="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-3">
+                        <div class="flex items-center gap-2">
+                          <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                            <i class="fas fa-globe text-white text-sm"></i>
+                          </div>
+                          <div>
+                            <h3 class="font-semibold text-sm" th:text="#{nav.languages}">Languages</h3>
+                            <p class="text-xs opacity-80" th:text="#{nav.chooseLanguage}">Choose language</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="py-1 max-h-60 overflow-y-auto">
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="en">
+                          <div class="w-6 h-6 rounded-md bg-blue-50 flex items-center justify-center text-sm"><span class="text-sm">🇺🇸</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">English</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="my">
+                          <div class="w-6 h-6 rounded-md bg-green-50 flex items-center justify-center text-sm"><span class="text-sm">🇲🇲</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">မြန်မာ</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="zh">
+                          <div class="w-6 h-6 rounded-md bg-red-50 flex items-center justify-center text-sm"><span class="text-sm">🇨🇳</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">中文</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="ne">
+                          <div class="w-6 h-6 rounded-md bg-orange-50 flex items-center justify-center text-sm"><span class="text-sm">🇳🇵</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">नेपाली</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="vi">
+                          <div class="w-6 h-6 rounded-md bg-yellow-50 flex items-center justify-center text-sm"><span class="text-sm">🇻🇳</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">Tiếng Việt</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="uz">
+                          <div class="w-6 h-6 rounded-md bg-teal-50 flex items-center justify-center text-sm"><span class="text-sm">🇺🇿</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">O'zbek</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="si">
+                          <div class="w-6 h-6 rounded-md bg-purple-50 flex items-center justify-center text-sm"><span class="text-sm">🇱🇰</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">සිංහල</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="hi">
+                          <div class="w-6 h-6 rounded-md bg-indigo-50 flex items-center justify-center text-sm"><span class="text-sm">🇮🇳</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">हिन्दी</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="ja">
+                          <div class="w-6 h-6 rounded-md bg-pink-50 flex items-center justify-center text-sm"><span class="text-sm">🇯🇵</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">日本語</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item" data-lang="bn">
+                          <div class="w-6 h-6 rounded-md bg-green-50 flex items-center justify-center text-sm"><span class="text-sm">🇧🇩</span></div>
+                          <div class="flex-1"><div class="font-medium text-sm">বাংলা</div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="h-px bg-gray-200 my-2"></div>
+                  <!-- Study in my language toggle -->
+                  <div class="px-4 py-2">
+                    <div class="flex items-center justify-between gap-4">
+                      <div class="min-w-0">
+                        <div class="font-medium text-sm text-gray-700 truncate" th:text="#{nav.studyInMyLanguage}">Study in my language</div>
+                        <div class="text-xs text-gray-500 truncate" th:text="#{nav.translateHint}">Translate content where available</div>
+                      </div>
+                      <button id="studyLangToggle" type="button" role="switch" aria-checked="false"
+                              class="relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30">
+                        <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="h-px bg-gray-200 my-2"></div>
+                  <form th:action="@{/logout}" method="POST" class="w-full">
+                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-red-600 no-underline transition-all duration-200 text-sm hover:bg-red-50 hover:text-red-700 group text-left">
+                      <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center"><i class="fas fa-sign-out-alt text-red-600 text-sm"></i></div>
+                      <div class="flex-1 text-left"><div class="font-medium text-sm" th:text="#{nav.logout}">Logout</div></div>
+                      <i class="fas fa-chevron-right text-xs text-red-400"></i>
+                    </button>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </body>
+</html>

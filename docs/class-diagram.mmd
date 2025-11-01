@@ -1,0 +1,74 @@
+%% Mermaid Class Diagram for MyanMyanLearn
+classDiagram
+  direction LR
+
+  %% Models / Entities
+  class Course {
+    +String id
+    +String title
+    +String description
+    +String logo
+    +List<Content> contents
+  }
+
+  class Content {
+    +int order
+    +String chapter
+    +String title
+    +List<Subcontent> subcontents
+  }
+
+  class Subcontent {
+    +int order
+    +String title
+    +String markdownPath
+  }
+
+  class Member {
+    +String userId
+    +Boolean active
+    +String email
+    +Boolean emailVerified
+    +String firstName
+    +String lastName
+    +String otpCode
+    +LocalDateTime otpExpiresAt
+    +String pw
+    +String profileImage
+  }
+
+  %% Repository
+  class MemberRepository {
+  }
+  <<interface>> MemberRepository
+
+  %% Service
+  class CourseService {
+    +List<Course> getAllCourses()
+    +Course findById(id)
+    +Course findByTitle(title)
+  }
+
+  %% Controllers
+  class HomeController {
+    +String homePage(Model)
+  }
+
+  class ContentsController {
+    +String contents(Model, String courseId, String selected, String title)
+  }
+
+  %% Application (optional)
+  class MyanmyanlearnApplication {
+    +static void main(String[])
+  }
+
+  %% Relationships
+  Course "1" --> "0..*" Content : contents
+  Content "1" --> "0..*" Subcontent : subcontents
+
+  MemberRepository --> Member : manages
+  HomeController --> CourseService : uses
+  HomeController --> MemberRepository : uses
+  ContentsController --> CourseService : uses
+  CourseService --> Course : loads

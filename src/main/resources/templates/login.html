@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Login</title>
+    <title th:text="#{login.title}">MYAN MYAN LEARN - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -73,11 +73,7 @@
               >
                 Myan Myan Learn
               </div>
-              <div
-                class="text-white/70 text-xs font-medium tracking-wider uppercase"
-              >
-                Learning Platform
-              </div>
+              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
             </div>
           </div>
         </div>
@@ -103,10 +99,8 @@
         >
           <i class="fas fa-user text-white text-xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-        <p class="text-sm text-white/80">
-          Sign in to continue your learning journey
-        </p>
+        <h1 class="text-3xl font-bold text-white mb-2" th:text="#{login.welcomeBack}">Welcome Back</h1>
+        <p class="text-sm text-white/80" th:text="#{login.signInPrompt}">Sign in to continue your learning journey</p>
       </div>
 
       <form
@@ -122,12 +116,7 @@
         >
           <div class="flex items-center">
             <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
-            <div
-              class="text-red-200 text-sm font-medium"
-              th:text="${errorMessage ?: 'Invalid username or password. Please try again.'}"
-            >
-              Invalid username or password. Please try again.
-            </div>
+            <div class="text-red-200 text-sm font-medium" th:text="${errorMessage ?: #{login.errorInvalid}}">Invalid username or password. Please try again.</div>
           </div>
         </div>
 
@@ -138,10 +127,7 @@
         >
           <div class="flex items-center">
             <i class="fas fa-lock text-orange-400 mr-3"></i>
-            <div class="text-orange-200 text-sm font-medium">
-              Your account has been locked. Please contact support for
-              assistance.
-            </div>
+            <div class="text-orange-200 text-sm font-medium" th:text="#{login.locked}">Your account has been locked. Please contact support for assistance.</div>
           </div>
         </div>
 
@@ -152,10 +138,7 @@
         >
           <div class="flex items-center">
             <i class="fas fa-user-slash text-yellow-400 mr-3"></i>
-            <div class="text-yellow-200 text-sm font-medium">
-              Your account has been disabled. Please contact support for
-              assistance.
-            </div>
+            <div class="text-yellow-200 text-sm font-medium" th:text="#{login.disabled}">Your account has been disabled. Please contact support for assistance.</div>
           </div>
         </div>
 
@@ -166,10 +149,7 @@
         >
           <div class="flex items-center">
             <i class="fas fa-clock text-purple-400 mr-3"></i>
-            <div class="text-purple-200 text-sm font-medium">
-              Your account or password has expired. Please contact support or
-              reset your password.
-            </div>
+            <div class="text-purple-200 text-sm font-medium" th:text="#{login.expired}">Your account or password has expired. Please contact support or reset your password.</div>
           </div>
         </div>
 
@@ -179,9 +159,7 @@
         >
           <div class="flex items-center">
             <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
-            <div class="text-red-200 text-sm font-medium">
-              Please fix the errors above before submitting.
-            </div>
+            <div class="text-red-200 text-sm font-medium" th:text="#{login.generalError}">Please fix the errors above before submitting.</div>
           </div>
         </div>
 
@@ -192,9 +170,7 @@
         >
           <div class="flex items-center">
             <i class="fas fa-check-circle text-green-400 mr-3"></i>
-            <div class="text-green-200 text-sm font-medium">
-              You have been successfully logged out.
-            </div>
+            <div class="text-green-200 text-sm font-medium" th:text="#{login.logoutSuccess}">You have been successfully logged out.</div>
           </div>
         </div>
 
@@ -205,7 +181,7 @@
             class="block text-sm font-semibold text-white mb-3"
           >
             <i class="fas fa-user text-white/80 mr-2"></i>
-            Username
+            <span th:text="#{login.username}">Username</span>
           </label>
           <div class="relative">
             <input
@@ -213,6 +189,7 @@
               name="username"
               type="text"
               class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50 autofill:bg-white/10 autofill:text-white"
+              th:placeholder="#{login.usernamePlaceholder}"
               placeholder="Enter your username"
               required
             />
@@ -231,7 +208,7 @@
             class="block text-sm font-semibold text-white mb-3"
           >
             <i class="fas fa-lock text-white/80 mr-2"></i>
-            Password
+            <span th:text="#{login.password}">Password</span>
           </label>
           <div class="relative">
             <input
@@ -239,6 +216,7 @@
               name="password"
               type="password"
               class="w-full px-4 py-4 pl-12 pr-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50 autofill:bg-white/10 autofill:text-white"
+              th:placeholder="#{login.passwordPlaceholder}"
               placeholder="Enter your password"
               required
             />
@@ -278,15 +256,12 @@
                 </svg>
               </div>
             </div>
-            <span
-              class="ml-3 text-sm text-white/80 group-hover:text-white transition-colors duration-200"
-              >Remember me</span
-            >
+            <span class="ml-3 text-sm text-white/80 group-hover:text-white transition-colors duration-200" th:text="#{login.rememberMe}">Remember me</span>
           </label>
           <a
             href="/forget-password"
             class="text-white/80 text-sm font-medium hover:text-white hover:underline transition-colors duration-200"
-            >Forgot password?</a
+            th:text="#{login.forgotPassword}">Forgot password?</a
           >
         </div>
 
@@ -297,16 +272,14 @@
             class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20"
           >
             <i class="fas fa-sign-in-alt mr-2"></i>
-            Sign In
+            <span th:text="#{login.signIn}">Sign In</span>
           </button>
         </div>
 
         <!-- Divider -->
         <div class="relative mb-6">
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-transparent text-white/60"
-              >New to Myan Myan Learn?</span
-            >
+            <span class="px-4 bg-transparent text-white/60" th:text="#{login.newHere}">New to Myan Myan Learn?</span>
           </div>
         </div>
 
@@ -317,7 +290,7 @@
             class="inline-flex items-center justify-center w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/20 hover:border-white/50"
           >
             <i class="fas fa-user-plus mr-2"></i>
-            Create Account
+            <span th:text="#{login.createAccount}">Create Account</span>
           </a>
         </div>
       </form>
@@ -514,11 +487,9 @@
         }
 
         if (hasErrors) {
-          // Show general error message
+          // Show general error message (text is already localized in the template)
           const generalError = document.querySelector(".general-error");
           if (generalError) {
-            generalError.textContent =
-              "Please fix the errors above before submitting.";
             generalError.classList.remove("hidden");
           }
           return;

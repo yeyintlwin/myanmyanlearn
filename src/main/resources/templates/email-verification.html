@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Email Verification</title>
+    <title th:text="#{emailVerify.title}">MYAN MYAN LEARN - Email Verification</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -42,11 +42,7 @@
               >
                 Myan Myan Learn
               </div>
-              <div
-                class="text-white/70 text-xs font-medium tracking-wider uppercase"
-              >
-                Learning Platform
-              </div>
+              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
             </div>
           </div>
         </div>
@@ -72,10 +68,8 @@
         >
           <i class="fas fa-envelope text-white text-xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2">Verify Your Email</h1>
-        <p class="text-sm text-white/80">
-          We've sent a 6-digit verification code to your email address
-        </p>
+        <h1 class="text-3xl font-bold text-white mb-2" th:text="#{emailVerify.header}">Verify Your Email</h1>
+        <p class="text-sm text-white/80" th:text="#{emailVerify.subtitle}">We've sent a 6-digit verification code to your email address</p>
       </div>
 
       <!-- Email Display -->
@@ -85,9 +79,7 @@
         >
           <div class="flex items-center justify-center gap-2 mb-2">
             <i class="fas fa-envelope text-white/80"></i>
-            <span class="text-sm font-semibold text-white/80"
-              >Email Sent To:</span
-            >
+            <span class="text-sm font-semibold text-white/80" th:text="#{emailVerify.emailSentTo}">Email Sent To:</span>
           </div>
           <div
             class="text-lg font-bold text-white"
@@ -107,8 +99,7 @@
         <span th:text="${error}"></span>
         <div class="mt-2 text-xs text-red-300">
           <i class="fas fa-info-circle mr-1"></i>
-          Please check your email for the correct code or click "Resend Code" to
-          get a new one.
+          <span th:text="#{emailVerify.errorHint}">Please check your email for the correct code or click "Resend Code" to get a new one.</span>
         </div>
       </div>
 
@@ -126,11 +117,10 @@
         class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-xl text-yellow-200 text-sm"
       >
         <i class="fas fa-exclamation-triangle mr-2"></i>
-        <span class="font-semibold">Email Verification Required</span>
+        <span class="font-semibold" th:text="#{emailVerify.requiredTitle}">Email Verification Required</span>
         <div class="mt-2 text-xs text-yellow-300">
           <i class="fas fa-info-circle mr-1"></i>
-          You must verify your email address before you can log in. Please enter
-          the verification code sent to your email.
+          <span th:text="#{emailVerify.requiredMsg}">You must verify your email address before you can log in. Please enter the verification code sent to your email.</span>
         </div>
       </div>
 
@@ -155,7 +145,7 @@
             class="block text-sm font-semibold text-white mb-4 text-center"
           >
             <i class="fas fa-key text-white/80 mr-2"></i>
-            Enter Verification Code
+            <span th:text="#{emailVerify.enterCode}">Enter Verification Code</span>
           </label>
           <div class="flex justify-center gap-3">
             <input
@@ -206,18 +196,19 @@
             disabled
           >
             <i class="fas fa-check mr-2"></i>
-            Verify Email
+            <span th:text="#{emailVerify.verify}">Verify Email</span>
           </button>
         </div>
 
         <!-- Resend Section -->
         <div class="text-center">
           <p class="text-sm text-white/80 mb-3">
-            Didn't receive the code?
+            <span th:text="#{emailVerify.didntReceive}">Didn't receive the code?</span>
             <a
               href="#"
               class="text-white/80 font-semibold hover:text-white hover:underline transition-colors duration-200"
               id="resendLink"
+              th:text="#{emailVerify.resend}"
               >Resend Code</a
             >
           </p>
@@ -226,15 +217,16 @@
           >
             <i class="fas fa-clock text-white/80 text-sm"></i>
             <span class="text-xs text-white/80">
-              Resend available in
-              <span id="timer" class="font-bold text-white">30</span> seconds
+              <span th:text="#{emailVerify.resendAvailable}">Resend available in</span>
+              <span id="timer" class="font-bold text-white">30</span>
+              <span th:text="#{emailVerify.seconds}">seconds</span>
             </span>
           </div>
         </div>
       </form>
     </div>
 
-    <script>
+    <script th:inline="javascript">
       const otpInputs = document.querySelectorAll(".otp-input");
       const verifyBtn = document.getElementById("verifyBtn");
       const resendLink = document.getElementById("resendLink");
@@ -286,6 +278,9 @@
 
       // Resend code functionality
       let resendTimer = 30;
+      const RESEND_LABEL = /*[[#{emailVerify.resend}]]*/ 'Resend Code';
+      const ALERT_NO_EMAIL = /*[[#{emailVerify.alertNoEmail}]]*/ 'Email not found. Please try registering again.';
+
       resendLink.addEventListener("click", function (e) {
         e.preventDefault();
 
@@ -325,17 +320,17 @@
           document.body.appendChild(form);
           form.submit();
         } else {
-          alert("Email not found. Please try registering again.");
+          alert(ALERT_NO_EMAIL);
         }
       });
 
       function updateResendTimer() {
         if (resendTimer > 0) {
-          resendLink.textContent = `Resend Code (${resendTimer}s)`;
+          resendLink.textContent = `${RESEND_LABEL} (${resendTimer}s)`;
           resendTimer--;
           setTimeout(updateResendTimer, 1000);
         } else {
-          resendLink.textContent = "Resend Code";
+          resendLink.textContent = RESEND_LABEL;
         }
       }
 

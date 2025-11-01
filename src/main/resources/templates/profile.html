@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MYAN MYAN LEARN - Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .show {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans text-gray-800 flex flex-col"
+  >
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-18">
+          <!-- Brand Section -->
+          <div class="flex items-center gap-2 group cursor-pointer" onclick="window.location.href='/home'">
+            <div class="relative">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+              ></div>
+              <div
+                class="relative p-2 group-hover:scale-105 transition-all duration-300"
+              >
+                <img
+                  th:src="@{/images/logo.svg}"
+                  alt="Myan Myan Learn"
+                  class="w-12 h-12 drop-shadow-lg"
+                />
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div
+                class="text-white font-bold text-xl brand-font tracking-wide"
+              >
+                Myan Myan Learn
+              </div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+              >
+                Learning Platform
+              </div>
+            </div>
+          </div>
+
+          <!-- Back Button -->
+          <div class="flex items-center gap-4">
+            <a
+              href="/home"
+              class="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-xl text-white font-medium text-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 hover:shadow-xl border border-white/20"
+            >
+              <i class="fas fa-arrow-left text-sm"></i>
+              <span>Back to Home</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 pt-24 pb-8">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Profile Header -->
+        <div class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 mb-8">
+          <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+            <!-- Profile Picture -->
+            <div class="relative">
+              <div
+                class="w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-4xl shadow-2xl"
+              >
+                <span th:text="${userInitials ?: 'U'}">U</span>
+              </div>
+            </div>
+
+            <!-- Profile Info -->
+            <div class="flex-1 text-center md:text-left">
+              <h1 
+                class="text-3xl font-bold text-white mb-2"
+                th:text="${userFullName ?: username ?: 'User'}"
+              ></h1>
+              <p 
+                class="text-white/80 text-lg mb-4"
+                th:text="${userEmail ?: 'user@example.com'}"
+              ></p>
+              
+              <!-- Status Badges -->
+              <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                <span 
+                  class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium border border-blue-500/30"
+                  th:classappend="${userEmailVerified ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'}"
+                >
+                  <i class="fas fa-envelope mr-1" th:classappend="${userEmailVerified ? 'fa-check' : 'fa-exclamation'}""></i>
+                  <span th:text="${userEmailVerified ? 'Email Verified' : 'Email Pending'}""></span>
+                </span>
+                <span 
+                  class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-medium border border-purple-500/30"
+                  th:classappend="${userActive ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-red-500/20 text-red-300 border-red-500/30'}"
+                >
+                  <i class="fas fa-user mr-1" th:classappend="${userActive ? 'fa-check' : 'fa-times'}""></i>
+                  <span th:text="${userActive ? 'Active' : 'Inactive'}""></span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Edit Profile Button -->
+            <div class="flex flex-col gap-3">
+              <button class="px-6 py-3 bg-white/20 backdrop-blur-md rounded-xl text-white font-medium transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-xl border border-white/30">
+                <i class="fas fa-edit mr-2"></i>
+                Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Personal Information -->
+          <div class="lg:col-span-2">
+            <div class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6 mb-8">
+              <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-user-circle mr-3 text-blue-400"></i>
+                Personal Information
+              </h2>
+              
+              <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div class="flex-1">
+                    <label class="block text-white/80 text-sm font-medium mb-2">First Name</label>
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20">
+                          <span th:text="${userFirstName ?: 'Not provided'}" data-first-name="${userFirstName ?: ''}">Not provided</span>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <label class="block text-white/80 text-sm font-medium mb-2">Last Name</label>
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20">
+                          <span th:text="${userLastName ?: 'Not provided'}" data-last-name="${userLastName ?: ''}">Not provided</span>
+                        </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-white/80 text-sm font-medium mb-2">Email Address</label>
+                      <div class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 flex items-center gap-3">
+                        <i class="fas fa-envelope text-blue-400"></i>
+                        <span th:text="${userEmail ?: 'Not provided'}" data-email="${userEmail ?: ''}">Not provided</span>
+                        <span 
+                          class="ml-auto px-2 py-1 rounded-full text-xs font-medium"
+                          th:classappend="${userEmailVerified ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'}"
+                        >
+                          <i class="fas fa-check mr-1" th:classappend="${userEmailVerified ? '' : 'fa-exclamation'}""></i>
+                          <span th:text="${userEmailVerified ? 'Verified' : 'Pending'}""></span>
+                        </span>
+                      </div>
+                </div>
+
+                <div>
+                  <label class="block text-white/80 text-sm font-medium mb-2">Username</label>
+                  <div class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 flex items-center gap-3">
+                    <i class="fas fa-at text-purple-400"></i>
+                    <span th:text="${username ?: 'Not provided'}">Not provided</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Sidebar -->
+          <div class="space-y-6">
+            <!-- Account Status -->
+            <div class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6">
+              <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                <i class="fas fa-info-circle mr-2 text-blue-400"></i>
+                Account Status
+              </h3>
+              
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-white/80 text-sm">Account Type</span>
+                  <span class="px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white text-xs font-medium">
+                    Standard
+                  </span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <span class="text-white/80 text-sm">Member Since</span>
+                  <span class="text-white text-sm">Jan 2024</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <span class="text-white/80 text-sm">Last Login</span>
+                  <span class="text-white text-sm">Today</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <span class="text-white/80 text-sm">Email Status</span>
+                  <span 
+                    class="px-2 py-1 rounded-full text-xs font-medium"
+                    th:classappend="${userEmailVerified ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'}"
+                  >
+                    <i class="fas fa-check mr-1" th:classappend="${userEmailVerified ? '' : 'fa-exclamation'}""></i>
+                    <span th:text="${userEmailVerified ? 'Verified' : 'Pending'}""></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+            <!-- Change Name Section -->
+            <div class="mt-8 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-white flex items-center">
+                  <i class="fas fa-user-edit mr-3 text-blue-400"></i>
+                  Change Name
+                </h3>
+                <button 
+                  id="toggleNameForm"
+                  class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  <i class="fas fa-edit mr-2"></i>
+                  Edit Name
+                </button>
+              </div>
+              
+              <form id="changeNameForm" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div class="flex-1">
+                    <label for="newFirstName" class="block text-white/80 text-sm font-medium mb-2">First Name</label>
+                    <input 
+                      type="text" 
+                      id="newFirstName" 
+                      name="newFirstName"
+                      class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                      placeholder="Enter your first name"
+                      required
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <label for="newLastName" class="block text-white/80 text-sm font-medium mb-2">Last Name</label>
+                    <input 
+                      type="text" 
+                      id="newLastName" 
+                      name="newLastName"
+                      class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                      placeholder="Enter your last name"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="flex gap-4">
+                  <button 
+                    type="submit" 
+                    class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                  >
+                    <i class="fas fa-save mr-2"></i>
+                    Update Name
+                  </button>
+                  <button 
+                    type="button" 
+                    id="cancelNameChange"
+                    class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Change Email Section -->
+            <div class="mt-8 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-white flex items-center">
+                  <i class="fas fa-envelope mr-3 text-orange-400"></i>
+                  Change Email
+                </h3>
+                <button 
+                  id="toggleEmailForm"
+                  class="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  <i class="fas fa-edit mr-2"></i>
+                  Change Email
+                </button>
+              </div>
+              
+              <form id="changeEmailForm" class="space-y-6 hidden">
+                <div>
+                  <label for="newEmail" class="block text-white/80 text-sm font-medium mb-2">New Email Address</label>
+                  <input 
+                    type="email" 
+                    id="newEmail" 
+                    name="newEmail"
+                    class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                    placeholder="Enter your new email address"
+                    required
+                  />
+                  <p class="text-white/60 text-xs mt-1">A verification email will be sent to the new address</p>
+                </div>
+
+                <div>
+                  <label for="confirmEmail" class="block text-white/80 text-sm font-medium mb-2">Confirm New Email</label>
+                  <input 
+                    type="email" 
+                    id="confirmEmail" 
+                    name="confirmEmail"
+                    class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                    placeholder="Confirm your new email address"
+                    required
+                  />
+                </div>
+
+                <div class="flex gap-4">
+                  <button 
+                    type="submit" 
+                    class="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                  >
+                    <i class="fas fa-save mr-2"></i>
+                    Update Email
+                  </button>
+                  <button 
+                    type="button" 
+                    id="cancelEmailChange"
+                    class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Change Password Section -->
+            <div class="mt-8 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-white flex items-center">
+                  <i class="fas fa-lock mr-3 text-green-400"></i>
+                  Change Password
+                </h3>
+                <button 
+                  id="togglePasswordForm"
+                  class="px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  <i class="fas fa-key mr-2"></i>
+                  Change Password
+                </button>
+              </div>
+              
+              <form id="changePasswordForm" class="space-y-6 hidden">
+            <div>
+              <label for="oldPassword" class="block text-white/80 text-sm font-medium mb-2">Current Password</label>
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="oldPassword" 
+                  name="oldPassword"
+                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  placeholder="Enter your current password"
+                  required
+                />
+                <button 
+                  type="button" 
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors duration-200"
+                  onclick="togglePasswordVisibility('oldPassword')"
+                >
+                  <i class="fas fa-eye" id="oldPasswordToggle"></i>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label for="newPassword" class="block text-white/80 text-sm font-medium mb-2">New Password</label>
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="newPassword" 
+                  name="newPassword"
+                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  placeholder="Enter your new password"
+                  required
+                  minlength="8"
+                />
+                <button 
+                  type="button" 
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors duration-200"
+                  onclick="togglePasswordVisibility('newPassword')"
+                >
+                  <i class="fas fa-eye" id="newPasswordToggle"></i>
+                </button>
+              </div>
+              <p class="text-white/60 text-xs mt-1">Password must be at least 8 characters long</p>
+            </div>
+
+            <div>
+              <label for="confirmPassword" class="block text-white/80 text-sm font-medium mb-2">Confirm New Password</label>
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="confirmPassword" 
+                  name="confirmPassword"
+                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  placeholder="Confirm your new password"
+                  required
+                />
+                <button 
+                  type="button" 
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors duration-200"
+                  onclick="togglePasswordVisibility('confirmPassword')"
+                >
+                  <i class="fas fa-eye" id="confirmPasswordToggle"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <button 
+                type="submit" 
+                class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              >
+                <i class="fas fa-save mr-2"></i>
+                Change Password
+              </button>
+              <button 
+                type="button" 
+                id="cancelPasswordChange"
+                class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Delete Account Section -->
+        <div class="mt-12 bg-red-500/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-red-500/20 p-8">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-red-300 mb-2">Danger Zone</h3>
+            <p class="text-red-200/80 mb-6 max-w-2xl mx-auto">
+              Once you delete your account, there is no going back. Please be certain. All your data will be permanently removed.
+            </p>
+            <button 
+              id="deleteAccountBtn"
+              class="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl border-2 border-red-500"
+            >
+              <i class="fas fa-trash mr-2"></i>
+              Delete My Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Delete Account Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 max-w-md w-full">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-2">Delete Account</h3>
+          <p class="text-white/80 mb-6">
+            Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.
+          </p>
+          
+          <!-- Confirmation Text Input -->
+          <div class="mb-6">
+            <label for="deleteConfirmation" class="block text-white/80 text-sm font-medium mb-2">
+              Type <span class="font-bold text-red-300">delete</span> to confirm:
+            </label>
+            <input 
+              type="text" 
+              id="deleteConfirmation" 
+              class="w-full px-4 py-3 bg-white/10 backdrop-blur-md rounded-xl text-white border border-white/20 focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-300"
+              placeholder="Type 'delete' here"
+            />
+            <div id="confirmationError" class="text-red-400 text-sm mt-2 hidden">
+              Please type "delete" exactly to confirm account deletion.
+            </div>
+          </div>
+          
+          <div class="flex gap-3">
+            <button 
+              id="cancelDelete"
+              class="flex-1 px-4 py-3 bg-white/20 backdrop-blur-md rounded-xl text-white font-medium transition-all duration-300 hover:bg-white/30 border border-white/30"
+            >
+              Cancel
+            </button>
+            <button 
+              id="confirmDelete"
+              class="flex-1 px-4 py-3 bg-red-500/20 backdrop-blur-md rounded-xl text-red-300 font-medium transition-all duration-300 hover:bg-red-500/30 border border-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+            >
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Add any interactive functionality here
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Profile page loaded');
+        
+        // Delete account functionality
+        const deleteBtn = document.getElementById('deleteAccountBtn');
+        const deleteModal = document.getElementById('deleteModal');
+        const cancelBtn = document.getElementById('cancelDelete');
+        const confirmBtn = document.getElementById('confirmDelete');
+        const confirmationInput = document.getElementById('deleteConfirmation');
+        const confirmationError = document.getElementById('confirmationError');
+        
+        deleteBtn.addEventListener('click', function() {
+          deleteModal.classList.remove('hidden');
+          // Reset form when opening modal
+          confirmationInput.value = '';
+          confirmBtn.disabled = true;
+          confirmationError.classList.add('hidden');
+        });
+        
+        cancelBtn.addEventListener('click', function() {
+          deleteModal.classList.add('hidden');
+          // Reset form when canceling
+          confirmationInput.value = '';
+          confirmBtn.disabled = true;
+          confirmationError.classList.add('hidden');
+        });
+        
+        // Handle text input validation
+        confirmationInput.addEventListener('input', function() {
+          const inputValue = this.value.toLowerCase().trim();
+          const deleteText = 'delete';
+          
+          if (inputValue === deleteText) {
+            confirmBtn.disabled = false;
+            confirmationError.classList.add('hidden');
+          } else {
+            confirmBtn.disabled = true;
+            if (inputValue.length > 0 && inputValue !== deleteText) {
+              confirmationError.classList.remove('hidden');
+            } else {
+              confirmationError.classList.add('hidden');
+            }
+          }
+        });
+        
+        confirmBtn.addEventListener('click', function() {
+          const inputValue = confirmationInput.value.toLowerCase().trim();
+          
+          if (inputValue !== 'delete') {
+            confirmationError.classList.remove('hidden');
+            return;
+          }
+          
+          // Show loading state
+          confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Deleting...';
+          confirmBtn.disabled = true;
+          
+          // Send delete request
+          fetch('/profile/delete', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              // Redirect to login page after successful deletion
+              window.location.href = '/login?deleted=true';
+            } else {
+              alert('Failed to delete account. Please try again.');
+              confirmBtn.innerHTML = '<i class="fas fa-trash mr-2"></i>Delete Account';
+              confirmBtn.disabled = false;
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+            confirmBtn.innerHTML = '<i class="fas fa-trash mr-2"></i>Delete Account';
+            confirmBtn.disabled = false;
+          });
+        });
+        
+        // Close modal when clicking outside
+        deleteModal.addEventListener('click', function(e) {
+          if (e.target === deleteModal) {
+            deleteModal.classList.add('hidden');
+          }
+        });
+        
+            // Change email form functionality
+            const changeEmailForm = document.getElementById('changeEmailForm');
+            const cancelEmailChange = document.getElementById('cancelEmailChange');
+            const toggleEmailForm = document.getElementById('toggleEmailForm');
+            
+            if (toggleEmailForm) {
+              toggleEmailForm.addEventListener('click', function() {
+                const form = document.getElementById('changeEmailForm');
+                if (form.classList.contains('hidden')) {
+                  form.classList.remove('hidden');
+                  this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
+                  this.classList.remove('from-orange-500', 'to-red-600', 'hover:from-orange-600', 'hover:to-red-700');
+                  this.classList.add('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                  // Pre-fill current email
+                  document.getElementById('newEmail').value = document.querySelector('[data-email]')?.textContent || '';
+                  document.getElementById('confirmEmail').value = '';
+                } else {
+                  form.classList.add('hidden');
+                  this.innerHTML = '<i class="fas fa-edit mr-2"></i>Change Email';
+                  this.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                  this.classList.add('from-orange-500', 'to-red-600', 'hover:from-orange-600', 'hover:to-red-700');
+                  clearEmailForm();
+                }
+              });
+            }
+            
+            if (changeEmailForm) {
+              changeEmailForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleEmailChange();
+              });
+            }
+            
+            if (cancelEmailChange) {
+              cancelEmailChange.addEventListener('click', function() {
+                clearEmailForm();
+                const form = document.getElementById('changeEmailForm');
+                const toggleBtn = document.getElementById('toggleEmailForm');
+                form.classList.add('hidden');
+                toggleBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Change Email';
+                toggleBtn.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                toggleBtn.classList.add('from-orange-500', 'to-red-600', 'hover:from-orange-600', 'hover:to-red-700');
+              });
+            }
+
+            // Change name form functionality
+            const changeNameForm = document.getElementById('changeNameForm');
+            const cancelNameChange = document.getElementById('cancelNameChange');
+            const toggleNameForm = document.getElementById('toggleNameForm');
+            
+            if (toggleNameForm) {
+              toggleNameForm.addEventListener('click', function() {
+                const form = document.getElementById('changeNameForm');
+                if (form.classList.contains('hidden')) {
+                  form.classList.remove('hidden');
+                  this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
+                  this.classList.remove('from-blue-500', 'to-purple-600', 'hover:from-blue-600', 'hover:to-purple-700');
+                  this.classList.add('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                  // Pre-fill current values
+                  document.getElementById('newFirstName').value = document.querySelector('[data-first-name]')?.textContent || '';
+                  document.getElementById('newLastName').value = document.querySelector('[data-last-name]')?.textContent || '';
+                } else {
+                  form.classList.add('hidden');
+                  this.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
+                  this.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                  this.classList.add('from-blue-500', 'to-purple-600', 'hover:from-blue-600', 'hover:to-purple-700');
+                  clearNameForm();
+                }
+              });
+            }
+            
+            if (changeNameForm) {
+              changeNameForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleNameChange();
+              });
+            }
+            
+            if (cancelNameChange) {
+              cancelNameChange.addEventListener('click', function() {
+                clearNameForm();
+                const form = document.getElementById('changeNameForm');
+                const toggleBtn = document.getElementById('toggleNameForm');
+                form.classList.add('hidden');
+                toggleBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
+                toggleBtn.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                toggleBtn.classList.add('from-blue-500', 'to-purple-600', 'hover:from-blue-600', 'hover:to-purple-700');
+              });
+            }
+
+            // Change password form functionality
+            const changePasswordForm = document.getElementById('changePasswordForm');
+            const cancelPasswordChange = document.getElementById('cancelPasswordChange');
+            const togglePasswordForm = document.getElementById('togglePasswordForm');
+            
+            if (togglePasswordForm) {
+              togglePasswordForm.addEventListener('click', function() {
+                const form = document.getElementById('changePasswordForm');
+                if (form.classList.contains('hidden')) {
+                  form.classList.remove('hidden');
+                  this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
+                  this.classList.remove('from-green-500', 'to-blue-600', 'hover:from-green-600', 'hover:to-blue-700');
+                  this.classList.add('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                } else {
+                  form.classList.add('hidden');
+                  this.innerHTML = '<i class="fas fa-key mr-2"></i>Change Password';
+                  this.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                  this.classList.add('from-green-500', 'to-blue-600', 'hover:from-green-600', 'hover:to-blue-700');
+                  clearPasswordForm();
+                }
+              });
+            }
+            
+            if (changePasswordForm) {
+              changePasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handlePasswordChange();
+              });
+            }
+            
+            if (cancelPasswordChange) {
+              cancelPasswordChange.addEventListener('click', function() {
+                clearPasswordForm();
+                const form = document.getElementById('changePasswordForm');
+                const toggleBtn = document.getElementById('togglePasswordForm');
+                form.classList.add('hidden');
+                toggleBtn.innerHTML = '<i class="fas fa-key mr-2"></i>Change Password';
+                toggleBtn.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                toggleBtn.classList.add('from-green-500', 'to-blue-600', 'hover:from-green-600', 'hover:to-blue-700');
+              });
+            }
+      });
+
+      // Toggle password visibility
+      function togglePasswordVisibility(fieldId) {
+        const field = document.getElementById(fieldId);
+        const toggle = document.getElementById(fieldId + 'Toggle');
+        
+        if (field.type === 'password') {
+          field.type = 'text';
+          toggle.classList.remove('fa-eye');
+          toggle.classList.add('fa-eye-slash');
+        } else {
+          field.type = 'password';
+          toggle.classList.remove('fa-eye-slash');
+          toggle.classList.add('fa-eye');
+        }
+      }
+
+      // Handle password change
+      function handlePasswordChange() {
+        const oldPassword = document.getElementById('oldPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // Validate passwords
+        if (newPassword !== confirmPassword) {
+          showMessage('New passwords do not match!', 'error');
+          return;
+        }
+        
+        if (newPassword.length < 8) {
+          showMessage('New password must be at least 8 characters long!', 'error');
+          return;
+        }
+        
+        if (oldPassword === newPassword) {
+          showMessage('New password must be different from current password!', 'error');
+          return;
+        }
+        
+        // Show loading state
+        const submitBtn = document.querySelector('#changePasswordForm button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Changing...';
+        submitBtn.disabled = true;
+        
+        // Send password change request
+        fetch('/profile/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            oldPassword: oldPassword,
+            newPassword: newPassword
+          })
+        })
+        .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                showMessage('Password changed successfully!', 'success');
+                clearPasswordForm();
+                // Hide the form after successful password change
+                const form = document.getElementById('changePasswordForm');
+                const toggleBtn = document.getElementById('togglePasswordForm');
+                form.classList.add('hidden');
+                toggleBtn.innerHTML = '<i class="fas fa-key mr-2"></i>Change Password';
+                toggleBtn.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                toggleBtn.classList.add('from-green-500', 'to-blue-600', 'hover:from-green-600', 'hover:to-blue-700');
+              } else {
+                showMessage(data.message || 'Failed to change password!', 'error');
+              }
+            })
+        .catch(error => {
+          console.error('Error:', error);
+          showMessage('An error occurred while changing password!', 'error');
+        })
+        .finally(() => {
+          // Reset button state
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        });
+      }
+
+          // Handle email change
+          function handleEmailChange() {
+            const newEmail = document.getElementById('newEmail').value.trim();
+            const confirmEmail = document.getElementById('confirmEmail').value.trim();
+            
+            // Validate emails
+            if (!newEmail || !confirmEmail) {
+              showMessage('Both email fields are required!', 'error');
+              return;
+            }
+            
+            if (newEmail !== confirmEmail) {
+              showMessage('Email addresses do not match!', 'error');
+              return;
+            }
+            
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(newEmail)) {
+              showMessage('Please enter a valid email address!', 'error');
+              return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.querySelector('#changeEmailForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
+            submitBtn.disabled = true;
+            
+            // Send email change request
+            fetch('/profile/change-email', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                newEmail: newEmail
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                showMessage('Email update request sent! Please check your new email for verification.', 'success');
+                clearEmailForm();
+                // Hide the form after successful email change request
+                const form = document.getElementById('changeEmailForm');
+                const toggleBtn = document.getElementById('toggleEmailForm');
+                form.classList.add('hidden');
+                toggleBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Change Email';
+                toggleBtn.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                toggleBtn.classList.add('from-orange-500', 'to-red-600', 'hover:from-orange-600', 'hover:to-red-700');
+                // Reload page to show updated status
+                setTimeout(() => {
+                  window.location.reload();
+                }, 2000);
+              } else {
+                showMessage(data.message || 'Failed to update email!', 'error');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              showMessage('An error occurred while updating email!', 'error');
+            })
+            .finally(() => {
+              // Reset button state
+              submitBtn.innerHTML = originalText;
+              submitBtn.disabled = false;
+            });
+          }
+
+          // Clear email form
+          function clearEmailForm() {
+            document.getElementById('newEmail').value = '';
+            document.getElementById('confirmEmail').value = '';
+          }
+
+          // Handle name change
+          function handleNameChange() {
+            const newFirstName = document.getElementById('newFirstName').value.trim();
+            const newLastName = document.getElementById('newLastName').value.trim();
+            
+            // Validate names
+            if (!newFirstName || !newLastName) {
+              showMessage('Both first name and last name are required!', 'error');
+              return;
+            }
+            
+            if (newFirstName.length < 2 || newLastName.length < 2) {
+              showMessage('Names must be at least 2 characters long!', 'error');
+              return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.querySelector('#changeNameForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
+            submitBtn.disabled = true;
+            
+            // Send name change request
+            fetch('/profile/change-name', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                firstName: newFirstName,
+                lastName: newLastName
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                showMessage('Name updated successfully!', 'success');
+                clearNameForm();
+                // Hide the form after successful name change
+                const form = document.getElementById('changeNameForm');
+                const toggleBtn = document.getElementById('toggleNameForm');
+                form.classList.add('hidden');
+                toggleBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
+                toggleBtn.classList.remove('from-red-500', 'to-orange-600', 'hover:from-red-600', 'hover:to-orange-700');
+                toggleBtn.classList.add('from-blue-500', 'to-purple-600', 'hover:from-blue-600', 'hover:to-purple-700');
+                // Reload page to show updated name
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1500);
+              } else {
+                showMessage(data.message || 'Failed to update name!', 'error');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              showMessage('An error occurred while updating name!', 'error');
+            })
+            .finally(() => {
+              // Reset button state
+              submitBtn.innerHTML = originalText;
+              submitBtn.disabled = false;
+            });
+          }
+
+          // Clear name form
+          function clearNameForm() {
+            document.getElementById('newFirstName').value = '';
+            document.getElementById('newLastName').value = '';
+          }
+
+          // Clear password form
+          function clearPasswordForm() {
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+          }
+
+      // Show message
+      function showMessage(message, type) {
+        // Create message element
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-xl shadow-xl transition-all duration-300 ${
+          type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+        }`;
+        messageDiv.innerHTML = `
+          <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+            <span>${message}</span>
+          </div>
+        `;
+        
+        document.body.appendChild(messageDiv);
+        
+        // Remove message after 5 seconds
+        setTimeout(() => {
+          messageDiv.remove();
+        }, 5000);
+      }
+    </script>
+  </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Password Changed</title>
+    <title th:text="#{resetSuccess.title}">MYAN MYAN LEARN - Password Changed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -42,11 +42,7 @@
               >
                 Myan Myan Learn
               </div>
-              <div
-                class="text-white/70 text-xs font-medium tracking-wider uppercase"
-              >
-                Learning Platform
-              </div>
+              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
             </div>
           </div>
         </div>
@@ -72,11 +68,8 @@
         >
           <i class="fas fa-check text-2xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-3">Password Changed!</h1>
-        <p class="text-base text-white/80 mb-8 leading-relaxed">
-          Your password has been successfully updated. You can now sign in with
-          your new password.
-        </p>
+        <h1 class="text-3xl font-bold text-white mb-3" th:text="#{resetSuccess.header}">Password Changed!</h1>
+        <p class="text-base text-white/80 mb-8 leading-relaxed" th:text="#{resetSuccess.message}">Your password has been successfully updated. You can now sign in with your new password.</p>
       </div>
 
       <!-- Success Message -->
@@ -90,14 +83,9 @@
             >
               <i class="fas fa-check text-white text-sm"></i>
             </div>
-            <h4 class="text-white text-sm font-bold">
-              Password Successfully Updated
-            </h4>
+            <h4 class="text-white text-sm font-bold" th:text="#{resetSuccess.updated}">Password Successfully Updated</h4>
           </div>
-          <p class="text-white/80 text-sm leading-relaxed">
-            Your account is now secured with your new password. All your data
-            remains safe and accessible.
-          </p>
+          <p class="text-white/80 text-sm leading-relaxed" th:text="#{resetSuccess.details}">Your account is now secured with your new password. All your data remains safe and accessible.</p>
         </div>
       </div>
 
@@ -109,14 +97,14 @@
           id="loginBtn"
         >
           <i class="fas fa-sign-in-alt mr-2"></i>
-          Sign In Now
+          <span th:text="#{verifySuccess.signInNow}">Sign In Now</span>
         </a>
         <a
           href="/"
           class="w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/20 hover:border-white/50 text-center no-underline"
         >
           <i class="fas fa-home mr-2"></i>
-          Go to Home
+          <span th:text="#{verifySuccess.goHome}">Go to Home</span>
         </a>
       </div>
 
@@ -127,24 +115,24 @@
         >
           <div class="flex items-center gap-2 mb-4">
             <i class="fas fa-shield-alt text-white/80"></i>
-            <h5 class="text-white text-sm font-bold">Security Tips:</h5>
+            <h5 class="text-white text-sm font-bold" th:text="#{resetSuccess.tipsTitle}">Security Tips:</h5>
           </div>
           <ul class="text-white/80 text-sm leading-relaxed space-y-2">
             <li class="flex items-center gap-2">
               <i class="fas fa-arrow-right text-white/80 text-xs"></i>
-              Keep your password private and don't share it
+              <span th:text="#{resetSuccess.tips.keepPrivate}">Keep your password private and don't share it</span>
             </li>
             <li class="flex items-center gap-2">
               <i class="fas fa-arrow-right text-white/80 text-xs"></i>
-              Use a unique password for this account
+              <span th:text="#{resetSuccess.tips.unique}">Use a unique password for this account</span>
             </li>
             <li class="flex items-center gap-2">
               <i class="fas fa-arrow-right text-white/80 text-xs"></i>
-              Consider enabling two-factor authentication
+              <span th:text="#{resetSuccess.tips.2fa}">Consider enabling two-factor authentication</span>
             </li>
             <li class="flex items-center gap-2">
               <i class="fas fa-arrow-right text-white/80 text-xs"></i>
-              Log out from all devices if you suspect unauthorized access
+              <span th:text="#{resetSuccess.tips.logoutAll}">Log out from all devices if you suspect unauthorized access</span>
             </li>
           </ul>
         </div>
@@ -157,14 +145,15 @@
         >
           <i class="fas fa-clock text-white/80 text-sm"></i>
           <span class="text-sm text-white/80 font-semibold" id="countdown">
-            Redirecting to login in
-            <span id="timer" class="text-white font-bold">5</span> seconds...
+            <span th:text="#{verifySuccess.redirectPrefix}">Redirecting to login in</span>
+            <span id="timer" class="text-white font-bold">5</span>
+            <span th:text="#{verifySuccess.redirectSuffix}">seconds...</span>
           </span>
         </div>
       </div>
     </div>
 
-    <script>
+    <script th:inline="javascript">
       let timeLeft = 5;
       const timerElement = document.getElementById("timer");
       const countdownElement = document.getElementById("countdown");

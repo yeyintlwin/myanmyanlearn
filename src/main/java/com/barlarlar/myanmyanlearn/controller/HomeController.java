@@ -2,6 +2,7 @@ package com.barlarlar.myanmyanlearn.controller;
 
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
+import com.barlarlar.myanmyanlearn.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,9 @@ public class HomeController {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private CourseService courseService;
 
     @GetMapping("/home")
     public String homePage(Model model) {
@@ -54,6 +58,9 @@ public class HomeController {
         } else {
             System.out.println("User not authenticated or is anonymous");
         }
+
+        // Add courses from JSON data model
+        model.addAttribute("courses", courseService.getAllCourses());
 
         return "home";
     }

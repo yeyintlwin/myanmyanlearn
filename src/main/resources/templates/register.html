@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Register</title>
+    <title th:text="#{register.title}">MYAN MYAN LEARN - Register</title>
     <!-- Debug: Thymeleaf test -->
     <meta
       name="debug"
@@ -47,11 +47,7 @@
               >
                 Myan Myan Learn
               </div>
-              <div
-                class="text-white/70 text-xs font-medium tracking-wider uppercase"
-              >
-                Learning Platform
-              </div>
+              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
             </div>
           </div>
         </div>
@@ -77,10 +73,8 @@
         >
           <i class="fas fa-user-plus text-white text-xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2">Create Account</h1>
-        <p class="text-sm text-white/80">
-          Join our learning community and start your journey
-        </p>
+        <h1 class="text-3xl font-bold text-white mb-2" th:text="#{register.createAccount}">Create Account</h1>
+        <p class="text-sm text-white/80" th:text="#{register.subtitle}">Join our learning community and start your journey</p>
       </div>
 
       <!-- Flash Messages -->
@@ -114,7 +108,7 @@
               class="block text-sm font-semibold text-white mb-3"
             >
               <i class="fas fa-user text-white/80 mr-2"></i>
-              First Name
+              <span th:text="#{register.firstName}">First Name</span>
             </label>
             <div class="relative">
               <input
@@ -122,6 +116,7 @@
                 name="firstName"
                 type="text"
                 class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
+                th:placeholder="#{register.firstNamePlaceholder}"
                 placeholder="John"
                 th:value="${firstName ?: ''}"
                 required
@@ -139,7 +134,7 @@
               class="block text-sm font-semibold text-white mb-3"
             >
               <i class="fas fa-user text-white/80 mr-2"></i>
-              Last Name
+              <span th:text="#{register.lastName}">Last Name</span>
             </label>
             <div class="relative">
               <input
@@ -147,6 +142,7 @@
                 name="lastName"
                 type="text"
                 class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
+                th:placeholder="#{register.lastNamePlaceholder}"
                 placeholder="Doe"
                 th:value="${lastName ?: ''}"
                 required
@@ -167,7 +163,7 @@
             class="block text-sm font-semibold text-white mb-3"
           >
             <i class="fas fa-at text-white/80 mr-2"></i>
-            Username
+            <span th:text="#{login.username}">Username</span>
           </label>
           <div class="relative">
             <input
@@ -175,6 +171,7 @@
               name="username"
               type="text"
               class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
+              th:placeholder="#{register.usernamePlaceholder}"
               placeholder="johndoe123"
               th:value="${username ?: ''}"
               required
@@ -194,7 +191,7 @@
             class="block text-sm font-semibold text-white mb-3"
           >
             <i class="fas fa-envelope text-white/80 mr-2"></i>
-            Email Address
+            <span th:text="#{register.email}">Email Address</span>
           </label>
           <div class="relative">
             <input
@@ -202,6 +199,7 @@
               name="email"
               type="email"
               class="w-full px-4 py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
+              th:placeholder="#{register.emailPlaceholder}"
               placeholder="you@example.com"
               th:value="${email ?: ''}"
               required
@@ -222,7 +220,7 @@
               class="block text-sm font-semibold text-white mb-3"
             >
               <i class="fas fa-lock text-white/80 mr-2"></i>
-              Password
+              <span th:text="#{login.password}">Password</span>
             </label>
             <div class="relative">
               <input
@@ -230,6 +228,7 @@
                 name="password"
                 type="password"
                 class="w-full px-4 py-4 pl-12 pr-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
+                th:placeholder="#{register.passwordCreatePlaceholder}"
                 placeholder="Create a strong password"
                 required
               />
@@ -249,9 +248,7 @@
             <!-- Password Strength Indicator -->
             <div id="passwordStrength" class="mt-2 hidden">
               <div class="flex items-center mb-2">
-                <span class="text-xs text-white/60 mr-2"
-                  >Password Strength:</span
-                >
+                <span class="text-xs text-white/60 mr-2" th:text="#{register.passwordStrength}">Password Strength:</span>
                 <span id="strengthText" class="text-xs font-medium"></span>
               </div>
               <div class="w-full bg-white/10 rounded-full h-2">
@@ -264,27 +261,27 @@
                 <div id="lengthReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span>At least 8 characters</span>
+                  <span th:text="#{register.req.length}">At least 8 characters</span>
                 </div>
                 <div id="upperReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span>One uppercase letter</span>
+                  <span th:text="#{register.req.upper}">One uppercase letter</span>
                 </div>
                 <div id="lowerReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span>One lowercase letter</span>
+                  <span th:text="#{register.req.lower}">One lowercase letter</span>
                 </div>
                 <div id="numberReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span>One number</span>
+                  <span th:text="#{register.req.number}">One number</span>
                 </div>
                 <div id="specialReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span>One special character</span>
+                  <span th:text="#{register.req.special}">One special character</span>
                 </div>
               </div>
             </div>
@@ -295,7 +292,7 @@
               class="block text-sm font-semibold text-white mb-3"
             >
               <i class="fas fa-lock text-white/80 mr-2"></i>
-              Confirm Password
+              <span th:text="#{register.confirmPassword}">Confirm Password</span>
             </label>
             <div class="relative">
               <input
@@ -303,6 +300,7 @@
                 name="confirmPassword"
                 type="password"
                 class="w-full px-4 py-4 pl-12 pr-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50"
+                th:placeholder="#{register.confirmPasswordPlaceholder}"
                 placeholder="Confirm your password"
                 required
               />
@@ -346,18 +344,22 @@
             <span
               class="ml-3 text-sm text-white/80 group-hover:text-white transition-colors duration-200"
             >
-              I agree to the
+              <span th:text="#{register.agree}">I agree to the</span>
               <a
                 href="#"
                 class="text-white/80 hover:text-white underline transition-colors duration-200"
-                >Terms of Service</a
+                th:text="#{register.tos}"
               >
-              and
+                Terms of Service
+              </a>
+              <span th:text="#{register.and}">and</span>
               <a
                 href="#"
                 class="text-white/80 hover:text-white underline transition-colors duration-200"
-                >Privacy Policy</a
+                th:text="#{register.privacy}"
               >
+                Privacy Policy
+              </a>
             </span>
           </label>
         </div>
@@ -369,16 +371,14 @@
             class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20"
           >
             <i class="fas fa-user-plus mr-2"></i>
-            Create Account
+            <span th:text="#{register.createAccount}">Create Account</span>
           </button>
         </div>
 
         <!-- Divider -->
         <div class="relative mb-6">
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-transparent text-white/60"
-              >Already have an account?</span
-            >
+            <span class="px-4 bg-transparent text-white/60" th:text="#{register.already}">Already have an account?</span>
           </div>
         </div>
 
@@ -389,7 +389,7 @@
             class="inline-flex items-center justify-center w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/20 hover:border-white/50"
           >
             <i class="fas fa-sign-in-alt mr-2"></i>
-            Sign In
+            <span th:text="#{login.signIn}">Sign In</span>
           </a>
         </div>
       </form>

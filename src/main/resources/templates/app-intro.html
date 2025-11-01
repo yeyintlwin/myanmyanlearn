@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Myan Myan Learn</title>
+    <title th:text="#{appIntro.pageTitle}">Welcome to Myan Myan Learn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -42,11 +42,7 @@
               >
                 Myan Myan Learn
               </div>
-              <div
-                class="text-white/70 text-xs font-medium tracking-wider uppercase"
-              >
-                Learning Platform
-              </div>
+              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
             </div>
           </div>
           <!-- Skip Introduction Button -->
@@ -61,7 +57,7 @@
               ></div>
               <div class="relative flex items-center gap-2">
                 <i class="fas fa-forward text-xs"></i>
-                <span>Skip Introduction</span>
+                <span th:text="#{appIntro.skip}">Skip Introduction</span>
               </div>
             </a>
           </div>
@@ -87,13 +83,8 @@
             <div class="text-8xl mb-6 text-white/90">
               <i class="fas fa-graduation-cap"></i>
             </div>
-            <h2 class="text-4xl font-bold mb-4 text-white leading-tight">
-              Welcome to Myan Myan Learn
-            </h2>
-            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto">
-              Your gateway to multilingual learning. Discover a world of
-              knowledge and connect with learners from around the globe.
-            </p>
+            <h2 class="text-4xl font-bold mb-4 text-white leading-tight" th:text="#{appIntro.s1.title}">Welcome to Myan Myan Learn</h2>
+            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto" th:text="#{appIntro.s1.body}">Your gateway to multilingual learning. Discover a world of knowledge and connect with learners from around the globe.</p>
           </div>
 
           <!-- Slide 2: Multi-Language -->
@@ -103,13 +94,8 @@
             <div class="text-8xl mb-6 text-white/90">
               <i class="fas fa-globe"></i>
             </div>
-            <h2 class="text-4xl font-bold mb-4 text-white leading-tight">
-              Multi-Language Support
-            </h2>
-            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto">
-              Learn in 9+ languages including English, Myanmar, Chinese, Hindi,
-              Japanese, and more. Choose your preferred language.
-            </p>
+            <h2 class="text-4xl font-bold mb-4 text-white leading-tight" th:text="#{appIntro.s2.title}">Multi-Language Support</h2>
+            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto" th:text="#{appIntro.s2.body}">Learn in 9+ languages including English, Myanmar, Chinese, Hindi, Japanese, and more. Choose your preferred language.</p>
           </div>
 
           <!-- Slide 3: Expert Courses -->
@@ -119,13 +105,8 @@
             <div class="text-8xl mb-6 text-white/90">
               <i class="fas fa-book-open"></i>
             </div>
-            <h2 class="text-4xl font-bold mb-4 text-white leading-tight">
-              Expert Courses
-            </h2>
-            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto">
-              Access high-quality educational content created by language
-              experts and native speakers from around the world.
-            </p>
+            <h2 class="text-4xl font-bold mb-4 text-white leading-tight" th:text="#{appIntro.s3.title}">Expert Courses</h2>
+            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto" th:text="#{appIntro.s3.body}">Access high-quality educational content created by language experts and native speakers from around the world.</p>
           </div>
 
           <!-- Slide 4: Community & Progress -->
@@ -135,13 +116,8 @@
             <div class="text-8xl mb-6 text-white/90">
               <i class="fas fa-users"></i>
             </div>
-            <h2 class="text-4xl font-bold mb-4 text-white leading-tight">
-              Community & Progress
-            </h2>
-            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto">
-              Join a vibrant community of learners, practice with native
-              speakers, and track your progress with detailed analytics.
-            </p>
+            <h2 class="text-4xl font-bold mb-4 text-white leading-tight" th:text="#{appIntro.s4.title}">Community & Progress</h2>
+            <p class="text-xl leading-relaxed text-white/90 max-w-md mx-auto" th:text="#{appIntro.s4.body}">Join a vibrant community of learners, practice with native speakers, and track your progress with detailed analytics.</p>
           </div>
         </div>
 
@@ -194,7 +170,7 @@
         class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 rounded-full text-lg font-bold cursor-pointer transition-all duration-300 flex items-center gap-2.5 mx-auto shadow-2xl hover:-translate-y-1 hover:shadow-3xl hover:bg-white/30 hover:border-white/50"
         onclick="continueToLogin()"
       >
-        <i class="fas fa-arrow-right text-base"></i> Get Started
+        <i class="fas fa-arrow-right text-base"></i> <span th:text="#{appIntro.getStarted}">Get Started</span>
       </button>
     </div>
 
