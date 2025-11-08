@@ -45,12 +45,78 @@
           </a>
         </div>
 
-        <div id="courseContents" class="space-y-3">
-          <!-- Dynamic course contents (each item is a direct child for proper spacing) -->
+        <!-- Tabs -->
+        <div class="flex border-b border-white/20 mb-6">
+          <button 
+            id="learnTab" 
+            class="px-4 py-2 text-sm font-medium text-white border-b-2 border-blue-400 focus:outline-none transition-colors"
+            onclick="switchTab('learn')"
+          >
+            Learn
+          </button>
+          <button 
+            id="testTab" 
+            class="px-4 py-2 text-sm font-medium text-white/70 hover:text-white border-b-2 border-transparent hover:border-white/30 focus:outline-none transition-colors"
+            onclick="switchTab('test')"
+          >
+            Test
+          </button>
+        </div>
+
+        <!-- Test Tab Content -->
+        <div id="testContent" class="space-y-4 hidden">
+          <div class="flex justify-end mb-4">
+            <button 
+              id="randomSelectBtn"
+              class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center gap-2"
+              onclick="selectRandomChapters()"
+            >
+              <i class="fas fa-random"></i>
+              <span>Random Select</span>
+            </button>
+          </div>
+          
+          <div class="space-y-3" id="chapterList">
+            <div 
+              th:if="${course != null}" 
+              th:each="content, ci : ${course.contents}"
+              class="chapter-item"
+              th:data-chapter-id="${content.order}"
+            >
+              <label class="flex items-center p-3 bg-white/10 rounded-lg border border-white/10 cursor-pointer hover:bg-white/15 transition-colors">
+                <input 
+                  type="checkbox" 
+                  class="hidden chapter-checkbox" 
+                  th:value="${content.order}"
+                >
+                <div class="w-5 h-5 border-2 border-white/50 rounded flex-shrink-0 mr-3 flex items-center justify-center transition-colors checkbox-custom">
+                  <i class="fas fa-check text-white text-xs opacity-0"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-white font-medium" th:text="${content.chapter + ': ' + content.title}"></div>
+                </div>
+              </label>
+            </div>
+          </div>
+          
+          <div class="mt-6 pt-4 border-t border-white/10">
+            <button 
+              id="takeTestBtn"
+              class="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+            >
+              <i class="fas fa-play"></i>
+              <span>Take Test</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Learn Tab Content -->
+        <div id="learnContent" class="space-y-3">
           <div
             th:if="${course != null}"
             th:each="content, ci : ${course.contents}"
-            class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4"
+            class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4 content-item"
           >
             <button
               class="w-full flex items-start gap-3 sm:gap-4 text-left group content-toggle"
@@ -745,29 +811,84 @@
     </main>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Display selected course title from query string or localStorage
-        const selectedTitleEl = document.getElementById("selectedCourseTitle");
-        const params = new URLSearchParams(window.location.search);
-        const courseTitle =
-          params.get("course") || localStorage.getItem("selectedCourse");
-        if (selectedTitleEl) {
-          if (courseTitle) {
-            selectedTitleEl.textContent = courseTitle;
-            selectedTitleEl.classList.remove("hidden");
-          } else {
-            selectedTitleEl.classList.add("hidden");
-          }
+      // Toggle chapter selection
+      function toggleChapterSelection(checkbox) {
+        const label = checkbox.closest('label');
+        const customCheckbox = label.querySelector('.checkbox-custom');
+        const checkIcon = customCheckbox.querySelector('i');
+        
+        if (checkbox.checked) {
+          customCheckbox.classList.add('bg-blue-500', 'border-blue-500');
+          checkIcon.classList.remove('opacity-0');
+        } else {
+          customCheckbox.classList.remove('bg-blue-500', 'border-blue-500');
+          checkIcon.classList.add('opacity-0');
         }
+        
+        // Enable/disable Take Test button based on selection
+        const hasSelection = document.querySelectorAll('.chapter-checkbox:checked').length > 0;
+        document.getElementById('takeTestBtn').disabled = !hasSelection;
+      }
+      
+      // Select random chapters
+      function selectRandomChapters() {
+        const checkboxes = Array.from(document.querySelectorAll('.chapter-checkbox'));
+        if (checkboxes.length === 0) return;
+        
+        // Clear all selections
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+          toggleChapterSelection(checkbox);
+        });
+        
+        // Select random chapters (at least 1, at most all)
+        const randomCount = Math.max(1, Math.floor(Math.random() * checkboxes.length) + 1);
+        const shuffled = [...checkboxes].sort(() => 0.5 - Math.random());
+        
+        for (let i = 0; i < randomCount; i++) {
+          const checkbox = shuffled[i];
+          checkbox.checked = true;
+          toggleChapterSelection(checkbox);
+        }
+      }
+      
+      function switchTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll('[id$="Content"]').forEach(el => {
+          el.classList.add('hidden');
+        });
+        
+        // Show selected tab content
+        const activeContent = document.getElementById(tabName + 'Content');
+        if (activeContent) {
+          activeContent.classList.remove('hidden');
+        }
+        
+        // Update tab styles
+        document.querySelectorAll('[id$="Tab"]').forEach(tab => {
+          if (tab.id === tabName + 'Tab') {
+            tab.classList.remove('text-white/70', 'border-transparent', 'hover:border-white/30');
+            tab.classList.add('text-white', 'border-blue-400');
+          } else {
+            tab.classList.remove('text-white', 'border-blue-400');
+            tab.classList.add('text-white/70', 'border-transparent', 'hover:border-white/30');
+          }
+        });
 
-        const contents = document.getElementById("courseContents");
+        // Initialize accordion for the active tab
+        if (tabName === 'learn') {
+          initAccordion();
+        }
+      }
+
+      function initAccordion() {
+        const learnContent = document.getElementById("learnContent");
+        if (!learnContent) return;
+
         // Initialize progress circles
-        const rings = contents
-          ? contents.querySelectorAll(".progress-ring")
-          : [];
-        const texts = contents
-          ? contents.querySelectorAll(".progress-text")
-          : [];
+        const rings = Array.from(learnContent.querySelectorAll(".progress-ring"));
+        const texts = Array.from(learnContent.querySelectorAll(".progress-text"));
+          
         const radius = 15;
         const circumference = 2 * Math.PI * radius;
         rings.forEach((ring, idx) => {
@@ -779,38 +900,102 @@
           ring.setAttribute("stroke-dashoffset", `${offset}`);
         });
 
-        // Accordion behavior with Tailwind transitions
-        const toggles = contents
-          ? contents.querySelectorAll(".content-toggle")
-          : [];
-        toggles.forEach((btn) => {
-          btn.addEventListener("click", function () {
-            const item = this.parentElement;
-            const sub = item.querySelector(".content-sublist");
-            const arrow = item.querySelector(".content-arrow");
-            const isExpanded = this.getAttribute("aria-expanded") === "true";
+        // Initialize the first item as expanded by default if needed
+        const firstItem = learnContent.querySelector(".content-item");
+        if (firstItem) {
+          const firstToggle = firstItem.querySelector(".content-toggle");
+          if (firstToggle) firstToggle.click();
+        }
+      }
 
-            // Close all others
-            contents.querySelectorAll(".content-sublist").forEach((el) => {
-              el.classList.remove("max-h-40", "sm:max-h-60", "opacity-100");
-              el.classList.add("max-h-0", "opacity-0");
-            });
-            contents
-              .querySelectorAll(".content-toggle")
-              .forEach((b) => b.setAttribute("aria-expanded", "false"));
-            contents
-              .querySelectorAll(".content-arrow")
-              .forEach((a) => a.classList.remove("rotate-180"));
+      // Handle accordion toggle
+      function handleAccordionToggle(e) {
+        const toggleBtn = e.target.closest('.content-toggle');
+        if (!toggleBtn) return;
+        
+        e.preventDefault();
+        const item = toggleBtn.closest('.content-item');
+        const sub = item ? item.querySelector(".content-sublist") : null;
+        const arrow = toggleBtn.querySelector(".content-arrow");
+        const isExpanded = toggleBtn.getAttribute("aria-expanded") === "true";
 
-            // If it was not expanded, open this one
-            if (!isExpanded && sub) {
-              sub.classList.remove("max-h-0", "opacity-0");
-              sub.classList.add("max-h-40", "sm:max-h-60", "opacity-100");
-              this.setAttribute("aria-expanded", "true");
-              if (arrow) arrow.classList.add("rotate-180");
+        // Close all other items
+        document.querySelectorAll('.content-item').forEach(otherItem => {
+          if (otherItem !== item) {
+            const otherSub = otherItem.querySelector(".content-sublist");
+            const otherBtn = otherItem.querySelector(".content-toggle");
+            const otherArrow = otherBtn ? otherBtn.querySelector(".content-arrow") : null;
+            
+            if (otherSub) {
+              otherSub.classList.remove("max-h-40", "sm:max-h-60", "opacity-100");
+              otherSub.classList.add("max-h-0", "opacity-0");
             }
-          });
+            if (otherBtn) otherBtn.setAttribute("aria-expanded", "false");
+            if (otherArrow) otherArrow.classList.remove("rotate-180");
+          }
         });
+
+        // Toggle current item
+        if (!isExpanded && sub) {
+          sub.classList.remove("max-h-0", "opacity-0");
+          sub.classList.add("max-h-40", "sm:max-h-60", "opacity-100");
+          toggleBtn.setAttribute("aria-expanded", "true");
+          if (arrow) arrow.classList.add("rotate-180");
+        } else if (sub) {
+          sub.classList.remove("max-h-40", "sm:max-h-60", "opacity-100");
+          sub.classList.add("max-h-0", "opacity-0");
+          toggleBtn.setAttribute("aria-expanded", "false");
+          if (arrow) arrow.classList.remove("rotate-180");
+        }
+      }
+
+      // Handle chapter selection
+      document.addEventListener('click', function(e) {
+        // Handle accordion toggles
+        if (e.target.closest('.content-toggle')) {
+          handleAccordionToggle(e);
+        }
+        
+        // Handle chapter checkbox clicks
+        const label = e.target.closest('label[class*="flex items-center"]');
+        if (label) {
+          const checkbox = label.querySelector('.chapter-checkbox');
+          if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+            toggleChapterSelection(checkbox);
+          }
+        }
+        
+        // Handle Take Test button click
+        if (e.target.closest('#takeTestBtn') || e.target.id === 'takeTestBtn') {
+          const selectedChapters = Array.from(document.querySelectorAll('.chapter-checkbox:checked'))
+            .map(checkbox => checkbox.value);
+          
+          if (selectedChapters.length > 0) {
+            // TODO: Navigate to test screen with selected chapters
+            console.log('Selected chapters for test:', selectedChapters);
+            // Example: window.location.href = `/test?chapters=${selectedChapters.join(',')}`;
+          }
+        }
+      });
+      
+      document.addEventListener("DOMContentLoaded", function () {
+        // Display selected course title from query string or localStorage
+        const selectedTitleEl = document.getElementById("selectedCourseTitle");
+        const params = new URLSearchParams(window.location.search);
+        const courseTitle = params.get("course") || localStorage.getItem("selectedCourse");
+        
+        if (selectedTitleEl) {
+          if (courseTitle) {
+            selectedTitleEl.textContent = courseTitle;
+            selectedTitleEl.classList.remove("hidden");
+          } else {
+            selectedTitleEl.classList.add("hidden");
+          }
+        }
+
+        // Initialize the first tab as active
+        switchTab('learn');
       });
     </script>
     <script src="/js/navbar.js"></script>

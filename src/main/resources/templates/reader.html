@@ -8,6 +8,7 @@
   <script src="/js/tailwind-config.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"/>
   <style>
     .show { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
     .show { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
@@ -48,7 +49,11 @@
     .drawer-acc.open { max-height: 1000px; opacity: 1; }
     .acc-icon { transition: transform .2s ease; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.0/dist/markdown-it-sub.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
@@ -183,13 +188,42 @@
         return;
       }
 
+      // Prepare markdown-it renderer with sub/sup and math (KaTeX)
+      const md = (window.markdownit ? window.markdownit({
+        html: true,
+        linkify: true,
+        breaks: false,
+        highlight: function (str, lang) {
+          try {
+            if (window.hljs) {
+              if (lang && hljs.getLanguage(lang)) {
+                return hljs.highlight(str, { language: lang }).value;
+              }
+              return hljs.highlightAuto(str).value;
+            }
+          } catch (_) {}
+          return '';
+        }
+      }) : null);
+      if (md) {
+        try { md.use(window.markdownitSub); } catch (_) {}
+        try { md.use(window.markdownitSup); } catch (_) {}
+        try {
+          md.use(window.texmath, {
+            engine: window.katex,
+            delimiters: 'dollars', // $...$ and $$...$$
+            katexOptions: { throwOnError: false }
+          });
+        } catch (_) {}
+      }
+
       fetch(url, { cache: 'no-cache' })
         .then(r => {
           if (!r.ok) throw new Error('Failed to load markdown: ' + r.status);
           return r.text();
         })
         .then(text => {
-          container.innerHTML = marked.parse(text);
+          container.innerHTML = md ? md.render(text) : text;
 
           // Fix relative asset URLs (images/links) to be relative to the markdown file directory
           try {
