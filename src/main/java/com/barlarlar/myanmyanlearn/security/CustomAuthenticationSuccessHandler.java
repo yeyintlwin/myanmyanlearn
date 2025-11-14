@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 import java.io.IOException;
 
 @Component
@@ -78,6 +79,14 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         }
 
         // If email is verified or user not found, proceed to home page
+        // If the remember-me checkbox was NOT checked, clear any existing remember-me
+        // cookie
+        if (request.getParameter("remember-me") == null) {
+            Cookie rememberMeCookie = new Cookie("remember-me", null);
+            rememberMeCookie.setPath("/");
+            rememberMeCookie.setMaxAge(0);
+            response.addCookie(rememberMeCookie);
+        }
         System.out.println("User email verified, redirecting to home");
         response.sendRedirect("/home");
     }
