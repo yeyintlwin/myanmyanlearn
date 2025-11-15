@@ -70,6 +70,20 @@ public class ForgetPasswordController {
             Member member = memberOpt.get();
             String username = member.getUserId();
 
+            // Build a display name using first and last name when available
+            String firstName = member.getFirstName();
+            String lastName = member.getLastName();
+            String fullName;
+            if (firstName != null && !firstName.isBlank() && lastName != null && !lastName.isBlank()) {
+                fullName = firstName + " " + lastName;
+            } else if (firstName != null && !firstName.isBlank()) {
+                fullName = firstName;
+            } else if (lastName != null && !lastName.isBlank()) {
+                fullName = lastName;
+            } else {
+                fullName = username;
+            }
+
             // Generate JWT reset token
             System.out.println("Generating JWT token...");
             String token = jwtService.generatePasswordResetToken(email);
@@ -87,9 +101,10 @@ public class ForgetPasswordController {
                     + java.net.URLEncoder.encode(token, java.nio.charset.StandardCharsets.UTF_8);
             System.out.println("Reset link: " + resetLink);
 
-            // Send email including username to help user identify their account
+            // Send email including full name (greeting) and username to help user identify
+            // their account
             System.out.println("Sending email...");
-            emailService.sendPasswordResetEmail(email, resetLink, username);
+            emailService.sendPasswordResetEmail(email, resetLink, username, fullName);
             System.out.println("Email sent successfully");
 
             System.out.println("Redirecting to reset-link-sent");

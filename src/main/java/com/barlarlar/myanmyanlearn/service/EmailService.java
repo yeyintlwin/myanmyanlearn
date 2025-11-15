@@ -67,12 +67,12 @@ public class EmailService {
         }
     }
 
-    public void sendPasswordResetEmail(String to, String resetLink, String username) {
+    public void sendPasswordResetEmail(String to, String resetLink, String username, String fullName) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(to);
             message.setSubject("Myan Myan Learn - Password Reset");
-            message.setText(buildPasswordResetEmailContent(resetLink, username));
+            message.setText(buildPasswordResetEmailContent(resetLink, username, fullName));
 
             mailSender.send(message);
             System.out.println("Password reset email sent successfully to: " + to);
@@ -82,20 +82,29 @@ public class EmailService {
         }
     }
 
-    private String buildPasswordResetEmailContent(String resetLink, String username) {
+    private String buildPasswordResetEmailContent(String resetLink, String username, String fullName) {
+        // Ensure we always send a full URL suitable for local development
+        String fullResetUrl = resetLink;
+        if (resetLink != null && !resetLink.isBlank() && !resetLink.startsWith("http")) {
+            fullResetUrl = "http://localhost:8080" + resetLink;
+        }
+
         return String.format("""
                 Hello %s,
 
                 We received a request to reset the password for your Myan Myan Learn account.
 
-                You can reset your password by clicking the link below:
+                Username: %s
+
+                To create a new password, please use the secure link below (valid for 60 minutes):
+
                 %s
 
-                This link will expire in 60 minutes. If you did not request a password reset,
-                you can safely ignore this email.
+                If you did not request a password reset, you can safely ignore this email.
+                For your security, please do not share this link with anyone.
 
                 Best regards,
                 Myan Myan Learn Team
-                """, username, resetLink);
+                """, fullName, username, fullResetUrl);
     }
 }
