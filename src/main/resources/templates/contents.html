@@ -1067,7 +1067,19 @@
           if (selectedChapters.length > 0) {
             // TODO: Navigate to test screen with selected chapters
             console.log("Selected chapters for test:", selectedChapters);
-            // Example: window.location.href = `/test?chapters=${selectedChapters.join(',')}`;
+            const params = new URLSearchParams();
+            params.set("chapters", selectedChapters.join(","));
+
+            // Preserve courseId so Assessment can navigate back to the correct Contents page
+            const currentUrlParams = new URLSearchParams(
+              window.location.search
+            );
+            const courseId = currentUrlParams.get("courseId");
+            if (courseId) {
+              params.set("courseId", courseId);
+            }
+
+            window.location.href = `/assessment?${params.toString()}`;
           }
         }
       });

@@ -58,11 +58,11 @@ public class SecurityConfig {
                                                 "/reset-success",
                                                 "/verification-success",
                                                 "/splash", "/language", "/intro",
-                                                "/contents", "/contents/**",
                                                 "/error",
                                                 "/images/**", "/css/**", "/js/**",
                                                 "/webjars/**")
                                 .permitAll()
+                                .requestMatchers("/assessment", "/assessment/**").authenticated()
                                 .anyRequest().authenticated())
                                 .formLogin(form -> form.loginPage("/login")
                                                 .loginProcessingUrl("/authenticateTheUser")
