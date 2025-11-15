@@ -67,12 +67,12 @@ public class EmailService {
         }
     }
 
-    public void sendPasswordResetEmail(String to, String resetLink) {
+    public void sendPasswordResetEmail(String to, String resetLink, String username) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(to);
             message.setSubject("Myan Myan Learn - Password Reset");
-            message.setText(buildPasswordResetEmailContent(resetLink));
+            message.setText(buildPasswordResetEmailContent(resetLink, username));
 
             mailSender.send(message);
             System.out.println("Password reset email sent successfully to: " + to);
@@ -82,11 +82,11 @@ public class EmailService {
         }
     }
 
-    private String buildPasswordResetEmailContent(String resetLink) {
+    private String buildPasswordResetEmailContent(String resetLink, String username) {
         return String.format("""
-                Hello!
+                Hello %s,
 
-                We received a request to reset your password for your Myan Myan Learn account.
+                We received a request to reset the password for your Myan Myan Learn account.
 
                 You can reset your password by clicking the link below:
                 %s
@@ -96,6 +96,6 @@ public class EmailService {
 
                 Best regards,
                 Myan Myan Learn Team
-                """, resetLink);
+                """, username, resetLink);
     }
 }

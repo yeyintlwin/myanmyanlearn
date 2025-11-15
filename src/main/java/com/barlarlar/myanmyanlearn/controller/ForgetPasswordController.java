@@ -59,6 +59,17 @@ public class ForgetPasswordController {
         }
 
         try {
+            // Look up member and username for this email
+            var memberOpt = memberRepository.findByEmail(email);
+            if (memberOpt.isEmpty()) {
+                System.out.println("Member not found for existing email, returning to form");
+                model.addAttribute("error", "Email not found. Please check and try again.");
+                model.addAttribute("email", email);
+                return "forget-password";
+            }
+            Member member = memberOpt.get();
+            String username = member.getUserId();
+
             // Generate JWT reset token
             System.out.println("Generating JWT token...");
             String token = jwtService.generatePasswordResetToken(email);
@@ -76,9 +87,9 @@ public class ForgetPasswordController {
                     + java.net.URLEncoder.encode(token, java.nio.charset.StandardCharsets.UTF_8);
             System.out.println("Reset link: " + resetLink);
 
-            // Send email
+            // Send email including username to help user identify their account
             System.out.println("Sending email...");
-            emailService.sendPasswordResetEmail(email, resetLink);
+            emailService.sendPasswordResetEmail(email, resetLink, username);
             System.out.println("Email sent successfully");
 
             System.out.println("Redirecting to reset-link-sent");
