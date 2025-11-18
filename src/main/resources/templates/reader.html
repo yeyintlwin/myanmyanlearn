@@ -1,345 +1,603 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:text="${sub != null ? sub.title : 'Reader'}">Reader</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/js/tailwind-config.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"/>
-  <style>
-    .show { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
-    .show { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
-    /* Markdown typography */
-    #mdContainer h1 { color: #0f172a; font-size: 2rem; line-height: 2.5rem; font-weight: 700; margin: 1.25rem 0 0.75rem; }
-    #mdContainer h2 { color: #0f172a; font-size: 1.5rem; line-height: 2rem; font-weight: 700; margin: 1.2rem 0 0.7rem; }
-    #mdContainer h3 { color: #0f172a; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; margin: 1.1rem 0 0.6rem; }
-    #mdContainer h4 { color: #0f172a; font-size: 1.125rem; line-height: 1.6rem; font-weight: 700; margin: 1rem 0 0.5rem; }
-    #mdContainer h5 { color: #0f172a; font-size: 1rem; line-height: 1.5rem; font-weight: 700; margin: 0.9rem 0 0.45rem; }
-    #mdContainer h6 { color: #0f172a; font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; margin: 0.8rem 0 0.4rem; }
-    #mdContainer p { margin: 0.75rem 0; color: #334155; }
-    #mdContainer a { color: #2563eb; text-decoration: underline; text-underline-offset: 2px; }
-    #mdContainer ul, #mdContainer ol { margin: 0.75rem 0 0.75rem 1.25rem; padding-left: 1.25rem; }
-    /* Unordered lists */
-    #mdContainer ul { list-style-type: disc; list-style-position: outside; }
-    #mdContainer ul ul { list-style-type: circle; }
-    #mdContainer ul ul ul { list-style-type: square; }
-    /* Ordered lists */
-    #mdContainer ol { list-style-type: decimal; list-style-position: outside; }
-    #mdContainer ol ol { list-style-type: lower-alpha; }
-    #mdContainer ol ol ol { list-style-type: lower-roman; }
-    #mdContainer li { margin: 0.25rem 0; }
-    #mdContainer li p { margin: 0.25rem 0; }
-    /* Task list checkboxes (GFM) */
-    #mdContainer li > input[type="checkbox"] { margin-right: 0.5rem; vertical-align: middle; }
-    #mdContainer blockquote { border-left: 4px solid #e2e8f0; padding: 0.5rem 1rem; margin: 1rem 0; color: #334155; background: #f8fafc; border-radius: 0.5rem; }
-    #mdContainer pre { background: #f6f8fa; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.75rem 1rem; overflow: auto; }
-    #mdContainer code { background: #f1f5f9; color: #0f172a; padding: 0.1rem 0.3rem; border-radius: 0.25rem; }
-    #mdContainer table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-    #mdContainer th, #mdContainer td { border: 1px solid #e5e7eb; padding: 0.5rem 0.6rem; }
-    #mdContainer th { background: #f8fafc; text-align: left; color: #0f172a; }
-    #mdContainer hr { border: none; height: 1px; background: #e5e7eb; margin: 1.25rem 0; }
-    /* Horizontal scroll helpers */
-    .scrollbar-none { scrollbar-width: none; }
-    .scrollbar-none::-webkit-scrollbar { display: none; }
-    /* Drawer accordion */
-    .drawer-acc { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .3s ease, opacity .2s ease; }
-    .drawer-acc.open { max-height: 1000px; opacity: 1; }
-    .acc-icon { transition: transform .2s ease; }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.0/dist/markdown-it-sub.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-</head>
-<body class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans text-gray-800 flex flex-col">
-  <!-- Navbar (shared fragment) -->
-  <nav th:replace="fragments/navbar :: appNavbar('Reader')"></nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${sub != null ? sub.title : 'Reader'}">Reader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+    />
+    <style>
+      .show {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+      }
+      .show {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+      }
+      /* Markdown typography */
+      #mdContainer h1 {
+        color: #0f172a;
+        font-size: 2rem;
+        line-height: 2.5rem;
+        font-weight: 700;
+        margin: 1.25rem 0 0.75rem;
+      }
+      #mdContainer h2 {
+        color: #0f172a;
+        font-size: 1.5rem;
+        line-height: 2rem;
+        font-weight: 700;
+        margin: 1.2rem 0 0.7rem;
+      }
+      #mdContainer h3 {
+        color: #0f172a;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        font-weight: 700;
+        margin: 1.1rem 0 0.6rem;
+      }
+      #mdContainer h4 {
+        color: #0f172a;
+        font-size: 1.125rem;
+        line-height: 1.6rem;
+        font-weight: 700;
+        margin: 1rem 0 0.5rem;
+      }
+      #mdContainer h5 {
+        color: #0f172a;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 700;
+        margin: 0.9rem 0 0.45rem;
+      }
+      #mdContainer h6 {
+        color: #0f172a;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        margin: 0.8rem 0 0.4rem;
+      }
+      #mdContainer p {
+        margin: 0.75rem 0;
+        color: #334155;
+      }
+      #mdContainer a {
+        color: #2563eb;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      #mdContainer ul,
+      #mdContainer ol {
+        margin: 0.75rem 0 0.75rem 1.25rem;
+        padding-left: 1.25rem;
+      }
+      /* Unordered lists */
+      #mdContainer ul {
+        list-style-type: disc;
+        list-style-position: outside;
+      }
+      #mdContainer ul ul {
+        list-style-type: circle;
+      }
+      #mdContainer ul ul ul {
+        list-style-type: square;
+      }
+      /* Ordered lists */
+      #mdContainer ol {
+        list-style-type: decimal;
+        list-style-position: outside;
+      }
+      #mdContainer ol ol {
+        list-style-type: lower-alpha;
+      }
+      #mdContainer ol ol ol {
+        list-style-type: lower-roman;
+      }
+      #mdContainer li {
+        margin: 0.25rem 0;
+      }
+      #mdContainer li p {
+        margin: 0.25rem 0;
+      }
+      /* Task list checkboxes (GFM) */
+      #mdContainer li > input[type="checkbox"] {
+        margin-right: 0.5rem;
+        vertical-align: middle;
+      }
+      #mdContainer blockquote {
+        border-left: 4px solid #e2e8f0;
+        padding: 0.5rem 1rem;
+        margin: 1rem 0;
+        color: #334155;
+        background: #f8fafc;
+        border-radius: 0.5rem;
+      }
+      #mdContainer pre {
+        background: #f6f8fa;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        overflow: auto;
+      }
+      #mdContainer code {
+        background: #f1f5f9;
+        color: #0f172a;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+      }
+      #mdContainer table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+      #mdContainer th,
+      #mdContainer td {
+        border: 1px solid #e5e7eb;
+        padding: 0.5rem 0.6rem;
+      }
+      #mdContainer th {
+        background: #f8fafc;
+        text-align: left;
+        color: #0f172a;
+      }
+      #mdContainer hr {
+        border: none;
+        height: 1px;
+        background: #e5e7eb;
+        margin: 1.25rem 0;
+      }
+      /* Horizontal scroll helpers */
+      .scrollbar-none {
+        scrollbar-width: none;
+      }
+      .scrollbar-none::-webkit-scrollbar {
+        display: none;
+      }
+      /* Drawer accordion */
+      .drawer-acc {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.3s ease, opacity 0.2s ease;
+      }
+      .drawer-acc.open {
+        max-height: 1000px;
+        opacity: 1;
+      }
+      .acc-icon {
+        transition: transform 0.2s ease;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.0/dist/markdown-it-sub.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-task-lists@2.1.1/dist/markdown-it-task-lists.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans text-gray-800 flex flex-col"
+  >
+    <!-- Navbar (shared fragment) -->
+    <nav th:replace="fragments/navbar :: appNavbar('Reader')"></nav>
 
-  <!-- Main Content -->
-  <main class="flex-1 pt-24 pb-16">
-    <div id="contentWrap" class="transition-all lg:ml-80">
-      <div class="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Header row matching Contents header: title left, Back button right -->
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <div class="flex items-center gap-3 sm:gap-3 min-w-0">
-          <button id="openDrawerBtn" type="button"
-                  class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0 mt-1 sm:mt-0">
-            <i class="fas fa-bars text-xs"></i>
-            <span class="hidden sm:inline">Subchapters</span>
-          </button>
-        </div>
-        <a th:href="@{/contents(courseId=${course.id})}"
-           class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0 mt-1 sm:mt-0">
-          <i class="fas fa-arrow-left text-xs"></i>
-          <span th:text="#{reader.back}">Back</span>
-        </a>
-      </div>
-
-      <!-- Markdown container: light yellow background for readability -->
-      <div class="bg-amber-50 border border-slate-200 rounded-xl p-4 sm:p-6 mb-3">
-        <article id="mdContainer" class="prose max-w-none text-slate-800"></article>
-      </div>
-      
-      <!-- Subchapter navigation (only Prev/Next) -->
-      <div th:if="${content != null && sub != null}" class="mt-2">
-        <div class="flex items-center justify-end gap-1">
-          <nav class="flex items-center gap-1" aria-label="Subchapter pagination">
-            <!-- Prev (always visible) -->
+    <!-- Main Content -->
+    <main class="flex-1 pt-24 pb-16">
+      <div id="contentWrap" class="transition-all lg:ml-80">
+        <div class="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- Header row matching Contents header: title left, Back button right -->
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div class="flex items-center gap-3 sm:gap-3 min-w-0">
+              <button
+                id="openDrawerBtn"
+                type="button"
+                class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0 mt-1 sm:mt-0"
+              >
+                <i class="fas fa-bars text-xs"></i>
+                <span class="hidden sm:inline">Subchapters</span>
+              </button>
+            </div>
             <a
-              class="inline-flex items-center justify-center h-9 w-9 rounded-md border bg-white/80 text-slate-700 no-underline transition focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-              th:classappend="${sub.order > 1} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
-              th:attr="href=${sub.order > 1} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order - 1})} : null, aria-disabled=${sub.order <= 1}"
-              title="Previous">
-              <i class="fas fa-chevron-left text-xs"></i>
+              th:href="@{/contents(courseId=${course.id})}"
+              class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0 mt-1 sm:mt-0"
+            >
+              <i class="fas fa-arrow-left text-xs"></i>
+              <span th:text="#{reader.back}">Back</span>
             </a>
-            <!-- Next (always visible) -->
-            <a
-              class="inline-flex items-center justify-center h-9 w-9 rounded-md border bg-white/80 text-slate-700 no-underline transition focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-              th:classappend="${sub.order < #lists.size(content.subcontents)} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
-              th:attr="href=${sub.order < #lists.size(content.subcontents)} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order + 1})} : null, aria-disabled=${sub.order >= #lists.size(content.subcontents)}"
-              title="Next">
-              <i class="fas fa-chevron-right text-xs"></i>
-            </a>
-          </nav>
-        </div>
-      </div>
+          </div>
 
-      <!-- Left Drawer: Subchapters (persistent) -->
-      <aside id="subDrawer"
-             class="fixed left-0 top-[72px] bottom-0 w-80 max-w-[85%] bg-white/60 backdrop-blur-lg supports-[backdrop-filter]:bg-white/50 shadow-2xl border-r border-slate-200 transition-transform duration-200 z-40">
-        <div class="h-full flex flex-col">
-          <!-- Current selection summary -->
-          <div class="px-3 pt-3 pb-3 border-b border-slate-200/60 bg-white/70">
-            <div class="min-w-0">
-              <div class="text-[11px] uppercase tracking-wide text-slate-500"
-                   th:text="${content != null ? (content.chapter != null ? content.chapter : 'Chapter ' + content.order) : ''}">Chapter</div>
-              <div class="text-sm sm:text-base font-semibold text-slate-900 truncate"
-                   th:text="${content != null ? content.title : ''}">Chapter Title</div>
-              <div class="text-xs sm:text-[13px] text-slate-600 truncate"
-                   th:text="${sub != null ? sub.title : ''}">Subchapter Title</div>
+          <!-- Markdown container: light yellow background for readability -->
+          <div
+            class="bg-amber-50 border border-slate-200 rounded-xl p-4 sm:p-6 mb-3"
+          >
+            <article
+              id="mdContainer"
+              class="prose max-w-none text-slate-800"
+            ></article>
+          </div>
+
+          <!-- Subchapter navigation (only Prev/Next) -->
+          <div th:if="${content != null && sub != null}" class="mt-2">
+            <div class="flex items-center justify-end gap-1">
+              <nav
+                class="flex items-center gap-1"
+                aria-label="Subchapter pagination"
+              >
+                <!-- Prev (always visible) -->
+                <a
+                  class="inline-flex items-center justify-center h-9 w-9 rounded-md border bg-white/80 text-slate-700 no-underline transition focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  th:classappend="${sub.order > 1} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
+                  th:attr="href=${sub.order > 1} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order - 1})} : null, aria-disabled=${sub.order <= 1}"
+                  title="Previous"
+                >
+                  <i class="fas fa-chevron-left text-xs"></i>
+                </a>
+                <!-- Next (always visible) -->
+                <a
+                  class="inline-flex items-center justify-center h-9 w-9 rounded-md border bg-white/80 text-slate-700 no-underline transition focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  th:classappend="${sub.order < #lists.size(content.subcontents)} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
+                  th:attr="href=${sub.order < #lists.size(content.subcontents)} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order + 1})} : null, aria-disabled=${sub.order >= #lists.size(content.subcontents)}"
+                  title="Next"
+                >
+                  <i class="fas fa-chevron-right text-xs"></i>
+                </a>
+              </nav>
             </div>
           </div>
-          <!-- Scrollable chapters/subchapters accordion -->
-          <div class="px-3 pt-2 pb-3 flex-1 overflow-y-auto">
-            <div th:each="c : ${course.contents}" class="mb-2">
-              <!-- Chapter (Disclosure button) -->
-              <button type="button"
-                      class="chapter-toggle w-full flex items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium text-slate-800 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                      th:data-ch="${c.order}"
-                      th:classappend="${c.order == content.order} ? ' bg-blue-100 text-blue-900 ring-1 ring-blue-300' : ''"
-                      aria-expanded="false">
-                <span class="flex items-center gap-2 min-w-0">
-                  <span class="inline-flex items-center justify-center h-6 w-6 rounded-md bg-slate-100 text-slate-600 text-xs font-medium"
-                        th:text="${c.order}">1</span>
-                  <span class="truncate" th:text="${c.title}">Chapter Title</span>
-                </span>
-                <i class="fas fa-chevron-down acc-icon text-[11px] text-gray-400"></i>
-              </button>
-              <!-- Subchapters (panel) -->
-              <div class="drawer-acc" th:classappend="${c.order == content.order} ? ' open' : ''">
-                <nav class="mt-0.5 divide-y divide-slate-200/30 pl-2 sm:pl-3" aria-label="Subchapters list">
-                  <a th:each="s : ${c.subcontents}"
-                     th:href="@{/reader(courseId=${course.id}, ch=${c.order}, sc=${s.order})}"
-                     class="flex items-center gap-2 no-underline px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 min-w-0"
-                     th:classappend="${c.order == content.order && s.order == sub.order} ? ' bg-indigo-50/60 text-indigo-600 ring-1 ring-inset ring-indigo-200/70' : ''">
-                    <span class="inline-flex items-center justify-center h-5 px-1.5 rounded bg-slate-50/80 text-slate-600 text-[11px] font-medium flex-none whitespace-nowrap"
-                          th:text="${c.order + '-' + s.order}">1-1</span>
-                    <span class="truncate flex-1" th:text="${s.title}">Subchapter</span>
-                  </a>
-                </nav>
+
+          <!-- Left Drawer: Subchapters (persistent) -->
+          <aside
+            id="subDrawer"
+            class="fixed left-0 top-[72px] bottom-0 w-80 max-w-[85%] bg-white/60 backdrop-blur-lg supports-[backdrop-filter]:bg-white/50 shadow-2xl border-r border-slate-200 transition-transform duration-200 z-40"
+          >
+            <div class="h-full flex flex-col">
+              <!-- Current selection summary -->
+              <div
+                class="px-3 pt-3 pb-3 border-b border-slate-200/60 bg-white/70"
+              >
+                <div class="min-w-0">
+                  <div
+                    class="text-[11px] uppercase tracking-wide text-slate-500"
+                    th:text="${content != null ? (content.chapter != null ? content.chapter : 'Chapter ' + content.order) : ''}"
+                  >
+                    Chapter
+                  </div>
+                  <div
+                    class="text-sm sm:text-base font-semibold text-slate-900 truncate"
+                    th:text="${content != null ? content.title : ''}"
+                  >
+                    Chapter Title
+                  </div>
+                  <div
+                    class="text-xs sm:text-[13px] text-slate-600 truncate"
+                    th:text="${sub != null ? sub.title : ''}"
+                  >
+                    Subchapter Title
+                  </div>
+                </div>
+              </div>
+              <!-- Scrollable chapters/subchapters accordion -->
+              <div class="px-3 pt-2 pb-3 flex-1 overflow-y-auto">
+                <div th:each="c : ${course.contents}" class="mb-2">
+                  <!-- Chapter (Disclosure button) -->
+                  <button
+                    type="button"
+                    class="chapter-toggle w-full flex items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium text-slate-800 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    th:data-ch="${c.order}"
+                    th:classappend="${c.order == content.order} ? ' bg-blue-100 text-blue-900 ring-1 ring-blue-300' : ''"
+                    aria-expanded="false"
+                  >
+                    <span class="flex items-center gap-2 min-w-0">
+                      <span
+                        class="inline-flex items-center justify-center h-6 w-6 rounded-md bg-slate-100 text-slate-600 text-xs font-medium"
+                        th:text="${c.order}"
+                        >1</span
+                      >
+                      <span class="truncate" th:text="${c.title}"
+                        >Chapter Title</span
+                      >
+                    </span>
+                    <i
+                      class="fas fa-chevron-down acc-icon text-[11px] text-gray-400"
+                    ></i>
+                  </button>
+                  <!-- Subchapters (panel) -->
+                  <div
+                    class="drawer-acc"
+                    th:classappend="${c.order == content.order} ? ' open' : ''"
+                  >
+                    <nav
+                      class="mt-0.5 divide-y divide-slate-200/30 pl-2 sm:pl-3"
+                      aria-label="Subchapters list"
+                    >
+                      <a
+                        th:each="s : ${c.subcontents}"
+                        th:href="@{/reader(courseId=${course.id}, ch=${c.order}, sc=${s.order})}"
+                        class="flex items-center gap-2 no-underline px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 min-w-0"
+                        th:classappend="${c.order == content.order && s.order == sub.order} ? ' bg-indigo-50/60 text-indigo-600 ring-1 ring-inset ring-indigo-200/70' : ''"
+                      >
+                        <span
+                          class="inline-flex items-center justify-center h-5 px-1.5 rounded bg-slate-50/80 text-slate-600 text-[11px] font-medium flex-none whitespace-nowrap"
+                          th:text="${c.order + '-' + s.order}"
+                          >1-1</span
+                        >
+                        <span class="truncate flex-1" th:text="${s.title}"
+                          >Subchapter</span
+                        >
+                      </a>
+                    </nav>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </aside>
+          <div id="mdError" class="text-red-200 mt-4 hidden"></div>
         </div>
-      </aside>
-      <div id="mdError" class="text-red-200 mt-4 hidden"></div>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <script th:inline="javascript">
-    (function() {
-      const mdPath = /*[[${markdownPath}]]*/ null;
-      const courseId = /*[[${course != null ? course.id : null}]]*/ null;
-      const ch = /*[[${content != null ? content.order : null}]]*/ null;
-      const sc = /*[[${sub != null ? sub.order : null}]]*/ null;
+    <script th:inline="javascript">
+      (function () {
+        const mdPath = /*[[${markdownPath}]]*/ null;
+        const courseId = /*[[${course != null ? course.id : null}]]*/ null;
+        const ch = /*[[${content != null ? content.order : null}]]*/ null;
+        const sc = /*[[${sub != null ? sub.order : null}]]*/ null;
 
-      const container = document.getElementById('mdContainer');
-      const err = document.getElementById('mdError');
+        const container = document.getElementById("mdContainer");
+        const err = document.getElementById("mdError");
 
-      // Prefer controller endpoint to avoid static resource 404s during dev
-      const apiUrl = (courseId && ch && sc)
-        ? `/reader/md?courseId=${encodeURIComponent(courseId)}&ch=${encodeURIComponent(ch)}&sc=${encodeURIComponent(sc)}`
-        : null;
+        // Prefer controller endpoint to avoid static resource 404s during dev
+        const apiUrl =
+          courseId && ch && sc
+            ? `/reader/md?courseId=${encodeURIComponent(
+                courseId
+              )}&ch=${encodeURIComponent(ch)}&sc=${encodeURIComponent(sc)}`
+            : null;
 
-      // Fallback to static path if apiUrl not available
-      const staticUrl = mdPath ? (mdPath.startsWith('/') ? mdPath : '/' + mdPath) : null;
-      const url = apiUrl || staticUrl;
+        // Fallback to static path if apiUrl not available
+        const staticUrl = mdPath
+          ? mdPath.startsWith("/")
+            ? mdPath
+            : "/" + mdPath
+          : null;
+        const url = apiUrl || staticUrl;
 
-      if (!url) {
-        err.textContent = 'No markdown path provided.';
-        err.classList.remove('hidden');
-        return;
-      }
-
-      // Prepare markdown-it renderer with sub/sup and math (KaTeX)
-      const md = (window.markdownit ? window.markdownit({
-        html: true,
-        linkify: true,
-        breaks: false,
-        highlight: function (str, lang) {
-          try {
-            if (window.hljs) {
-              if (lang && hljs.getLanguage(lang)) {
-                return hljs.highlight(str, { language: lang }).value;
-              }
-              return hljs.highlightAuto(str).value;
-            }
-          } catch (_) {}
-          return '';
+        if (!url) {
+          err.textContent = "No markdown path provided.";
+          err.classList.remove("hidden");
+          return;
         }
-      }) : null);
-      if (md) {
-        try { md.use(window.markdownitSub); } catch (_) {}
-        try { md.use(window.markdownitSup); } catch (_) {}
-        try {
-          md.use(window.texmath, {
-            engine: window.katex,
-            delimiters: 'dollars', // $...$ and $$...$$
-            katexOptions: { throwOnError: false }
-          });
-        } catch (_) {}
-      }
 
-      fetch(url, { cache: 'no-cache' })
-        .then(r => {
-          if (!r.ok) throw new Error('Failed to load markdown: ' + r.status);
-          return r.text();
-        })
-        .then(text => {
-          container.innerHTML = md ? md.render(text) : text;
-
-          // Fix relative asset URLs (images/links) to be relative to the markdown file directory
+        // Prepare markdown-it renderer with sub/sup and math (KaTeX)
+        const md = window.markdownit
+          ? window.markdownit({
+              html: true,
+              linkify: true,
+              breaks: false,
+              highlight: function (str, lang) {
+                try {
+                  if (window.hljs) {
+                    if (lang && hljs.getLanguage(lang)) {
+                      return hljs.highlight(str, { language: lang }).value;
+                    }
+                    return hljs.highlightAuto(str).value;
+                  }
+                } catch (_) {}
+                return "";
+              },
+            })
+          : null;
+        if (md) {
           try {
-            const rawMdPath = mdPath || '';
-            const normalized = rawMdPath.startsWith('/') ? rawMdPath.substring(1) : rawMdPath;
-            const lastSlash = normalized.lastIndexOf('/');
-            const baseDir = lastSlash >= 0 ? normalized.substring(0, lastSlash + 1) : '';
-            const isAbsolute = (u) => /^(?:[a-z]+:)?\/\//i.test(u) || u.startsWith('/') || u.startsWith('data:');
+            md.use(window.markdownitSub);
+          } catch (_) {}
+          try {
+            md.use(window.markdownitSup);
+          } catch (_) {}
+          try {
+            md.use(window.texmath, {
+              engine: window.katex,
+              delimiters: "dollars", // $...$ and $$...$$
+              katexOptions: { throwOnError: false },
+            });
+          } catch (_) {}
+          try {
+            // Enable GitHub-style task list checkboxes (e.g. "- [ ]" / "- [x]")
+            md.use(window.markdownitTaskLists, {
+              enabled: true,
+              label: true,
+              labelAfter: true,
+            });
+          } catch (_) {}
+        }
 
-            // Images
-            container.querySelectorAll('img[src]').forEach((img) => {
-              const src = img.getAttribute('src');
-              if (!src || isAbsolute(src)) return;
-              img.setAttribute('src', '/' + baseDir + src);
+        fetch(url, { cache: "no-cache" })
+          .then((r) => {
+            if (!r.ok) throw new Error("Failed to load markdown: " + r.status);
+            return r.text();
+          })
+          .then((text) => {
+            container.innerHTML = md ? md.render(text) : text;
+
+            // Make all task-list checkboxes read-only in the reader
+            const checkboxes = container.querySelectorAll(
+              'input[type="checkbox"]'
+            );
+            checkboxes.forEach((cb) => {
+              cb.disabled = true;
+              cb.setAttribute("aria-disabled", "true");
             });
 
-            // Links (keep http(s) intact; fix relative asset/document links)
-            container.querySelectorAll('a[href]').forEach((a) => {
-              const href = a.getAttribute('href');
-              if (!href || isAbsolute(href)) return;
-              a.setAttribute('href', '/' + baseDir + href);
-            });
-          } catch (_) { /* noop */ }
-
-          // Render Mermaid diagrams if present
-          if (window.mermaid) {
+            // Fix relative asset URLs (images/links) to be relative to the markdown file directory
             try {
-              mermaid.initialize({ startOnLoad: false, theme: 'default' });
-              // Replace fenced mermaid code blocks with .mermaid containers
-              const blocks = container.querySelectorAll('pre code.language-mermaid');
-              blocks.forEach((codeEl) => {
-                const graphDef = codeEl.textContent.trim();
-                const wrapper = document.createElement('div');
-                wrapper.className = 'mermaid my-4';
-                wrapper.textContent = graphDef;
-                const pre = codeEl.closest('pre');
-                if (pre && pre.parentNode) {
-                  pre.parentNode.replaceChild(wrapper, pre);
-                }
+              const rawMdPath = mdPath || "";
+              const normalized = rawMdPath.startsWith("/")
+                ? rawMdPath.substring(1)
+                : rawMdPath;
+              const lastSlash = normalized.lastIndexOf("/");
+              const baseDir =
+                lastSlash >= 0 ? normalized.substring(0, lastSlash + 1) : "";
+              const isAbsolute = (u) =>
+                /^(?:[a-z]+:)?\/\//i.test(u) ||
+                u.startsWith("/") ||
+                u.startsWith("data:");
+
+              // Images
+              container.querySelectorAll("img[src]").forEach((img) => {
+                const src = img.getAttribute("src");
+                if (!src || isAbsolute(src)) return;
+                img.setAttribute("src", "/" + baseDir + src);
               });
-              mermaid.run({ querySelector: '.mermaid' });
-            } catch (e) {
-              console.warn('Mermaid render error:', e);
+
+              // Links (keep http(s) intact; fix relative asset/document links)
+              container.querySelectorAll("a[href]").forEach((a) => {
+                const href = a.getAttribute("href");
+                if (!href || isAbsolute(href)) return;
+                a.setAttribute("href", "/" + baseDir + href);
+              });
+            } catch (_) {
+              /* noop */
             }
-          }
 
-          // Syntax highlight code blocks
-          if (window.hljs) {
-            container.querySelectorAll('pre code').forEach((block) => {
-              try { hljs.highlightElement(block); } catch (_) {}
-            });
-          }
-
-          // No subchapter tab scrolling (tabs removed)
-
-          // Persistent drawer: visible by default, user can hide it
-          const drawer = document.getElementById('subDrawer');
-          const openBtn = document.getElementById('openDrawerBtn');
-          const closeBtn = document.getElementById('closeDrawerBtn');
-          const contentWrap = document.getElementById('contentWrap');
-          const STORAGE_KEY = 'readerDrawerHidden';
-
-          const setHidden = (hidden) => {
-            if (!drawer || !contentWrap) return;
-            if (hidden) {
-              drawer.classList.add('-translate-x-full');
-              contentWrap.classList.remove('lg:ml-80');
-              if (openBtn) openBtn.querySelector('span') && (openBtn.querySelector('span').textContent = 'Show');
-            } else {
-              drawer.classList.remove('-translate-x-full');
-              contentWrap.classList.add('lg:ml-80');
-              if (openBtn) openBtn.querySelector('span') && (openBtn.querySelector('span').textContent = 'Hide');
+            // Render Mermaid diagrams if present
+            if (window.mermaid) {
+              try {
+                mermaid.initialize({ startOnLoad: false, theme: "default" });
+                // Replace fenced mermaid code blocks with .mermaid containers
+                const blocks = container.querySelectorAll(
+                  "pre code.language-mermaid"
+                );
+                blocks.forEach((codeEl) => {
+                  const graphDef = codeEl.textContent.trim();
+                  const wrapper = document.createElement("div");
+                  wrapper.className = "mermaid my-4";
+                  wrapper.textContent = graphDef;
+                  const pre = codeEl.closest("pre");
+                  if (pre && pre.parentNode) {
+                    pre.parentNode.replaceChild(wrapper, pre);
+                  }
+                });
+                mermaid.run({ querySelector: ".mermaid" });
+              } catch (e) {
+                console.warn("Mermaid render error:", e);
+              }
             }
-            try { localStorage.setItem(STORAGE_KEY, hidden ? '1' : '0'); } catch (_) {}
-          };
 
-          // Initialize state (default visible)
-          let hidden = false;
-          try { hidden = localStorage.getItem(STORAGE_KEY) === '1'; } catch (_) {}
-          setHidden(hidden);
+            // Syntax highlight code blocks
+            if (window.hljs) {
+              container.querySelectorAll("pre code").forEach((block) => {
+                try {
+                  hljs.highlightElement(block);
+                } catch (_) {}
+              });
+            }
 
-          const toggleDrawer = () => { hidden = !hidden; setHidden(hidden); };
-          openBtn && openBtn.addEventListener('click', toggleDrawer);
-          closeBtn && closeBtn.addEventListener('click', () => setHidden(true));
+            // No subchapter tab scrolling (tabs removed)
 
-          // Drawer accordion: only one chapter open at a time
-          const chapterButtons = Array.from(document.querySelectorAll('#subDrawer .chapter-toggle'));
-          const panels = Array.from(document.querySelectorAll('#subDrawer .drawer-acc'));
-          const syncIcons = () => {
+            // Persistent drawer: visible by default, user can hide it
+            const drawer = document.getElementById("subDrawer");
+            const openBtn = document.getElementById("openDrawerBtn");
+            const closeBtn = document.getElementById("closeDrawerBtn");
+            const contentWrap = document.getElementById("contentWrap");
+            const STORAGE_KEY = "readerDrawerHidden";
+
+            const setHidden = (hidden) => {
+              if (!drawer || !contentWrap) return;
+              if (hidden) {
+                drawer.classList.add("-translate-x-full");
+                contentWrap.classList.remove("lg:ml-80");
+                if (openBtn)
+                  openBtn.querySelector("span") &&
+                    (openBtn.querySelector("span").textContent = "Show");
+              } else {
+                drawer.classList.remove("-translate-x-full");
+                contentWrap.classList.add("lg:ml-80");
+                if (openBtn)
+                  openBtn.querySelector("span") &&
+                    (openBtn.querySelector("span").textContent = "Hide");
+              }
+              try {
+                localStorage.setItem(STORAGE_KEY, hidden ? "1" : "0");
+              } catch (_) {}
+            };
+
+            // Initialize state (default visible)
+            let hidden = false;
+            try {
+              hidden = localStorage.getItem(STORAGE_KEY) === "1";
+            } catch (_) {}
+            setHidden(hidden);
+
+            const toggleDrawer = () => {
+              hidden = !hidden;
+              setHidden(hidden);
+            };
+            openBtn && openBtn.addEventListener("click", toggleDrawer);
+            closeBtn &&
+              closeBtn.addEventListener("click", () => setHidden(true));
+
+            // Drawer accordion: only one chapter open at a time
+            const chapterButtons = Array.from(
+              document.querySelectorAll("#subDrawer .chapter-toggle")
+            );
+            const panels = Array.from(
+              document.querySelectorAll("#subDrawer .drawer-acc")
+            );
+            const syncIcons = () => {
+              chapterButtons.forEach((btn, idx) => {
+                const icon = btn.querySelector(".acc-icon");
+                const isOpen = panels[idx]?.classList.contains("open");
+                btn.setAttribute("aria-expanded", String(!!isOpen));
+                if (icon)
+                  icon.style.transform = isOpen
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)";
+              });
+            };
+            const closeAll = () => {
+              panels.forEach((p) => p.classList.remove("open"));
+            };
             chapterButtons.forEach((btn, idx) => {
-              const icon = btn.querySelector('.acc-icon');
-              const isOpen = panels[idx]?.classList.contains('open');
-              btn.setAttribute('aria-expanded', String(!!isOpen));
-              if (icon) icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+              btn.addEventListener("click", () => {
+                const panel = panels[idx];
+                const willOpen = !panel.classList.contains("open");
+                closeAll();
+                if (willOpen) panel.classList.add("open");
+                syncIcons();
+              });
             });
-          };
-          const closeAll = () => { panels.forEach(p => p.classList.remove('open')); };
-          chapterButtons.forEach((btn, idx) => {
-            btn.addEventListener('click', () => {
-              const panel = panels[idx];
-              const willOpen = !panel.classList.contains('open');
-              closeAll();
-              if (willOpen) panel.classList.add('open');
-              syncIcons();
-            });
+            // Initial sync for server-rendered open chapter
+            syncIcons();
+          })
+          .catch((e) => {
+            err.textContent = e.message;
+            err.classList.remove("hidden");
           });
-          // Initial sync for server-rendered open chapter
-          syncIcons();
-        })
-        .catch(e => {
-          err.textContent = e.message;
-          err.classList.remove('hidden');
-        });
-    })();
-  </script>
-  <script src="/js/navbar.js"></script>
-  <script src="https://kit.fontawesome.com/6cfb6b7f24.js" crossorigin="anonymous"></script>
-</body>
+      })();
+    </script>
+    <script src="/js/navbar.js"></script>
+    <script
+      src="https://kit.fontawesome.com/6cfb6b7f24.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
