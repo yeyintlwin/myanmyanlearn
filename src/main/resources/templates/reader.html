@@ -163,6 +163,35 @@
         background: #e5e7eb;
         margin: 1.25rem 0;
       }
+      /* Media sizing: keep images/diagrams from becoming too large */
+      #mdContainer img,
+      #mdContainer svg,
+      #mdContainer video,
+      #mdContainer iframe {
+        display: block;
+        max-width: min(100%, 720px);
+        height: auto;
+        margin: 0.5rem auto;
+      }
+      /* Cap image height to avoid overly tall images */
+      #mdContainer img {
+        max-height: 60vh;
+      }
+      /* Mermaid diagrams (SVG) */
+      #mdContainer .mermaid {
+        max-width: min(100%, 720px);
+        margin: 0.5rem auto;
+        overflow: hidden;
+      }
+      /* Figure captions */
+      #mdContainer figure {
+        margin: 0.75rem auto;
+        text-align: center;
+      }
+      #mdContainer figcaption {
+        color: #64748b;
+        font-size: 0.875rem;
+      }
       /* Horizontal scroll helpers */
       .scrollbar-none {
         scrollbar-width: none;
