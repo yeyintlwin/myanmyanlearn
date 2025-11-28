@@ -1015,11 +1015,9 @@
               : null;
 
             if (otherSub) {
-              otherSub.classList.remove(
-                "max-h-40",
-                "sm:max-h-60",
-                "opacity-100"
-              );
+              // Collapse and hide
+              otherSub.style.maxHeight = "0px";
+              otherSub.classList.remove("opacity-100");
               otherSub.classList.add("max-h-0", "opacity-0");
             }
             if (otherBtn) otherBtn.setAttribute("aria-expanded", "false");
@@ -1029,13 +1027,18 @@
 
         // Toggle current item
         if (!isExpanded && sub) {
+          // Expand to fit all subtitles
           sub.classList.remove("max-h-0", "opacity-0");
-          sub.classList.add("max-h-40", "sm:max-h-60", "opacity-100");
+          sub.classList.add("opacity-100");
+          // Use dynamic height so all items are visible
+          sub.style.maxHeight = sub.scrollHeight + "px";
           toggleBtn.setAttribute("aria-expanded", "true");
           if (arrow) arrow.classList.add("rotate-180");
         } else if (sub) {
-          sub.classList.remove("max-h-40", "sm:max-h-60", "opacity-100");
+          // Collapse
+          sub.classList.remove("opacity-100");
           sub.classList.add("max-h-0", "opacity-0");
+          sub.style.maxHeight = "0px";
           toggleBtn.setAttribute("aria-expanded", "false");
           if (arrow) arrow.classList.remove("rotate-180");
         }

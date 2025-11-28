@@ -10,13 +10,176 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+    />
     <style>
       .show {
         opacity: 1 !important;
         visibility: visible !important;
         transform: translateY(0) !important;
       }
+      /* Markdown typography */
+      #mdContainer h1 {
+        color: #0f172a;
+        font-size: 2rem;
+        line-height: 2.5rem;
+        font-weight: 700;
+        margin: 1.25rem 0 0.75rem;
+      }
+      #mdContainer h2 {
+        color: #0f172a;
+        font-size: 1.5rem;
+        line-height: 2rem;
+        font-weight: 700;
+        margin: 1.2rem 0 0.7rem;
+      }
+      #mdContainer h3 {
+        color: #0f172a;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        font-weight: 700;
+        margin: 1.1rem 0 0.6rem;
+      }
+      #mdContainer h4 {
+        color: #0f172a;
+        font-size: 1.125rem;
+        line-height: 1.6rem;
+        font-weight: 700;
+        margin: 1rem 0 0.5rem;
+      }
+      #mdContainer h5 {
+        color: #0f172a;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 700;
+        margin: 0.9rem 0 0.45rem;
+      }
+      #mdContainer h6 {
+        color: #0f172a;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        margin: 0.8rem 0 0.4rem;
+      }
+      #mdContainer p {
+        margin: 0.75rem 0;
+        color: #334155;
+      }
+      #mdContainer a {
+        color: #2563eb;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      #mdContainer ul,
+      #mdContainer ol {
+        margin: 0.75rem 0 0.75rem 1.25rem;
+        padding-left: 1.25rem;
+      }
+      #mdContainer ul {
+        list-style-type: disc;
+        list-style-position: outside;
+      }
+      #mdContainer ul ul {
+        list-style-type: circle;
+      }
+      #mdContainer ul ul ul {
+        list-style-type: square;
+      }
+      #mdContainer ol {
+        list-style-type: decimal;
+        list-style-position: outside;
+      }
+      #mdContainer ol ol {
+        list-style-type: lower-alpha;
+      }
+      #mdContainer ol ol ol {
+        list-style-type: lower-roman;
+      }
+      #mdContainer li {
+        margin: 0.25rem 0;
+      }
+      #mdContainer li p {
+        margin: 0.25rem 0;
+      }
+      #mdContainer li > input[type="checkbox"] {
+        margin-right: 0.5rem;
+        vertical-align: middle;
+      }
+      #mdContainer blockquote {
+        border-left: 4px solid #e2e8f0;
+        padding: 0.5rem 1rem;
+        margin: 1rem 0;
+        color: #334155;
+        background: #f8fafc;
+        border-radius: 0.5rem;
+      }
+      #mdContainer pre {
+        background: #f6f8fa;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        overflow: auto;
+      }
+      #mdContainer code {
+        background: #f1f5f9;
+        color: #0f172a;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+      }
+      #mdContainer table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+      #mdContainer th,
+      #mdContainer td {
+        border: 1px solid #e5e7eb;
+        padding: 0.5rem 0.6rem;
+      }
+      #mdContainer th {
+        background: #f8fafc;
+        text-align: left;
+        color: #0f172a;
+      }
+      #mdContainer hr {
+        border: none;
+        height: 1px;
+        background: #e5e7eb;
+        margin: 1.25rem 0;
+      }
+      #mdContainer img,
+      #mdContainer svg,
+      #mdContainer video,
+      #mdContainer iframe {
+        display: block;
+        max-width: min(100%, 720px);
+        height: auto;
+        margin: 0.5rem auto;
+      }
+      #mdContainer img {
+        max-height: 60vh;
+      }
+      #mdError1,
+      #mdError2,
+      #mdError3 {
+        color: #fecaca;
+      }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.0/dist/markdown-it-sub.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-task-lists@2.1.1/dist/markdown-it-task-lists.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   </head>
   <body
     class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans text-gray-800 flex flex-col"
@@ -45,16 +208,389 @@
             class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0"
           >
             <i class="fas fa-arrow-left text-xs"></i>
-          <span>Back to Contents</span>
+            <span>Back to Contents</span>
           </a>
         </div>
 
-        <!-- Assessment cards removed -->
+        <!-- Summary Card -->
+        <section
+          class="mb-6 bg-white/10 border border-white/10 rounded-xl p-4 sm:p-5"
+        >
+          <div class="flex items-center justify-between">
+            <h2
+              class="text-white text-lg font-semibold flex items-center gap-2"
+            >
+              <span
+                class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs"
+              >
+                <i class="fas fa-file-alt"></i>
+              </span>
+              <span>Exam Summary</span>
+            </h2>
+          </div>
+          <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+              <div class="text-white/70 text-xs">Exam Title</div>
+              <div
+                class="text-white font-medium"
+                id="examTitleVal"
+                th:text="${examTitle}"
+              >
+                Assessment
+              </div>
+            </div>
+            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+              <div class="text-white/70 text-xs">Total Score</div>
+              <div class="text-white font-medium">
+                <span id="totalScoreVal">0</span>
+              </div>
+            </div>
+            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+              <div class="text-white/70 text-xs">Chapters</div>
+              <div
+                class="text-white font-medium break-words"
+                id="chaptersVal"
+                th:text="${#strings.listJoin(selectedChapters, ', ')}"
+              >
+                -
+              </div>
+            </div>
+          </div>
+        </section>
 
+        <!-- Sample Questions and Answers -->
+        <div class="space-y-6">
+          <!-- Q1 -->
+          <section
+            class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
+            data-mark="1"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <h2
+                class="text-white text-lg font-semibold flex items-center gap-2"
+              >
+                <span
+                  class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs"
+                  >1</span
+                >
+                <span>Question 1</span>
+              </h2>
+              <div class="flex items-center gap-3">
+                <span
+                  class="text-white/80 text-sm question-mark-label"
+                  data-mark-label
+                  >–</span
+                >
+                <span id="mdError1" class="hidden"></span>
+              </div>
+            </div>
+            <div
+              class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
+            >
+              <article
+                id="mdQ1"
+                class="prose max-w-none text-slate-800"
+              ></article>
+            </div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q1"
+                  value="0"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>I am happy.</span>
+              </label>
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q1"
+                  value="1"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>I is happy.</span>
+              </label>
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q1"
+                  value="2"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>I be happy.</span>
+              </label>
+            </div>
+          </section>
 
+          <!-- Q2 -->
+          <section
+            class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
+            data-mark="1"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <h2
+                class="text-white text-lg font-semibold flex items-center gap-2"
+              >
+                <span
+                  class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs"
+                  >2</span
+                >
+                <span>Question 2</span>
+              </h2>
+              <div class="flex items-center gap-3">
+                <span
+                  class="text-white/80 text-sm question-mark-label"
+                  data-mark-label
+                  >–</span
+                >
+                <span id="mdError2" class="hidden"></span>
+              </div>
+            </div>
+            <div
+              class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
+            >
+              <article
+                id="mdQ2"
+                class="prose max-w-none text-slate-800"
+              ></article>
+            </div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q2"
+                  value="0"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>The sum of <code>a</code> and <code>b</code>.</span>
+              </label>
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q2"
+                  value="1"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>The product of <code>a</code> and <code>b</code>.</span>
+              </label>
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q2"
+                  value="2"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>The string <code>"add"</code>.</span>
+              </label>
+            </div>
+          </section>
+
+          <!-- Q3 -->
+          <section
+            class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
+            data-mark="1"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <h2
+                class="text-white text-lg font-semibold flex items-center gap-2"
+              >
+                <span
+                  class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs"
+                  >3</span
+                >
+                <span>Question 3</span>
+              </h2>
+              <div class="flex items-center gap-3">
+                <span
+                  class="text-white/80 text-sm question-mark-label"
+                  data-mark-label
+                  >–</span
+                >
+                <span id="mdError3" class="hidden"></span>
+              </div>
+            </div>
+            <div
+              class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
+            >
+              <article
+                id="mdQ3"
+                class="prose max-w-none text-slate-800"
+              ></article>
+            </div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q3"
+                  value="0"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>x = 3</span>
+              </label>
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q3"
+                  value="1"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>x = 6</span>
+              </label>
+              <label class="flex items-center gap-3 text-white/90">
+                <input
+                  type="radio"
+                  name="q3"
+                  value="2"
+                  class="w-4 h-4 accent-blue-500"
+                />
+                <span>x = 2</span>
+              </label>
+            </div>
+          </section>
+
+          <!-- Submit -->
+          <div class="pt-2">
+            <button
+              id="submitAssessment"
+              type="button"
+              class="w-full sm:w-auto px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              <i class="fas fa-paper-plane"></i>
+              <span>Submit</span>
+            </button>
+          </div>
+        </div>
       </div>
     </main>
 
+    <script>
+      (function () {
+        const md = window.markdownit
+          ? window.markdownit({
+              html: true,
+              linkify: true,
+              breaks: false,
+              highlight: function (str, lang) {
+                try {
+                  if (window.hljs) {
+                    if (lang && hljs.getLanguage(lang)) {
+                      return hljs.highlight(str, { language: lang }).value;
+                    }
+                    return hljs.highlightAuto(str).value;
+                  }
+                } catch (_) {}
+                return "";
+              },
+            })
+          : null;
+        if (md) {
+          try {
+            md.use(window.markdownitSub);
+          } catch (_) {}
+          try {
+            md.use(window.markdownitSup);
+          } catch (_) {}
+          try {
+            md.use(window.texmath, {
+              engine: window.katex,
+              delimiters: "dollars",
+              katexOptions: { throwOnError: false },
+            });
+          } catch (_) {}
+          try {
+            md.use(window.markdownitTaskLists, {
+              enabled: true,
+              label: true,
+              labelAfter: true,
+            });
+          } catch (_) {}
+        }
+
+        const prompts = [
+          '**Which sentence uses the correct form of \\"to be\\"?**\n\nRemember: singular subjects take **is**, plural subjects take **are**, and **I** takes **am**.\n\nExamples:\n- I **am** learning English.\n- She **is** reading.\n- They **are** studying.',
+          "**What does the following JavaScript function return?**\n\n```js\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nChoose the best description.",
+          "**Solve for $x$:** $2x + 3 = 9$\n\nShow your work if needed. The solution involves basic algebra: subtract, then divide.",
+        ];
+
+        const ids = ["mdQ1", "mdQ2", "mdQ3"];
+        const errs = ["mdError1", "mdError2", "mdError3"];
+        ids.forEach((id, i) => {
+          const el = document.getElementById(id);
+          const errEl = document.getElementById(errs[i]);
+          try {
+            if (el) {
+              el.innerHTML = md ? md.render(prompts[i]) : prompts[i];
+              el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+                cb.disabled = true;
+                cb.setAttribute("aria-disabled", "true");
+              });
+            }
+            errEl && errEl.classList.add("hidden");
+          } catch (e) {
+            if (errEl) {
+              errEl.textContent = e.message;
+              errEl.classList.remove("hidden");
+            }
+          }
+        });
+
+        const submitBtn = document.getElementById("submitAssessment");
+        submitBtn &&
+          submitBtn.addEventListener("click", () => {
+            const names = ["q1", "q2", "q3"];
+            const results = names.map((n, idx) => {
+              const sel = document.querySelector(`input[name="${n}"]:checked`);
+              return {
+                question: idx + 1,
+                selectedIndex: sel ? parseInt(sel.value, 10) : null,
+              };
+            });
+            const missing = results
+              .filter((r) => r.selectedIndex === null)
+              .map((r) => r.question);
+            console.log("Assessment submission:", results);
+            if (missing.length) {
+              alert("Please answer question(s): " + missing.join(", "));
+            } else {
+              alert("Submitted! Thank you.");
+            }
+          });
+
+        // Compute total score from question marks
+        const totalScoreEl = document.getElementById("totalScoreVal");
+        const questionEls = Array.from(
+          document.querySelectorAll(".question-card")
+        );
+        const totalScore = questionEls.reduce((sum, el) => {
+          const mark = parseFloat(el.dataset.mark);
+          return sum + (isNaN(mark) ? 0 : mark);
+        }, 0);
+        if (totalScoreEl) totalScoreEl.textContent = String(totalScore);
+
+        // Populate per-question mark labels
+        questionEls.forEach((el) => {
+          const label = el.querySelector("[data-mark-label]");
+          const mark = parseFloat(el.dataset.mark);
+          const val = isNaN(mark) ? 0 : mark;
+          if (label)
+            label.textContent = `${val} ${val === 1 ? "mark" : "marks"}`;
+        });
+
+        // Populate chapters from URL if server-side missing
+        const chaptersEl = document.getElementById("chaptersVal");
+        if (
+          chaptersEl &&
+          (!chaptersEl.textContent ||
+            chaptersEl.textContent.trim() === "" ||
+            chaptersEl.textContent === "-")
+        ) {
+          const params = new URLSearchParams(window.location.search);
+          const ch = params.get("chapters");
+          if (ch) chaptersEl.textContent = ch;
+        }
+      })();
+    </script>
     <script src="/js/navbar.js"></script>
   </body>
 </html>
