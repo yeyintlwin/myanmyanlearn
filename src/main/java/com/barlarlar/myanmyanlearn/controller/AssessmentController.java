@@ -51,7 +51,9 @@ public class AssessmentController {
             }
         }
         model.addAttribute("examTitle", examTitle != null ? examTitle : "Assessment");
-        // Provide sample questions for the assessment UI (for testing/demo)
+        List<com.barlarlar.myanmyanlearn.model.Question> questions =
+                com.barlarlar.myanmyanlearn.datasource.QuestionDataSource.getSampleQuestions();
+        model.addAttribute("questions", questions);
 
         return "assessment";
     }

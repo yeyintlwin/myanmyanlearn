@@ -11,43 +11,57 @@ public class QuestionDataSource {
         List<Question> questions = new ArrayList<>();
 
         List<QuestionOption> q1Options = new ArrayList<>();
-        QuestionOption q1o1 = new QuestionOption(0, "Option 1");
+        QuestionOption q1o1 = new QuestionOption(0, "I am happy.");
         q1o1.setIsCorrect(true);
         q1Options.add(q1o1);
-        q1Options.add(new QuestionOption(1, "Option 2"));
-        q1Options.add(new QuestionOption(2, "Option 3"));
-        Question q1 = new Question("jken", 1, "Grammar: to be", 0);
+        q1Options.add(new QuestionOption(1, "I is happy."));
+        q1Options.add(new QuestionOption(2, "I be happy."));
+        Question q1 = new Question("jken", 1, "Which sentence uses the correct form of to be?", 0);
         q1.setMarks(1.0f);
-        q1.setDifficultyLevel("EASY");
-        q1.setExplanation("Explanation for question 1");
+        
+        q1.setExplanation("Singular subjects take is, plural take are, and I takes am.");
         q1.setOptions(q1Options);
         questions.add(q1);
 
         List<QuestionOption> q2Options = new ArrayList<>();
-        QuestionOption q2o1 = new QuestionOption(0, "Option A");
+        QuestionOption q2o1 = new QuestionOption(0, "The sum of a and b.");
         q2o1.setIsCorrect(true);
         q2Options.add(q2o1);
-        q2Options.add(new QuestionOption(1, "Option B"));
-        q2Options.add(new QuestionOption(2, "Option C"));
-        Question q2 = new Question("jken", 2, "JavaScript basics", 0);
+        q2Options.add(new QuestionOption(1, "The product of a and b."));
+        q2Options.add(new QuestionOption(2, "The string \"add\"."));
+        Question q2 = new Question("jken", 2, "What does the JavaScript function return?", 0);
         q2.setMarks(1.0f);
-        q2.setDifficultyLevel("MEDIUM");
-        q2.setExplanation("Explanation for question 2");
+        
+        q2.setExplanation("Function add returns a + b.");
         q2.setOptions(q2Options);
         questions.add(q2);
 
         List<QuestionOption> q3Options = new ArrayList<>();
-        QuestionOption q3o1 = new QuestionOption(0, "Opt 1");
+        QuestionOption q3o1 = new QuestionOption(0, "x = 3");
         q3o1.setIsCorrect(true);
         q3Options.add(q3o1);
-        q3Options.add(new QuestionOption(1, "Opt 2"));
-        q3Options.add(new QuestionOption(2, "Opt 3"));
-        Question q3 = new Question("jken", 3, "Solve for $x$", 0);
+        q3Options.add(new QuestionOption(1, "x = 6"));
+        q3Options.add(new QuestionOption(2, "x = 2"));
+        Question q3 = new Question("jken", 3, "Solve for $x$: 2x + 3 = 9", 0);
         q3.setMarks(1.0f);
-        q3.setDifficultyLevel("EASY");
-        q3.setExplanation("Explanation for question 3");
+        
+        q3.setExplanation("Subtract 3 then divide by 2.");
         q3.setOptions(q3Options);
         questions.add(q3);
+
+        List<QuestionOption> q4Options = new ArrayList<>();
+        q4Options.add(new QuestionOption(0, "4"));
+        q4Options.add(new QuestionOption(1, "6"));
+        q4Options.add(new QuestionOption(2, "9"));
+        QuestionOption q4o4 = new QuestionOption(3, "7");
+        q4o4.setIsCorrect(true);
+        q4Options.add(q4o4);
+        Question q4 = new Question("jken", 4, "Which is a prime number?", 3);
+        q4.setMarks(1.0f);
+        
+        q4.setExplanation("Prime numbers are divisible only by 1 and themselves.");
+        q4.setOptions(q4Options);
+        questions.add(q4);
 
         return questions;
     }
@@ -62,8 +76,7 @@ public class QuestionDataSource {
         Question q = new Question(courseId, questionNumber, questionContent, correctOptionIndex);
         q.setMarks(marks);
         q.setOptions(options);
-        q.setQuestionType("multiple_choice");
-
+        
         for (QuestionOption option : options) {
             option.setIsCorrect(option.getOptionIndex() == correctOptionIndex);
         }
@@ -88,11 +101,10 @@ public class QuestionDataSource {
 
         Question q = new Question(courseId, questionNumber, questionContent, correctOptionIndex);
         q.setChapterId(chapterId);
-        q.setDifficultyLevel(difficultyLevel);
+        
         q.setMarks(marks);
-        q.setQuestionType("multiple_choice");
+        
         q.setOptions(options);
-
         for (QuestionOption option : options) {
             option.setIsCorrect(option.getOptionIndex() == correctOptionIndex);
         }

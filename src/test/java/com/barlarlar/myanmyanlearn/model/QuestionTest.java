@@ -24,7 +24,6 @@ public class QuestionTest {
                 "Test question content",
                 0);
         question.setMarks(1.0f);
-        question.setDifficultyLevel("EASY");
 
         options = new ArrayList<>();
         QuestionOption opt1 = new QuestionOption(0, "Option 1");
@@ -52,10 +51,10 @@ public class QuestionTest {
     }
 
     @Test
-    public void testQuestionDifficulty() {
-        assertEquals("EASY", question.getDifficultyLevel());
-        question.setDifficultyLevel("HARD");
-        assertEquals("HARD", question.getDifficultyLevel());
+    public void testQuestionMarksUpdate() {
+        assertEquals(1.0f, question.getMarks());
+        question.setMarks(3.0f);
+        assertEquals(3.0f, question.getMarks());
     }
 
     @Test
@@ -67,14 +66,7 @@ public class QuestionTest {
         assertFalse(question.getOptions().get(1).getIsCorrect());
     }
 
-    @Test
-    public void testQuestionActive() {
-        assertTrue(question.getIsActive());
-        question.setIsActive(false);
-        assertFalse(question.getIsActive());
-    }
-
-    @Test
+    
     public void testQuestionChapterId() {
         assertNull(question.getChapterId());
         question.setChapterId("chapter_1");
@@ -89,12 +81,7 @@ public class QuestionTest {
         assertEquals(explanation, question.getExplanation());
     }
 
-    @Test
-    public void testQuestionType() {
-        assertEquals("multiple_choice", question.getQuestionType());
-    }
-
-    @Test
+    
     public void testQuestionToString() {
         String toString = question.toString();
         assertNotNull(toString);

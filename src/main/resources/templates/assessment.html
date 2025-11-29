@@ -25,6 +25,7 @@
         transform: translateY(0) !important;
       }
       /* Markdown typography */
+
       #mdContainer h1 {
         color: #0f172a;
         font-size: 2rem;
@@ -32,6 +33,7 @@
         font-weight: 700;
         margin: 1.25rem 0 0.75rem;
       }
+
       #mdContainer h2 {
         color: #0f172a;
         font-size: 1.5rem;
@@ -39,6 +41,7 @@
         font-weight: 700;
         margin: 1.2rem 0 0.7rem;
       }
+
       #mdContainer h3 {
         color: #0f172a;
         font-size: 1.25rem;
@@ -46,6 +49,7 @@
         font-weight: 700;
         margin: 1.1rem 0 0.6rem;
       }
+
       #mdContainer h4 {
         color: #0f172a;
         font-size: 1.125rem;
@@ -53,6 +57,7 @@
         font-weight: 700;
         margin: 1rem 0 0.5rem;
       }
+
       #mdContainer h5 {
         color: #0f172a;
         font-size: 1rem;
@@ -60,6 +65,7 @@
         font-weight: 700;
         margin: 0.9rem 0 0.45rem;
       }
+
       #mdContainer h6 {
         color: #0f172a;
         font-size: 0.875rem;
@@ -69,50 +75,63 @@
         letter-spacing: 0.02em;
         margin: 0.8rem 0 0.4rem;
       }
+
       #mdContainer p {
         margin: 0.75rem 0;
         color: #334155;
       }
+
       #mdContainer a {
         color: #2563eb;
         text-decoration: underline;
         text-underline-offset: 2px;
       }
+
       #mdContainer ul,
       #mdContainer ol {
         margin: 0.75rem 0 0.75rem 1.25rem;
         padding-left: 1.25rem;
       }
+
       #mdContainer ul {
         list-style-type: disc;
         list-style-position: outside;
       }
+
       #mdContainer ul ul {
         list-style-type: circle;
       }
+
       #mdContainer ul ul ul {
         list-style-type: square;
       }
+
       #mdContainer ol {
         list-style-type: decimal;
         list-style-position: outside;
       }
+
       #mdContainer ol ol {
         list-style-type: lower-alpha;
       }
+
       #mdContainer ol ol ol {
         list-style-type: lower-roman;
       }
+
       #mdContainer li {
         margin: 0.25rem 0;
       }
+
       #mdContainer li p {
         margin: 0.25rem 0;
       }
+
       #mdContainer li > input[type="checkbox"] {
         margin-right: 0.5rem;
         vertical-align: middle;
       }
+
       #mdContainer blockquote {
         border-left: 4px solid #e2e8f0;
         padding: 0.5rem 1rem;
@@ -121,6 +140,7 @@
         background: #f8fafc;
         border-radius: 0.5rem;
       }
+
       #mdContainer pre {
         background: #f6f8fa;
         border: 1px solid #e5e7eb;
@@ -128,33 +148,39 @@
         padding: 0.75rem 1rem;
         overflow: auto;
       }
+
       #mdContainer code {
         background: #f1f5f9;
         color: #0f172a;
         padding: 0.1rem 0.3rem;
         border-radius: 0.25rem;
       }
+
       #mdContainer table {
         width: 100%;
         border-collapse: collapse;
         margin: 1rem 0;
       }
+
       #mdContainer th,
       #mdContainer td {
         border: 1px solid #e5e7eb;
         padding: 0.5rem 0.6rem;
       }
+
       #mdContainer th {
         background: #f8fafc;
         text-align: left;
         color: #0f172a;
       }
+
       #mdContainer hr {
         border: none;
         height: 1px;
         background: #e5e7eb;
         margin: 1.25rem 0;
       }
+
       #mdContainer img,
       #mdContainer svg,
       #mdContainer video,
@@ -164,9 +190,11 @@
         height: auto;
         margin: 0.5rem auto;
       }
+
       #mdContainer img {
         max-height: 60vh;
       }
+
       #mdError1,
       #mdError2,
       #mdError3 {
@@ -181,6 +209,7 @@
     <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   </head>
+
   <body
     class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans text-gray-800 flex flex-col"
   >
@@ -259,192 +288,49 @@
         </section>
 
         <!-- Sample Questions and Answers -->
-        <div class="space-y-6">
-          <!-- Q1 -->
+        <div class="space-y-6" th:if="${questions}">
           <section
             class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
-            data-mark="1"
+            th:each="q, iStat : ${questions}"
+            th:attr="data-mark=${q.marks}"
           >
-            <div class="flex items-center justify-between mb-3">
+            <div
+              class="flex items-center justify-between mb-3 pb-2 border-b border-white/10 gap-3"
+            >
               <h2
-                class="text-white text-lg font-semibold flex items-center gap-2"
+                class="text-white text-lg font-semibold flex items-center gap-3 min-w-0"
               >
-                <span
-                  class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs"
-                  >1</span
-                >
-                <span>Question 1</span>
+                <span class="truncate">Question [[${iStat.count}]]</span>
               </h2>
               <div class="flex items-center gap-3">
                 <span
-                  class="text-white/80 text-sm question-mark-label"
+                  class="text-white/80 text-sm question-mark-label whitespace-nowrap"
                   data-mark-label
                   >–</span
                 >
-                <span id="mdError1" class="hidden"></span>
+                <span class="mdError hidden"></span>
               </div>
             </div>
             <div
               class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
             >
               <article
-                id="mdQ1"
                 class="prose max-w-none text-slate-800"
+                th:attr="data-content=${q.questionContent}"
               ></article>
             </div>
             <div class="space-y-2">
-              <label class="flex items-center gap-3 text-white/90">
-                <input
-                  type="radio"
-                  name="q1"
-                  value="0"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span>I am happy.</span>
-              </label>
-              <label class="flex items-center gap-3 text-white/90">
-                <input
-                  type="radio"
-                  name="q1"
-                  value="1"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span>I is happy.</span>
-              </label>
-              <label class="flex items-center gap-3 text-white/90">
-                <input
-                  type="radio"
-                  name="q1"
-                  value="2"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span>I be happy.</span>
-              </label>
-            </div>
-          </section>
-
-          <!-- Q2 -->
-          <section
-            class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
-            data-mark="1"
-          >
-            <div class="flex items-center justify-between mb-3">
-              <h2
-                class="text-white text-lg font-semibold flex items-center gap-2"
+              <label
+                class="flex items-center gap-3 text-white/90"
+                th:each="opt, optStat : ${q.options}"
               >
-                <span
-                  class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs"
-                  >2</span
-                >
-                <span>Question 2</span>
-              </h2>
-              <div class="flex items-center gap-3">
-                <span
-                  class="text-white/80 text-sm question-mark-label"
-                  data-mark-label
-                  >–</span
-                >
-                <span id="mdError2" class="hidden"></span>
-              </div>
-            </div>
-            <div
-              class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
-            >
-              <article
-                id="mdQ2"
-                class="prose max-w-none text-slate-800"
-              ></article>
-            </div>
-            <div class="space-y-2">
-              <label class="flex items-center gap-3 text-white/90">
                 <input
                   type="radio"
-                  name="q2"
-                  value="0"
+                  th:attr="name=${'q' + iStat.count}"
+                  th:value="${opt.optionIndex}"
                   class="w-4 h-4 accent-blue-500"
                 />
-                <span>The sum of <code>a</code> and <code>b</code>.</span>
-              </label>
-              <label class="flex items-center gap-3 text-white/90">
-                <input
-                  type="radio"
-                  name="q2"
-                  value="1"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span>The product of <code>a</code> and <code>b</code>.</span>
-              </label>
-              <label class="flex items-center gap-3 text-white/90">
-                <input
-                  type="radio"
-                  name="q2"
-                  value="2"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span>The string <code>"add"</code>.</span>
-              </label>
-            </div>
-          </section>
-
-          <!-- Q3 -->
-          <section
-            class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
-            data-mark="1"
-          >
-            <div class="flex items-center justify-between mb-3">
-              <h2
-                class="text-white text-lg font-semibold flex items-center gap-2"
-              >
-                <span
-                  class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs"
-                  >3</span
-                >
-                <span>Question 3</span>
-              </h2>
-              <div class="flex items-center gap-3">
-                <span
-                  class="text-white/80 text-sm question-mark-label"
-                  data-mark-label
-                  >–</span
-                >
-                <span id="mdError3" class="hidden"></span>
-              </div>
-            </div>
-            <div
-              class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
-            >
-              <article
-                id="mdQ3"
-                class="prose max-w-none text-slate-800"
-              ></article>
-            </div>
-            <div class="space-y-2">
-              <label class="flex items-center gap-3 text-white/90">
-                <input
-                  type="radio"
-                  name="q3"
-                  value="0"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span>x = 3</span>
-              </label>
-              <label class="flex items-center gap-3 text-white/90">
-                <input
-                  type="radio"
-                  name="q3"
-                  value="1"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span>x = 6</span>
-              </label>
-              <label class="flex items-center gap-3 text-white/90">
-                <input
-                  type="radio"
-                  name="q3"
-                  value="2"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span>x = 2</span>
+                <span th:text="${opt.optionContent}">Option</span>
               </label>
             </div>
           </section>
@@ -475,7 +361,9 @@
                 try {
                   if (window.hljs) {
                     if (lang && hljs.getLanguage(lang)) {
-                      return hljs.highlight(str, { language: lang }).value;
+                      return hljs.highlight(str, {
+                        language: lang,
+                      }).value;
                     }
                     return hljs.highlightAuto(str).value;
                   }
@@ -495,7 +383,9 @@
             md.use(window.texmath, {
               engine: window.katex,
               delimiters: "dollars",
-              katexOptions: { throwOnError: false },
+              katexOptions: {
+                throwOnError: false,
+              },
             });
           } catch (_) {}
           try {
@@ -535,10 +425,38 @@
           }
         });
 
+        const articles = Array.from(
+          document.querySelectorAll("article[data-content]")
+        );
+        articles.forEach((el) => {
+          const src = el.getAttribute("data-content") || "";
+          const cardEl = el.closest(".question-card");
+          const errEl = cardEl ? cardEl.querySelector(".mdError") : null;
+          try {
+            el.innerHTML = md ? md.render(src) : src;
+            el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+              cb.disabled = true;
+              cb.setAttribute("aria-disabled", "true");
+            });
+            if (errEl) errEl.classList.add("hidden");
+          } catch (e) {
+            if (errEl) {
+              errEl.textContent = e.message;
+              errEl.classList.remove("hidden");
+            }
+          }
+        });
+
         const submitBtn = document.getElementById("submitAssessment");
         submitBtn &&
           submitBtn.addEventListener("click", () => {
-            const names = ["q1", "q2", "q3"];
+            const count = document.querySelectorAll(".question-card").length;
+            const names = Array.from(
+              {
+                length: count,
+              },
+              (_, i) => `q${i + 1}`
+            );
             const results = names.map((n, idx) => {
               const sel = document.querySelector(`input[name="${n}"]:checked`);
               return {

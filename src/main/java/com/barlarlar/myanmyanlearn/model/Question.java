@@ -9,9 +9,7 @@ public class Question {
     private String questionContent;
     private int correctOptionIndex;
     private float marks;
-    private String difficultyLevel;
-    private String questionType = "multiple_choice";
-    private boolean isActive = true;
+    
     private String explanation;
     private List<QuestionOption> options;
 
@@ -70,29 +68,7 @@ public class Question {
         this.marks = marks;
     }
 
-    public String getDifficultyLevel() {
-        return difficultyLevel;
-    }
-
-    public void setDifficultyLevel(String difficultyLevel) {
-        this.difficultyLevel = difficultyLevel;
-    }
-
-    public String getQuestionType() {
-        return questionType;
-    }
-
-    public void setQuestionType(String questionType) {
-        this.questionType = questionType;
-    }
-
-    public boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
+    
 
     public String getExplanation() {
         return explanation;
@@ -119,9 +95,6 @@ public class Question {
                 ", questionContent='" + questionContent + '\'' +
                 ", correctOptionIndex=" + correctOptionIndex +
                 ", marks=" + marks +
-                ", difficultyLevel='" + difficultyLevel + '\'' +
-                ", questionType='" + questionType + '\'' +
-                ", isActive=" + isActive +
                 ", explanation='" + explanation + '\'' +
                 '}';
     }

@@ -19,7 +19,7 @@ public class QuestionDataSourceTest {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
 
         assertNotNull(questions);
-        assertEquals(3, questions.size());
+        assertEquals(4, questions.size());
     }
 
     @Test
@@ -31,7 +31,7 @@ public class QuestionDataSourceTest {
         assertEquals("jken", q1.getCourseId());
         assertEquals(0, q1.getCorrectOptionIndex());
         assertEquals(1.0f, q1.getMarks());
-        assertEquals("EASY", q1.getDifficultyLevel());
+        
         assertTrue(q1.getQuestionContent().contains("to be"));
         assertNotNull(q1.getExplanation());
         assertEquals(3, q1.getOptions().size());
@@ -47,7 +47,7 @@ public class QuestionDataSourceTest {
         assertEquals("jken", q2.getCourseId());
         assertEquals(0, q2.getCorrectOptionIndex());
         assertEquals(1.0f, q2.getMarks());
-        assertEquals("MEDIUM", q2.getDifficultyLevel());
+        
         assertTrue(q2.getQuestionContent().contains("JavaScript"));
         assertNotNull(q2.getExplanation());
         assertEquals(3, q2.getOptions().size());
@@ -62,10 +62,26 @@ public class QuestionDataSourceTest {
         assertEquals("jken", q3.getCourseId());
         assertEquals(0, q3.getCorrectOptionIndex());
         assertEquals(1.0f, q3.getMarks());
-        assertEquals("EASY", q3.getDifficultyLevel());
+        
         assertTrue(q3.getQuestionContent().contains("$x$"));
         assertNotNull(q3.getExplanation());
         assertEquals(3, q3.getOptions().size());
+    }
+
+    @Test
+    public void testSampleQuestion4() {
+        List<Question> questions = QuestionDataSource.getSampleQuestions();
+        Question q4 = questions.get(3);
+
+        assertEquals(4, q4.getQuestionNumber());
+        assertEquals("jken", q4.getCourseId());
+        assertEquals(3, q4.getCorrectOptionIndex());
+        assertEquals(1.0f, q4.getMarks());
+        
+        assertTrue(q4.getQuestionContent().contains("prime number"));
+        assertNotNull(q4.getExplanation());
+        assertEquals(4, q4.getOptions().size());
+        assertTrue(q4.getOptions().get(3).getIsCorrect());
     }
 
     @Test
@@ -89,7 +105,7 @@ public class QuestionDataSourceTest {
         assertEquals(0, q.getCorrectOptionIndex());
         assertEquals(2.0f, q.getMarks());
         assertEquals(2, q.getOptions().size());
-        assertEquals("multiple_choice", q.getQuestionType());
+        
     }
 
     @Test
@@ -113,9 +129,9 @@ public class QuestionDataSourceTest {
         assertEquals("Custom question?", q.getQuestionContent());
         assertEquals(1, q.getCorrectOptionIndex());
         assertEquals(3.0f, q.getMarks());
-        assertEquals("HARD", q.getDifficultyLevel());
+        
         assertEquals(3, q.getOptions().size());
-        assertEquals("multiple_choice", q.getQuestionType());
+        
 
         // Verify correct option is marked
         assertTrue(q.getOptions().get(1).getIsCorrect());
