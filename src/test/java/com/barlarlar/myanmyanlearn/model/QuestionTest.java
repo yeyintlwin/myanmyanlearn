@@ -66,7 +66,15 @@ public class QuestionTest {
         assertFalse(question.getOptions().get(1).getIsCorrect());
     }
 
-    
+    @Test
+    public void testQuestionSlots() {
+        assertEquals(0, question.getSlotCount());
+        question.setSlotCount(3);
+        assertEquals(3, question.getSlotCount());
+        java.util.List<Integer> mapping = java.util.Arrays.asList(1, 2, 0);
+        question.setCorrectSlotOptionIndices(mapping);
+        assertEquals(mapping, question.getCorrectSlotOptionIndices());
+    }
     public void testQuestionChapterId() {
         assertNull(question.getChapterId());
         question.setChapterId("chapter_1");

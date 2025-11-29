@@ -19,69 +19,37 @@ public class QuestionDataSourceTest {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
 
         assertNotNull(questions);
-        assertEquals(4, questions.size());
+        assertEquals(1, questions.size());
     }
 
-    @Test
-    public void testSampleQuestion1() {
-        List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q1 = questions.get(0);
+    
 
-        assertEquals(1, q1.getQuestionNumber());
-        assertEquals("jken", q1.getCourseId());
-        assertEquals(0, q1.getCorrectOptionIndex());
-        assertEquals(1.0f, q1.getMarks());
-        
-        assertTrue(q1.getQuestionContent().contains("to be"));
-        assertNotNull(q1.getExplanation());
-        assertEquals(3, q1.getOptions().size());
-        assertTrue(q1.getOptions().get(0).getIsCorrect());
-    }
+    
+
+    
+
+    
+
+    
 
     @Test
-    public void testSampleQuestion2() {
+    public void testSampleQuestion6() {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q2 = questions.get(1);
+        Question q6 = questions.get(0);
 
-        assertEquals(2, q2.getQuestionNumber());
-        assertEquals("jken", q2.getCourseId());
-        assertEquals(0, q2.getCorrectOptionIndex());
-        assertEquals(1.0f, q2.getMarks());
-        
-        assertTrue(q2.getQuestionContent().contains("JavaScript"));
-        assertNotNull(q2.getExplanation());
-        assertEquals(3, q2.getOptions().size());
-    }
-
-    @Test
-    public void testSampleQuestion3() {
-        List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q3 = questions.get(2);
-
-        assertEquals(3, q3.getQuestionNumber());
-        assertEquals("jken", q3.getCourseId());
-        assertEquals(0, q3.getCorrectOptionIndex());
-        assertEquals(1.0f, q3.getMarks());
-        
-        assertTrue(q3.getQuestionContent().contains("$x$"));
-        assertNotNull(q3.getExplanation());
-        assertEquals(3, q3.getOptions().size());
-    }
-
-    @Test
-    public void testSampleQuestion4() {
-        List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q4 = questions.get(3);
-
-        assertEquals(4, q4.getQuestionNumber());
-        assertEquals("jken", q4.getCourseId());
-        assertEquals(3, q4.getCorrectOptionIndex());
-        assertEquals(1.0f, q4.getMarks());
-        
-        assertTrue(q4.getQuestionContent().contains("prime number"));
-        assertNotNull(q4.getExplanation());
-        assertEquals(4, q4.getOptions().size());
-        assertTrue(q4.getOptions().get(3).getIsCorrect());
+        assertEquals(6, q6.getQuestionNumber());
+        assertEquals("jken", q6.getCourseId());
+        assertEquals(9.0f, q6.getMarks());
+        assertTrue(q6.getQuestionContent().contains("[9]"));
+        assertNotNull(q6.getExplanation());
+        assertEquals(9, q6.getSlotCount());
+        assertEquals(9, q6.getCorrectSlotOptionIndices().size());
+        assertNotNull(q6.getSlotOptions());
+        assertEquals(9, q6.getSlotOptions().size());
+        for (int i = 0; i < 9; i++) {
+            assertEquals(4, q6.getSlotOptions().get(i).size());
+            assertTrue(q6.getSlotOptions().get(i).get(0).getIsCorrect());
+        }
     }
 
     @Test
@@ -161,16 +129,26 @@ public class QuestionDataSourceTest {
     public void testSampleQuestionsOptions() {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
 
-        // Check all questions have options
+        // Check all questions have options either per-question or per-slot
         for (Question question : questions) {
-            assertNotNull(question.getOptions());
-            assertTrue(question.getOptions().size() > 0);
-
-            // Verify each option has an index and content
-            for (QuestionOption option : question.getOptions()) {
-                assertNotNull(option.getOptionIndex());
-                assertNotNull(option.getOptionContent());
-                assertNotNull(option.getIsCorrect());
+            if (question.getSlotCount() > 0 && question.getSlotOptions() != null) {
+                assertTrue(question.getSlotOptions().size() > 0);
+                for (java.util.List<QuestionOption> slot : question.getSlotOptions()) {
+                    assertTrue(slot.size() > 0);
+                    for (QuestionOption option : slot) {
+                        assertNotNull(option.getOptionIndex());
+                        assertNotNull(option.getOptionContent());
+                        assertNotNull(option.getIsCorrect());
+                    }
+                }
+            } else {
+                assertNotNull(question.getOptions());
+                assertTrue(question.getOptions().size() > 0);
+                for (QuestionOption option : question.getOptions()) {
+                    assertNotNull(option.getOptionIndex());
+                    assertNotNull(option.getOptionContent());
+                    assertNotNull(option.getIsCorrect());
+                }
             }
         }
     }

@@ -9,9 +9,12 @@ public class Question {
     private String questionContent;
     private int correctOptionIndex;
     private float marks;
+    private int slotCount;
+    private java.util.List<Integer> correctSlotOptionIndices;
     
     private String explanation;
     private List<QuestionOption> options;
+    private List<List<QuestionOption>> slotOptions;
 
     public Question(String courseId, int questionNumber, String questionContent, int correctOptionIndex) {
         this.courseId = courseId;
@@ -68,6 +71,22 @@ public class Question {
         this.marks = marks;
     }
 
+    public int getSlotCount() {
+        return slotCount;
+    }
+
+    public void setSlotCount(int slotCount) {
+        this.slotCount = slotCount;
+    }
+
+    public java.util.List<Integer> getCorrectSlotOptionIndices() {
+        return correctSlotOptionIndices;
+    }
+
+    public void setCorrectSlotOptionIndices(java.util.List<Integer> correctSlotOptionIndices) {
+        this.correctSlotOptionIndices = correctSlotOptionIndices;
+    }
+
     
 
     public String getExplanation() {
@@ -86,6 +105,14 @@ public class Question {
         this.options = options;
     }
 
+    public List<List<QuestionOption>> getSlotOptions() {
+        return slotOptions;
+    }
+
+    public void setSlotOptions(List<List<QuestionOption>> slotOptions) {
+        this.slotOptions = slotOptions;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -95,6 +122,7 @@ public class Question {
                 ", questionContent='" + questionContent + '\'' +
                 ", correctOptionIndex=" + correctOptionIndex +
                 ", marks=" + marks +
+                ", slotCount=" + slotCount +
                 ", explanation='" + explanation + '\'' +
                 '}';
     }

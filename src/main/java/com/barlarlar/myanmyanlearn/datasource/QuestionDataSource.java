@@ -10,58 +10,35 @@ public class QuestionDataSource {
     public static List<Question> getSampleQuestions() {
         List<Question> questions = new ArrayList<>();
 
-        List<QuestionOption> q1Options = new ArrayList<>();
-        QuestionOption q1o1 = new QuestionOption(0, "I am happy.");
-        q1o1.setIsCorrect(true);
-        q1Options.add(q1o1);
-        q1Options.add(new QuestionOption(1, "I is happy."));
-        q1Options.add(new QuestionOption(2, "I be happy."));
-        Question q1 = new Question("jken", 1, "Which sentence uses the correct form of to be?", 0);
-        q1.setMarks(1.0f);
         
-        q1.setExplanation("Singular subjects take is, plural take are, and I takes am.");
-        q1.setOptions(q1Options);
-        questions.add(q1);
 
-        List<QuestionOption> q2Options = new ArrayList<>();
-        QuestionOption q2o1 = new QuestionOption(0, "The sum of a and b.");
-        q2o1.setIsCorrect(true);
-        q2Options.add(q2o1);
-        q2Options.add(new QuestionOption(1, "The product of a and b."));
-        q2Options.add(new QuestionOption(2, "The string \"add\"."));
-        Question q2 = new Question("jken", 2, "What does the JavaScript function return?", 0);
-        q2.setMarks(1.0f);
-        
-        q2.setExplanation("Function add returns a + b.");
-        q2.setOptions(q2Options);
-        questions.add(q2);
-
-        List<QuestionOption> q3Options = new ArrayList<>();
-        QuestionOption q3o1 = new QuestionOption(0, "x = 3");
-        q3o1.setIsCorrect(true);
-        q3Options.add(q3o1);
-        q3Options.add(new QuestionOption(1, "x = 6"));
-        q3Options.add(new QuestionOption(2, "x = 2"));
-        Question q3 = new Question("jken", 3, "Solve for $x$: 2x + 3 = 9", 0);
-        q3.setMarks(1.0f);
-        
-        q3.setExplanation("Subtract 3 then divide by 2.");
-        q3.setOptions(q3Options);
-        questions.add(q3);
-
-        List<QuestionOption> q4Options = new ArrayList<>();
-        q4Options.add(new QuestionOption(0, "4"));
-        q4Options.add(new QuestionOption(1, "6"));
-        q4Options.add(new QuestionOption(2, "9"));
-        QuestionOption q4o4 = new QuestionOption(3, "7");
-        q4o4.setIsCorrect(true);
-        q4Options.add(q4o4);
-        Question q4 = new Question("jken", 4, "Which is a prime number?", 3);
-        q4.setMarks(1.0f);
-        
-        q4.setExplanation("Prime numbers are divisible only by 1 and themselves.");
-        q4.setOptions(q4Options);
-        questions.add(q4);
+        // Q6: 9 blanks, each with 4 options
+        List<List<QuestionOption>> q6SlotOptions = new ArrayList<>();
+        java.util.List<Integer> q6Correct = new java.util.ArrayList<>();
+        for (int s = 0; s < 9; s++) {
+            List<QuestionOption> slot = new ArrayList<>();
+            slot.add(new QuestionOption(0, "A" + (s + 1)));
+            slot.add(new QuestionOption(1, "B" + (s + 1)));
+            slot.add(new QuestionOption(2, "C" + (s + 1)));
+            slot.add(new QuestionOption(3, "D" + (s + 1)));
+            q6SlotOptions.add(slot);
+            q6Correct.add(0); // correct: A for each slot
+        }
+        Question q6 = new Question("jken", 6,
+                "Complete the sequence: [1] [2] [3] [4] [5] [6] [7] [8] [9]",
+                0);
+        q6.setMarks(9.0f);
+        q6.setSlotCount(9);
+        q6.setCorrectSlotOptionIndices(q6Correct);
+        q6.setSlotOptions(q6SlotOptions);
+        // mark correctness flags per slot
+        for (int i = 0; i < q6SlotOptions.size(); i++) {
+            for (QuestionOption opt : q6SlotOptions.get(i)) {
+                opt.setIsCorrect(opt.getOptionIndex() == q6Correct.get(i));
+            }
+        }
+        q6.setExplanation("Pick the appropriate option for each blank (A1..A9 correct).");
+        questions.add(q6);
 
         return questions;
     }

@@ -319,19 +319,29 @@
                 th:attr="data-content=${q.questionContent}"
               ></article>
             </div>
-            <div class="space-y-2">
-              <label
-                class="flex items-center gap-3 text-white/90"
-                th:each="opt, optStat : ${q.options}"
+            <div
+              class="flex flex-wrap items-center gap-x-3 gap-y-2"
+              th:if="${q.slotCount > 0}"
+            >
+              <div
+                class="flex items-center gap-2"
+                th:each="slotNum : ${#numbers.sequence(1, q.slotCount)}"
               >
-                <input
-                  type="radio"
-                  th:attr="name=${'q' + iStat.count}"
-                  th:value="${opt.optionIndex}"
-                  class="w-4 h-4 accent-blue-500"
-                />
-                <span th:text="${opt.optionContent}">Option</span>
-              </label>
+                <label class="text-white/90 text-sm"
+                  ><span th:text="${slotNum}"></span>.
+                </label>
+                <select
+                  th:attr="name=${'q' + iStat.count + '-s' + slotNum}"
+                  class="inline-block bg-white/10 border border-white/10 text-white rounded-md px-3 py-2"
+                >
+                  <option value="" disabled selected>Select</option>
+                  <option
+                    th:each="opt : ${(q.slotOptions != null) ? q.slotOptions[slotNum - 1] : q.options}"
+                    th:value="${opt.optionIndex}"
+                    th:text="${opt.optionContent}"
+                  ></option>
+                </select>
+              </div>
             </div>
           </section>
 
@@ -450,26 +460,37 @@
         const submitBtn = document.getElementById("submitAssessment");
         submitBtn &&
           submitBtn.addEventListener("click", () => {
-            const count = document.querySelectorAll(".question-card").length;
-            const names = Array.from(
-              {
-                length: count,
-              },
-              (_, i) => `q${i + 1}`
+            const cards = Array.from(
+              document.querySelectorAll(".question-card")
             );
-            const results = names.map((n, idx) => {
-              const sel = document.querySelector(`input[name="${n}"]:checked`);
+            const results = cards.map((card, idx) => {
+              const selects = Array.from(
+                card.querySelectorAll("select[name^='q']")
+              );
+              const selected = selects.map((s) => {
+                const v = s.value;
+                return v === "" ? null : parseInt(v, 10);
+              });
               return {
                 question: idx + 1,
-                selectedIndex: sel ? parseInt(sel.value, 10) : null,
+                selectedIndices: selected,
               };
             });
             const missing = results
-              .filter((r) => r.selectedIndex === null)
-              .map((r) => r.question);
+              .map((r) => ({
+                q: r.question,
+                missingCount: r.selectedIndices.filter((v) => v === null)
+                  .length,
+              }))
+              .filter((x) => x.missingCount > 0);
             console.log("Assessment submission:", results);
             if (missing.length) {
-              alert("Please answer question(s): " + missing.join(", "));
+              alert(
+                "Please select options for question(s): " +
+                  missing
+                    .map((m) => `${m.q} (${m.missingCount} missing)`)
+                    .join(", ")
+              );
             } else {
               alert("Submitted! Thank you.");
             }
