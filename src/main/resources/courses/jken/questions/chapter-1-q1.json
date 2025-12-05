@@ -1,0 +1,27 @@
+{
+    "courseId": "jken",
+    "chapterId": "1",
+    "questionNumber": 1,
+    "questionContentPath": "/courses/jken/questions/chapter-1-q1.md",
+    "correctOptionIndex": 0,
+    "marks": 3.0,
+    "explanation": "Select appropriate values for name, age, and hobby.",
+    "slotCount": 3,
+    "slotOptions": [
+        [
+            { "optionIndex": 0, "optionContent": "ရုပ်ရှင်ကြည့်ခြင်း", "isCorrect": false },
+            { "optionIndex": 1, "optionContent": "ရဲရင့်လွင်", "isCorrect": true },
+            { "optionIndex": 2, "optionContent": "၃၀", "isCorrect": false }
+        ],
+        [
+            { "optionIndex": 0, "optionContent": "ရုပ်ရှင်ကြည့်ခြင်း", "isCorrect": false },
+            { "optionIndex": 1, "optionContent": "ရဲရင့်လွင်", "isCorrect": false },
+            { "optionIndex": 2, "optionContent": "၃၀", "isCorrect": true }
+        ],
+        [
+            { "optionIndex": 0, "optionContent": "ရုပ်ရှင်ကြည့်ခြင်း", "isCorrect": true },
+            { "optionIndex": 1, "optionContent": "ရဲရင့်လွင်", "isCorrect": false },
+            { "optionIndex": 2, "optionContent": "၃၀", "isCorrect": false }
+        ]
+    ]
+}

@@ -19,7 +19,7 @@ public class QuestionDataSourceTest {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
 
         assertNotNull(questions);
-        assertEquals(2, questions.size());
+        assertEquals(4, questions.size());
     }
 
     
@@ -35,15 +35,14 @@ public class QuestionDataSourceTest {
     @Test
     public void testSampleQuestion6() {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q6 = questions.get(0);
+        Question q6 = questions.stream().filter(q -> q.getQuestionNumber() == 6).findFirst().orElseThrow();
 
         assertEquals(6, q6.getQuestionNumber());
         assertEquals("jken", q6.getCourseId());
         assertEquals(9.0f, q6.getMarks());
-        assertTrue(q6.getQuestionContent().contains("[9]"));
+        assertNotNull(q6.getQuestionContentPath());
         assertNotNull(q6.getExplanation());
         assertEquals(9, q6.getSlotCount());
-        assertEquals(9, q6.getCorrectSlotOptionIndices().size());
         assertNotNull(q6.getSlotOptions());
         assertEquals(9, q6.getSlotOptions().size());
         for (int i = 0; i < 9; i++) {
@@ -55,22 +54,38 @@ public class QuestionDataSourceTest {
     @Test
     public void testSampleQuestion7() {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q7 = questions.get(1);
+        Question q7 = questions.stream().filter(q -> q.getQuestionNumber() == 7).findFirst().orElseThrow();
 
         assertEquals(7, q7.getQuestionNumber());
         assertEquals("jken", q7.getCourseId());
         assertEquals(3.0f, q7.getMarks());
-        assertTrue(q7.getQuestionContent().contains("[1]"));
-        assertTrue(q7.getQuestionContent().contains("[2]"));
-        assertTrue(q7.getQuestionContent().contains("[3]"));
+        assertNotNull(q7.getQuestionContentPath());
         assertNotNull(q7.getExplanation());
         assertEquals(3, q7.getSlotCount());
-        assertEquals(3, q7.getCorrectSlotOptionIndices().size());
         assertNotNull(q7.getSlotOptions());
         assertEquals(3, q7.getSlotOptions().size());
         for (int i = 0; i < 3; i++) {
             assertEquals(4, q7.getSlotOptions().get(i).size());
             assertTrue(q7.getSlotOptions().get(i).get(0).getIsCorrect());
+        }
+    }
+
+    @Test
+    public void testSampleQuestion8() {
+        List<Question> questions = QuestionDataSource.getSampleQuestions();
+        Question q8 = questions.stream().filter(q -> q.getQuestionNumber() == 8).findFirst().orElseThrow();
+
+        assertEquals(8, q8.getQuestionNumber());
+        assertEquals("jken", q8.getCourseId());
+        assertEquals(3.0f, q8.getMarks());
+        assertNotNull(q8.getQuestionContentPath());
+        assertNotNull(q8.getExplanation());
+        assertEquals(3, q8.getSlotCount());
+        assertNotNull(q8.getSlotOptions());
+        assertEquals(3, q8.getSlotOptions().size());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(4, q8.getSlotOptions().get(i).size());
+            assertTrue(q8.getSlotOptions().get(i).get(0).getIsCorrect());
         }
     }
 
@@ -83,7 +98,7 @@ public class QuestionDataSourceTest {
         Question q = QuestionDataSource.createQuestion(
                 "test-course",
                 1,
-                "Test question",
+                "/courses/test/questions/q1.md",
                 0,
                 2.0f,
                 options);
@@ -91,7 +106,7 @@ public class QuestionDataSourceTest {
         assertNotNull(q);
         assertEquals("test-course", q.getCourseId());
         assertEquals(1, q.getQuestionNumber());
-        assertEquals("Test question", q.getQuestionContent());
+        assertEquals("/courses/test/questions/q1.md", q.getQuestionContentPath());
         assertEquals(0, q.getCorrectOptionIndex());
         assertEquals(2.0f, q.getMarks());
         assertEquals(2, q.getOptions().size());
@@ -104,7 +119,7 @@ public class QuestionDataSourceTest {
                 "custom-course",
                 "chapter-1",
                 5,
-                "Custom question?",
+                "/courses/custom/questions/q5.md",
                 1,
                 "HARD",
                 3.0f,
@@ -116,7 +131,7 @@ public class QuestionDataSourceTest {
         assertEquals("custom-course", q.getCourseId());
         assertEquals("chapter-1", q.getChapterId());
         assertEquals(5, q.getQuestionNumber());
-        assertEquals("Custom question?", q.getQuestionContent());
+        assertEquals("/courses/custom/questions/q5.md", q.getQuestionContentPath());
         assertEquals(1, q.getCorrectOptionIndex());
         assertEquals(3.0f, q.getMarks());
         

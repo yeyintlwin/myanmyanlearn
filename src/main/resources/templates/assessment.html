@@ -316,7 +316,7 @@
             >
               <article
                 class="prose max-w-none text-slate-800"
-                th:attr="data-content=${q.questionContent}"
+                th:attr="data-md-src=${q.questionContentPath}"
               ></article>
             </div>
             <div
@@ -436,14 +436,22 @@
         });
 
         const articles = Array.from(
-          document.querySelectorAll("article[data-content]")
+          document.querySelectorAll(
+            "article[data-md-src], article[data-content]"
+          )
         );
-        articles.forEach((el) => {
-          const src = el.getAttribute("data-content") || "";
+        articles.forEach(async (el) => {
+          const mdSrc = el.getAttribute("data-md-src");
+          const inlineSrc = el.getAttribute("data-content") || "";
           const cardEl = el.closest(".question-card");
           const errEl = cardEl ? cardEl.querySelector(".mdError") : null;
           try {
-            el.innerHTML = md ? md.render(src) : src;
+            let content = inlineSrc;
+            if (mdSrc) {
+              const resp = await fetch(mdSrc);
+              content = await resp.text();
+            }
+            el.innerHTML = md ? md.render(content) : content;
             el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
               cb.disabled = true;
               cb.setAttribute("aria-disabled", "true");

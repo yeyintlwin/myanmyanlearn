@@ -21,7 +21,7 @@ public class QuestionTest {
         question = new Question(
                 "jken",
                 1,
-                "Test question content",
+                "/courses/jken/questions/chapter-1-q1.md",
                 0);
         question.setMarks(1.0f);
 
@@ -39,7 +39,7 @@ public class QuestionTest {
         assertNotNull(question);
         assertEquals("jken", question.getCourseId());
         assertEquals(1, question.getQuestionNumber());
-        assertEquals("Test question content", question.getQuestionContent());
+        assertEquals("/courses/jken/questions/chapter-1-q1.md", question.getQuestionContentPath());
         assertEquals(0, question.getCorrectOptionIndex());
     }
 
@@ -71,9 +71,8 @@ public class QuestionTest {
         assertEquals(0, question.getSlotCount());
         question.setSlotCount(3);
         assertEquals(3, question.getSlotCount());
-        java.util.List<Integer> mapping = java.util.Arrays.asList(1, 2, 0);
-        question.setCorrectSlotOptionIndices(mapping);
-        assertEquals(mapping, question.getCorrectSlotOptionIndices());
+        // Per-slot correctness is stored within each option (isCorrect),
+        // not via a separate indices list.
     }
     public void testQuestionChapterId() {
         assertNull(question.getChapterId());

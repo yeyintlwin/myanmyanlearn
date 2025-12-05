@@ -17,7 +17,7 @@ public class QuestionDataSource {
         try {
             ObjectMapper mapper = new ObjectMapper();
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-            Resource[] resources = resolver.getResources("classpath*:/jken/questions/*.json");
+            Resource[] resources = resolver.getResources("classpath*:courses/*/questions/*.json");
 
             for (Resource res : resources) {
                 try {
@@ -37,11 +37,11 @@ public class QuestionDataSource {
     public static Question createQuestion(
             String courseId,
             int questionNumber,
-            String questionContent,
+            String questionContentPath,
             int correctOptionIndex,
             float marks,
             List<QuestionOption> options) {
-        Question q = new Question(courseId, questionNumber, questionContent, correctOptionIndex);
+        Question q = new Question(courseId, questionNumber, questionContentPath, correctOptionIndex);
         q.setMarks(marks);
         q.setOptions(options);
         
@@ -55,7 +55,7 @@ public class QuestionDataSource {
             String courseId,
             String chapterId,
             int questionNumber,
-            String questionContent,
+            String questionContentPath,
             int correctOptionIndex,
             String difficultyLevel,
             float marks,
@@ -67,7 +67,7 @@ public class QuestionDataSource {
         options.add(new QuestionOption(1, optB));
         options.add(new QuestionOption(2, optC));
 
-        Question q = new Question(courseId, questionNumber, questionContent, correctOptionIndex);
+        Question q = new Question(courseId, questionNumber, questionContentPath, correctOptionIndex);
         q.setChapterId(chapterId);
         
         q.setMarks(marks);

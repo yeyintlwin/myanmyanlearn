@@ -6,11 +6,10 @@ public class Question {
     private String courseId;
     private String chapterId;
     private int questionNumber;
-    private String questionContent;
+    private String questionContentPath;
     private int correctOptionIndex;
     private float marks;
     private int slotCount;
-    private java.util.List<Integer> correctSlotOptionIndices;
     
     private String explanation;
     private List<QuestionOption> options;
@@ -18,10 +17,10 @@ public class Question {
 
     public Question() {}
 
-    public Question(String courseId, int questionNumber, String questionContent, int correctOptionIndex) {
+    public Question(String courseId, int questionNumber, String questionContentPath, int correctOptionIndex) {
         this.courseId = courseId;
         this.questionNumber = questionNumber;
-        this.questionContent = questionContent;
+        this.questionContentPath = questionContentPath;
         this.correctOptionIndex = correctOptionIndex;
     }
 
@@ -49,12 +48,12 @@ public class Question {
         this.questionNumber = questionNumber;
     }
 
-    public String getQuestionContent() {
-        return questionContent;
+    public String getQuestionContentPath() {
+        return questionContentPath;
     }
 
-    public void setQuestionContent(String questionContent) {
-        this.questionContent = questionContent;
+    public void setQuestionContentPath(String questionContentPath) {
+        this.questionContentPath = questionContentPath;
     }
 
     public int getCorrectOptionIndex() {
@@ -81,13 +80,6 @@ public class Question {
         this.slotCount = slotCount;
     }
 
-    public java.util.List<Integer> getCorrectSlotOptionIndices() {
-        return correctSlotOptionIndices;
-    }
-
-    public void setCorrectSlotOptionIndices(java.util.List<Integer> correctSlotOptionIndices) {
-        this.correctSlotOptionIndices = correctSlotOptionIndices;
-    }
 
     
 
@@ -115,13 +107,14 @@ public class Question {
         this.slotOptions = slotOptions;
     }
 
+
     @Override
     public String toString() {
         return "Question{" +
                 "courseId='" + courseId + '\'' +
                 ", chapterId='" + chapterId + '\'' +
                 ", questionNumber=" + questionNumber +
-                ", questionContent='" + questionContent + '\'' +
+                ", questionContentPath='" + questionContentPath + '\'' +
                 ", correctOptionIndex=" + correctOptionIndex +
                 ", marks=" + marks +
                 ", slotCount=" + slotCount +
