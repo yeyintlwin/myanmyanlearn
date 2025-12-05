@@ -16,6 +16,8 @@ public class Question {
     private List<QuestionOption> options;
     private List<List<QuestionOption>> slotOptions;
 
+    public Question() {}
+
     public Question(String courseId, int questionNumber, String questionContent, int correctOptionIndex) {
         this.courseId = courseId;
         this.questionNumber = questionNumber;

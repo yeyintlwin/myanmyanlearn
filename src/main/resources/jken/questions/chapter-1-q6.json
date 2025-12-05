@@ -1,0 +1,67 @@
+{
+  "courseId": "jken",
+  "chapterId": "1",
+  "questionNumber": 6,
+  "questionContent": "Read the passage carefully and complete the nine blanks using the dropdown options. Choose words so the text reads naturally and logically. My name is [1], I live in [2], and I work as [3]. I am [4] years old, I studied at [5], and I enjoy [6]. On weekends I often visit [7], learn about [8], and practice [9]. Ensure subject–verb agreement, consistent tense, and appropriate nouns or adjectives for each position.",
+  "correctOptionIndex": 0,
+  "marks": 9.0,
+  "explanation": "Pick the appropriate option for each blank (A1..A9 correct).",
+  "slotCount": 9,
+  "correctSlotOptionIndices": [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  "slotOptions": [
+    [
+      {"optionIndex": 0, "optionContent": "A1", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B1", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C1", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D1", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "A2", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B2", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C2", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D2", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "A3", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B3", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C3", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D3", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "A4", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B4", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C4", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D4", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "A5", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B5", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C5", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D5", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "A6", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B6", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C6", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D6", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "A7", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B7", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C7", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D7", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "A8", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B8", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C8", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D8", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "A9", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "B9", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "C9", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "D9", "isCorrect": false}
+    ]
+  ]
+}

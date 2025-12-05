@@ -1,0 +1,31 @@
+{
+  "courseId": "jken",
+  "chapterId": "1",
+  "questionNumber": 7,
+  "questionContent": "The weather is [1] today, so we will [2] and have [3].",
+  "correctOptionIndex": 0,
+  "marks": 3.0,
+  "explanation": "Choose appropriate words to form a natural sentence.",
+  "slotCount": 3,
+  "correctSlotOptionIndices": [0, 0, 0],
+  "slotOptions": [
+    [
+      {"optionIndex": 0, "optionContent": "sunny", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "raining", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "cloudy", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "stormy", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "go for a picnic", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "stay home", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "work late", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "travel abroad", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "fun", "isCorrect": true},
+      {"optionIndex": 1, "optionContent": "trouble", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "silence", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "noise", "isCorrect": false}
+    ]
+  ]
+}

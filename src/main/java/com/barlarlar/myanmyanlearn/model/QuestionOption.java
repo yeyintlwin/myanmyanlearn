@@ -5,6 +5,8 @@ public class QuestionOption {
     private String optionContent;
     private boolean isCorrect;
 
+    public QuestionOption() {}
+
     public QuestionOption(int optionIndex, String optionContent) {
         this.optionIndex = optionIndex;
         this.optionContent = optionContent;

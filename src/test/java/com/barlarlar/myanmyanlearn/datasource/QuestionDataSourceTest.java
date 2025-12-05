@@ -19,7 +19,7 @@ public class QuestionDataSourceTest {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
 
         assertNotNull(questions);
-        assertEquals(1, questions.size());
+        assertEquals(2, questions.size());
     }
 
     
@@ -49,6 +49,28 @@ public class QuestionDataSourceTest {
         for (int i = 0; i < 9; i++) {
             assertEquals(4, q6.getSlotOptions().get(i).size());
             assertTrue(q6.getSlotOptions().get(i).get(0).getIsCorrect());
+        }
+    }
+
+    @Test
+    public void testSampleQuestion7() {
+        List<Question> questions = QuestionDataSource.getSampleQuestions();
+        Question q7 = questions.get(1);
+
+        assertEquals(7, q7.getQuestionNumber());
+        assertEquals("jken", q7.getCourseId());
+        assertEquals(3.0f, q7.getMarks());
+        assertTrue(q7.getQuestionContent().contains("[1]"));
+        assertTrue(q7.getQuestionContent().contains("[2]"));
+        assertTrue(q7.getQuestionContent().contains("[3]"));
+        assertNotNull(q7.getExplanation());
+        assertEquals(3, q7.getSlotCount());
+        assertEquals(3, q7.getCorrectSlotOptionIndices().size());
+        assertNotNull(q7.getSlotOptions());
+        assertEquals(3, q7.getSlotOptions().size());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(4, q7.getSlotOptions().get(i).size());
+            assertTrue(q7.getSlotOptions().get(i).get(0).getIsCorrect());
         }
     }
 
