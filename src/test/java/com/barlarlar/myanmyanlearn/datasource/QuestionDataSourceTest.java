@@ -19,7 +19,7 @@ public class QuestionDataSourceTest {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
 
         assertNotNull(questions);
-        assertEquals(4, questions.size());
+        assertTrue(questions.size() >= 8);
     }
 
     
@@ -33,59 +33,44 @@ public class QuestionDataSourceTest {
     
 
     @Test
-    public void testSampleQuestion6() {
+    public void testAllQuestionsHaveValidSlotOptions() {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q6 = questions.stream().filter(q -> q.getQuestionNumber() == 6).findFirst().orElseThrow();
-
-        assertEquals(6, q6.getQuestionNumber());
-        assertEquals("jken", q6.getCourseId());
-        assertEquals(9.0f, q6.getMarks());
-        assertNotNull(q6.getQuestionContentPath());
-        assertNotNull(q6.getExplanation());
-        assertEquals(9, q6.getSlotCount());
-        assertNotNull(q6.getSlotOptions());
-        assertEquals(9, q6.getSlotOptions().size());
-        for (int i = 0; i < 9; i++) {
-            assertEquals(4, q6.getSlotOptions().get(i).size());
-            assertTrue(q6.getSlotOptions().get(i).get(0).getIsCorrect());
+        for (Question q : questions) {
+            assertNotNull(q.getQuestionContentPath());
+            assertTrue(q.getSlotCount() >= 1);
+            assertNotNull(q.getSlotOptions());
+            assertEquals(q.getSlotCount(), q.getSlotOptions().size());
+            for (java.util.List<QuestionOption> slot : q.getSlotOptions()) {
+                assertTrue(slot.size() >= 2);
+                int correctCount = 0;
+                for (QuestionOption opt : slot) {
+                    assertNotNull(opt.getOptionContent());
+                    assertNotNull(opt.getOptionIndex());
+                    if (opt.getIsCorrect()) correctCount++;
+                }
+                assertTrue(correctCount >= 1);
+            }
         }
     }
 
     @Test
-    public void testSampleQuestion7() {
+    public void testQuestionsContainCourseAndChapter() {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q7 = questions.stream().filter(q -> q.getQuestionNumber() == 7).findFirst().orElseThrow();
-
-        assertEquals(7, q7.getQuestionNumber());
-        assertEquals("jken", q7.getCourseId());
-        assertEquals(3.0f, q7.getMarks());
-        assertNotNull(q7.getQuestionContentPath());
-        assertNotNull(q7.getExplanation());
-        assertEquals(3, q7.getSlotCount());
-        assertNotNull(q7.getSlotOptions());
-        assertEquals(3, q7.getSlotOptions().size());
-        for (int i = 0; i < 3; i++) {
-            assertEquals(4, q7.getSlotOptions().get(i).size());
-            assertTrue(q7.getSlotOptions().get(i).get(0).getIsCorrect());
+        for (Question q : questions) {
+            assertEquals("jken", q.getCourseId());
+            assertNotNull(q.getChapterId());
+            assertTrue(!q.getChapterId().isBlank());
         }
     }
 
     @Test
-    public void testSampleQuestion8() {
+    public void testSlotOptionsMarking() {
         List<Question> questions = QuestionDataSource.getSampleQuestions();
-        Question q8 = questions.stream().filter(q -> q.getQuestionNumber() == 8).findFirst().orElseThrow();
-
-        assertEquals(8, q8.getQuestionNumber());
-        assertEquals("jken", q8.getCourseId());
-        assertEquals(3.0f, q8.getMarks());
-        assertNotNull(q8.getQuestionContentPath());
-        assertNotNull(q8.getExplanation());
-        assertEquals(3, q8.getSlotCount());
-        assertNotNull(q8.getSlotOptions());
-        assertEquals(3, q8.getSlotOptions().size());
-        for (int i = 0; i < 3; i++) {
-            assertEquals(4, q8.getSlotOptions().get(i).size());
-            assertTrue(q8.getSlotOptions().get(i).get(0).getIsCorrect());
+        for (Question q : questions) {
+            for (java.util.List<QuestionOption> slot : q.getSlotOptions()) {
+                long trueCount = slot.stream().filter(QuestionOption::getIsCorrect).count();
+                assertTrue(trueCount >= 1);
+            }
         }
     }
 

@@ -1,30 +1,60 @@
 {
-    "courseId": "jken",
-    "chapterId": "1",
-    "questionNumber": 8,
-    "questionContentPath": "/courses/jken/questions/chapter-1-q8.md",
-    "correctOptionIndex": 0,
-    "marks": 3.0,
-    "explanation": "Choose words that form a natural, grammatically correct sentence.",
-    "slotCount": 3,
-    "slotOptions": [
-        [
-            { "optionIndex": 0, "optionContent": "student", "isCorrect": true },
-            { "optionIndex": 1, "optionContent": "teacher", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "librarian", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "tourist", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "takes notes", "isCorrect": true },
-            { "optionIndex": 1, "optionContent": "plays games", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "sleeps", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "chats", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "quietly", "isCorrect": true },
-            { "optionIndex": 1, "optionContent": "loudly", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "quickly", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "carelessly", "isCorrect": false }
-        ]
+  "courseId": "jken",
+  "chapterId": "1",
+  "questionNumber": 8,
+  "questionContentPath": "/courses/jken/questions/chapter-1-q8.md",
+  "correctOptionIndex": 0,
+  "marks": 7.0,
+  "explanation": "Select the correct option for each blank.",
+  "slotCount": 7,
+  "slotOptions": [
+    [
+      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
+      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true},
+      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false},
+      {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false},
+      {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false},
+      {"optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false},
+      {"optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
+      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true},
+      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false},
+      {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
+      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true},
+      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
+      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false},
+      {"optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": true},
+      {"optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
+      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true},
+      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
+      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
+      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true},
+      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false}
+    ],
+    [
+      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
+      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true},
+      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
+      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false}
     ]
+  ]
 }
