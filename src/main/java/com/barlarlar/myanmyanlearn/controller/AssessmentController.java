@@ -2,6 +2,7 @@ package com.barlarlar.myanmyanlearn.controller;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,8 +54,35 @@ public class AssessmentController {
         model.addAttribute("examTitle", examTitle != null ? examTitle : "Assessment");
         List<com.barlarlar.myanmyanlearn.model.Question> questions =
                 com.barlarlar.myanmyanlearn.datasource.QuestionDataSource.getSampleQuestions();
+
+        if (courseId != null && !courseId.isBlank()) {
+            questions = questions.stream()
+                    .filter(q -> courseId.equals(q.getCourseId()))
+                    .collect(Collectors.toList());
+        }
+
+        if (!chapterList.isEmpty()) {
+            questions = questions.stream()
+                    .filter(q -> chapterList.contains(q.getChapterId()))
+                    .collect(Collectors.toList());
+        }
+
+        Comparator<com.barlarlar.myanmyanlearn.model.Question> comparator =
+                Comparator.<com.barlarlar.myanmyanlearn.model.Question>comparingInt(q -> parseChapterOrder(q.getChapterId()))
+                        .thenComparingInt(com.barlarlar.myanmyanlearn.model.Question::getQuestionNumber);
+        questions.sort(comparator);
+
         model.addAttribute("questions", questions);
 
         return "assessment";
+    }
+
+    private int parseChapterOrder(String chapterId) {
+        if (chapterId == null) return Integer.MAX_VALUE;
+        try {
+            return Integer.parseInt(chapterId.trim());
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE;
+        }
     }
 }
