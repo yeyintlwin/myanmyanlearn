@@ -12,6 +12,7 @@
     />
     <style>
       /* Fix autofill styling - Enhanced version */
+
       input:-webkit-autofill,
       input:-webkit-autofill:hover,
       input:-webkit-autofill:focus,
@@ -23,16 +24,16 @@
         transition: background-color 5000s ease-in-out 0s !important;
         -webkit-transition: background-color 5000s ease-in-out 0s !important;
       }
-
       /* Firefox autofill fix */
+
       input:-moz-autofill {
         background-color: rgba(255, 255, 255, 0.1) !important;
         background-image: none !important;
         color: white !important;
         box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.1) inset !important;
       }
-
       /* Additional fix for all browsers */
+
       input[type="text"]:autofill,
       input[type="password"]:autofill {
         background-color: rgba(255, 255, 255, 0.1) !important;
@@ -42,9 +43,8 @@
       }
     </style>
   </head>
-  <body
-    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center p-6"
-  >
+
+  <body class="min-h-screen font-sans flex items-center justify-center p-6">
     <!-- Navbar -->
     <nav
       class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
@@ -405,7 +405,10 @@
       // Real-time validation
       function validateUsername(username) {
         if (!username || username.trim().length === 0) {
-          return { valid: false, message: "Username is required" };
+          return {
+            valid: false,
+            message: "Username is required",
+          };
         }
         if (username.length < 3) {
           return {
@@ -426,12 +429,18 @@
               "Username can only contain letters, numbers, and underscores",
           };
         }
-        return { valid: true, message: "" };
+        return {
+          valid: true,
+          message: "",
+        };
       }
 
       function validatePassword(password) {
         if (!password || password.length === 0) {
-          return { valid: false, message: "Password is required" };
+          return {
+            valid: false,
+            message: "Password is required",
+          };
         }
         if (password.length < 6) {
           return {
@@ -445,7 +454,10 @@
             message: "Password must be less than 100 characters",
           };
         }
-        return { valid: true, message: "" };
+        return {
+          valid: true,
+          message: "",
+        };
       }
 
       function showFieldError(field, message) {

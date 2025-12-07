@@ -115,7 +115,23 @@ tailwind.config = {
           border: "1px solid rgba(255, 255, 255, 0.1)",
         },
         ".gradient-primary": {
+          background: "linear-gradient(135deg, #14b8a6 0%, #22c55e 100%)",
+        },
+        ".gradient-primary-old": {
           background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        },
+        ".app-bg": {
+          "background-size": "cover",
+          "background-position": "center",
+          "background-repeat": "no-repeat",
+          "background-attachment": "fixed",
+        },
+        ".app-bg-solid": {
+          "background-color": "var(--app-bg-color, #000000)",
+        },
+        ".app-bg-gradient": {
+          "background-image":
+            "var(--app-bg-gradient, linear-gradient(135deg, #0ea5e9 0%, #22d3ee 25%, #a78bfa 50%, #f43f5e 75%, #f59e0b 100%))",
         },
         ".gradient-accent": {
           background: "linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)",
@@ -135,3 +151,51 @@ tailwind.config = {
     },
   ],
 };
+
+(function () {
+  var cfg = window.APP_BACKGROUND || {
+    mode: "solid",
+    color: "#0f172a",
+  };
+  var root = document.documentElement;
+  if (cfg.color) root.style.setProperty("--app-bg-color", cfg.color);
+  if (cfg.gradient) root.style.setProperty("--app-bg-gradient", cfg.gradient);
+
+  function apply() {
+    var body = document.body;
+    if (!body) return;
+    body.classList.add("app-bg");
+    body.classList.remove("app-bg-solid", "app-bg-gradient");
+    if (cfg.mode === "gradient") body.classList.add("app-bg-gradient");
+    else body.classList.add("app-bg-solid");
+    // Force inline style to override any existing Tailwind bg-* classes
+    body.style.backgroundSize = "cover";
+    body.style.backgroundPosition = "center";
+    body.style.backgroundRepeat = "no-repeat";
+    body.style.backgroundAttachment = "fixed";
+    if (cfg.mode === "solid") {
+      body.style.backgroundImage = "none";
+      body.style.backgroundColor = cfg.color || "#000000";
+    } else if (cfg.mode === "gradient") {
+      var g =
+        cfg.gradient ||
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--app-bg-gradient"
+        ) ||
+        "linear-gradient(135deg, #0ea5e9 0%, #22d3ee 25%, #a78bfa 50%, #f43f5e 75%, #f59e0b 100%)";
+      var dim = typeof cfg.dimOpacity === "number" ? cfg.dimOpacity : 0.35;
+      var overlay =
+        dim > 0
+          ? "linear-gradient(rgba(0,0,0," + dim + "), rgba(0,0,0," + dim + ")),"
+          : "";
+      body.style.backgroundImage = overlay + g.trim();
+      body.style.backgroundColor = "transparent";
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", apply);
+  } else {
+    apply();
+  }
+})();

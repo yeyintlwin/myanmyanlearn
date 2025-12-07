@@ -11,9 +11,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
-  <body
-    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center p-6"
-  >
+
+  <body class="min-h-screen font-sans flex items-center justify-center p-6">
     <!-- Navbar -->
     <nav
       class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
@@ -42,7 +41,12 @@
               >
                 Myan Myan Learn
               </div>
-              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+                th:text="#{nav.subtitle}"
+              >
+                Learning Platform
+              </div>
             </div>
           </div>
         </div>
@@ -54,8 +58,15 @@
       <!-- Error Code -->
       <div class="mb-8">
         <h1 class="text-6xl font-black text-white mb-4 brand-font">404</h1>
-        <h2 class="text-2xl font-bold text-white mb-4" th:text="#{error.header}">Page Not Found</h2>
-        <p class="text-white/80" th:text="#{error.message}">The page you're looking for doesn't exist.</p>
+        <h2
+          class="text-2xl font-bold text-white mb-4"
+          th:text="#{error.header}"
+        >
+          Page Not Found
+        </h2>
+        <p class="text-white/80" th:text="#{error.message}">
+          The page you're looking for doesn't exist.
+        </p>
       </div>
 
       <!-- Action Button -->

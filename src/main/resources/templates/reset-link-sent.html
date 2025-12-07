@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="#{resetSent.title}">MYAN MYAN LEARN - Reset Link Sent</title>
+    <title th:text="#{resetSent.title}">
+      MYAN MYAN LEARN - Reset Link Sent
+    </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -11,9 +13,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
-  <body
-    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center p-6"
-  >
+
+  <body class="min-h-screen font-sans flex items-center justify-center p-6">
     <!-- Card -->
     <div
       class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl mt-4 relative overflow-hidden"
@@ -32,8 +33,19 @@
         >
           <i class="fas fa-envelope-circle-check text-white text-xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2" th:text="#{resetSent.header}">Check your email</h1>
-        <p class="text-sm text-white/80 max-w-sm mx-auto" th:text="#{resetSent.message}">If an account exists for the email you entered, we've sent a password reset link. The link will expire in 60 minutes.</p>
+        <h1
+          class="text-3xl font-bold text-white mb-2"
+          th:text="#{resetSent.header}"
+        >
+          Check your email
+        </h1>
+        <p
+          class="text-sm text-white/80 max-w-sm mx-auto"
+          th:text="#{resetSent.message}"
+        >
+          If an account exists for the email you entered, we've sent a password
+          reset link. The link will expire in 60 minutes.
+        </p>
 
         <!-- Actions -->
         <div class="mt-8 flex flex-col gap-3">

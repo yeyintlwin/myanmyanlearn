@@ -18,45 +18,77 @@
       }
     </style>
   </head>
-  <body
-    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans text-gray-800 flex flex-col"
-  >
+
+  <body class="min-h-screen font-sans text-gray-800 flex flex-col">
     <!-- Navbar -->
     <nav th:replace="fragments/navbar :: appNavbar('Learning Platform')"></nav>
-
 
     <!-- Main Content -->
     <main class="flex-1 pt-28 pb-16">
       <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Our Courses Title -->
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-white text-2xl sm:text-3xl font-bold" th:text="#{home.ourCourses}">Our Courses</h2>
+          <h2
+            class="text-white text-2xl sm:text-3xl font-bold"
+            th:text="#{home.ourCourses}"
+          >
+            Our Courses
+          </h2>
         </div>
 
         <!-- Course List -->
         <div class="space-y-3">
           <!-- Course Items -->
-          <a th:each="course : ${courses}"
-             th:href="@{/contents(courseId=${course.id})}"
-             href="/contents"
-             class="block no-underline">
-            <div class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4 flex items-start gap-4 hover:bg-white/15 transition cursor-pointer">
+          <a
+            th:each="course : ${courses}"
+            th:href="@{/contents(courseId=${course.id})}"
+            href="/contents"
+            class="block no-underline"
+          >
+            <div
+              class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4 flex items-start gap-4 hover:bg-white/15 transition cursor-pointer"
+            >
               <!-- Image -->
-              <div class="w-24 h-28 sm:w-28 sm:h-32 rounded-xl bg-white/10 overflow-hidden flex-shrink-0">
-                <img th:src="${course.logo}" src="" alt="Course Cover" class="w-full h-full object-cover" />
+              <div
+                class="w-24 h-28 sm:w-28 sm:h-32 rounded-xl bg-white/10 overflow-hidden flex-shrink-0"
+              >
+                <img
+                  th:src="${course.logo}"
+                  src=""
+                  alt="Course Cover"
+                  class="w-full h-full object-cover"
+                />
               </div>
               <!-- Text -->
               <div class="flex-1 min-w-0">
-                <div class="text-white font-semibold text-2xl sm:text-3xl truncate mb-2"
-                     th:text="${course.title}">Course Title</div>
-                <div class="text-white/80 text-sm sm:text-base mt-2 leading-relaxed line-clamp-2"
-                     th:text="${course.description}">Course description</div>
+                <div
+                  class="text-white font-semibold text-2xl sm:text-3xl truncate mb-2"
+                  th:text="${course.title}"
+                >
+                  Course Title
+                </div>
+                <div
+                  class="text-white/80 text-sm sm:text-base mt-2 leading-relaxed line-clamp-2"
+                  th:text="${course.description}"
+                >
+                  Course description
+                </div>
               </div>
               <!-- Percentage Block -->
               <div class="text-left flex flex-col items-start leading-tight">
-                <span class="text-white/80 text-[10px] sm:text-xs" th:text="#{home.youHave}">You have</span>
-                <span class="text-white font-extrabold text-6xl sm:text-8xl">50%</span>
-                <span class="text-white/80 text-[10px] sm:text-xs" th:text="#{home.passPossibility}">possibility to pass the exam.</span>
+                <span
+                  class="text-white/80 text-[10px] sm:text-xs"
+                  th:text="#{home.youHave}"
+                  >You have</span
+                >
+                <span class="text-white font-extrabold text-6xl sm:text-8xl"
+                  >50%</span
+                >
+                <span
+                  class="text-white/80 text-[10px] sm:text-xs"
+                  th:text="#{home.passPossibility}"
+                  >possibility to pass the exam.</span
+                >
               </div>
             </div>
           </a>

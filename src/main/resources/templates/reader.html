@@ -24,12 +24,14 @@
         visibility: visible !important;
         transform: translateY(0) !important;
       }
+
       .show {
         opacity: 1 !important;
         visibility: visible !important;
         transform: translateY(0) !important;
       }
       /* Markdown typography */
+
       #mdContainer h1 {
         color: #0f172a;
         font-size: 2rem;
@@ -37,6 +39,7 @@
         font-weight: 700;
         margin: 1.25rem 0 0.75rem;
       }
+
       #mdContainer h2 {
         color: #0f172a;
         font-size: 1.5rem;
@@ -44,6 +47,7 @@
         font-weight: 700;
         margin: 1.2rem 0 0.7rem;
       }
+
       #mdContainer h3 {
         color: #0f172a;
         font-size: 1.25rem;
@@ -51,6 +55,7 @@
         font-weight: 700;
         margin: 1.1rem 0 0.6rem;
       }
+
       #mdContainer h4 {
         color: #0f172a;
         font-size: 1.125rem;
@@ -58,6 +63,7 @@
         font-weight: 700;
         margin: 1rem 0 0.5rem;
       }
+
       #mdContainer h5 {
         color: #0f172a;
         font-size: 1rem;
@@ -65,6 +71,7 @@
         font-weight: 700;
         margin: 0.9rem 0 0.45rem;
       }
+
       #mdContainer h6 {
         color: #0f172a;
         font-size: 0.875rem;
@@ -74,53 +81,66 @@
         letter-spacing: 0.02em;
         margin: 0.8rem 0 0.4rem;
       }
+
       #mdContainer p {
         margin: 0.75rem 0;
         color: #334155;
       }
+
       #mdContainer a {
         color: #2563eb;
         text-decoration: underline;
         text-underline-offset: 2px;
       }
+
       #mdContainer ul,
       #mdContainer ol {
         margin: 0.75rem 0 0.75rem 1.25rem;
         padding-left: 1.25rem;
       }
       /* Unordered lists */
+
       #mdContainer ul {
         list-style-type: disc;
         list-style-position: outside;
       }
+
       #mdContainer ul ul {
         list-style-type: circle;
       }
+
       #mdContainer ul ul ul {
         list-style-type: square;
       }
       /* Ordered lists */
+
       #mdContainer ol {
         list-style-type: decimal;
         list-style-position: outside;
       }
+
       #mdContainer ol ol {
         list-style-type: lower-alpha;
       }
+
       #mdContainer ol ol ol {
         list-style-type: lower-roman;
       }
+
       #mdContainer li {
         margin: 0.25rem 0;
       }
+
       #mdContainer li p {
         margin: 0.25rem 0;
       }
       /* Task list checkboxes (GFM) */
+
       #mdContainer li > input[type="checkbox"] {
         margin-right: 0.5rem;
         vertical-align: middle;
       }
+
       #mdContainer blockquote {
         border-left: 4px solid #e2e8f0;
         padding: 0.5rem 1rem;
@@ -129,6 +149,7 @@
         background: #f8fafc;
         border-radius: 0.5rem;
       }
+
       #mdContainer pre {
         background: #f6f8fa;
         border: 1px solid #e5e7eb;
@@ -136,27 +157,32 @@
         padding: 0.75rem 1rem;
         overflow: auto;
       }
+
       #mdContainer code {
         background: #f1f5f9;
         color: #0f172a;
         padding: 0.1rem 0.3rem;
         border-radius: 0.25rem;
       }
+
       #mdContainer table {
         width: 100%;
         border-collapse: collapse;
         margin: 1rem 0;
       }
+
       #mdContainer th,
       #mdContainer td {
         border: 1px solid #e5e7eb;
         padding: 0.5rem 0.6rem;
       }
+
       #mdContainer th {
         background: #f8fafc;
         text-align: left;
         color: #0f172a;
       }
+
       #mdContainer hr {
         border: none;
         height: 1px;
@@ -164,6 +190,7 @@
         margin: 1.25rem 0;
       }
       /* Media sizing: keep images/diagrams from becoming too large */
+
       #mdContainer img,
       #mdContainer svg,
       #mdContainer video,
@@ -174,42 +201,51 @@
         margin: 0.5rem auto;
       }
       /* Cap image height to avoid overly tall images */
+
       #mdContainer img {
         max-height: 60vh;
       }
       /* Mermaid diagrams (SVG) */
+
       #mdContainer .mermaid {
         max-width: min(100%, 720px);
         margin: 0.5rem auto;
         overflow: hidden;
       }
       /* Figure captions */
+
       #mdContainer figure {
         margin: 0.75rem auto;
         text-align: center;
       }
+
       #mdContainer figcaption {
         color: #64748b;
         font-size: 0.875rem;
       }
       /* Horizontal scroll helpers */
+
       .scrollbar-none {
         scrollbar-width: none;
       }
+
       .scrollbar-none::-webkit-scrollbar {
         display: none;
       }
       /* Drawer accordion */
+
       .drawer-acc {
         max-height: 0;
         overflow: hidden;
         opacity: 0;
         transition: max-height 0.3s ease, opacity 0.2s ease;
       }
+
       .drawer-acc.open {
         max-height: 1000px;
         opacity: 1;
       }
+
       .acc-icon {
         transition: transform 0.2s ease;
       }
@@ -223,9 +259,8 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   </head>
-  <body
-    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans text-gray-800 flex flex-col"
-  >
+
+  <body class="min-h-screen font-sans text-gray-800 flex flex-col">
     <!-- Navbar (shared fragment) -->
     <nav th:replace="fragments/navbar :: appNavbar('Reader')"></nav>
 

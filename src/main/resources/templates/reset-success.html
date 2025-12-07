@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="#{resetSuccess.title}">MYAN MYAN LEARN - Password Changed</title>
+    <title th:text="#{resetSuccess.title}">
+      MYAN MYAN LEARN - Password Changed
+    </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -11,9 +13,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
-  <body
-    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center p-6"
-  >
+
+  <body class="min-h-screen font-sans flex items-center justify-center p-6">
     <!-- Navbar -->
     <nav
       class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
@@ -42,7 +43,12 @@
               >
                 Myan Myan Learn
               </div>
-              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+                th:text="#{nav.subtitle}"
+              >
+                Learning Platform
+              </div>
             </div>
           </div>
         </div>
@@ -68,8 +74,19 @@
         >
           <i class="fas fa-check text-2xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-3" th:text="#{resetSuccess.header}">Password Changed!</h1>
-        <p class="text-base text-white/80 mb-8 leading-relaxed" th:text="#{resetSuccess.message}">Your password has been successfully updated. You can now sign in with your new password.</p>
+        <h1
+          class="text-3xl font-bold text-white mb-3"
+          th:text="#{resetSuccess.header}"
+        >
+          Password Changed!
+        </h1>
+        <p
+          class="text-base text-white/80 mb-8 leading-relaxed"
+          th:text="#{resetSuccess.message}"
+        >
+          Your password has been successfully updated. You can now sign in with
+          your new password.
+        </p>
       </div>
 
       <!-- Success Message -->
@@ -83,9 +100,20 @@
             >
               <i class="fas fa-check text-white text-sm"></i>
             </div>
-            <h4 class="text-white text-sm font-bold" th:text="#{resetSuccess.updated}">Password Successfully Updated</h4>
+            <h4
+              class="text-white text-sm font-bold"
+              th:text="#{resetSuccess.updated}"
+            >
+              Password Successfully Updated
+            </h4>
           </div>
-          <p class="text-white/80 text-sm leading-relaxed" th:text="#{resetSuccess.details}">Your account is now secured with your new password. All your data remains safe and accessible.</p>
+          <p
+            class="text-white/80 text-sm leading-relaxed"
+            th:text="#{resetSuccess.details}"
+          >
+            Your account is now secured with your new password. All your data
+            remains safe and accessible.
+          </p>
         </div>
       </div>
 
@@ -115,24 +143,38 @@
         >
           <div class="flex items-center gap-2 mb-4">
             <i class="fas fa-shield-alt text-white/80"></i>
-            <h5 class="text-white text-sm font-bold" th:text="#{resetSuccess.tipsTitle}">Security Tips:</h5>
+            <h5
+              class="text-white text-sm font-bold"
+              th:text="#{resetSuccess.tipsTitle}"
+            >
+              Security Tips:
+            </h5>
           </div>
           <ul class="text-white/80 text-sm leading-relaxed space-y-2">
             <li class="flex items-center gap-2">
               <i class="fas fa-arrow-right text-white/80 text-xs"></i>
-              <span th:text="#{resetSuccess.tips.keepPrivate}">Keep your password private and don't share it</span>
+              <span th:text="#{resetSuccess.tips.keepPrivate}"
+                >Keep your password private and don't share it</span
+              >
             </li>
             <li class="flex items-center gap-2">
               <i class="fas fa-arrow-right text-white/80 text-xs"></i>
-              <span th:text="#{resetSuccess.tips.unique}">Use a unique password for this account</span>
+              <span th:text="#{resetSuccess.tips.unique}"
+                >Use a unique password for this account</span
+              >
             </li>
             <li class="flex items-center gap-2">
               <i class="fas fa-arrow-right text-white/80 text-xs"></i>
-              <span th:text="#{resetSuccess.tips.2fa}">Consider enabling two-factor authentication</span>
+              <span th:text="#{resetSuccess.tips.2fa}"
+                >Consider enabling two-factor authentication</span
+              >
             </li>
             <li class="flex items-center gap-2">
               <i class="fas fa-arrow-right text-white/80 text-xs"></i>
-              <span th:text="#{resetSuccess.tips.logoutAll}">Log out from all devices if you suspect unauthorized access</span>
+              <span th:text="#{resetSuccess.tips.logoutAll}"
+                >Log out from all devices if you suspect unauthorized
+                access</span
+              >
             </li>
           </ul>
         </div>
@@ -145,7 +187,9 @@
         >
           <i class="fas fa-clock text-white/80 text-sm"></i>
           <span class="text-sm text-white/80 font-semibold" id="countdown">
-            <span th:text="#{verifySuccess.redirectPrefix}">Redirecting to login in</span>
+            <span th:text="#{verifySuccess.redirectPrefix}"
+              >Redirecting to login in</span
+            >
             <span id="timer" class="text-white font-bold">5</span>
             <span th:text="#{verifySuccess.redirectSuffix}">seconds...</span>
           </span>

@@ -16,9 +16,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
-  <body
-    class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 font-sans flex items-center justify-center p-6"
-  >
+
+  <body class="min-h-screen font-sans flex items-center justify-center p-6">
     <!-- Navbar -->
     <nav
       class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
@@ -47,7 +46,12 @@
               >
                 Myan Myan Learn
               </div>
-              <div class="text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
+              <div
+                class="text-white/70 text-xs font-medium tracking-wider uppercase"
+                th:text="#{nav.subtitle}"
+              >
+                Learning Platform
+              </div>
             </div>
           </div>
         </div>
@@ -73,8 +77,15 @@
         >
           <i class="fas fa-user-plus text-white text-xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2" th:text="#{register.createAccount}">Create Account</h1>
-        <p class="text-sm text-white/80" th:text="#{register.subtitle}">Join our learning community and start your journey</p>
+        <h1
+          class="text-3xl font-bold text-white mb-2"
+          th:text="#{register.createAccount}"
+        >
+          Create Account
+        </h1>
+        <p class="text-sm text-white/80" th:text="#{register.subtitle}">
+          Join our learning community and start your journey
+        </p>
       </div>
 
       <!-- Flash Messages -->
@@ -248,7 +259,11 @@
             <!-- Password Strength Indicator -->
             <div id="passwordStrength" class="mt-2 hidden">
               <div class="flex items-center mb-2">
-                <span class="text-xs text-white/60 mr-2" th:text="#{register.passwordStrength}">Password Strength:</span>
+                <span
+                  class="text-xs text-white/60 mr-2"
+                  th:text="#{register.passwordStrength}"
+                  >Password Strength:</span
+                >
                 <span id="strengthText" class="text-xs font-medium"></span>
               </div>
               <div class="w-full bg-white/10 rounded-full h-2">
@@ -261,17 +276,23 @@
                 <div id="lengthReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span th:text="#{register.req.length}">At least 8 characters</span>
+                  <span th:text="#{register.req.length}"
+                    >At least 8 characters</span
+                  >
                 </div>
                 <div id="upperReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span th:text="#{register.req.upper}">One uppercase letter</span>
+                  <span th:text="#{register.req.upper}"
+                    >One uppercase letter</span
+                  >
                 </div>
                 <div id="lowerReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span th:text="#{register.req.lower}">One lowercase letter</span>
+                  <span th:text="#{register.req.lower}"
+                    >One lowercase letter</span
+                  >
                 </div>
                 <div id="numberReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
@@ -281,7 +302,9 @@
                 <div id="specialReq" class="flex items-center mb-1">
                   <i class="fas fa-check text-green-400 mr-2 hidden"></i>
                   <i class="fas fa-times text-red-400 mr-2"></i>
-                  <span th:text="#{register.req.special}">One special character</span>
+                  <span th:text="#{register.req.special}"
+                    >One special character</span
+                  >
                 </div>
               </div>
             </div>
@@ -292,7 +315,9 @@
               class="block text-sm font-semibold text-white mb-3"
             >
               <i class="fas fa-lock text-white/80 mr-2"></i>
-              <span th:text="#{register.confirmPassword}">Confirm Password</span>
+              <span th:text="#{register.confirmPassword}"
+                >Confirm Password</span
+              >
             </label>
             <div class="relative">
               <input
@@ -378,7 +403,11 @@
         <!-- Divider -->
         <div class="relative mb-6">
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-transparent text-white/60" th:text="#{register.already}">Already have an account?</span>
+            <span
+              class="px-4 bg-transparent text-white/60"
+              th:text="#{register.already}"
+              >Already have an account?</span
+            >
           </div>
         </div>
 
