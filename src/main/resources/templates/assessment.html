@@ -357,6 +357,16 @@
               id="submitMessage"
               class="mt-2 hidden text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2"
             ></div>
+            <input
+              type="hidden"
+              id="csrfParameterName"
+              th:value="${_csrf.parameterName}"
+            />
+            <input
+              type="hidden"
+              id="csrfTokenValue"
+              th:value="${_csrf.token}"
+            />
           </div>
         </div>
       </div>
@@ -537,19 +547,35 @@
                   JSON.stringify(payload)
                 );
               } catch (_) {}
-              const nav = new URLSearchParams();
-              if (courseId) nav.set("courseId", courseId);
-              if (chapters) nav.set("chapters", chapters);
+              var form = document.createElement("form");
+              form.method = "POST";
+              form.action = "/assessment/score";
+
+              function addField(n, v) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = n;
+                input.value = v;
+                form.appendChild(input);
+              }
+              if (courseId) addField("courseId", courseId);
+              if (chapters) addField("chapters", chapters);
               try {
                 Array.from(
                   document.querySelectorAll("select[name^='q']")
                 ).forEach(function (s) {
                   if (s && s.name && s.value && s.value !== "") {
-                    nav.set(s.name, s.value);
+                    addField(s.name, s.value);
                   }
                 });
               } catch (_) {}
-              window.location.href = "/assessment/score?" + nav.toString();
+              var csrfParamEl = document.getElementById("csrfParameterName");
+              var csrfTokenEl = document.getElementById("csrfTokenValue");
+              if (csrfParamEl && csrfTokenEl) {
+                addField(csrfParamEl.value, csrfTokenEl.value);
+              }
+              document.body.appendChild(form);
+              form.submit();
             }
           });
 

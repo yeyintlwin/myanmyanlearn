@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.barlarlar.myanmyanlearn.model.Course;
@@ -78,7 +79,7 @@ public class AssessmentController {
         return "assessment";
     }
 
-    @GetMapping("/assessment/score")
+    @PostMapping("/assessment/score")
     public String assessmentScorePage(
             Model model,
             @RequestParam(name = "chapters", required = false) String chapters,

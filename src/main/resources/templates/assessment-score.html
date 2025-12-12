@@ -12,7 +12,10 @@
     />
   </head>
 
-  <body class="min-h-screen font-sans app-bg app-bg-solid flex flex-col">
+  <body
+    class="min-h-screen font-sans app-bg app-bg-solid flex flex-col"
+    th:attr="data-course-id=${courseId}"
+  >
     <nav th:replace="fragments/navbar :: appNavbar('View Score')"></nav>
 
     <main class="flex-1 pt-28 pb-16">
@@ -237,6 +240,17 @@
           if (label)
             label.textContent = `${val} ${val === 1 ? "mark" : "marks"}`;
         });
+        try {
+          history.replaceState(null, "", location.href);
+          history.pushState(null, "", location.href);
+          window.addEventListener("popstate", function () {
+            var cidEl = document.querySelector("[data-course-id]");
+            var cid = cidEl ? cidEl.getAttribute("data-course-id") : "";
+            var url =
+              "/contents" + (cid ? "?courseId=" + encodeURIComponent(cid) : "");
+            window.location.replace(url);
+          });
+        } catch (_) {}
       })();
     </script>
     <script src="/js/navbar.js"></script>
