@@ -12,7 +12,7 @@
     />
   </head>
 
-  <body class="min-h-screen font-sans text-gray-800 flex flex-col">
+  <body class="min-h-screen font-sans app-bg app-bg-solid flex flex-col">
     <nav th:replace="fragments/navbar :: appNavbar('View Score')"></nav>
 
     <main class="flex-1 pt-28 pb-16">
@@ -104,12 +104,24 @@
               </div>
             </div>
             <div
-              class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
+              class="bg-white border border-slate-200 rounded-xl p-4 mb-3 shadow-sm"
             >
+              <div class="text-slate-600 text-xs font-semibold mb-2">
+                Question
+              </div>
               <article
                 class="prose max-w-none text-slate-800"
                 th:attr="data-md-src=${sq.q.questionContentPath}"
               ></article>
+              <div class="mt-4 border-t border-slate-200 pt-3">
+                <div class="text-slate-600 text-xs font-semibold mb-2">
+                  Explanation
+                </div>
+                <article
+                  class="prose max-w-none text-slate-800"
+                  th:attr="data-md-src=${'/courses/' + sq.q.courseId + '/questions/chapter-' + sq.q.chapterId + '-e' + sq.q.questionNumber + '.md'}"
+                ></article>
+              </div>
             </div>
             <div class="space-y-2" th:if="${sq.q.slotCount > 0}">
               <div
