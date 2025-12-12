@@ -12,8 +12,6 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.barlarlar.myanmyanlearn.security.CustomAuthenticationSuccessHandler;
-
 import javax.sql.DataSource;
 
 @Configuration

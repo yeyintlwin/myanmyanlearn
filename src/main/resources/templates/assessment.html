@@ -210,9 +210,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   </head>
 
-  <body
-    class="min-h-screen font-sans text-gray-800 flex flex-col"
-  >
+  <body class="min-h-screen font-sans text-gray-800 flex flex-col">
     <!-- Navbar -->
     <nav th:replace="fragments/navbar :: appNavbar('Assessment')"></nav>
 
@@ -355,6 +353,10 @@
               <i class="fas fa-paper-plane"></i>
               <span>Submit</span>
             </button>
+            <div
+              id="submitMessage"
+              class="mt-2 hidden text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2"
+            ></div>
           </div>
         </div>
       </div>
@@ -493,14 +495,61 @@
               .filter((x) => x.missingCount > 0);
             console.log("Assessment submission:", results);
             if (missing.length) {
-              alert(
-                "Please select options for question(s): " +
+              var msgEl = document.getElementById("submitMessage");
+              if (msgEl) {
+                var text =
+                  "Please select options for question(s): " +
                   missing
-                    .map((m) => `${m.q} (${m.missingCount} missing)`)
-                    .join(", ")
-              );
+                    .map(function (m) {
+                      return m.q + " (" + m.missingCount + " missing)";
+                    })
+                    .join(", ");
+                msgEl.textContent = text;
+                msgEl.classList.remove("hidden");
+              }
             } else {
-              alert("Submitted! Thank you.");
+              const params = new URLSearchParams(window.location.search);
+              const courseId = params.get("courseId") || "";
+              const chapters = params.get("chapters") || "";
+              var examTitleEl = document.getElementById("examTitleVal");
+              var examTitle =
+                examTitleEl && examTitleEl.textContent
+                  ? examTitleEl.textContent.trim()
+                  : "Assessment";
+              var totalScoreEl = document.getElementById("totalScoreVal");
+              var totalScore = 0;
+              if (totalScoreEl && totalScoreEl.textContent) {
+                var ts = parseFloat(totalScoreEl.textContent);
+                totalScore = isNaN(ts) ? 0 : ts;
+              }
+              var payload = {
+                results: results,
+                meta: {
+                  examTitle: examTitle,
+                  totalScore: totalScore,
+                  courseId: courseId,
+                  chapters: chapters,
+                },
+              };
+              try {
+                sessionStorage.setItem(
+                  "assessmentResults",
+                  JSON.stringify(payload)
+                );
+              } catch (_) {}
+              const nav = new URLSearchParams();
+              if (courseId) nav.set("courseId", courseId);
+              if (chapters) nav.set("chapters", chapters);
+              try {
+                Array.from(
+                  document.querySelectorAll("select[name^='q']")
+                ).forEach(function (s) {
+                  if (s && s.name && s.value && s.value !== "") {
+                    nav.set(s.name, s.value);
+                  }
+                });
+              } catch (_) {}
+              window.location.href = "/assessment/score?" + nav.toString();
             }
           });
 

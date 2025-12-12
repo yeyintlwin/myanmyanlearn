@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MYAN MYAN LEARN - View Score</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body class="min-h-screen font-sans text-gray-800 flex flex-col">
+    <nav th:replace="fragments/navbar :: appNavbar('View Score')"></nav>
+
+    <main class="flex-1 pt-28 pb-16">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+          <h1
+            class="text-white text-2xl sm:text-3xl font-bold flex items-center gap-3"
+          >
+            <span
+              class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 border border-white/10"
+            >
+              <i class="fas fa-chart-line text-white"></i>
+            </span>
+            <span>View Score</span>
+          </h1>
+          <a
+            th:href="@{/contents(courseId=${courseId})}"
+            href="/contents"
+            class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0"
+          >
+            <i class="fas fa-arrow-left text-xs"></i>
+            <span>Back to Contents</span>
+          </a>
+        </div>
+
+        <!-- Summary -->
+        <section
+          class="mb-6 bg-white/10 border border-white/10 rounded-xl p-4 sm:p-5"
+        >
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+              <div class="text-white/70 text-xs">Exam Title</div>
+              <div
+                class="text-white font-medium"
+                id="examTitle"
+                th:text="${examTitle}"
+              >
+                Assessment
+              </div>
+            </div>
+            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+              <div class="text-white/70 text-xs">Your Score</div>
+              <div class="text-white font-medium">
+                <span id="yourScore" th:text="${yourScore}">0</span>
+              </div>
+            </div>
+            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+              <div class="text-white/70 text-xs">Total Possible</div>
+              <div class="text-white font-medium">
+                <span id="totalPossible" th:text="${totalPossible}">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <div class="text-white/70 text-xs">Chapters</div>
+            <div
+              class="text-white font-medium break-words"
+              id="chapters"
+              th:text="${#strings.listJoin(selectedChapters, ', ')}"
+            >
+              -
+            </div>
+          </div>
+        </section>
+
+        <!-- Scored Questions -->
+        <div class="space-y-6" th:if="${scoredQuestions}">
+          <section
+            class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
+            th:each="sq, iStat : ${scoredQuestions}"
+            th:attr="data-mark=${sq.q.marks}"
+          >
+            <div
+              class="flex items-center justify-between mb-3 pb-2 border-b border-white/10 gap-3"
+            >
+              <h2
+                class="text-white text-lg font-semibold flex items-center gap-3 min-w-0"
+              >
+                <span class="truncate">Question [[${iStat.count}]]</span>
+              </h2>
+              <div class="flex items-center gap-3">
+                <span
+                  class="text-white/80 text-sm question-mark-label whitespace-nowrap"
+                  data-mark-label
+                  >–</span
+                >
+                <span class="mdError hidden"></span>
+              </div>
+            </div>
+            <div
+              class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
+            >
+              <article
+                class="prose max-w-none text-slate-800"
+                th:attr="data-md-src=${sq.q.questionContentPath}"
+              ></article>
+            </div>
+            <div class="space-y-2" th:if="${sq.q.slotCount > 0}">
+              <div
+                class="w-full bg-white/5 border border-white/10 rounded-lg p-3 flex items-center gap-3"
+                th:each="slot : ${sq.slots}"
+              >
+                <label class="text-white/90 text-sm"
+                  ><span th:text="${slot.slotNum}"></span>.</label
+                >
+                <i
+                  class="fas"
+                  th:classappend="${slot.isCorrect} ? 'fa-check-circle text-green-300' : 'fa-times-circle text-red-300'"
+                ></i>
+                <div class="text-sm">
+                  <span
+                    th:classappend="${slot.isCorrect} ? 'text-green-300' : 'text-red-300'"
+                  >
+                    Your answer: <span th:text="${slot.selectedText}">-</span>
+                  </span>
+                  <span class="text-white/80" th:if="${!slot.isCorrect}">
+                    (Correct: <span th:text="${slot.correctText}">-</span>)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <script>
+      (function () {
+        const md = window.markdownit
+          ? window.markdownit({
+              html: true,
+              linkify: true,
+              breaks: false,
+              highlight: function (str, lang) {
+                try {
+                  if (window.hljs) {
+                    if (lang && hljs.getLanguage(lang)) {
+                      return hljs.highlight(str, {
+                        language: lang,
+                      }).value;
+                    }
+                    return hljs.highlightAuto(str).value;
+                  }
+                } catch (_) {}
+                return "";
+              },
+            })
+          : null;
+        if (md) {
+          try {
+            md.use(window.markdownitSub);
+          } catch (_) {}
+          try {
+            md.use(window.markdownitSup);
+          } catch (_) {}
+          try {
+            md.use(window.texmath, {
+              engine: window.katex,
+              delimiters: "dollars",
+              katexOptions: {
+                throwOnError: false,
+              },
+            });
+          } catch (_) {}
+          try {
+            md.use(window.markdownitTaskLists, {
+              enabled: true,
+              label: true,
+              labelAfter: true,
+            });
+          } catch (_) {}
+        }
+        const articles = Array.from(
+          document.querySelectorAll(
+            "article[data-md-src], article[data-content]"
+          )
+        );
+        articles.forEach(async (el) => {
+          const mdSrc = el.getAttribute("data-md-src");
+          const inlineSrc = el.getAttribute("data-content") || "";
+          const cardEl = el.closest(".question-card");
+          const errEl = cardEl ? cardEl.querySelector(".mdError") : null;
+          try {
+            let content = inlineSrc;
+            if (mdSrc) {
+              const resp = await fetch(mdSrc);
+              content = await resp.text();
+            }
+            el.innerHTML = md ? md.render(content) : content;
+            el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+              cb.disabled = true;
+              cb.setAttribute("aria-disabled", "true");
+            });
+            if (errEl) errEl.classList.add("hidden");
+          } catch (e) {
+            if (errEl) {
+              errEl.textContent = e.message;
+              errEl.classList.remove("hidden");
+            }
+          }
+        });
+        // Populate per-question mark labels
+        const questionEls = Array.from(
+          document.querySelectorAll(".question-card")
+        );
+        questionEls.forEach((el) => {
+          const label = el.querySelector("[data-mark-label]");
+          const mark = parseFloat(el.dataset.mark);
+          const val = isNaN(mark) ? 0 : mark;
+          if (label)
+            label.textContent = `${val} ${val === 1 ? "mark" : "marks"}`;
+        });
+      })();
+    </script>
+    <script src="/js/navbar.js"></script>
+  </body>
+</html>
