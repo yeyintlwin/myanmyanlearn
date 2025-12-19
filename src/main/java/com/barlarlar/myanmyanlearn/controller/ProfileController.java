@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Objects;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,7 +52,7 @@ public class ProfileController {
             model.addAttribute("userInitials", getInitials(username));
 
             // Fetch user's full data from database
-            Optional<Member> memberOpt = memberRepository.findById(username);
+            Optional<Member> memberOpt = memberRepository.findById(Objects.requireNonNull(username));
             System.out.println("Fetching user data for: " + username);
             if (memberOpt.isPresent()) {
                 Member member = memberOpt.get();
@@ -127,7 +128,7 @@ public class ProfileController {
             System.out.println("Deleting account for user: " + username);
 
             // Find the user in database
-            Optional<Member> memberOpt = memberRepository.findById(username);
+            Optional<Member> memberOpt = memberRepository.findById(Objects.requireNonNull(username));
             if (memberOpt.isPresent()) {
                 Member member = memberOpt.get();
                 System.out.println("Found user: " + member.getFirstName() + " " + member.getLastName());

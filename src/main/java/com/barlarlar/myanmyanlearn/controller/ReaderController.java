@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 import java.nio.charset.StandardCharsets;
 import java.io.IOException;
+import java.util.Objects;
 
 @Controller
 public class ReaderController {
@@ -87,7 +88,7 @@ public class ReaderController {
         }
         String path = subOpt.get().getMarkdownPath();
         try {
-            ClassPathResource res = new ClassPathResource(path.startsWith("/") ? path.substring(1) : path);
+            ClassPathResource res = new ClassPathResource(Objects.requireNonNull(path.startsWith("/") ? path.substring(1) : path));
             byte[] bytes = res.getInputStream().readAllBytes();
             return ResponseEntity.ok(new String(bytes, StandardCharsets.UTF_8));
         } catch (IOException e) {

@@ -3,6 +3,7 @@ package com.barlarlar.myanmyanlearn.controller;
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
 import com.barlarlar.myanmyanlearn.service.CourseService;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +42,7 @@ public class HomeController {
             model.addAttribute("userInitials", getInitials(username));
 
             // Fetch user's full data from database
-            Optional<Member> memberOpt = memberRepository.findById(username);
+            Optional<Member> memberOpt = memberRepository.findById(Objects.requireNonNull(username));
             System.out.println("Fetching user data for: " + username);
             if (memberOpt.isPresent()) {
                 Member member = memberOpt.get();

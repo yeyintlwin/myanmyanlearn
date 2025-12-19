@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Objects;
 
 import java.time.LocalDateTime;
 
@@ -152,7 +153,7 @@ public class RegistrationService {
      * Get user by user ID
      */
     public Member getUserByUserId(String userId) {
-        return memberRepository.findById(userId)
+        return memberRepository.findById(Objects.requireNonNull(userId))
                 .orElseThrow(() -> new RuntimeException("User not found with user ID: " + userId));
     }
 
@@ -160,7 +161,7 @@ public class RegistrationService {
      * Get user by username (user_id)
      */
     public Member getUserByUsername(String username) {
-        return memberRepository.findById(username)
+        return memberRepository.findById(Objects.requireNonNull(username))
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
 

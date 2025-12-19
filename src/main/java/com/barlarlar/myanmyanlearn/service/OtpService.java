@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -119,7 +120,7 @@ public class OtpService {
      * Get OTP verification by ID
      */
     public Optional<OtpVerification> getOtpVerification(Long id) {
-        return otpVerificationRepository.findById(id);
+        return otpVerificationRepository.findById(Objects.requireNonNull(id));
     }
 
     /**

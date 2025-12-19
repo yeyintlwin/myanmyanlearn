@@ -24,6 +24,25 @@ classDiagram
     +String markdownPath
   }
 
+  class Question {
+    +String courseId
+    +String chapterId
+    +int questionNumber
+    +String questionContentPath
+    +int correctOptionIndex
+    +float marks
+    +int slotCount
+    +String explanation
+    +List<QuestionOption> options
+    +List<List<QuestionOption>> slotOptions
+  }
+
+  class QuestionOption {
+    +int optionIndex
+    +String optionContent
+    +boolean isCorrect
+  }
+
   class Member {
     +String userId
     +Boolean active
@@ -58,20 +77,33 @@ classDiagram
     +String contents(Model, String courseId, String selected, String title)
   }
 
-  %% Application (optional)
-  class MyanmyanlearnApplication {
-    +static void main(String[])
+  class AssessmentController {
+    +String assessmentPage(Model, String chapters, String courseId)
+    +String assessmentScorePage(Model, String chapters, String courseId, Map allParams)
+  }
+
+  %% Data Source
+  class QuestionDataSource {
+    +static List<Question> getSampleQuestions()
+    +static Question createQuestion(...)
+    +static Question createCustomQuestion(...)
   }
 
   %% Relationships
   Course "1" --> "0..*" Content : contents
   Content "1" --> "0..*" Subcontent : subcontents
+  Question "1" --> "0..*" QuestionOption : options/slotOptions
 
   MemberRepository --> Member : manages
+  
   HomeController --> CourseService : uses
   HomeController --> MemberRepository : uses
+  
   ContentsController --> CourseService : uses
-  CourseService --> Course : loads
+  
+  AssessmentController --> CourseService : uses
+  AssessmentController --> QuestionDataSource : uses
+  QuestionDataSource ..> Question : creates
 
   %% Additional Models / Entities
   class CourseCatalog {
@@ -99,101 +131,3 @@ classDiagram
     +String userId
     +String role
   }
-
-  class PasswordResetToken {
-    +Long id
-    +String email
-    +String token
-    +Instant expireTime
-  }
-
-  %% Repositories (interfaces)
-  class RoleRepository
-  <<interface>> RoleRepository
-  class OtpVerificationRepository
-  <<interface>> OtpVerificationRepository
-  class PasswordResetTokenRepository
-  <<interface>> PasswordResetTokenRepository
-
-  %% Services
-  class RegistrationService
-  class OtpService
-  class EmailService
-  class JwtService
-  class LoginAttemptService
-  class PasswordValidationService
-
-  %% Controllers
-  class AppIntroController
-  class EmailTestController
-  class ForgetPasswordController
-  class LoginController
-  class MainController
-  class ProfileController
-  class ReaderController
-  class SelectLanguageController
-  class SignUpController
-  class SplashController
-
-  %% Web / Config / Security
-  class WebConfig
-  class SecurityConfig
-  class CustomAuthenticationSuccessHandler
-  class GlobalNavbarModel
-
-  %% Application
-  class MyanmyanlearnApplication
-
-  %% Entity relationships
-  Member "1" o-- "0..*" Role : roles
-  Role "*" --> "1" Member : member
-  Member "1" o-- "0..*" OtpVerification : otpVerifications
-  OtpVerification "*" --> "1" Member : member
-
-  %% Repository -> Entity relations
-  MemberRepository --> Member : manages
-  RoleRepository --> Role : manages
-  OtpVerificationRepository --> OtpVerification : manages
-  PasswordResetTokenRepository --> PasswordResetToken : manages
-
-  %% Service -> Repository/Entity relations
-  RegistrationService --> MemberRepository : uses
-  RegistrationService --> RoleRepository : uses
-  RegistrationService --> EmailService : uses
-  RegistrationService --> OtpService : uses
-  OtpService --> OtpVerificationRepository : uses
-  EmailService ..> JavaMailSender : uses
-  JwtService ..> PasswordResetToken : issues tokens
-  LoginAttemptService ..> JdbcTemplate : uses
-  ForgetPasswordController --> JwtService : uses
-  ForgetPasswordController --> PasswordResetTokenRepository : uses
-  ForgetPasswordController --> EmailService : uses
-  ForgetPasswordController --> MemberRepository : uses
-
-  %% Controllers -> Services
-  AppIntroController ..> WebConfig : reads cookie
-  EmailTestController --> EmailService : uses
-  LoginController --> LoginAttemptService : uses
-  LoginController --> RegistrationService : uses
-  SignUpController --> RegistrationService : uses
-  SignUpController --> OtpService : uses
-  ProfileController --> MemberRepository : uses
-  ProfileController --> PasswordEncoder : uses
-  ReaderController --> CourseService : uses
-  ContentsController --> CourseService : uses
-  HomeController --> MemberRepository : uses
-  HomeController --> CourseService : uses
-
-  %% Security
-  SecurityConfig --> CustomAuthenticationSuccessHandler : uses
-  SecurityConfig ..> UserDetailsManager : provides
-  SecurityConfig ..> DataSource : config
-  CustomAuthenticationSuccessHandler --> MemberRepository : uses
-  CustomAuthenticationSuccessHandler --> EmailService : uses
-  CustomAuthenticationSuccessHandler --> OtpService : uses
-
-  %% Web layer helpers
-  GlobalNavbarModel --> MemberRepository : uses
-
-  %% Misc
-  CourseCatalog --> Course : aggregates

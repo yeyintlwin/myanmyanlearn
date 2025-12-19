@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,9 @@ import com.barlarlar.myanmyanlearn.service.CourseService;
 public class AssessmentController {
     private final CourseService courseService;
 
+    @Value("${app.assessment.seconds-per-slot:120}")
+    private int secondsPerSlot;
+
     public AssessmentController(CourseService courseService) {
         this.courseService = courseService;
     }
@@ -29,6 +33,7 @@ public class AssessmentController {
             Model model,
             @RequestParam(name = "chapters", required = false) String chapters,
             @RequestParam(name = "courseId", required = false) String courseId) {
+        
         List<String> chapterList;
         if (chapters == null || chapters.isBlank()) {
             chapterList = Collections.emptyList();
@@ -75,6 +80,13 @@ public class AssessmentController {
         questions.sort(comparator);
 
         model.addAttribute("questions", questions);
+
+        // Calculate total time for the exam based on total slots
+        int totalSlots = questions.stream()
+                .mapToInt(q -> q.getSlotCount() > 0 ? q.getSlotCount() : 1)
+                .sum();
+        long totalTimeSeconds = (long) totalSlots * secondsPerSlot;
+        model.addAttribute("totalTimeSeconds", totalTimeSeconds);
 
         return "assessment";
     }

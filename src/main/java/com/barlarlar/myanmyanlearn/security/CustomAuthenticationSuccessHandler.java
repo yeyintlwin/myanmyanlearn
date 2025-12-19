@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Cookie;
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -36,7 +37,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         System.out.println("Login attempt for user: " + username);
 
         // Get user from database
-        Member member = memberRepository.findById(username).orElse(null);
+        Member member = memberRepository.findById(Objects.requireNonNull(username)).orElse(null);
 
         if (member != null) {
             System.out.println("User found: " + username + ", Email verified: " + member.getEmailVerified());

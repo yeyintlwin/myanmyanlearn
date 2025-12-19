@@ -8,13 +8,16 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.lang.NonNull;
 
+import java.time.Duration;
 import java.util.Locale;
+import java.util.Objects;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         // Serve course assets directly from classpath:/courses/**
         registry.addResourceHandler("/courses/**")
                 .addResourceLocations("classpath:/courses/");
@@ -32,11 +35,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public LocaleResolver localeResolver() {
-        CookieLocaleResolver clr = new CookieLocaleResolver();
-        clr.setCookieName("selectedLanguage");
+        CookieLocaleResolver clr = new CookieLocaleResolver("selectedLanguage");
         clr.setDefaultLocale(Locale.ENGLISH);
         // 365 days
-        clr.setCookieMaxAge(31536000);
+        clr.setCookieMaxAge(Objects.requireNonNull(Duration.ofSeconds(31536000)));
         return clr;
     }
 }

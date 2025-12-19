@@ -2,7 +2,6 @@ package com.barlarlar.myanmyanlearn.controller;
 
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.service.RegistrationService;
-import com.barlarlar.myanmyanlearn.service.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +13,6 @@ public class SignUpController {
 
     @Autowired
     private RegistrationService registrationService;
-
-    @Autowired
-    private OtpService otpService;
 
     @GetMapping("/register")
     public String register(Model model) {

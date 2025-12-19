@@ -216,6 +216,31 @@
 
     <!-- Main Content -->
     <main class="flex-1 pt-28 pb-16">
+      <!-- Sticky Timer -->
+      <div
+        class="fixed top-20 left-0 w-full flex justify-center z-50 pointer-events-none"
+      >
+        <div
+          class="bg-slate-800/95 backdrop-blur text-white px-6 py-2 rounded-full border border-white/20 shadow-2xl flex items-center gap-4 pointer-events-auto"
+        >
+          <i class="fas fa-clock text-yellow-400"></i>
+          <span
+            class="text-sm font-medium text-slate-300 uppercase tracking-wide"
+            >Time Left</span
+          >
+          <span
+            id="timerDisplay"
+            class="font-mono text-xl font-bold text-white tracking-wider"
+            >--:--</span
+          >
+          <input
+            type="hidden"
+            id="totalTimeSeconds"
+            th:value="${totalTimeSeconds}"
+          />
+        </div>
+      </div>
+
       <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
@@ -332,8 +357,16 @@
                   th:attr="name=${'q' + iStat.count + '-s' + slotNum}"
                   class="inline-block bg-white/10 border border-white/10 text-white rounded-md px-3 py-2"
                 >
-                  <option value="" disabled selected>Select</option>
                   <option
+                    value=""
+                    disabled
+                    selected
+                    class="text-gray-900 bg-white"
+                  >
+                    Select
+                  </option>
+                  <option
+                    class="text-gray-900 bg-white"
                     th:each="opt : ${(q.slotOptions != null) ? q.slotOptions[slotNum - 1] : q.options}"
                     th:value="${opt.optionIndex}"
                     th:text="${opt.optionContent}"
@@ -589,6 +622,122 @@
           return sum + (isNaN(mark) ? 0 : mark);
         }, 0);
         if (totalScoreEl) totalScoreEl.textContent = String(totalScore);
+
+        // Timer Logic
+        const totalTimeInput = document.getElementById("totalTimeSeconds");
+        const timerDisplay = document.getElementById("timerDisplay");
+        let remainingSeconds = totalTimeInput
+          ? parseInt(totalTimeInput.value, 10)
+          : 0;
+
+        if (remainingSeconds > 0 && timerDisplay) {
+          const updateTimer = () => {
+            const m = Math.floor(remainingSeconds / 60);
+            const s = remainingSeconds % 60;
+            timerDisplay.textContent = `${String(m).padStart(2, "0")}:${String(
+              s
+            ).padStart(2, "0")}`;
+
+            if (remainingSeconds <= 300) {
+              // Red warning last 5 mins
+              timerDisplay.classList.remove("text-yellow-400");
+              timerDisplay.classList.add("text-red-400");
+            }
+
+            if (remainingSeconds <= 0) {
+              clearInterval(timerInterval);
+              alert("Time is up! Submitting your assessment.");
+
+              // Force submit without validation
+              const submitBtn = document.getElementById("submitAssessment");
+              // Bypass validation check in the click handler by setting a flag or calling submit logic directly?
+              // The existing click handler does validation.
+              // Let's reuse the submit logic but perhaps we need to handle the 'missing answers' check.
+              // If time is up, we should probably submit whatever they have.
+
+              // Simplest way: Simulate click, but if validation fails, the user is stuck.
+              // Better way: Re-implement submission logic here or modify the click handler to accept a 'force' param.
+
+              // Let's modify the click handler slightly or just copy the submit logic for force submit.
+              // For now, let's trigger the click. If validation fails, they can't submit?
+              // Usually time-up auto-submit should ignore missing fields.
+
+              // I will extract the submission logic or copy it here for robust auto-submit.
+              // Copying the submission logic (lines 529-587) for safety.
+
+              const results = Array.from(
+                document.querySelectorAll("select[name^='q']")
+              )
+                .map((el) => {
+                  const parts = el.name.match(/q(\d+)-s(\d+)/);
+                  if (!parts) return null;
+                  const qIdx = parseInt(parts[1], 10);
+                  const sIdx = parseInt(parts[2], 10);
+                  const val = el.value === "" ? null : parseInt(el.value, 10);
+                  return {
+                    qIdx,
+                    sIdx,
+                    val,
+                  };
+                })
+                .filter((x) => x);
+
+              // ... actually constructing the form is key.
+              // Let's just create the form and submit, ignoring the JSON payload for sessionStorage if needed,
+              // but the backend needs parameters.
+
+              var form = document.createElement("form");
+              form.method = "POST";
+              form.action = "/assessment/score";
+              var csrfParamEl = document.getElementById("csrfParameterName");
+              var csrfTokenEl = document.getElementById("csrfTokenValue");
+
+              if (csrfParamEl && csrfTokenEl) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = csrfParamEl.value;
+                input.value = csrfTokenEl.value;
+                form.appendChild(input);
+              }
+
+              const params = new URLSearchParams(window.location.search);
+              const cId = params.get("courseId");
+              const ch = params.get("chapters");
+
+              if (cId) {
+                var i = document.createElement("input");
+                i.type = "hidden";
+                i.name = "courseId";
+                i.value = cId;
+                form.appendChild(i);
+              }
+              if (ch) {
+                var i = document.createElement("input");
+                i.type = "hidden";
+                i.name = "chapters";
+                i.value = ch;
+                form.appendChild(i);
+              }
+
+              document.querySelectorAll("select[name^='q']").forEach((s) => {
+                if (s.value) {
+                  var i = document.createElement("input");
+                  i.type = "hidden";
+                  i.name = s.name;
+                  i.value = s.value;
+                  form.appendChild(i);
+                }
+              });
+
+              document.body.appendChild(form);
+              form.submit();
+            }
+            remainingSeconds--;
+          };
+
+          updateTimer(); // Initial call
+          var timerInterval = setInterval(updateTimer, 1000);
+        }
 
         // Populate per-question mark labels
         questionEls.forEach((el) => {
