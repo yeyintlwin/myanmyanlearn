@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.List;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,14 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.barlarlar.myanmyanlearn.model.Course;
-import com.barlarlar.myanmyanlearn.service.AssessmentScoreRecordService;
 import com.barlarlar.myanmyanlearn.service.CourseService;
 
 @Controller
 public class AssessmentController {
     private static final Logger log = LoggerFactory.getLogger(AssessmentController.class);
     private final CourseService courseService;
-    private final AssessmentScoreRecordService scoreRecordService;
     private final ObjectMapper objectMapper;
 
     @Value("${app.assessment.seconds-per-slot:120}")
@@ -37,10 +34,8 @@ public class AssessmentController {
 
     public AssessmentController(
             CourseService courseService,
-            AssessmentScoreRecordService scoreRecordService,
             ObjectMapper objectMapper) {
         this.courseService = courseService;
-        this.scoreRecordService = scoreRecordService;
         this.objectMapper = objectMapper;
     }
 
