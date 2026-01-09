@@ -2,7 +2,15 @@ package com.barlarlar.myanmyanlearn.controller;
 
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
+import com.barlarlar.myanmyanlearn.model.Content;
+import com.barlarlar.myanmyanlearn.model.Course;
+import com.barlarlar.myanmyanlearn.service.AssessmentScoreRecordService;
 import com.barlarlar.myanmyanlearn.service.CourseService;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,6 +29,9 @@ public class HomeController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private AssessmentScoreRecordService scoreRecordService;
 
     @GetMapping("/home")
     public String homePage(Model model) {
@@ -61,9 +72,116 @@ public class HomeController {
         }
 
         // Add courses from JSON data model
-        model.addAttribute("courses", courseService.getAllCourses());
+        List<Course> courses = courseService.getAllCourses();
+        model.addAttribute("courses", courses);
+
+        Map<String, Integer> courseProgress = new HashMap<>();
+        for (Course course : courses) {
+            if (course == null || course.getId() == null) {
+                continue;
+            }
+            Optional<JsonNode> scoreJsonOpt = scoreRecordService
+                    .latestScoreJsonForCurrentUser(Optional.ofNullable(course.getId()));
+            Map<Integer, Integer> chapterProgress = scoreJsonOpt.isPresent()
+                    ? computeChapterProgress(scoreJsonOpt.get())
+                    : Map.of();
+            int coursePercent = computeCourseProgress(course, chapterProgress);
+            courseProgress.put(course.getId(), coursePercent);
+        }
+        model.addAttribute("courseProgress", courseProgress);
 
         return "home";
+    }
+
+    private int computeCourseProgress(Course course, Map<Integer, Integer> chapterProgress) {
+        if (course == null || course.getContents() == null || course.getContents().isEmpty()) {
+            return 0;
+        }
+        if (chapterProgress == null) {
+            chapterProgress = Map.of();
+        }
+
+        int sum = 0;
+        int count = 0;
+        for (Content content : course.getContents()) {
+            if (content == null) {
+                continue;
+            }
+            Integer pct = chapterProgress.get(content.getOrder());
+            if (pct == null) {
+                pct = 0;
+            }
+            sum += pct;
+            count++;
+        }
+        int percent = count == 0 ? 0 : (int) Math.round(sum / (double) count);
+        if (percent < 0) {
+            percent = 0;
+        } else if (percent > 100) {
+            percent = 100;
+        }
+        return percent;
+    }
+
+    private Map<Integer, Integer> computeChapterProgress(JsonNode scoreJsonRoot) {
+        Map<Integer, Integer> out = new HashMap<>();
+        if (scoreJsonRoot == null || !scoreJsonRoot.isObject()) {
+            return out;
+        }
+        JsonNode chapters = scoreJsonRoot.get("chapters");
+        if (chapters == null || !chapters.isArray()) {
+            return out;
+        }
+
+        for (JsonNode chapterNode : chapters) {
+            if (chapterNode == null || !chapterNode.isObject()) {
+                continue;
+            }
+            JsonNode chapterNoNode = chapterNode.get("chapter_no");
+            if (chapterNoNode == null || !chapterNoNode.canConvertToInt()) {
+                continue;
+            }
+            int chapterNo = chapterNoNode.asInt();
+
+            JsonNode questions = chapterNode.get("questions");
+            if (questions == null || !questions.isArray()) {
+                continue;
+            }
+
+            int total = 0;
+            int correct = 0;
+            for (JsonNode qNode : questions) {
+                if (qNode == null || !qNode.isObject()) {
+                    continue;
+                }
+                JsonNode slopes = qNode.get("slopes");
+                if (slopes == null || !slopes.isArray()) {
+                    continue;
+                }
+                for (JsonNode slopeNode : slopes) {
+                    if (slopeNode == null || !slopeNode.isObject()) {
+                        continue;
+                    }
+                    JsonNode isCorrectNode = slopeNode.get("is_correct");
+                    if (isCorrectNode == null || !isCorrectNode.isBoolean()) {
+                        continue;
+                    }
+                    total++;
+                    if (isCorrectNode.asBoolean()) {
+                        correct++;
+                    }
+                }
+            }
+
+            int percent = total == 0 ? 0 : (int) Math.round((correct * 100.0) / total);
+            if (percent < 0) {
+                percent = 0;
+            } else if (percent > 100) {
+                percent = 100;
+            }
+            out.put(chapterNo, percent);
+        }
+        return out;
     }
 
     /**

@@ -35,6 +35,38 @@ public class AssessmentScoreRecordService {
         return name;
     }
 
+    @Transactional(readOnly = true)
+    public Optional<JsonNode> latestScoreJsonForCurrentUser(Optional<String> courseId) {
+        String userId = currentUserId();
+        if (userId == null) {
+            return Optional.empty();
+        }
+
+        AssessmentScoreRecord record = null;
+        if (courseId != null && courseId.isPresent() && courseId.get() != null && !courseId.get().isBlank()) {
+            List<AssessmentScoreRecord> records = repository.findByUserIdAndCourseIdOrderByCreatedAtDesc(userId,
+                    courseId.get());
+            if (!records.isEmpty()) {
+                record = records.get(0);
+            }
+        } else {
+            List<AssessmentScoreRecord> records = repository.findByUserIdOrderByCreatedAtDesc(userId);
+            if (!records.isEmpty()) {
+                record = records.get(0);
+            }
+        }
+
+        if (record == null || record.getScoreJson() == null || record.getScoreJson().isBlank()) {
+            return Optional.empty();
+        }
+
+        try {
+            return Optional.ofNullable(objectMapper.readTree(record.getScoreJson()));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     @Transactional
     public AssessmentScoreRecord upsertMergedForCurrentUser(JsonNode incomingPayload) {
         String userId = currentUserId();

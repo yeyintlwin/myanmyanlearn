@@ -47,6 +47,7 @@
           >
             <div
               class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4 flex items-start gap-4 hover:bg-white/15 transition cursor-pointer"
+              th:with="pct=${courseProgress != null ? (courseProgress[course.id] ?: 0) : 0}"
             >
               <!-- Image -->
               <div
@@ -81,7 +82,9 @@
                   th:text="#{home.youHave}"
                   >You have</span
                 >
-                <span class="text-white font-extrabold text-6xl sm:text-8xl"
+                <span
+                  class="text-white font-extrabold text-6xl sm:text-8xl"
+                  th:text="${pct + '%'}"
                   >50%</span
                 >
                 <span
