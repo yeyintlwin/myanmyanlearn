@@ -9,5 +9,4 @@ public class MyanmyanlearnApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MyanmyanlearnApplication.class, args);
 	}
-
 }

@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MYAN MYAN LEARN - View Score</title>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -81,6 +83,13 @@
             </div>
           </div>
         </section>
+
+        <textarea
+          id="scoreJson"
+          class="hidden"
+          aria-hidden="true"
+          th:text="${scoreJson}"
+        ></textarea>
 
         <!-- Scored Questions -->
         <div class="space-y-6" th:if="${scoredQuestions}">
@@ -185,6 +194,58 @@
           try {
             if (e && e.persisted) lockHistory();
           } catch (_) {}
+        });
+
+        function djb2Hash(str) {
+          var hash = 5381;
+          for (var i = 0; i < str.length; i++) {
+            hash = (hash << 5) + hash + str.charCodeAt(i);
+            hash = hash & 0xffffffff;
+          }
+          return String(hash);
+        }
+
+        async function persistScoreIfNeeded() {
+          var scoreEl = document.getElementById("scoreJson");
+          if (!scoreEl) return;
+          var raw = (scoreEl.value || scoreEl.textContent || "").trim();
+          if (!raw) return;
+
+          var hash = djb2Hash(raw);
+          try {
+            if (sessionStorage.getItem("assessmentScoreSavedHash") === hash) {
+              return;
+            }
+          } catch (_) {}
+
+          var tokenMeta = document.querySelector('meta[name="_csrf"]');
+          var headerMeta = document.querySelector('meta[name="_csrf_header"]');
+          var token = tokenMeta ? tokenMeta.getAttribute("content") : "";
+          var headerName = headerMeta ? headerMeta.getAttribute("content") : "";
+
+          var headers = { "Content-Type": "application/json" };
+          if (token && headerName) {
+            headers[headerName] = token;
+          }
+
+          try {
+            var resp = await fetch("/api/assessment-scores", {
+              method: "POST",
+              headers: headers,
+              credentials: "same-origin",
+              body: raw,
+            });
+            if (resp && resp.ok) {
+              try {
+                sessionStorage.setItem("assessmentScoreSavedHash", hash);
+              } catch (_) {}
+            }
+          } catch (_) {}
+        }
+
+        persistScoreIfNeeded();
+        window.addEventListener("pageshow", function () {
+          persistScoreIfNeeded();
         });
 
         const md = window.markdownit

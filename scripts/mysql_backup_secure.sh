@@ -1,72 +1,86 @@
 #!/bin/bash
+set -euo pipefail
 
-# MySQL Database Backup Script (Secure Version)
-# This script will create a backup of your MySQL database using a secure configuration file
-
-# Add mysql-client to PATH if not already there
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
-# Read database connection details
-read -p "Enter MySQL host [localhost]: " DB_HOST
-DB_HOST=${DB_HOST:-localhost}
+PROPS_PATH="${1:-src/main/resources/application.properties}"
 
-read -p "Enter MySQL port [3306]: " DB_PORT
-DB_PORT=${DB_PORT:-3306}
+get_prop() {
+  local key="$1"
+  local file="$2"
+  local escaped
+  escaped="${key//./\\.}"
+  local line
+  line="$(grep -E "^[[:space:]]*${escaped}=" "$file" | tail -n 1 || true)"
+  if [ -z "$line" ]; then
+    return 1
+  fi
+  printf '%s' "${line#*=}"
+}
 
-read -p "Enter database name: " DB_NAME
-read -p "Enter MySQL username: " DB_USER
-read -s -p "Enter MySQL password: " DB_PASS
-echo ""
+JDBC_URL="$(get_prop "spring.datasource.url" "$PROPS_PATH")"
+DB_USER="$(get_prop "spring.datasource.username" "$PROPS_PATH")"
+DB_PASS="$(get_prop "spring.datasource.password" "$PROPS_PATH" || true)"
+BACKUP_DIR="$(get_prop "app.mysql.backup.directory" "$PROPS_PATH" || true)"
+RETENTION="$(get_prop "app.mysql.backup.retention" "$PROPS_PATH" || true)"
 
-# Create a temporary config file
-CONFIG_FILE=$(mktemp /tmp/mysql_backup_XXXXX.cnf)
-chmod 600 $CONFIG_FILE
-
-# Write MySQL config to the temporary file
-cat > $CONFIG_FILE << EOF
-[client]
-host=$DB_HOST
-port=$DB_PORT
-user=$DB_USER
-password=$DB_PASS
-EOF
-
-# Get current timestamp for backup filename
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-BACKUP_DIR="./backups"
-BACKUP_FILE="${BACKUP_DIR}/${DB_NAME}_${TIMESTAMP}.sql"
-
-# Create backup directory if it doesn't exist
-mkdir -p "$BACKUP_DIR"
-
-# Generate and display the backup command
-echo -e "\n# Backup Command:"
-echo "# This command will create a full backup of the MySQL database"
-echo "mysqldump --defaults-extra-file=$CONFIG_FILE $DB_NAME > $BACKUP_FILE"
-
-# Ask for confirmation
-read -p "Do you want to execute this backup command? (y/n): " confirm
-if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
-    echo "Starting backup..."
-    
-    # Execute the backup
-    mysqldump --defaults-extra-file=$CONFIG_FILE $DB_NAME > $BACKUP_FILE
-    
-    # Check if backup was successful
-    if [ $? -eq 0 ]; then
-        echo -e "\n✅ Backup completed successfully!"
-        echo "Backup saved to: $BACKUP_FILE"
-    else
-        echo -e "\n❌ Backup failed. Please check the error messages above."
-        echo "Possible issues:"
-        echo "1. Incorrect username or password"
-        echo "2. User doesn't have sufficient privileges"
-        echo "3. Database doesn't exist"
-        echo "4. MySQL server is not running"
-    fi
-else
-    echo "Backup cancelled."
+if [ -z "${BACKUP_DIR:-}" ]; then
+  BACKUP_DIR="scripts/backups"
+fi
+if [ -z "${RETENTION:-}" ]; then
+  RETENTION="7"
 fi
 
-# Clean up the temporary config file
-rm -f $CONFIG_FILE
+if [[ "$JDBC_URL" != jdbc:mysql://* ]]; then
+  echo "Unsupported JDBC url: $JDBC_URL" >&2
+  exit 1
+fi
+
+URL_NO_PREFIX="${JDBC_URL#jdbc:mysql://}"
+HOST_PORT="${URL_NO_PREFIX%%/*}"
+DB_AND_QUERY="${URL_NO_PREFIX#*/}"
+DB_NAME="${DB_AND_QUERY%%\?*}"
+
+DB_HOST="${HOST_PORT%%:*}"
+DB_PORT="${HOST_PORT#*:}"
+if [ "$DB_PORT" = "$HOST_PORT" ]; then
+  DB_PORT="3306"
+fi
+
+if [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$DB_NAME" ] || [ -z "$DB_USER" ]; then
+  echo "Missing db connection fields parsed from properties." >&2
+  exit 1
+fi
+
+mkdir -p "$BACKUP_DIR"
+TIMESTAMP="$(date +"%Y%m%d_%H%M%S")"
+BACKUP_FILE="${BACKUP_DIR}/${DB_NAME}_${TIMESTAMP}.sql"
+
+CONFIG_FILE="$(mktemp /tmp/mysql_backup_XXXXX.cnf)"
+chmod 600 "$CONFIG_FILE"
+trap 'rm -f "$CONFIG_FILE"' EXIT
+
+{
+  echo "[client]"
+  echo "host=$DB_HOST"
+  echo "port=$DB_PORT"
+  echo "user=$DB_USER"
+  if [ -n "${DB_PASS:-}" ]; then
+    echo "password=$DB_PASS"
+  fi
+} > "$CONFIG_FILE"
+
+mysqldump \
+  --defaults-extra-file="$CONFIG_FILE" \
+  --single-transaction \
+  --quick \
+  --skip-lock-tables \
+  --no-tablespaces \
+  --set-gtid-purged=OFF \
+  "$DB_NAME" > "$BACKUP_FILE"
+
+ls -lh "$BACKUP_FILE"
+
+if [ "$RETENTION" -gt 0 ] 2>/dev/null; then
+  ls -1t "${BACKUP_DIR}/${DB_NAME}_"*.sql 2>/dev/null | tail -n +"$((RETENTION + 1))" | xargs -I {} rm -f "{}" || true
+fi
