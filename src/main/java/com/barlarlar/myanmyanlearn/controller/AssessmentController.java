@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,8 +33,10 @@ public class AssessmentController {
     @GetMapping("/assessment")
     public String assessmentPage(
             Model model,
+            HttpServletResponse response,
             @RequestParam(name = "chapters", required = false) String chapters,
             @RequestParam(name = "courseId", required = false) String courseId) {
+        setNoStoreHeaders(response);
         
         List<String> chapterList;
         if (chapters == null || chapters.isBlank()) {
@@ -94,9 +98,11 @@ public class AssessmentController {
     @PostMapping("/assessment/score")
     public String assessmentScorePage(
             Model model,
+            HttpServletResponse response,
             @RequestParam(name = "chapters", required = false) String chapters,
             @RequestParam(name = "courseId", required = false) String courseId,
             @RequestParam Map<String, String> allParams) {
+        setNoStoreHeaders(response);
         List<String> chapterList;
         if (chapters == null || chapters.isBlank()) {
             chapterList = Collections.emptyList();
@@ -230,5 +236,12 @@ public class AssessmentController {
         } catch (NumberFormatException e) {
             return Integer.MAX_VALUE;
         }
+    }
+
+    private void setNoStoreHeaders(HttpServletResponse response) {
+        if (response == null) return;
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
     }
 }

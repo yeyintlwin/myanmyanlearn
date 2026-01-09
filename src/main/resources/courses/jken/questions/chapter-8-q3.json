@@ -1,0 +1,18 @@
+{
+  "courseId": "jken",
+  "chapterId": "8",
+  "questionNumber": 3,
+  "questionContentPath": "/courses/jken/questions/chapter-8-q3.md",
+  "correctOptionIndex": 0,
+  "marks": 1.0,
+  "explanation": "Choose the best answer.",
+  "slotCount": 1,
+  "slotOptions": [
+    [
+      { "optionIndex": 0, "optionContent": "ア. フィッシング詐欺", "isCorrect": true },
+      { "optionIndex": 1, "optionContent": "イ. デフラグ", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. 圧縮", "isCorrect": false },
+      { "optionIndex": 3, "optionContent": "エ. バックアップ", "isCorrect": false }
+    ]
+  ]
+}

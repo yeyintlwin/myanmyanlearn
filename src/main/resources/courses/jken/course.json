@@ -96,6 +96,14 @@
         { "order": 3, "title": "ネチケット （2）", "markdownPath": "courses/jken/7-3.md" },
         { "order": 4, "title": "個人情報保護と著作権", "markdownPath": "courses/jken/7-4.md" }
       ]
+    },
+    {
+      "order": 8,
+      "chapter": "第8章",
+      "title": "総合演習",
+      "subcontents": [
+        { "order": 1, "title": "章のまとめ", "markdownPath": "courses/jken/8-1.md" }
+      ]
     }
   ]
 }

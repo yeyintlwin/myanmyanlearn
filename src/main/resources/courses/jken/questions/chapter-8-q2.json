@@ -1,0 +1,18 @@
+{
+  "courseId": "jken",
+  "chapterId": "8",
+  "questionNumber": 2,
+  "questionContentPath": "/courses/jken/questions/chapter-8-q2.md",
+  "correctOptionIndex": 2,
+  "marks": 1.0,
+  "explanation": "Choose the best answer.",
+  "slotCount": 1,
+  "slotOptions": [
+    [
+      { "optionIndex": 0, "optionContent": "ア. アプリケーションソフト", "isCorrect": false },
+      { "optionIndex": 1, "optionContent": "イ. デバイスドライバ", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. オペレーティングシステム", "isCorrect": true },
+      { "optionIndex": 3, "optionContent": "エ. 表計算ソフト", "isCorrect": false }
+    ]
+  ]
+}

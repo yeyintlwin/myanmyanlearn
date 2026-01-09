@@ -407,6 +407,27 @@
 
     <script>
       (function () {
+        function redirectIfBackBlocked() {
+          try {
+            if (sessionStorage.getItem("blockAssessmentBack") !== "1") {
+              return false;
+            }
+            const params = new URLSearchParams(window.location.search);
+            const cid = params.get("courseId") || "";
+            const url =
+              "/contents" + (cid ? "?courseId=" + encodeURIComponent(cid) : "");
+            window.location.replace(url);
+            return true;
+          } catch (_) {
+            return false;
+          }
+        }
+
+        if (redirectIfBackBlocked()) return;
+        window.addEventListener("pageshow", function () {
+          redirectIfBackBlocked();
+        });
+
         const md = window.markdownit
           ? window.markdownit({
               html: true,

@@ -156,6 +156,37 @@
     </main>
     <script>
       (function () {
+        try {
+          sessionStorage.setItem("blockAssessmentBack", "1");
+        } catch (_) {}
+
+        function lockHistory() {
+          try {
+            history.replaceState({ _noBackScore: true }, "", location.href);
+            history.pushState({ _noBackScore: true }, "", location.href);
+          } catch (_) {}
+        }
+
+        function redirectAwayFromAssessment() {
+          try {
+            var cidEl = document.querySelector("[data-course-id]");
+            var cid = cidEl ? cidEl.getAttribute("data-course-id") : "";
+            var url =
+              "/contents" + (cid ? "?courseId=" + encodeURIComponent(cid) : "");
+            window.location.replace(url);
+          } catch (_) {
+            window.location.replace("/contents");
+          }
+        }
+
+        lockHistory();
+        window.addEventListener("popstate", redirectAwayFromAssessment);
+        window.addEventListener("pageshow", function (e) {
+          try {
+            if (e && e.persisted) lockHistory();
+          } catch (_) {}
+        });
+
         const md = window.markdownit
           ? window.markdownit({
               html: true,
@@ -240,17 +271,6 @@
           if (label)
             label.textContent = `${val} ${val === 1 ? "mark" : "marks"}`;
         });
-        try {
-          history.replaceState(null, "", location.href);
-          history.pushState(null, "", location.href);
-          window.addEventListener("popstate", function () {
-            var cidEl = document.querySelector("[data-course-id]");
-            var cid = cidEl ? cidEl.getAttribute("data-course-id") : "";
-            var url =
-              "/contents" + (cid ? "?courseId=" + encodeURIComponent(cid) : "");
-            window.location.replace(url);
-          });
-        } catch (_) {}
       })();
     </script>
     <script src="/js/navbar.js"></script>

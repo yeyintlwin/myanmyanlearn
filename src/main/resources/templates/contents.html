@@ -1067,6 +1067,9 @@
           ).map((checkbox) => checkbox.value);
 
           if (selectedChapters.length > 0) {
+            try {
+              sessionStorage.removeItem("blockAssessmentBack");
+            } catch (_) {}
             // TODO: Navigate to test screen with selected chapters
             console.log("Selected chapters for test:", selectedChapters);
             const params = new URLSearchParams();
