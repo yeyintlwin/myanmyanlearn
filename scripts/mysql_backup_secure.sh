@@ -72,6 +72,8 @@ trap 'rm -f "$CONFIG_FILE"' EXIT
 
 mysqldump \
   --defaults-extra-file="$CONFIG_FILE" \
+  --no-data \
+  --skip-triggers \
   --single-transaction \
   --quick \
   --skip-lock-tables \
