@@ -29,7 +29,7 @@ public class AssessmentController {
     private final CourseService courseService;
     private final ObjectMapper objectMapper;
 
-    @Value("${app.assessment.seconds-per-slot:120}")
+    @Value("${app.assessment.seconds-per-slot:15}")
     private int secondsPerSlot;
 
     public AssessmentController(
@@ -94,7 +94,6 @@ public class AssessmentController {
 
         model.addAttribute("questions", questions);
 
-        // Calculate total time for the exam based on total slots
         int totalSlots = questions.stream()
                 .mapToInt(q -> q.getSlotCount() > 0 ? q.getSlotCount() : 1)
                 .sum();

@@ -342,6 +342,24 @@
                       </div>
                     </div>
                     <div class="h-px bg-gray-200 my-2"></div>
+                    <a
+                      th:href="@{/about}"
+                      href="/about"
+                      class="flex items-center gap-3 px-4 py-2 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-slate-50 hover:text-slate-800 group"
+                    >
+                      <div
+                        class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center"
+                      >
+                        <i
+                          class="fas fa-circle-info text-indigo-600 text-sm"
+                        ></i>
+                      </div>
+                      <div class="flex-1 text-left">
+                        <div class="font-medium text-sm">About</div>
+                      </div>
+                      <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                    </a>
+                    <div class="h-px bg-gray-200 my-2"></div>
                     <form th:action="@{/logout}" method="POST" class="w-full">
                       <button
                         type="submit"

@@ -16,6 +16,8 @@ spring.jpa.show-sql=false
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 spring.jpa.properties.hibernate.format_sql=false
 
+app.assessment.seconds-per-slot=15
+
 app.mysql.backup.enabled=true
 app.mysql.backup.directory=scripts/backups
 app.mysql.backup.retention=7
