@@ -55,7 +55,7 @@
           <div class="flex items-center gap-2 group cursor-pointer">
             <div class="relative">
               <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+                class="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
               ></div>
               <div
                 class="relative p-2 group-hover:scale-105 transition-all duration-300"
@@ -91,10 +91,10 @@
     >
       <!-- Decorative Background -->
       <div
-        class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full -translate-y-16 translate-x-16"
+        class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 rounded-full -translate-y-16 translate-x-16"
       ></div>
       <div
-        class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-500/20 to-pink-500/20 rounded-full translate-y-12 -translate-x-12"
+        class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-secondary-500/20 to-pink-500/20 rounded-full translate-y-12 -translate-x-12"
       ></div>
 
       <!-- Header Section -->
@@ -140,12 +140,12 @@
         <!-- Account Locked Message -->
         <div
           th:if="${locked}"
-          class="mb-6 p-4 bg-orange-500/20 border border-orange-500/30 rounded-2xl backdrop-blur-sm"
+          class="mb-6 p-4 bg-accent-500/20 border border-accent-500/30 rounded-2xl backdrop-blur-sm"
         >
           <div class="flex items-center">
-            <i class="fas fa-lock text-orange-400 mr-3"></i>
+            <i class="fas fa-lock text-accent-400 mr-3"></i>
             <div
-              class="text-orange-200 text-sm font-medium"
+              class="text-accent-200 text-sm font-medium"
               th:text="#{login.locked}"
             >
               Your account has been locked. Please contact support for
@@ -174,12 +174,12 @@
         <!-- Account Expired Message -->
         <div
           th:if="${expired}"
-          class="mb-6 p-4 bg-purple-500/20 border border-purple-500/30 rounded-2xl backdrop-blur-sm"
+          class="mb-6 p-4 bg-secondary-500/20 border border-secondary-500/30 rounded-2xl backdrop-blur-sm"
         >
           <div class="flex items-center">
-            <i class="fas fa-clock text-purple-400 mr-3"></i>
+            <i class="fas fa-clock text-secondary-400 mr-3"></i>
             <div
-              class="text-purple-200 text-sm font-medium"
+              class="text-secondary-200 text-sm font-medium"
               th:text="#{login.expired}"
             >
               Your account or password has expired. Please contact support or

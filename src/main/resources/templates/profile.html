@@ -33,7 +33,7 @@
           >
             <div class="relative">
               <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+                class="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
               ></div>
               <div
                 class="relative p-2 group-hover:scale-105 transition-all duration-300"
@@ -86,7 +86,7 @@
             <!-- Profile Picture -->
             <div class="relative">
               <div
-                class="w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-4xl shadow-2xl"
+                class="w-32 h-32 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-600 flex items-center justify-center text-white font-bold text-4xl shadow-2xl"
               >
                 <span th:text="${userInitials ?: 'U'}">U</span>
               </div>
@@ -106,7 +106,7 @@
               <!-- Status Badges -->
               <div class="flex flex-wrap gap-2 justify-center md:justify-start">
                 <span
-                  class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium border border-blue-500/30"
+                  class="px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full text-sm font-medium border border-primary-500/30"
                   th:classappend="${userEmailVerified ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'}"
                 >
                   <i
@@ -118,7 +118,7 @@
                   ></span>
                 </span>
                 <span
-                  class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-medium border border-purple-500/30"
+                  class="px-3 py-1 bg-secondary-500/20 text-secondary-300 rounded-full text-sm font-medium border border-secondary-500/30"
                   th:classappend="${userActive ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-red-500/20 text-red-300 border-red-500/30'}"
                 >
                   <i
@@ -150,8 +150,8 @@
               class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6 mb-8"
             >
               <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
-                <i class="fas fa-user-circle mr-3 text-blue-400"></i> Personal
-                Information
+                <i class="fas fa-user-circle mr-3 text-primary-400"></i>
+                Personal Information
               </h2>
 
               <div class="space-y-4">
@@ -193,7 +193,7 @@
                   <div
                     class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 flex items-center gap-3"
                   >
-                    <i class="fas fa-envelope text-blue-400"></i>
+                    <i class="fas fa-envelope text-primary-400"></i>
                     <span
                       th:text="${userEmail ?: 'Not provided'}"
                       data-email="${userEmail ?: ''}"
@@ -221,7 +221,7 @@
                   <div
                     class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 flex items-center gap-3"
                   >
-                    <i class="fas fa-at text-purple-400"></i>
+                    <i class="fas fa-at text-secondary-400"></i>
                     <span th:text="${username ?: 'Not provided'}"
                       >Not provided</span
                     >
@@ -238,7 +238,7 @@
               class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6"
             >
               <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-                <i class="fas fa-info-circle mr-2 text-blue-400"></i> Account
+                <i class="fas fa-info-circle mr-2 text-primary-400"></i> Account
                 Status
               </h3>
 
@@ -246,7 +246,7 @@
                 <div class="flex items-center justify-between">
                   <span class="text-white/80 text-sm">Account Type</span>
                   <span
-                    class="px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white text-xs font-medium"
+                    class="px-2 py-1 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-full text-white text-xs font-medium"
                   >
                     Standard
                   </span>
@@ -288,11 +288,11 @@
         >
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-white flex items-center">
-              <i class="fas fa-user-edit mr-3 text-blue-400"></i> Change Name
+              <i class="fas fa-user-edit mr-3 text-primary-400"></i> Change Name
             </h3>
             <button
               id="toggleNameForm"
-              class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              class="px-6 py-3 bg-gradient-to-r from-primary-500 to-secondary-600 hover:from-primary-600 hover:to-secondary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
             >
               <i class="fas fa-edit mr-2"></i>
               Edit Name
@@ -311,7 +311,7 @@
                   type="text"
                   id="newFirstName"
                   name="newFirstName"
-                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                   placeholder="Enter your first name"
                   required
                 />
@@ -326,7 +326,7 @@
                   type="text"
                   id="newLastName"
                   name="newLastName"
-                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                   placeholder="Enter your last name"
                   required
                 />
@@ -336,7 +336,7 @@
             <div class="flex gap-4">
               <button
                 type="submit"
-                class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                class="flex-1 px-6 py-3 bg-gradient-to-r from-primary-500 to-secondary-600 hover:from-primary-600 hover:to-secondary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
               >
                 <i class="fas fa-save mr-2"></i>
                 Update Name
@@ -358,11 +358,11 @@
         >
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-white flex items-center">
-              <i class="fas fa-envelope mr-3 text-orange-400"></i> Change Email
+              <i class="fas fa-envelope mr-3 text-primary-400"></i> Change Email
             </h3>
             <button
               id="toggleEmailForm"
-              class="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              class="px-6 py-3 bg-gradient-to-r from-primary-500 to-red-600 hover:from-primary-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
             >
               <i class="fas fa-edit mr-2"></i>
               Change Email
@@ -380,7 +380,7 @@
                 type="email"
                 id="newEmail"
                 name="newEmail"
-                class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                 placeholder="Enter your new email address"
                 required
               />
@@ -399,7 +399,7 @@
                 type="email"
                 id="confirmEmail"
                 name="confirmEmail"
-                class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                 placeholder="Confirm your new email address"
                 required
               />
@@ -408,7 +408,7 @@
             <div class="flex gap-4">
               <button
                 type="submit"
-                class="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                class="flex-1 px-6 py-3 bg-gradient-to-r from-primary-500 to-red-600 hover:from-primary-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
               >
                 <i class="fas fa-save mr-2"></i>
                 Update Email
@@ -434,7 +434,7 @@
             </h3>
             <button
               id="togglePasswordForm"
-              class="px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              class="px-6 py-3 bg-gradient-to-r from-green-500 to-primary-600 hover:from-green-600 hover:to-primary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
             >
               <i class="fas fa-key mr-2"></i>
               Change Password
@@ -453,7 +453,7 @@
                   type="password"
                   id="oldPassword"
                   name="oldPassword"
-                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                   placeholder="Enter your current password"
                   required
                 />
@@ -478,7 +478,7 @@
                   type="password"
                   id="newPassword"
                   name="newPassword"
-                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                   placeholder="Enter your new password"
                   required
                   minlength="8"
@@ -507,7 +507,7 @@
                   type="password"
                   id="confirmPassword"
                   name="confirmPassword"
-                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
                   placeholder="Confirm your new password"
                   required
                 />
@@ -524,7 +524,7 @@
             <div class="flex gap-4">
               <button
                 type="submit"
-                class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-primary-600 hover:from-green-600 hover:to-primary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
               >
                 <i class="fas fa-save mr-2"></i>
                 Change Password
@@ -735,16 +735,16 @@
               form.classList.remove("hidden");
               this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
               this.classList.remove(
-                "from-orange-500",
+                "from-primary-500",
                 "to-red-600",
-                "hover:from-orange-600",
+                "hover:from-primary-600",
                 "hover:to-red-700"
               );
               this.classList.add(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
               // Pre-fill current email
               var el = document.querySelector("[data-email]");
@@ -757,14 +757,14 @@
               this.innerHTML = '<i class="fas fa-edit mr-2"></i>Change Email';
               this.classList.remove(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
               this.classList.add(
-                "from-orange-500",
+                "from-primary-500",
                 "to-red-600",
-                "hover:from-orange-600",
+                "hover:from-primary-600",
                 "hover:to-red-700"
               );
               clearEmailForm();
@@ -789,14 +789,14 @@
               '<i class="fas fa-edit mr-2"></i>Change Email';
             toggleBtn.classList.remove(
               "from-red-500",
-              "to-orange-600",
+              "to-primary-600",
               "hover:from-red-600",
-              "hover:to-orange-700"
+              "hover:to-primary-700"
             );
             toggleBtn.classList.add(
-              "from-orange-500",
+              "from-primary-500",
               "to-red-600",
-              "hover:from-orange-600",
+              "hover:from-primary-600",
               "hover:to-red-700"
             );
           });
@@ -814,16 +814,16 @@
               form.classList.remove("hidden");
               this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
               this.classList.remove(
-                "from-blue-500",
-                "to-purple-600",
-                "hover:from-blue-600",
-                "hover:to-purple-700"
+                "from-primary-500",
+                "to-secondary-600",
+                "hover:from-primary-600",
+                "hover:to-secondary-700"
               );
               this.classList.add(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
               // Pre-fill current values
               var fn = document.querySelector("[data-first-name]");
@@ -839,15 +839,15 @@
               this.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
               this.classList.remove(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
               this.classList.add(
-                "from-blue-500",
-                "to-purple-600",
-                "hover:from-blue-600",
-                "hover:to-purple-700"
+                "from-primary-500",
+                "to-secondary-600",
+                "hover:from-primary-600",
+                "hover:to-secondary-700"
               );
               clearNameForm();
             }
@@ -870,15 +870,15 @@
             toggleBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
             toggleBtn.classList.remove(
               "from-red-500",
-              "to-orange-600",
+              "to-primary-600",
               "hover:from-red-600",
-              "hover:to-orange-700"
+              "hover:to-primary-700"
             );
             toggleBtn.classList.add(
-              "from-blue-500",
-              "to-purple-600",
-              "hover:from-blue-600",
-              "hover:to-purple-700"
+              "from-primary-500",
+              "to-secondary-600",
+              "hover:from-primary-600",
+              "hover:to-secondary-700"
             );
           });
         }
@@ -900,30 +900,30 @@
               this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
               this.classList.remove(
                 "from-green-500",
-                "to-blue-600",
+                "to-primary-600",
                 "hover:from-green-600",
-                "hover:to-blue-700"
+                "hover:to-primary-700"
               );
               this.classList.add(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
             } else {
               form.classList.add("hidden");
               this.innerHTML = '<i class="fas fa-key mr-2"></i>Change Password';
               this.classList.remove(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
               this.classList.add(
                 "from-green-500",
-                "to-blue-600",
+                "to-primary-600",
                 "hover:from-green-600",
-                "hover:to-blue-700"
+                "hover:to-primary-700"
               );
               clearPasswordForm();
             }
@@ -947,15 +947,15 @@
               '<i class="fas fa-key mr-2"></i>Change Password';
             toggleBtn.classList.remove(
               "from-red-500",
-              "to-orange-600",
+              "to-primary-600",
               "hover:from-red-600",
-              "hover:to-orange-700"
+              "hover:to-primary-700"
             );
             toggleBtn.classList.add(
               "from-green-500",
-              "to-blue-600",
+              "to-primary-600",
               "hover:from-green-600",
-              "hover:to-blue-700"
+              "hover:to-primary-700"
             );
           });
         }
@@ -1039,15 +1039,15 @@
                 '<i class="fas fa-key mr-2"></i>Change Password';
               toggleBtn.classList.remove(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
               toggleBtn.classList.add(
                 "from-green-500",
-                "to-blue-600",
+                "to-primary-600",
                 "hover:from-green-600",
-                "hover:to-blue-700"
+                "hover:to-primary-700"
               );
             } else {
               showMessage(
@@ -1127,14 +1127,14 @@
                 '<i class="fas fa-edit mr-2"></i>Change Email';
               toggleBtn.classList.remove(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
               toggleBtn.classList.add(
-                "from-orange-500",
+                "from-primary-500",
                 "to-red-600",
-                "hover:from-orange-600",
+                "hover:from-primary-600",
                 "hover:to-red-700"
               );
               // Reload page to show updated status
@@ -1212,15 +1212,15 @@
               toggleBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
               toggleBtn.classList.remove(
                 "from-red-500",
-                "to-orange-600",
+                "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-orange-700"
+                "hover:to-primary-700"
               );
               toggleBtn.classList.add(
-                "from-blue-500",
-                "to-purple-600",
-                "hover:from-blue-600",
-                "hover:to-purple-700"
+                "from-primary-500",
+                "to-secondary-600",
+                "hover:from-primary-600",
+                "hover:to-secondary-700"
               );
               // Reload page to show updated name
               setTimeout(() => {

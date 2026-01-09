@@ -1,156 +1,302 @@
 // Tailwind CSS Configuration for Myan Myan Learn
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          50: "#f0f4ff",
-          100: "#e0e7ff",
-          200: "#c7d2fe",
-          300: "#a5b4fc",
-          400: "#818cf8",
-          500: "#667eea",
-          600: "#5a67d8",
-          700: "#4c51bf",
-          800: "#434190",
-          900: "#3c366b",
+(function () {
+  var defaultColors = {
+    primary: {
+      50: "#fff4ef",
+      100: "#ffe5d9",
+      200: "#ffc7ad",
+      300: "#ffa074",
+      400: "#f9783b",
+      500: "#e95420",
+      600: "#d44418",
+      700: "#b13613",
+      800: "#8a2a0f",
+      900: "#65200b",
+    },
+    secondary: {
+      50: "#f6eef6",
+      100: "#ead6e9",
+      200: "#d3add1",
+      300: "#b97db6",
+      400: "#9d5297",
+      500: "#77216f",
+      600: "#641b5d",
+      700: "#50154a",
+      800: "#3c0f37",
+      900: "#2c001e",
+    },
+    accent: {
+      50: "#fff7ed",
+      100: "#ffedd5",
+      200: "#fed7aa",
+      300: "#fdba74",
+      400: "#fb923c",
+      500: "#f67400",
+      600: "#e85d00",
+      700: "#c24600",
+      800: "#9a3600",
+      900: "#7c2d12",
+    },
+  };
+
+  var appTheme =
+    window.APP_THEME && typeof window.APP_THEME === "object"
+      ? window.APP_THEME
+      : {};
+  var themeColors =
+    appTheme.colors && typeof appTheme.colors === "object"
+      ? appTheme.colors
+      : defaultColors;
+
+  var defaultFonts = {
+    sans: "Ubuntu",
+    brand: "Ubuntu",
+    mono: "Ubuntu Mono",
+    urls: [
+      "https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap",
+      "https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap",
+    ],
+  };
+
+  var themeFonts =
+    appTheme.fonts && typeof appTheme.fonts === "object"
+      ? appTheme.fonts
+      : defaultFonts;
+
+  var fontSans =
+    typeof themeFonts.sans === "string" && themeFonts.sans.trim()
+      ? themeFonts.sans.trim()
+      : defaultFonts.sans;
+  var fontBrand =
+    typeof themeFonts.brand === "string" && themeFonts.brand.trim()
+      ? themeFonts.brand.trim()
+      : defaultFonts.brand;
+  var fontMono =
+    typeof themeFonts.mono === "string" && themeFonts.mono.trim()
+      ? themeFonts.mono.trim()
+      : defaultFonts.mono;
+
+  (function () {
+    var urls = Array.isArray(themeFonts.urls)
+      ? themeFonts.urls
+      : defaultFonts.urls;
+    var head = document.head;
+    if (!head) return;
+
+    function ensurePreconnect(href, crossOrigin) {
+      var selector = 'link[rel="preconnect"][href="' + href + '"]';
+      if (head.querySelector(selector)) return;
+      var link = document.createElement("link");
+      link.rel = "preconnect";
+      link.href = href;
+      if (crossOrigin) link.crossOrigin = crossOrigin;
+      head.appendChild(link);
+    }
+
+    function ensureStylesheet(href) {
+      var selector = 'link[rel="stylesheet"][href="' + href + '"]';
+      if (head.querySelector(selector)) return;
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = href;
+      head.appendChild(link);
+    }
+
+    ensurePreconnect("https://fonts.googleapis.com");
+    ensurePreconnect("https://fonts.gstatic.com", "anonymous");
+    urls.forEach(function (u) {
+      if (typeof u === "string" && u.trim()) ensureStylesheet(u.trim());
+    });
+
+    var root = document.documentElement;
+    if (!root) return;
+    root.style.setProperty("--app-font-sans", fontSans);
+    root.style.setProperty("--app-font-brand", fontBrand);
+    root.style.setProperty("--app-font-mono", fontMono);
+  })();
+
+  function hexToRgbTriplet(hex) {
+    if (!hex || typeof hex !== "string") return null;
+    var h = hex.trim().replace("#", "");
+    if (h.length !== 6) return null;
+    var r = parseInt(h.slice(0, 2), 16);
+    var g = parseInt(h.slice(2, 4), 16);
+    var b = parseInt(h.slice(4, 6), 16);
+    if (
+      [r, g, b].some(function (n) {
+        return Number.isNaN(n);
+      })
+    )
+      return null;
+    return r + ", " + g + ", " + b;
+  }
+
+  var glowRgb =
+    hexToRgbTriplet(themeColors.primary && themeColors.primary[500]) ||
+    "233, 84, 32";
+
+  var defaultBgGradient =
+    "linear-gradient(135deg, " +
+    ((themeColors.secondary && themeColors.secondary[900]) || "#2c001e") +
+    " 0%, " +
+    ((themeColors.secondary && themeColors.secondary[500]) || "#77216f") +
+    " 45%, " +
+    ((themeColors.primary && themeColors.primary[500]) || "#e95420") +
+    " 100%)";
+
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: themeColors,
+        fontFamily: {
+          sans: [
+            "var(--app-font-sans)",
+            "system-ui",
+            "-apple-system",
+            "Segoe UI",
+            "sans-serif",
+          ],
+          brand: [
+            "var(--app-font-brand)",
+            "system-ui",
+            "-apple-system",
+            "Segoe UI",
+            "sans-serif",
+          ],
+          mono: ["var(--app-font-mono)", "ui-monospace", "monospace"],
         },
-        secondary: {
-          50: "#faf5ff",
-          100: "#f3e8ff",
-          200: "#e9d5ff",
-          300: "#d8b4fe",
-          400: "#c084fc",
-          500: "#764ba2",
-          600: "#7c3aed",
-          700: "#6d28d9",
-          800: "#5b21b6",
-          900: "#4c1d95",
+        fontSize: {
+          xs: ["0.75rem", { lineHeight: "1rem" }],
+          sm: ["0.875rem", { lineHeight: "1.25rem" }],
+          base: ["1rem", { lineHeight: "1.5rem" }],
+          lg: ["1.125rem", { lineHeight: "1.75rem" }],
+          xl: ["1.25rem", { lineHeight: "1.75rem" }],
+          "2xl": ["1.5rem", { lineHeight: "2rem" }],
+          "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
+          "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
+          "5xl": ["3rem", { lineHeight: "1" }],
+          "6xl": ["3.75rem", { lineHeight: "1" }],
         },
-        accent: {
-          50: "#fef2f2",
-          100: "#fee2e2",
-          200: "#fecaca",
-          300: "#fca5a5",
-          400: "#f87171",
-          500: "#ff6b6b",
-          600: "#ef4444",
-          700: "#dc2626",
-          800: "#b91c1c",
-          900: "#991b1b",
+        spacing: {
+          18: "4.5rem",
+          88: "22rem",
+          128: "32rem",
         },
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        brand: ["Inter", "system-ui", "sans-serif"],
-        mono: ["Inter", "monospace"],
-      },
-      fontSize: {
-        xs: ["0.75rem", { lineHeight: "1rem" }],
-        sm: ["0.875rem", { lineHeight: "1.25rem" }],
-        base: ["1rem", { lineHeight: "1.5rem" }],
-        lg: ["1.125rem", { lineHeight: "1.75rem" }],
-        xl: ["1.25rem", { lineHeight: "1.75rem" }],
-        "2xl": ["1.5rem", { lineHeight: "2rem" }],
-        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
-        "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
-        "5xl": ["3rem", { lineHeight: "1" }],
-        "6xl": ["3.75rem", { lineHeight: "1" }],
-      },
-      spacing: {
-        18: "4.5rem",
-        88: "22rem",
-        128: "32rem",
-      },
-      borderRadius: {
-        xl: "0.75rem",
-        "2xl": "1rem",
-        "3xl": "1.5rem",
-      },
-      boxShadow: {
-        glass: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-        glow: "0 0 20px rgba(102, 126, 234, 0.3)",
-        soft: "0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)",
-      },
-      backdropBlur: {
-        xs: "2px",
-      },
-      animation: {
-        "fade-in": "fadeIn 0.5s ease-in-out",
-        "slide-up": "slideUp 0.3s ease-out",
-        "bounce-soft": "bounceSoft 0.6s ease-in-out",
-        "pulse-soft": "pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-      },
-      keyframes: {
-        fadeIn: {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
+        borderRadius: {
+          xl: "0.75rem",
+          "2xl": "1rem",
+          "3xl": "1.5rem",
         },
-        slideUp: {
-          "0%": { transform: "translateY(10px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
+        boxShadow: {
+          glass: "0 8px 32px 0 rgba(44, 0, 30, 0.35)",
+          glow: "0 0 20px rgba(" + glowRgb + ", 0.35)",
+          soft: "0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)",
         },
-        bounceSoft: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-5px)" },
+        backdropBlur: {
+          xs: "2px",
         },
-        pulseSoft: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.8" },
+        animation: {
+          "fade-in": "fadeIn 0.5s ease-in-out",
+          "slide-up": "slideUp 0.3s ease-out",
+          "bounce-soft": "bounceSoft 0.6s ease-in-out",
+          "pulse-soft": "pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        },
+        keyframes: {
+          fadeIn: {
+            "0%": { opacity: "0" },
+            "100%": { opacity: "1" },
+          },
+          slideUp: {
+            "0%": { transform: "translateY(10px)", opacity: "0" },
+            "100%": { transform: "translateY(0)", opacity: "1" },
+          },
+          bounceSoft: {
+            "0%, 100%": { transform: "translateY(0)" },
+            "50%": { transform: "translateY(-5px)" },
+          },
+          pulseSoft: {
+            "0%, 100%": { opacity: "1" },
+            "50%": { opacity: "0.8" },
+          },
         },
       },
     },
-  },
-  plugins: [
-    function ({ addUtilities }) {
-      const newUtilities = {
-        ".glass": {
-          background: "rgba(255, 255, 255, 0.1)",
-          "backdrop-filter": "blur(10px)",
-          border: "1px solid rgba(255, 255, 255, 0.2)",
-        },
-        ".glass-dark": {
-          background: "rgba(0, 0, 0, 0.1)",
-          "backdrop-filter": "blur(10px)",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-        },
-        ".gradient-primary": {
-          background: "linear-gradient(135deg, #14b8a6 0%, #22c55e 100%)",
-        },
-        ".gradient-primary-old": {
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        },
-        ".app-bg": {
-          "background-size": "cover",
-          "background-position": "center",
-          "background-repeat": "no-repeat",
-          "background-attachment": "fixed",
-        },
-        ".app-bg-solid": {
-          "background-color": "var(--app-bg-color, #000000)",
-        },
-        ".app-bg-gradient": {
-          "background-image":
-            "var(--app-bg-gradient, linear-gradient(135deg, #0ea5e9 0%, #22d3ee 25%, #a78bfa 50%, #f43f5e 75%, #f59e0b 100%))",
-        },
-        ".gradient-accent": {
-          background: "linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)",
-        },
-        ".text-gradient": {
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-          "background-clip": "text",
-        },
-        ".brand-font": {
-          "font-family": "Inter, system-ui, sans-serif",
-          "font-weight": "700",
-        },
-      };
-      addUtilities(newUtilities);
-    },
-  ],
-};
+    plugins: [
+      function (_ref) {
+        var addUtilities = _ref.addUtilities;
+        var newUtilities = {
+          ".glass": {
+            background: "rgba(255, 255, 255, 0.1)",
+            "backdrop-filter": "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          },
+          ".glass-dark": {
+            background: "rgba(0, 0, 0, 0.1)",
+            "backdrop-filter": "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+          },
+          ".gradient-primary": {
+            background:
+              "linear-gradient(135deg, " +
+              ((themeColors.primary && themeColors.primary[500]) || "#e95420") +
+              " 0%, " +
+              ((themeColors.secondary && themeColors.secondary[500]) ||
+                "#77216f") +
+              " 100%)",
+          },
+          ".gradient-primary-old": {
+            background:
+              "linear-gradient(135deg, " +
+              ((themeColors.primary && themeColors.primary[500]) || "#e95420") +
+              " 0%, " +
+              ((themeColors.secondary && themeColors.secondary[500]) ||
+                "#77216f") +
+              " 100%)",
+          },
+          ".app-bg": {
+            "background-size": "cover",
+            "background-position": "center",
+            "background-repeat": "no-repeat",
+            "background-attachment": "fixed",
+          },
+          ".app-bg-solid": {
+            "background-color": "var(--app-bg-color, #000000)",
+          },
+          ".app-bg-gradient": {
+            "background-image":
+              "var(--app-bg-gradient, " + defaultBgGradient + ")",
+          },
+          ".gradient-accent": {
+            background:
+              "linear-gradient(135deg, " +
+              ((themeColors.primary && themeColors.primary[500]) || "#e95420") +
+              " 0%, " +
+              ((themeColors.accent && themeColors.accent[500]) || "#f67400") +
+              " 100%)",
+          },
+          ".text-gradient": {
+            background:
+              "linear-gradient(135deg, " +
+              ((themeColors.primary && themeColors.primary[500]) || "#e95420") +
+              " 0%, " +
+              ((themeColors.secondary && themeColors.secondary[500]) ||
+                "#77216f") +
+              " 100%)",
+            "-webkit-background-clip": "text",
+            "-webkit-text-fill-color": "transparent",
+            "background-clip": "text",
+          },
+          ".brand-font": {
+            "font-family":
+              "var(--app-font-brand), system-ui, -apple-system, Segoe UI, sans-serif",
+            "font-weight": "700",
+          },
+        };
+        addUtilities(newUtilities);
+      },
+    ],
+  };
+})();
 
 (function () {
   var cfg = window.APP_BACKGROUND || {
@@ -182,7 +328,7 @@ tailwind.config = {
         getComputedStyle(document.documentElement).getPropertyValue(
           "--app-bg-gradient"
         ) ||
-        "linear-gradient(135deg, #0ea5e9 0%, #22d3ee 25%, #a78bfa 50%, #f43f5e 75%, #f59e0b 100%)";
+        "linear-gradient(135deg, #2c001e 0%, #77216f 45%, #e95420 100%)";
       var dim = typeof cfg.dimOpacity === "number" ? cfg.dimOpacity : 0.35;
       var overlay =
         dim > 0
