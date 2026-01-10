@@ -5,6 +5,7 @@ import com.barlarlar.myanmyanlearn.model.Course;
 import com.barlarlar.myanmyanlearn.model.Subcontent;
 import com.barlarlar.myanmyanlearn.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,13 +25,16 @@ public class ReaderController {
     @Autowired
     private CourseService courseService;
 
+    @Value("${google.studio.api-key:}")
+    private String googleStudioApiKey;
+
     @GetMapping("/reader")
     public String reader(
             Model model,
             @RequestParam(name = "courseId") String courseId,
             @RequestParam(name = "ch") Integer chapterOrder,
-            @RequestParam(name = "sc") Integer subOrder
-    ) {
+            @RequestParam(name = "sc") Integer subOrder) {
+        model.addAttribute("googleStudioApiKey", googleStudioApiKey);
         Course course = courseService.findById(courseId);
         if (course == null) {
             model.addAttribute("error", "Course not found");
@@ -67,8 +71,7 @@ public class ReaderController {
     public ResponseEntity<String> markdown(
             @RequestParam(name = "courseId") String courseId,
             @RequestParam(name = "ch") Integer chapterOrder,
-            @RequestParam(name = "sc") Integer subOrder
-    ) {
+            @RequestParam(name = "sc") Integer subOrder) {
         Course course = courseService.findById(courseId);
         if (course == null) {
             return ResponseEntity.notFound().build();
@@ -88,7 +91,8 @@ public class ReaderController {
         }
         String path = subOpt.get().getMarkdownPath();
         try {
-            ClassPathResource res = new ClassPathResource(Objects.requireNonNull(path.startsWith("/") ? path.substring(1) : path));
+            ClassPathResource res = new ClassPathResource(
+                    Objects.requireNonNull(path.startsWith("/") ? path.substring(1) : path));
             byte[] bytes = res.getInputStream().readAllBytes();
             return ResponseEntity.ok(new String(bytes, StandardCharsets.UTF_8));
         } catch (IOException e) {

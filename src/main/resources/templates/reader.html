@@ -386,7 +386,9 @@
                 class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0 mt-1 sm:mt-0"
               >
                 <i class="fas fa-bars text-xs"></i>
-                <span class="hidden sm:inline">Show</span>
+                <span class="hidden sm:inline" th:text="#{reader.drawer.show}"
+                  >Show</span
+                >
               </button>
             </div>
             <a
@@ -410,7 +412,7 @@
               <div
                 class="inline-flex"
                 role="group"
-                aria-label="Markdown font size"
+                th:attr="aria-label=#{reader.fontSize.ariaLabel}"
               >
                 <button
                   type="button"
@@ -439,13 +441,33 @@
               </div>
 
               <button
+                id="mdTranslateBtn"
+                type="button"
+                class="md-toolbar-btn inline-flex items-center justify-center h-9 w-9 rounded-lg border border-slate-200 bg-white/70 hover:bg-white text-slate-700 transition"
+                aria-pressed="false"
+              >
+                <i id="mdTranslateBtnIcon" class="fas fa-language text-xs"></i>
+                <span
+                  id="mdTranslateBtnLabel"
+                  class="sr-only"
+                  th:text="#{reader.translate}"
+                  >Translate</span
+                >
+              </button>
+
+              <button
                 id="mdThemeToggle"
                 type="button"
                 class="md-toolbar-btn inline-flex items-center justify-center h-9 w-9 rounded-lg border border-slate-200 bg-white/70 hover:bg-white text-slate-700 transition"
                 aria-pressed="false"
               >
                 <i id="mdThemeToggleIcon" class="fas fa-moon text-xs"></i>
-                <span id="mdThemeToggleLabel" class="sr-only">Dark</span>
+                <span
+                  id="mdThemeToggleLabel"
+                  class="sr-only"
+                  th:text="#{reader.theme.darkMode}"
+                  >Dark</span
+                >
               </button>
             </div>
             <article
@@ -459,14 +481,13 @@
             <div class="flex items-center justify-end gap-1">
               <nav
                 class="flex items-center gap-1"
-                aria-label="Subchapter pagination"
+                th:attr="aria-label=#{reader.pagination.ariaLabel}"
               >
                 <!-- Prev (always visible) -->
                 <a
                   class="inline-flex items-center justify-center h-9 w-9 rounded-md border bg-white/80 text-slate-700 no-underline transition focus:outline-none focus:ring-2 focus:ring-primary-500/30"
                   th:classappend="${sub.order > 1} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
-                  th:attr="href=${sub.order > 1} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order - 1})} : null, aria-disabled=${sub.order <= 1}"
-                  title="Previous"
+                  th:attr="href=${sub.order > 1} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order - 1})} : null, aria-disabled=${sub.order <= 1}, title=#{reader.pagination.previous}"
                 >
                   <i class="fas fa-chevron-left text-xs"></i>
                 </a>
@@ -474,8 +495,7 @@
                 <a
                   class="inline-flex items-center justify-center h-9 w-9 rounded-md border bg-white/80 text-slate-700 no-underline transition focus:outline-none focus:ring-2 focus:ring-primary-500/30"
                   th:classappend="${sub.order < #lists.size(content.subcontents)} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
-                  th:attr="href=${sub.order < #lists.size(content.subcontents)} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order + 1})} : null, aria-disabled=${sub.order >= #lists.size(content.subcontents)}"
-                  title="Next"
+                  th:attr="href=${sub.order < #lists.size(content.subcontents)} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order + 1})} : null, aria-disabled=${sub.order >= #lists.size(content.subcontents)}, title=#{reader.pagination.next}"
                 >
                   <i class="fas fa-chevron-right text-xs"></i>
                 </a>
@@ -518,8 +538,7 @@
                     id="closeDrawerBtn"
                     type="button"
                     class="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-white/80 hover:bg-white border border-slate-200 text-slate-700 transition flex-none"
-                    aria-label="Close drawer"
-                    title="Close"
+                    th:attr="aria-label=#{reader.drawer.closeAria}, title=#{reader.drawer.close}"
                   >
                     <i class="fas fa-xmark"></i>
                   </button>
@@ -557,7 +576,7 @@
                   >
                     <nav
                       class="mt-0.5 divide-y divide-slate-200/30 pl-2 sm:pl-3"
-                      aria-label="Subchapters list"
+                      th:attr="aria-label=#{reader.subchapters.ariaLabel}"
                     >
                       <a
                         th:each="s : ${c.subcontents}"
@@ -595,6 +614,30 @@
         const courseId = /*[[${course != null ? course.id : null}]]*/ null;
         const ch = /*[[${content != null ? content.order : null}]]*/ null;
         const sc = /*[[${sub != null ? sub.order : null}]]*/ null;
+        const courseLanguage =
+          /*[[${course != null ? course.language : null}]]*/ null;
+        const userLanguage = /*[[${#locale.language}]]*/ "en";
+        const googleStudioApiKey = /*[[${googleStudioApiKey}]]*/ null;
+
+        const i18n = {
+          lightMode: /*[[#{reader.theme.lightMode}]]*/ "Light mode",
+          darkMode: /*[[#{reader.theme.darkMode}]]*/ "Dark mode",
+          enableDarkMode:
+            /*[[#{reader.theme.enableDarkMode}]]*/ "Enable dark mode",
+          disableDarkMode:
+            /*[[#{reader.theme.disableDarkMode}]]*/ "Disable dark mode",
+          drawerShow: /*[[#{reader.drawer.show}]]*/ "Show",
+          drawerHide: /*[[#{reader.drawer.hide}]]*/ "Hide",
+          translate: /*[[#{reader.translate}]]*/ "Translate",
+          translateMissingApiKey:
+            /*[[#{reader.translate.missingApiKey}]]*/ "Translation API key is not configured.",
+          translateFailedPrefix:
+            /*[[#{reader.translate.failedPrefix}]]*/ "Translation failed: ",
+          errorNoMarkdownPath:
+            /*[[#{reader.error.noMarkdownPath}]]*/ "No markdown path provided.",
+          errorLoadFailedPrefix:
+            /*[[#{reader.error.loadFailedPrefix}]]*/ "Failed to load markdown: ",
+        };
 
         const container = document.getElementById("mdContainer");
         const err = document.getElementById("mdError");
@@ -603,17 +646,26 @@
         const mdThemeToggleIcon = document.getElementById("mdThemeToggleIcon");
         const mdThemeToggleLabel =
           document.getElementById("mdThemeToggleLabel");
+        const mdTranslateBtn = document.getElementById("mdTranslateBtn");
+        const mdTranslateBtnLabel = document.getElementById(
+          "mdTranslateBtnLabel"
+        );
+        const mdTranslateBtnIcon =
+          document.getElementById("mdTranslateBtnIcon");
         const mdFontSizeButtons = Array.from(
           document.querySelectorAll("[data-md-font-size]")
         );
         const hljsThemeLight = document.getElementById("hljsThemeLight");
         const hljsThemeDark = document.getElementById("hljsThemeDark");
+        let rawMarkdownText = null;
 
         const MD_THEME_KEY = "readerMarkdownDark";
         const setMarkdownDark = (enabled) => {
           if (mdPanel) mdPanel.classList.toggle("md-dark", !!enabled);
-          const actionLabel = enabled ? "Light mode" : "Dark mode";
-          const ariaLabel = enabled ? "Disable dark mode" : "Enable dark mode";
+          const actionLabel = enabled ? i18n.lightMode : i18n.darkMode;
+          const ariaLabel = enabled
+            ? i18n.disableDarkMode
+            : i18n.enableDarkMode;
           if (mdThemeToggle) {
             mdThemeToggle.setAttribute(
               "aria-pressed",
@@ -682,6 +734,217 @@
           });
         });
 
+        const normalizeLang = (value) => {
+          const v = (value || "").trim().toLowerCase();
+          if (!v) return null;
+          if (v === "jp") return "ja";
+          if (v === "mm") return "my";
+          return v;
+        };
+
+        const renderMarkdown = (text) => {
+          container.innerHTML = md ? md.render(text) : text;
+
+          const checkboxes = container.querySelectorAll(
+            'input[type="checkbox"]'
+          );
+          checkboxes.forEach((cb) => {
+            cb.disabled = true;
+            cb.setAttribute("aria-disabled", "true");
+          });
+
+          try {
+            const rawMdPath = mdPath || "";
+            const normalized = rawMdPath.startsWith("/")
+              ? rawMdPath.substring(1)
+              : rawMdPath;
+            const lastSlash = normalized.lastIndexOf("/");
+            const baseDir =
+              lastSlash >= 0 ? normalized.substring(0, lastSlash + 1) : "";
+            const isAbsolute = (u) =>
+              /^(?:[a-z]+:)?\/\//i.test(u) ||
+              u.startsWith("/") ||
+              u.startsWith("data:");
+
+            container.querySelectorAll("img[src]").forEach((img) => {
+              const src = img.getAttribute("src");
+              if (!src || isAbsolute(src)) return;
+              img.setAttribute("src", "/" + baseDir + src);
+            });
+
+            container.querySelectorAll("a[href]").forEach((a) => {
+              const href = a.getAttribute("href");
+              if (!href || isAbsolute(href)) return;
+              a.setAttribute("href", "/" + baseDir + href);
+            });
+          } catch (_) {}
+
+          if (window.mermaid) {
+            try {
+              mermaid.initialize({ startOnLoad: false, theme: "default" });
+              const blocks = container.querySelectorAll(
+                "pre code.language-mermaid"
+              );
+              blocks.forEach((codeEl) => {
+                const graphDef = codeEl.textContent.trim();
+                const wrapper = document.createElement("div");
+                wrapper.className = "mermaid my-4";
+                wrapper.textContent = graphDef;
+                const pre = codeEl.closest("pre");
+                if (pre && pre.parentNode) {
+                  pre.parentNode.replaceChild(wrapper, pre);
+                }
+              });
+              mermaid.run({ querySelector: ".mermaid" });
+            } catch (e) {
+              console.warn("Mermaid render error:", e);
+            }
+          }
+
+          if (window.hljs) {
+            container.querySelectorAll("pre code").forEach((block) => {
+              try {
+                hljs.highlightElement(block);
+              } catch (_) {}
+            });
+          }
+        };
+
+        const translateWithGoogleStudio = async (text) => {
+          const sourceLang = normalizeLang(courseLanguage);
+          const targetLang = normalizeLang(userLanguage);
+          if (!sourceLang || !targetLang || sourceLang === targetLang) {
+            return text;
+          }
+          if (!googleStudioApiKey || String(googleStudioApiKey).trim() === "") {
+            throw new Error("TRANSLATE_MISSING_API_KEY");
+          }
+          const readErrorDetails = async (res) => {
+            let details = "";
+            try {
+              const ct = (res.headers.get("content-type") || "").toLowerCase();
+              if (ct.includes("application/json")) {
+                const j = await res.json();
+                const msg =
+                  j?.error?.message ||
+                  j?.message ||
+                  JSON.stringify(j).slice(0, 300);
+                details = msg ? ` ${msg}` : "";
+              } else {
+                const t = await res.text();
+                details = t ? ` ${t.slice(0, 300)}` : "";
+              }
+            } catch (_) {}
+            return details;
+          };
+
+          let cachedModel = null;
+          const getGenerateContentModel = async () => {
+            if (cachedModel) return cachedModel;
+            const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(
+              googleStudioApiKey
+            )}`;
+            const res = await fetch(listUrl, { cache: "no-cache" });
+            if (!res.ok) {
+              const details = await readErrorDetails(res);
+              throw new Error(`HTTP ${res.status}${details}`);
+            }
+            const data = await res.json();
+            const models = Array.isArray(data?.models) ? data.models : [];
+            const candidates = models
+              .filter((m) =>
+                Array.isArray(m?.supportedGenerationMethods)
+                  ? m.supportedGenerationMethods.includes("generateContent")
+                  : false
+              )
+              .map((m) => String(m?.name || ""))
+              .filter(Boolean);
+
+            const preferred = [
+              "models/gemini-1.5-flash",
+              "models/gemini-1.5-flash-002",
+              "models/gemini-1.5-flash-001",
+              "models/gemini-1.5-pro",
+              "models/gemini-1.5-pro-002",
+              "models/gemini-1.5-pro-001",
+              "models/gemini-pro",
+            ];
+            const pick =
+              preferred.find((p) => candidates.includes(p)) || candidates[0];
+            if (!pick) {
+              throw new Error("No generateContent-capable model available.");
+            }
+            cachedModel = pick;
+            return cachedModel;
+          };
+
+          const modelName = await getGenerateContentModel();
+          const endpoint = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${encodeURIComponent(
+            googleStudioApiKey
+          )}`;
+          const prompt =
+            `Translate the following Markdown from ${sourceLang} to ${targetLang}. ` +
+            `Preserve Markdown formatting, links, code blocks, and inline code. ` +
+            `Return only the translated Markdown.\n\n` +
+            text;
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ role: "user", parts: [{ text: prompt }] }],
+            }),
+          });
+          if (!res.ok) {
+            const details = await readErrorDetails(res);
+            throw new Error(`HTTP ${res.status}${details}`);
+          }
+          const data = await res.json();
+          const parts = data?.candidates?.[0]?.content?.parts;
+          const out = Array.isArray(parts)
+            ? parts.map((p) => (p && p.text ? p.text : "")).join("")
+            : "";
+          const trimmed = (out || "").trim();
+          if (!trimmed) {
+            throw new Error("TRANSLATE_EMPTY");
+          }
+          return trimmed;
+        };
+
+        if (mdTranslateBtn) {
+          mdTranslateBtn.setAttribute("aria-label", i18n.translate);
+          mdTranslateBtn.setAttribute("title", i18n.translate);
+          if (mdTranslateBtnLabel)
+            mdTranslateBtnLabel.textContent = i18n.translate;
+          mdTranslateBtn.addEventListener("click", async () => {
+            if (!rawMarkdownText) return;
+            if (err) err.classList.add("hidden");
+            mdTranslateBtn.disabled = true;
+            if (mdTranslateBtnIcon) {
+              mdTranslateBtnIcon.classList.add("fa-spin");
+            }
+            try {
+              const translated = await translateWithGoogleStudio(
+                rawMarkdownText
+              );
+              renderMarkdown(translated);
+            } catch (e) {
+              if (e && e.message === "TRANSLATE_MISSING_API_KEY") {
+                err.textContent = i18n.translateMissingApiKey;
+              } else {
+                err.textContent =
+                  i18n.translateFailedPrefix +
+                  (e && typeof e.message === "string" ? e.message : String(e));
+              }
+              err.classList.remove("hidden");
+            } finally {
+              mdTranslateBtn.disabled = false;
+              if (mdTranslateBtnIcon) {
+                mdTranslateBtnIcon.classList.remove("fa-spin");
+              }
+            }
+          });
+        }
+
         // Prefer controller endpoint to avoid static resource 404s during dev
         const apiUrl =
           courseId && ch && sc
@@ -699,7 +962,7 @@
         const url = apiUrl || staticUrl;
 
         if (!url) {
-          err.textContent = "No markdown path provided.";
+          err.textContent = i18n.errorNoMarkdownPath;
           err.classList.remove("hidden");
           return;
         }
@@ -749,84 +1012,16 @@
 
         fetch(url, { cache: "no-cache" })
           .then((r) => {
-            if (!r.ok) throw new Error("Failed to load markdown: " + r.status);
+            if (!r.ok) {
+              const e = new Error("MD_LOAD_FAILED");
+              e.status = r.status;
+              throw e;
+            }
             return r.text();
           })
           .then((text) => {
-            container.innerHTML = md ? md.render(text) : text;
-
-            // Make all task-list checkboxes read-only in the reader
-            const checkboxes = container.querySelectorAll(
-              'input[type="checkbox"]'
-            );
-            checkboxes.forEach((cb) => {
-              cb.disabled = true;
-              cb.setAttribute("aria-disabled", "true");
-            });
-
-            // Fix relative asset URLs (images/links) to be relative to the markdown file directory
-            try {
-              const rawMdPath = mdPath || "";
-              const normalized = rawMdPath.startsWith("/")
-                ? rawMdPath.substring(1)
-                : rawMdPath;
-              const lastSlash = normalized.lastIndexOf("/");
-              const baseDir =
-                lastSlash >= 0 ? normalized.substring(0, lastSlash + 1) : "";
-              const isAbsolute = (u) =>
-                /^(?:[a-z]+:)?\/\//i.test(u) ||
-                u.startsWith("/") ||
-                u.startsWith("data:");
-
-              // Images
-              container.querySelectorAll("img[src]").forEach((img) => {
-                const src = img.getAttribute("src");
-                if (!src || isAbsolute(src)) return;
-                img.setAttribute("src", "/" + baseDir + src);
-              });
-
-              // Links (keep http(s) intact; fix relative asset/document links)
-              container.querySelectorAll("a[href]").forEach((a) => {
-                const href = a.getAttribute("href");
-                if (!href || isAbsolute(href)) return;
-                a.setAttribute("href", "/" + baseDir + href);
-              });
-            } catch (_) {
-              /* noop */
-            }
-
-            // Render Mermaid diagrams if present
-            if (window.mermaid) {
-              try {
-                mermaid.initialize({ startOnLoad: false, theme: "default" });
-                // Replace fenced mermaid code blocks with .mermaid containers
-                const blocks = container.querySelectorAll(
-                  "pre code.language-mermaid"
-                );
-                blocks.forEach((codeEl) => {
-                  const graphDef = codeEl.textContent.trim();
-                  const wrapper = document.createElement("div");
-                  wrapper.className = "mermaid my-4";
-                  wrapper.textContent = graphDef;
-                  const pre = codeEl.closest("pre");
-                  if (pre && pre.parentNode) {
-                    pre.parentNode.replaceChild(wrapper, pre);
-                  }
-                });
-                mermaid.run({ querySelector: ".mermaid" });
-              } catch (e) {
-                console.warn("Mermaid render error:", e);
-              }
-            }
-
-            // Syntax highlight code blocks
-            if (window.hljs) {
-              container.querySelectorAll("pre code").forEach((block) => {
-                try {
-                  hljs.highlightElement(block);
-                } catch (_) {}
-              });
-            }
+            rawMarkdownText = text;
+            renderMarkdown(text);
 
             // No subchapter tab scrolling (tabs removed)
 
@@ -875,7 +1070,8 @@
                 unlockScroll();
                 if (openBtn)
                   openBtn.querySelector("span") &&
-                    (openBtn.querySelector("span").textContent = "Show");
+                    (openBtn.querySelector("span").textContent =
+                      i18n.drawerShow);
               } else {
                 drawer.classList.remove("-translate-x-full");
                 if (backdrop) {
@@ -886,7 +1082,8 @@
                 lockScroll();
                 if (openBtn)
                   openBtn.querySelector("span") &&
-                    (openBtn.querySelector("span").textContent = "Hide");
+                    (openBtn.querySelector("span").textContent =
+                      i18n.drawerHide);
               }
               try {
                 localStorage.setItem(STORAGE_KEY, hidden ? "1" : "0");
@@ -942,7 +1139,14 @@
             syncIcons();
           })
           .catch((e) => {
-            err.textContent = e.message;
+            if (e && e.message === "MD_LOAD_FAILED") {
+              const status =
+                typeof e.status === "number" ? String(e.status) : "";
+              err.textContent = i18n.errorLoadFailedPrefix + status;
+            } else {
+              err.textContent =
+                e && typeof e.message === "string" ? e.message : String(e);
+            }
             err.classList.remove("hidden");
           });
       })();
