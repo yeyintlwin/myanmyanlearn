@@ -1,8 +1,4 @@
 # JKEN Chapter 1 – Question 4 Explanation
 
-Explain the rationale and highlight cues in the prompt that lead to the right answer.
-
-- Key concept: pronouns and agreement
-- Why correct: matches reference and number agreement
-- Common pitfalls: mismatched pronoun–antecedent
-
+![問1-4問題1](../images/Explain_1_e4.jpg)
+![問1-4問題1](../images/Explain_1_e4_1.jpg)

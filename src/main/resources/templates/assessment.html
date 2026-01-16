@@ -343,35 +343,60 @@
               ></article>
             </div>
             <div
-              class="flex flex-wrap items-center gap-x-3 gap-y-2"
+              class="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0"
               th:if="${q.slotCount > 0}"
             >
               <div
-                class="flex items-center gap-2"
+                class="flex flex-wrap items-center gap-2 min-w-0"
                 th:each="slotNum : ${#numbers.sequence(1, q.slotCount)}"
               >
-                <label class="text-white/90 text-sm"
+                <label class="text-white/90 text-sm shrink-0"
                   ><span th:text="${slotNum}"></span>.
                 </label>
-                <select
-                  th:attr="name=${'q' + iStat.count + '-s' + slotNum}"
-                  class="inline-block bg-white/10 border border-white/10 text-white rounded-md px-3 py-2"
+                <div
+                  class="relative w-64 sm:w-80 max-w-full"
+                  data-answer-dropdown
                 >
-                  <option
+                  <input
+                    type="hidden"
+                    data-answer-field
+                    th:attr="name=${'q' + iStat.count + '-s' + slotNum}"
                     value=""
-                    disabled
-                    selected
-                    class="text-gray-900 bg-white"
+                  />
+                  <button
+                    type="button"
+                    class="w-full bg-white/10 border border-white/10 text-white rounded-md px-3 py-2 flex items-start justify-between gap-3"
+                    data-answer-toggle
                   >
-                    Select
-                  </option>
-                  <option
-                    class="text-gray-900 bg-white"
-                    th:each="opt : ${(q.slotOptions != null) ? q.slotOptions[slotNum - 1] : q.options}"
-                    th:value="${opt.optionIndex}"
-                    th:text="${opt.optionContent}"
-                  ></option>
-                </select>
+                    <span
+                      class="block text-left whitespace-normal break-words leading-snug"
+                      data-answer-label
+                      >Select</span
+                    >
+                    <i
+                      class="fas fa-chevron-down text-white/70 text-xs mt-1.5 shrink-0"
+                    ></i>
+                  </button>
+                  <div
+                    class="absolute left-0 mt-2 w-full bg-slate-900 border border-white/10 rounded-lg shadow-xl hidden z-50 max-h-64 overflow-auto"
+                    data-answer-menu
+                  >
+                    <button
+                      type="button"
+                      class="w-full text-left px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
+                      data-value=""
+                    >
+                      Select
+                    </button>
+                    <button
+                      type="button"
+                      class="w-full text-left px-3 py-2 text-white/90 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
+                      th:each="opt : ${(q.slotOptions != null) ? q.slotOptions[slotNum - 1] : q.options}"
+                      th:attr="data-value=${opt.optionIndex}"
+                      th:text="${opt.optionContent}"
+                    ></button>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -531,6 +556,47 @@
           }
         });
 
+        function closeAllAnswerMenus(except) {
+          document
+            .querySelectorAll("[data-answer-dropdown] [data-answer-menu]")
+            .forEach((menu) => {
+              if (except && except.contains(menu)) return;
+              menu.classList.add("hidden");
+            });
+        }
+
+        document.addEventListener("click", function () {
+          closeAllAnswerMenus();
+        });
+
+        document.querySelectorAll("[data-answer-dropdown]").forEach((dd) => {
+          const input = dd.querySelector("input[data-answer-field]");
+          const label = dd.querySelector("[data-answer-label]");
+          const toggle = dd.querySelector("[data-answer-toggle]");
+          const menu = dd.querySelector("[data-answer-menu]");
+
+          if (!input || !label || !toggle || !menu) return;
+
+          toggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            closeAllAnswerMenus(dd);
+            menu.classList.toggle("hidden");
+          });
+
+          menu.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const btn = e.target.closest("button[data-value]");
+            if (!btn) return;
+
+            const v = btn.getAttribute("data-value") || "";
+            input.value = v;
+            label.textContent = btn.textContent
+              ? btn.textContent.trim()
+              : "Select";
+            menu.classList.add("hidden");
+          });
+        });
+
         const submitBtn = document.getElementById("submitAssessment");
         submitBtn &&
           submitBtn.addEventListener("click", () => {
@@ -538,11 +604,11 @@
               document.querySelectorAll(".question-card")
             );
             const results = cards.map((card, idx) => {
-              const selects = Array.from(
-                card.querySelectorAll("select[name^='q']")
+              const answerFields = Array.from(
+                card.querySelectorAll("input[data-answer-field][name^='q']")
               );
-              const selected = selects.map((s) => {
-                const v = s.value;
+              const selected = answerFields.map((f) => {
+                const v = f.value;
                 return v === "" ? null : parseInt(v, 10);
               });
               return {
@@ -616,10 +682,12 @@
               if (chapters) addField("chapters", chapters);
               try {
                 Array.from(
-                  document.querySelectorAll("select[name^='q']")
-                ).forEach(function (s) {
-                  if (s && s.name && s.value && s.value !== "") {
-                    addField(s.name, s.value);
+                  document.querySelectorAll(
+                    "input[data-answer-field][name^='q']"
+                  )
+                ).forEach(function (f) {
+                  if (f && f.name && f.value && f.value !== "") {
+                    addField(f.name, f.value);
                   }
                 });
               } catch (_) {}
@@ -687,7 +755,7 @@
               // Copying the submission logic (lines 529-587) for safety.
 
               const results = Array.from(
-                document.querySelectorAll("select[name^='q']")
+                document.querySelectorAll("input[data-answer-field][name^='q']")
               )
                 .map((el) => {
                   const parts = el.name.match(/q(\d+)-s(\d+)/);
@@ -740,15 +808,17 @@
                 form.appendChild(i);
               }
 
-              document.querySelectorAll("select[name^='q']").forEach((s) => {
-                if (s.value) {
-                  var i = document.createElement("input");
-                  i.type = "hidden";
-                  i.name = s.name;
-                  i.value = s.value;
-                  form.appendChild(i);
-                }
-              });
+              document
+                .querySelectorAll("input[data-answer-field][name^='q']")
+                .forEach((f) => {
+                  if (f.value) {
+                    var i = document.createElement("input");
+                    i.type = "hidden";
+                    i.name = f.name;
+                    i.value = f.value;
+                    form.appendChild(i);
+                  }
+                });
 
               document.body.appendChild(form);
               form.submit();

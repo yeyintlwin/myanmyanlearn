@@ -9,88 +9,360 @@
     "slotCount": 8,
     "slotOptions": [
         [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true },
-            { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false },
-            { "optionIndex": 8, "optionContent": "ケ. Option 9", "isCorrect": false },
-            { "optionIndex": 9, "optionContent": "コ. Option 10", "isCorrect": false }
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 演算算",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. キャッシュメモリ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. クロックジェネレータ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. 主記憶",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 4,
+                "optionContent": "オ. 出力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 5,
+                "optionContent": "カ. 制御制御",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 6,
+                "optionContent": "キ. ディスクキャッシュ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 7,
+                "optionContent": "ク. 入力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 8,
+                "optionContent": "ケ. バス",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 9,
+                "optionContent": "コ. 補助記憶",
+                "isCorrect": false
+            }
         ],
         [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false },
-            { "optionIndex": 8, "optionContent": "ケ. Option 9", "isCorrect": false },
-            { "optionIndex": 9, "optionContent": "コ. Option 10", "isCorrect": false }
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 演算算",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. キャッシュメモリ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. クロックジェネレータ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. 主記憶",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 4,
+                "optionContent": "オ. 出力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 5,
+                "optionContent": "カ. 制御制御",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 6,
+                "optionContent": "キ. ディスクキャッシュ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 7,
+                "optionContent": "ク. 入力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 8,
+                "optionContent": "ケ. バス",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 9,
+                "optionContent": "コ. 補助記憶",
+                "isCorrect": false
+            }
         ],
         [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false },
-            { "optionIndex": 8, "optionContent": "ケ. Option 9", "isCorrect": false },
-            { "optionIndex": 9, "optionContent": "コ. Option 10", "isCorrect": false }
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 演算算",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. キャッシュメモリ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. クロックジェネレータ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. 主記憶",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 4,
+                "optionContent": "オ. 出力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 5,
+                "optionContent": "カ. 制御制御",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 6,
+                "optionContent": "キ. ディスクキャッシュ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 7,
+                "optionContent": "ク. 入力",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 8,
+                "optionContent": "ケ. バス",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 9,
+                "optionContent": "コ. 補助記憶",
+                "isCorrect": false
+            }
         ],
         [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true },
-            { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false },
-            { "optionIndex": 8, "optionContent": "ケ. Option 9", "isCorrect": false },
-            { "optionIndex": 9, "optionContent": "コ. Option 10", "isCorrect": false }
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 演算算",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. キャッシュメモリ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. クロックジェネレータ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. 主記憶",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 4,
+                "optionContent": "オ. 出力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 5,
+                "optionContent": "カ. 制御制御",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 6,
+                "optionContent": "キ. ディスクキャッシュ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 7,
+                "optionContent": "ク. 入力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 8,
+                "optionContent": "ケ. バス",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 9,
+                "optionContent": "コ. 補助記憶",
+                "isCorrect": false
+            }
         ],
         [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false },
-            { "optionIndex": 8, "optionContent": "ケ. Option 9", "isCorrect": false },
-            { "optionIndex": 9, "optionContent": "コ. Option 10", "isCorrect": true }
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 演算算",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. キャッシュメモリ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. クロックジェネレータ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. 主記憶",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 4,
+                "optionContent": "オ. 出力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 5,
+                "optionContent": "カ. 制御制御",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 6,
+                "optionContent": "キ. ディスクキャッシュ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 7,
+                "optionContent": "ク. 入力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 8,
+                "optionContent": "ケ. バス",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 9,
+                "optionContent": "コ. 補助記憶",
+                "isCorrect": true
+            }
         ],
         [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": true },
-            { "optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false },
-            { "optionIndex": 8, "optionContent": "ケ. Option 9", "isCorrect": false },
-            { "optionIndex": 9, "optionContent": "コ. Option 10", "isCorrect": false }
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 演算算",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. キャッシュメモリ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. クロックジェネレータ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. 主記憶",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 4,
+                "optionContent": "オ. 出力",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 5,
+                "optionContent": "カ. 制御制御",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 6,
+                "optionContent": "キ. ディスクキャッシュ",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 7,
+                "optionContent": "ク. 入力",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 8,
+                "optionContent": "ケ. バス",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 9,
+                "optionContent": "コ. 補助記憶",
+                "isCorrect": false
+            }
         ],
         [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. カーネルカーネル",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. 基本ソフトウェア",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. グループウェア",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. ミドルウェア",
+                "isCorrect": false
+            }
         ],
         [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. Option 1",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. Option 2",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. Option 3",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. Option 4",
+                "isCorrect": true
+            }
         ]
     ]
 }

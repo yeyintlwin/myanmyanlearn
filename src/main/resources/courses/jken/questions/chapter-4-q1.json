@@ -8,12 +8,159 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 7,
   "slotOptions": [
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false } ]
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. クッキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 検索エンジン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ブックマーク(お気に入り)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.ホームページ",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. クッキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 検索エンジン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ブックマーク(お気に入り)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.ホームページ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. クッキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 検索エンジン",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ブックマーク(お気に入り)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.ホームページ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ディレクトリ型",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ.ハイパーテキスト型",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ロボット型",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. インターネット上の情報を取得する方法と所在を記述する規格のこと",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. インターネット上の情報を取得するまでの経路をまとめた一覧表のこと",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. インターネット上の情報を取得できるプログラミング言語のこと",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. A",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. AとB",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ.ＡとＢとⅭ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ＢとＣ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. D",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. A",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. AとB",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ.ＡとＢとⅭ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ＢとＣ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. D",
+        "isCorrect": false
+      }
+    ]
   ]
 }

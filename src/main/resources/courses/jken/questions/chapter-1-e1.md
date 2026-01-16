@@ -1,8 +1,14 @@
 # JKEN Chapter 1 – Question 1 Explanation
 
-Use this notes page to explain the reasoning behind the correct answer, outline key concepts tested, and provide quick tips.
+## 【解説】
+つり銭として、10円玉と50円玉が何枚必要かを求める流れ図が図3の「つり銭10」である。まず、(金額÷10)の商」で10円玉だけで支払う場合の枚数を求め、その後「(金額÷10)の余り」で10円未満のつり銭(金額)を求めている。そして、50円玉は、10円玉の枚数が5枚以上の場合に限り必要で、しかも必要の場合でも1枚、必要なければ0枚となる。また、50円玉を使用した場合、10円玉の枚数は5枚減ることになる。
 
-- Key concept: subject–verb agreement and basic structure
-- Why correct: matches the rule demonstrated in the lesson
-- Common pitfalls: misreading the prompt or overlooking constraints
+このアルゴリズムは、「つり銭100」 と「つり銭1」でも同じである。
+- 1:100円玉の枚数を求める部分である。
+- 2:100円未満のつり銭(金額)を求める部分である。
+- 3:500円玉を1枚使用しので100円玉の枚数を5枚減らす部分である。
+- 4:「つり銭10」や「つり銭100」の流れからは、「1円玉←(金額÷1)の商」であるが、1で割った時の商は金額そのものである。したがってて、「1円玉一金額」となる。
+- 5:5円玉を1枚使用する部分である。
+- 6:5円玉を使用しない部分である。
+- 7:金種計算は、大きな金種から計算する必要がある。そうしないと100円玉を使わず10円玉で32枚などとなってしまうことがある。
 

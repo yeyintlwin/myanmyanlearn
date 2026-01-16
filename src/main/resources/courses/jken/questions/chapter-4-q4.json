@@ -8,12 +8,154 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 7,
   "slotOptions": [
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ]
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Webブラウザ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. アドオン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. お気に入り（ブックマーク）",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.メールアプリ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Webブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. アドオン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. お気に入り（ブックマーク）",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.メールアプリ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. file",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. https",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. mailto",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 日本の政府機",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 日本の企業",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 日本のネットワーク事業者",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 日本の大学などの教育関連",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 日本の政府機",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 日本の企業",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 日本のネットワーク事業者",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 日本の大学などの教育関連",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. クッキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. サーチエンジン",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ディレクトリ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. パンくずリスト",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. クッキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. サーチエンジン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ディレクトリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. パンくずリスト",
+        "isCorrect": true
+      }
+    ]
   ]
 }

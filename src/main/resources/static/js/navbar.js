@@ -10,16 +10,6 @@
   const profileMenu = byId('profileMenu');
   const profileDropdown = byId('profileDropdown');
   const languagesItem = byId('languagesItem');
-  const studyLangToggle = byId('studyLangToggle');
-
-  function getCookie(name) {
-    try {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
-    } catch (_) {}
-    return null;
-  }
 
   // Helper to toggle dropdown and rotate chevron
   function toggleWithChevron(container, dropdown) {
@@ -27,48 +17,6 @@
     dropdown.classList.toggle('show');
     const chev = container.querySelector('.fa-chevron-down');
     if (chev) chev.style.transform = dropdown.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
-  }
-
-  // Study in my language toggle
-  if (studyLangToggle) {
-    const knob = studyLangToggle.querySelector('span');
-    const applySwitch = (on) => {
-      studyLangToggle.setAttribute('aria-checked', on ? 'true' : 'false');
-      if (on) {
-        studyLangToggle.classList.remove('bg-gray-300');
-        studyLangToggle.classList.add('bg-blue-600');
-        if (knob) {
-          knob.classList.remove('translate-x-0');
-          knob.classList.add('translate-x-5');
-        }
-      } else {
-        studyLangToggle.classList.remove('bg-blue-600');
-        studyLangToggle.classList.add('bg-gray-300');
-        if (knob) {
-          knob.classList.remove('translate-x-5');
-          knob.classList.add('translate-x-0');
-        }
-      }
-    };
-
-    // Initialize from cookie or localStorage
-    let initial = false;
-    try {
-      const cookieVal = getCookie('studyInMyLanguage');
-      if (cookieVal !== null) initial = cookieVal === '1' || cookieVal === 'true';
-      else initial = (localStorage.getItem('studyInMyLanguage') === '1');
-    } catch (_) {}
-    applySwitch(initial);
-
-    studyLangToggle.addEventListener('click', function (e) {
-      e.preventDefault();
-      const on = studyLangToggle.getAttribute('aria-checked') !== 'true';
-      applySwitch(on);
-      try { localStorage.setItem('studyInMyLanguage', on ? '1' : '0'); } catch (_) {}
-      try { document.cookie = `studyInMyLanguage=${on ? '1' : '0'}; path=/; max-age=31536000; SameSite=Lax`; } catch (_) {}
-      // Reload once to apply across app if needed
-      setTimeout(() => { window.location.reload(); }, 50);
-    });
   }
 
   // Languages submenu (new inside Profile dropdown)

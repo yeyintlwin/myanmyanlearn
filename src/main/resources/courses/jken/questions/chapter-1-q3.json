@@ -8,36 +8,118 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 6,
   "slotOptions": [
-    [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true}
-    ],
-    [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true}
-    ],
-    [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true}
-    ],
-    [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false}
-    ],
-    [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true}
-    ],
-    [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true},
-      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false}
+        [
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 1",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. 2",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. 3",
+                "isCorrect": false
+            }
+        ],
+        [
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 4",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. 18",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. 16",
+                "isCorrect": true
+            }
+        ],
+        [
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 64",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. 128",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. 256",
+                "isCorrect": true
+            }
+        ],
+        [
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 2",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. 3",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. 4",
+                "isCorrect": false
+            }
+        ],
+        [
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 240",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. 600",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. 1200",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. 2400",
+                "isCorrect": true
+            }
+        ],
+        [
+            {
+                "optionIndex": 0,
+                "optionContent": "ア. 500",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 1,
+                "optionContent": "イ. 2000",
+                "isCorrect": false
+            },
+            {
+                "optionIndex": 2,
+                "optionContent": "ウ. 5000",
+                "isCorrect": true
+            },
+            {
+                "optionIndex": 3,
+                "optionContent": "エ. 20000",
+                "isCorrect": false
+            }
+        ]
     ]
-  ]
 }
+

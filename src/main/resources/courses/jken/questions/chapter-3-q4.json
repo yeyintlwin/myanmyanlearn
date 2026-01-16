@@ -8,12 +8,72 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 7,
   "slotOptions": [
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true } ]
+    [
+      { "optionIndex": 0, "optionContent": "ア. IPsec", "isCorrect": false },
+      { "optionIndex": 1, "optionContent": "イ. IPv4", "isCorrect": true },
+      { "optionIndex": 2, "optionContent": "ウ. IPv6", "isCorrect": false }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. アカウント名",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ドメイン名",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. プロトコル名",
+        "isCorrect": false
+      }
+    ],
+    [
+      { "optionIndex": 0, "optionContent": "ア. DNS", "isCorrect": true },
+      { "optionIndex": 1, "optionContent": "イ. ISP", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. SMTP", "isCorrect": false }
+    ],
+    [
+      { "optionIndex": 0, "optionContent": "ア. DHCP", "isCorrect": true },
+      { "optionIndex": 1, "optionContent": "イ. FTP", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. POP", "isCorrect": false }
+    ],
+    [
+      { "optionIndex": 0, "optionContent": "ア. FTTH", "isCorrect": false },
+      { "optionIndex": 1, "optionContent": "イ. NIC", "isCorrect": true },
+      { "optionIndex": 2, "optionContent": "ウ. PPP", "isCorrect": false }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. LANアダプタ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. スプリッタ",
+        "isCorrect": false
+      },
+      { "optionIndex": 2, "optionContent": "ウ. ハブ", "isCorrect": true }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. アクセスポイント",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ピアツーピア",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. プロバイダ",
+        "isCorrect": false
+      }
+    ]
   ]
 }

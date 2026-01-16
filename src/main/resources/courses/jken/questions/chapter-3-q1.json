@@ -9,45 +9,57 @@
   "slotCount": 7,
   "slotOptions": [
     [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false}
+      { "optionIndex": 0, "optionContent": "ア. LAN", "isCorrect": true },
+      { "optionIndex": 1, "optionContent": "イ. MAN", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. PAN", "isCorrect": false },
+      { "optionIndex": 3, "optionContent": "エ. WAN", "isCorrect": false }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true}
+      { "optionIndex": 0, "optionContent": "ア. LAN", "isCorrect": false },
+      { "optionIndex": 1, "optionContent": "イ. MAN", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. PAN", "isCorrect": false },
+      { "optionIndex": 3, "optionContent": "エ. WAN", "isCorrect": true }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true}
+      { "optionIndex": 0, "optionContent": "ア. ADSL", "isCorrect": false },
+      { "optionIndex": 1, "optionContent": "イ. CATV", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. FTTH", "isCorrect": false },
+      { "optionIndex": 3, "optionContent": "エ. ISDN", "isCorrect": true }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false}
+      { "optionIndex": 0, "optionContent": "ア. ADSL", "isCorrect": true },
+      { "optionIndex": 1, "optionContent": "イ. CATV", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. FTTH", "isCorrect": false },
+      { "optionIndex": 3, "optionContent": "エ. ISDN", "isCorrect": false }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false}
+      { "optionIndex": 0, "optionContent": "ア. ADSL", "isCorrect": false },
+      { "optionIndex": 1, "optionContent": "イ. CATV", "isCorrect": true },
+      { "optionIndex": 2, "optionContent": "ウ. FTTH", "isCorrect": false },
+      { "optionIndex": 3, "optionContent": "エ. ISDN", "isCorrect": false }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true},
-      {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false}
+      { "optionIndex": 0, "optionContent": "ア. ADSL", "isCorrect": false },
+      { "optionIndex": 1, "optionContent": "イ. CATV", "isCorrect": false },
+      { "optionIndex": 2, "optionContent": "ウ. FTTH", "isCorrect": true },
+      { "optionIndex": 3, "optionContent": "エ. ISDN", "isCorrect": false }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true},
-      {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false}
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IPアドレス",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. サブネットマスク",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ポート番号",
+        "isCorrect": false
+      }
     ]
   ]
 }

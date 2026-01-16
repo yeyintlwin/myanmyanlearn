@@ -8,12 +8,164 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 7,
   "slotOptions": [
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ]
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 12",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 14",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 26",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. black",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. blue",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. red",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. GIF",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. JPEG",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. LZH",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. PNG",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ZIP",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. GIF",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. JPEG",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. LZH",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. PNG",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ZIP",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. GIF",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. JPEG",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. LZH",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. PNG",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ZIP",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. MOV",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. MP3",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. MPEG",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SWF",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. MOV",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. MP3",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. MPEG",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SWF",
+        "isCorrect": false
+      }
+    ]
   ]
 }

@@ -8,12 +8,209 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 7,
   "slotOptions": [
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }, {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }, {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }, {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": true } ]
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. http",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ISP",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. URL",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. メーラ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. メールアドレス",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. http",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ISP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. URL",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ブラウザ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. メーラ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. メールアドレス",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. http",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ISP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. URL",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. メーラ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. メールアドレス",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. http",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ISP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. URL",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. メーラ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. メールアドレス",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ①",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ①～③",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ②",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ②～④",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CGI",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. FTP",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. FTTH",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. HTML",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. TCP/IP",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CGI",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. FTP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. FTTH",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. HTML",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. TCP/IP",
+        "isCorrect": true
+      }
+    ]
   ]
 }

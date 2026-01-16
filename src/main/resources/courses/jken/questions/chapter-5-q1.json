@@ -8,13 +8,282 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 8,
   "slotOptions": [
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }, {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false }, {"optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false }, {"optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }, {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false }, {"optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false }, {"optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }, {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false }, {"optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false }, {"optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }, {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": true }, {"optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false }, {"optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, {"optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }, {"optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false }, {"optionIndex": 6, "optionContent": "キ. Option 7", "isCorrect": false }, {"optionIndex": 7, "optionContent": "ク. Option 8", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true } ]
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Webブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. セキュリティソフト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. フォトレタッチソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.プレゼンテーションソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ナビゲーションソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ワープロソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. 電子メールソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 表計算ソフト",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Webブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. セキュリティソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. フォトレタッチソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. プレゼンテーションソフト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ナビゲーションソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ワープロソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. 電子メールソフ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 表計算ソフト",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Webブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ.セキュリティソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ.フォトレタッチソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. プレゼンテーションソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ナビゲーションソフ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ワープロソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. 電子メールソフ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 表計算ソフト",
+        "isCorrect": true
+      }
+
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Webブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. セキュリティソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. フォトレタッチソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. プレゼンテーションソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ナビゲーションソフ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ワープロソフト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ.電子メールソフ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 表計算ソフト",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Webブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. セキュリティソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ.フォトレタッチソフト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.プレゼンテーションソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ナビゲーションソフ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ワープロソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. 電子メールソフ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 表計算ソフト",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 科目",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ.年度",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ.履修期",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 点数",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DELETE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. INSERT",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. SELECT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.UPDATE",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. SELECT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. INSERT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. SELECT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.UPDATE",
+        "isCorrect": true
+      }
+    ]
   ]
 }

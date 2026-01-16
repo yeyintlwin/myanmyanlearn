@@ -6,12 +6,149 @@
     "correctOptionIndex": 0,
     "marks": 6.0,
     "slotCount": 6,
-    "slotOptions": [
-        [{ "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true }, { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }],
-        [{ "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }],
-        [{ "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }, { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false }],
-        [{ "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }],
-        [{ "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }],
-        [{ "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false }]
-    ]
-}
+    
+        "slotOptions": [
+            [
+                {
+                    "optionIndex": 0,
+                    "optionContent": "ア. インタフェースカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 1,
+                    "optionContent": "イ. クレジットカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 2,
+                    "optionContent": "ウ. デビットカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 3,
+                    "optionContent": "エ. プリペイドカード",
+                    "isCorrect": true
+                },
+                {
+                    "optionIndex": 4,
+                    "optionContent": "オ. メモリーカード",
+                    "isCorrect": false
+                }
+            ],
+            [
+                {
+                    "optionIndex": 0,
+                    "optionContent": "ア. インタフェースカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 1,
+                    "optionContent": "イ. クレジットカード",
+                    "isCorrect": true
+                },
+                {
+                    "optionIndex": 2,
+                    "optionContent": "ウ. デビットカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 3,
+                    "optionContent": "エ. プリペイドカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 4,
+                    "optionContent": "オ. メモリーカード",
+                    "isCorrect": false
+                }
+            ],
+            [
+                {
+                    "optionIndex": 0,
+                    "optionContent": "ア. インタフェースカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 1,
+                    "optionContent": "イ. クレジットカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 2,
+                    "optionContent": "ウ. デビットカード",
+                    "isCorrect": true
+                },
+                {
+                    "optionIndex": 3,
+                    "optionContent": "エ. プリペイドカード",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 4,
+                    "optionContent": "オ. メモリーカード",
+                    "isCorrect": false
+                }
+            ],
+            [
+                {
+                    "optionIndex": 0,
+                    "optionContent": "ア. POSシステム",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 1,
+                    "optionContent": "イ. キオスク端末",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 2,
+                    "optionContent": "ウ. 電子マネー",
+                    "isCorrect": true
+                }
+            ],
+            [
+                {
+                    "optionIndex": 0,
+                    "optionContent": "ア. ICタグ",
+                    "isCorrect": true
+                },
+                {
+                    "optionIndex": 1,
+                    "optionContent": "イ. 信頼性",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 2,
+                    "optionContent": "ウ. 耐タンパ性",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 3,
+                    "optionContent": "エ. バーコード",
+                    "isCorrect": false
+                }
+            ],
+            [
+                {
+                    "optionIndex": 0,
+                    "optionContent": "ア. ICタグ",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 1,
+                    "optionContent": "イ. 信頼性",
+                    "isCorrect": false
+                },
+                {
+                    "optionIndex": 2,
+                    "optionContent": "ウ. 耐タンパ性",
+                    "isCorrect": true
+                },
+                {
+                    "optionIndex": 3,
+                    "optionContent": "エ. バーコード",
+                    "isCorrect": false
+                }
+            ]
+        ]
+    }

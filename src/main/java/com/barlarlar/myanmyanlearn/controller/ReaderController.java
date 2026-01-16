@@ -4,19 +4,31 @@ import com.barlarlar.myanmyanlearn.model.Content;
 import com.barlarlar.myanmyanlearn.model.Course;
 import com.barlarlar.myanmyanlearn.model.Subcontent;
 import com.barlarlar.myanmyanlearn.service.CourseService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Optional;
 import java.nio.charset.StandardCharsets;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -25,8 +37,14 @@ public class ReaderController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Value("${google.studio.api-key:}")
     private String googleStudioApiKey;
+
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private volatile String cachedModelName;
 
     @GetMapping("/reader")
     public String reader(
@@ -34,7 +52,6 @@ public class ReaderController {
             @RequestParam(name = "courseId") String courseId,
             @RequestParam(name = "ch") Integer chapterOrder,
             @RequestParam(name = "sc") Integer subOrder) {
-        model.addAttribute("googleStudioApiKey", googleStudioApiKey);
         Course course = courseService.findById(courseId);
         if (course == null) {
             model.addAttribute("error", "Course not found");
@@ -65,6 +82,30 @@ public class ReaderController {
         model.addAttribute("sub", sub);
         model.addAttribute("markdownPath", sub.getMarkdownPath());
         return "reader";
+    }
+
+    @PostMapping(value = "/reader/translate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE
+            + ";charset=UTF-8")
+    public ResponseEntity<String> translate(@RequestBody TranslateRequest req) {
+        if (req == null || req.text == null) {
+            return ResponseEntity.badRequest().body("Missing text.");
+        }
+        String apiKey = googleStudioApiKey == null ? "" : googleStudioApiKey.trim();
+        if (apiKey.isEmpty()) {
+            return ResponseEntity.status(503).body("Translation API key is not configured.");
+        }
+        String sourceLang = normalizeLang(req.sourceLang);
+        String targetLang = normalizeLang(req.targetLang);
+        if (targetLang == null || (sourceLang != null && sourceLang.equals(targetLang))) {
+            return ResponseEntity.ok(req.text);
+        }
+        try {
+            String translated = translateMarkdown(apiKey, sourceLang, targetLang, req.text);
+            return ResponseEntity.ok(translated);
+        } catch (Exception e) {
+            String msg = e.getMessage() == null ? "Translation failed." : e.getMessage();
+            return ResponseEntity.status(502).body(msg);
+        }
     }
 
     @GetMapping(value = "/reader/md", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
@@ -98,5 +139,163 @@ public class ReaderController {
         } catch (IOException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private String normalizeLang(String value) {
+        String v = value == null ? "" : value.trim().toLowerCase();
+        if (v.isEmpty()) {
+            return null;
+        }
+        if ("jp".equals(v)) {
+            return "ja";
+        }
+        if ("mm".equals(v)) {
+            return "my";
+        }
+        return v;
+    }
+
+    private String translateMarkdown(String apiKey, String sourceLang, String targetLang, String text)
+            throws Exception {
+        String modelName = getGenerateContentModel(apiKey);
+        String url = "https://generativelanguage.googleapis.com/v1beta/" + modelName + ":generateContent?key="
+                + URLEncoder.encode(apiKey, StandardCharsets.UTF_8);
+        String prompt = (sourceLang == null || sourceLang.isBlank())
+                ? "Translate the following Markdown to " + targetLang + ". "
+                : "Translate the following Markdown from " + sourceLang + " to " + targetLang + ". ";
+        prompt += "Preserve Markdown formatting, links, code blocks, and inline code. "
+                + "Return only the translated Markdown.\n\n" + text;
+
+        ObjectNode body = objectMapper.createObjectNode();
+        ArrayNode contents = body.putArray("contents");
+        ObjectNode content = contents.addObject();
+        content.put("role", "user");
+        ArrayNode parts = content.putArray("parts");
+        parts.addObject().put("text", prompt);
+
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body.toString(), StandardCharsets.UTF_8))
+                .build();
+        HttpResponse<String> resp = httpClient.send(request,
+                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        if (resp.statusCode() < 200 || resp.statusCode() >= 300) {
+            throw new IOException("HTTP " + resp.statusCode() + " " + safeTrim(resp.body(), 300));
+        }
+        JsonNode data = objectMapper.readTree(resp.body());
+        JsonNode partsNode = data.path("candidates").path(0).path("content").path("parts");
+        if (!partsNode.isArray()) {
+            throw new IOException("Unexpected response from translation service.");
+        }
+        StringBuilder sb = new StringBuilder();
+        for (JsonNode p : partsNode) {
+            String t = p.path("text").asText("");
+            if (!t.isEmpty()) {
+                sb.append(t);
+            }
+        }
+        String out = sb.toString().trim();
+        if (out.isEmpty()) {
+            throw new IOException("Empty translation result.");
+        }
+        return out;
+    }
+
+    private String getGenerateContentModel(String apiKey) throws Exception {
+        String cached = cachedModelName;
+        if (cached != null && !cached.isBlank()) {
+            return cached;
+        }
+        String url = "https://generativelanguage.googleapis.com/v1beta/models?key="
+                + URLEncoder.encode(apiKey, StandardCharsets.UTF_8);
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .GET()
+                .build();
+        HttpResponse<String> resp = httpClient.send(request,
+                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        if (resp.statusCode() < 200 || resp.statusCode() >= 300) {
+            throw new IOException("HTTP " + resp.statusCode() + " " + safeTrim(resp.body(), 300));
+        }
+        JsonNode data = objectMapper.readTree(resp.body());
+        JsonNode models = data.path("models");
+        if (!models.isArray()) {
+            throw new IOException("No models available.");
+        }
+        List<String> preferred = List.of(
+                "models/gemini-1.5-flash",
+                "models/gemini-1.5-flash-002",
+                "models/gemini-1.5-flash-001",
+                "models/gemini-1.5-pro",
+                "models/gemini-1.5-pro-002",
+                "models/gemini-1.5-pro-001",
+                "models/gemini-pro");
+        String picked = null;
+        for (String p : preferred) {
+            if (hasGenerateContentModel(models, p)) {
+                picked = p;
+                break;
+            }
+        }
+        if (picked == null) {
+            for (JsonNode m : models) {
+                String name = m.path("name").asText("");
+                if (name.isEmpty()) {
+                    continue;
+                }
+                JsonNode methods = m.path("supportedGenerationMethods");
+                if (methods.isArray()) {
+                    for (JsonNode method : methods) {
+                        if ("generateContent".equals(method.asText(""))) {
+                            picked = name;
+                            break;
+                        }
+                    }
+                }
+                if (picked != null) {
+                    break;
+                }
+            }
+        }
+        if (picked == null) {
+            throw new IOException("No generateContent-capable model available.");
+        }
+        cachedModelName = picked;
+        return picked;
+    }
+
+    private boolean hasGenerateContentModel(JsonNode models, String name) {
+        for (JsonNode m : models) {
+            if (!name.equals(m.path("name").asText(""))) {
+                continue;
+            }
+            JsonNode methods = m.path("supportedGenerationMethods");
+            if (!methods.isArray()) {
+                return false;
+            }
+            for (JsonNode method : methods) {
+                if ("generateContent".equals(method.asText(""))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+
+    private String safeTrim(String value, int max) {
+        if (value == null) {
+            return "";
+        }
+        String v = value.trim();
+        if (v.length() <= max) {
+            return v;
+        }
+        return v.substring(0, max);
+    }
+
+    private static class TranslateRequest {
+        public String text;
+        public String sourceLang;
+        public String targetLang;
     }
 }

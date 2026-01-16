@@ -8,13 +8,182 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 8,
   "slotOptions": [
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": true }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ]
-  ]
-}
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. ページ設定",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. 段組設定",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. 段落設定",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. 表示設定",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. 中央揃え",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. 左寄せ",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. 右寄せ",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. 両端揃え",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. フォントサイズ",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. フォント色",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. フォント名",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. 等幅フォント",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. 中央揃え",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. 左寄せ",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. 右寄せ",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. 両端揃え",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. ゴシック体",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. 斜体",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. 明朝体",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. 立体",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. ゴシック体",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. 斜体",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. 明朝体",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. 立体",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. インデント",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. カーニング",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. リスト",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. ルビ",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. A3",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. A5",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. B4",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. B5",
+                  "isCorrect": false
+              }
+          ]
+      ]
+  }
+

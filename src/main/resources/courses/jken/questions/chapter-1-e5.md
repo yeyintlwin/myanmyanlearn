@@ -1,8 +1,4 @@
 # JKEN Chapter 1 – Question 5 Explanation
 
-Detail the reasoning steps and cross-check with chapter examples.
-
-- Key concept: word order basics
-- Why correct: correct SVO pattern
-- Common pitfalls: swapping subject and object
+![問1-5問題1](../images/Explain_1_e5.jpg)
 

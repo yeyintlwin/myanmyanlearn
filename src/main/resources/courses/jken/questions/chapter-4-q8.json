@@ -8,12 +8,155 @@
   "explanation": "Select the correct option for each blank.",
   "slotCount": 7,
   "slotOptions": [
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": true }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false } ],
-    [ {"optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false }, {"optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false }, {"optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false }, {"optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": true } ]
-  ]
-}
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. cookie",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. Webブラウザ",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. サーチエンジン",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. メールアプリケーション",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. cookie",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. Webブラウザ",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. サーチエンジン",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. メールアプリケーション",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. インデックス",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. ディレクトリ",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. ハイパーテキスト",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. ロボット",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. インデックス",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. ディレクトリ",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. ハイパーテキスト",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. ロボット",
+                  "isCorrect": true
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. CGI",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. RSS",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. SEO",
+                  "isCorrect": true
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. A",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. AとC",
+                  "isCorrect": true
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. AとCとD",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. AとBとCとD",
+                  "isCorrect": false
+              }
+          ],
+          [
+              {
+                  "optionIndex": 0,
+                  "optionContent": "ア. A",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 1,
+                  "optionContent": "イ. AとC",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 2,
+                  "optionContent": "ウ. AとCとD",
+                  "isCorrect": false
+              },
+              {
+                  "optionIndex": 3,
+                  "optionContent": "エ. AとBとCとD",
+                  "isCorrect": true
+              }
+          ]
+      ]
+  }
+

@@ -1,8 +1,4 @@
 # JKEN Chapter 1 – Question 6 Explanation
 
-Clarify the rule applied and how it eliminates distractors.
-
-- Key concept: articles (a/an/the)
-- Why correct: follows definite/indefinite usage
-- Common pitfalls: defaulting to “the” without context
-
+![問1-6問題1](../images/Explain_1_e6.jpg)
+![問1-6問題1](../images/Explain_1_e6_1.jpg)
