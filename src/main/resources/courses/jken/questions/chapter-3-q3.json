@@ -3,10 +3,6 @@
   "chapterId": "3",
   "questionNumber": 3,
   "questionContentPath": "/courses/jken/questions/chapter-3-q3.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
     [
       {
@@ -14,13 +10,33 @@
         "optionContent": "ア. Webサービス",
         "isCorrect": false
       },
-      { "optionIndex": 1, "optionContent": "イ. Webページ", "isCorrect": true },
-      { "optionIndex": 2, "optionContent": "ウ. Webメール", "isCorrect": false }
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. Webページ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Webメール",
+        "isCorrect": false
+      }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. CGI", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. FTP", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. HTML", "isCorrect": true }
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CGI",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. FTP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. HTML",
+        "isCorrect": true
+      }
     ],
     [
       {
@@ -28,11 +44,23 @@
         "optionContent": "ア. テキストエディタ",
         "isCorrect": false
       },
-      { "optionIndex": 1, "optionContent": "イ. ブラウザ", "isCorrect": true },
-      { "optionIndex": 2, "optionContent": "ウ. メーラ", "isCorrect": false }
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ブラウザ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. メーラ",
+        "isCorrect": false
+      }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. カテゴリ", "isCorrect": true },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. カテゴリ",
+        "isCorrect": true
+      },
       {
         "optionIndex": 1,
         "optionContent": "イ. キーワード",
@@ -50,7 +78,11 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. カテゴリ", "isCorrect": false },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. カテゴリ",
+        "isCorrect": false
+      },
       {
         "optionIndex": 1,
         "optionContent": "イ. キーワード",
@@ -85,9 +117,21 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. DNS", "isCorrect": true },
-      { "optionIndex": 1, "optionContent": "イ. FTP", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. PPP", "isCorrect": false }
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DNS",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. FTP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. PPP",
+        "isCorrect": false
+      }
     ]
   ]
 }

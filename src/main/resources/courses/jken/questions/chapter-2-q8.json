@@ -1,61 +1,197 @@
 {
-    "courseId": "jken",
-    "chapterId": "2",
-    "questionNumber": 8,
-    "questionContentPath": "/courses/jken/questions/chapter-2-q8.md",
-    "correctOptionIndex": 0,
-    "marks": 7.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 7,
-    "slotOptions": [
-        [
-            { "optionIndex": 0, "optionContent": "ア. csv", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. html", "isCorrect":false},
-            { "optionIndex": 2, "optionContent": "ウ. jpeg", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. mp3", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. mpeg", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ.txt", "isCorrect": true }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. csv", "isCorrect": true},
-            { "optionIndex": 1, "optionContent": "イ. html", "isCorrect":false},
-            { "optionIndex": 2, "optionContent": "ウ. jpeg", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. mp3", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. mpeg", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ.txt", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. csv", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. html", "isCorrect":false},
-            { "optionIndex": 2, "optionContent": "ウ. jpeg", "isCorrect": true },
-            { "optionIndex": 3, "optionContent": "エ. mp3", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. mpeg", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ.txt", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. csv", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. html", "isCorrect":true},
-            { "optionIndex": 2, "optionContent": "ウ. jpeg", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. mp3", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. mpeg", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ.txt", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. .../アルペンスキー/配車計画", "isCorrect": true},
-            { "optionIndex": 1, "optionContent": "イ. アルペンスキー/配車計画", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. /趣味/スキー/アルペンスキー/配車計画", "isCorrect": true }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. .../../スケジュール", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. ../スケジュール", "isCorrect":false },
-            { "optionIndex": 2, "optionContent": "ウ. ../趣味/スケジュール", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. /趣味/スケジュール", "isCorrect": true }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. .../../スケジュール", "isCorrect": true },
-            { "optionIndex": 1, "optionContent": "イ. ../スケジュール", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. ../趣味/スケジュール", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. /趣味/スケジュール", "isCorrect": false }
-        ]
+  "courseId": "jken",
+  "chapterId": "2",
+  "questionNumber": 8,
+  "questionContentPath": "/courses/jken/questions/chapter-2-q8.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. csv",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. html",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. jpeg",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. mp3",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. mpeg",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.txt",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. csv",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. html",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. jpeg",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. mp3",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. mpeg",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.txt",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. csv",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. html",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. jpeg",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. mp3",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. mpeg",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.txt",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. csv",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. html",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. jpeg",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. mp3",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. mpeg",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.txt",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. .../アルペンスキー/配車計画",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. アルペンスキー/配車計画",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. /趣味/スキー/アルペンスキー/配車計画",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. .../../スケジュール",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ../スケジュール",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ../趣味/スケジュール",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. /趣味/スケジュール",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. .../../スケジュール",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ../スケジュール",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ../趣味/スケジュール",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. /趣味/スケジュール",
+        "isCorrect": false
+      }
     ]
+  ]
 }

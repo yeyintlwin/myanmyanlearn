@@ -3,67 +3,235 @@
   "chapterId": "1",
   "questionNumber": 8,
   "questionContentPath": "/courses/jken/questions/chapter-1-q8.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
     [
-      {"optionIndex": 0, "optionContent": "ア. 0101", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. 0110", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. 0111", "isCorrect": true},
-      {"optionIndex": 3, "optionContent": "エ. 1001", "isCorrect": false},
-      {"optionIndex": 4, "optionContent": "オ. 1010", "isCorrect": false},
-      {"optionIndex": 5, "optionContent": "カ.1100", "isCorrect": false},
-      {"optionIndex": 6, "optionContent": "キ. 1101", "isCorrect": false},
-      {"optionIndex": 7, "optionContent": "ク. 1110", "isCorrect": false}
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 0101",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 0110",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 0111",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 1001",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 1010",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.1100",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. 1101",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 1110",
+        "isCorrect": false
+      }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. 0101", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. 0110", "isCorrect": true},
-      {"optionIndex": 2, "optionContent": "ウ. 0111", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ.1001", "isCorrect": false},
-      {"optionIndex": 4, "optionContent": "オ. 1010", "isCorrect": false},
-      {"optionIndex": 5, "optionContent": "カ.1100", "isCorrect": false},
-      {"optionIndex": 6, "optionContent": "キ. 1101", "isCorrect": false},
-      {"optionIndex": 7, "optionContent": "ク. 1110", "isCorrect": false}
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 0101",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 0110",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 0111",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.1001",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 1010",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.1100",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. 1101",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 1110",
+        "isCorrect": false
+      }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. 0101", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. 0110", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. 0111", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ. 1001", "isCorrect": true},
-      {"optionIndex": 4, "optionContent": "オ. 1010", "isCorrect": false},
-      {"optionIndex": 5, "optionContent": "カ.1100", "isCorrect": false},
-      {"optionIndex": 6, "optionContent": "キ. 1101", "isCorrect": false},
-      {"optionIndex": 7, "optionContent": "ク. 1110", "isCorrect": false}
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 0101",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 0110",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 0111",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 1001",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 1010",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.1100",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. 1101",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 1110",
+        "isCorrect": false
+      }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. 0101", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. 0110", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. 0111", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ.1001", "isCorrect": false},
-      {"optionIndex": 4, "optionContent": "オ. 1010", "isCorrect": false},
-      {"optionIndex": 5, "optionContent": "カ.1100", "isCorrect": false},
-      {"optionIndex": 6, "optionContent": "キ. 1101", "isCorrect": true},
-      {"optionIndex": 7, "optionContent": "ク. 1110", "isCorrect": false}
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 0101",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 0110",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 0111",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.1001",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 1010",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.1100",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. 1101",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 1110",
+        "isCorrect": false
+      }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア.コピーの繰り返しにより劣化する", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. 経年劣化しない", "isCorrect": true},
-      {"optionIndex": 2, "optionContent": "ウ. 雑音の影響を受けやすい", "isCorrect": false}
+      {
+        "optionIndex": 0,
+        "optionContent": "ア.コピーの繰り返しにより劣化する",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 経年劣化しない",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 雑音の影響を受けやすい",
+        "isCorrect": false
+      }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. テキスト", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ.バイト", "isCorrect": false},
-      {"optionIndex": 2, "optionContent": "ウ. ビット", "isCorrect": true},
-      {"optionIndex": 3, "optionContent": "エ. フラグ", "isCorrect": false}
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. テキスト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ.バイト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ビット",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. フラグ",
+        "isCorrect": false
+      }
     ],
     [
-      {"optionIndex": 0, "optionContent": "ア. テキスト", "isCorrect": false},
-      {"optionIndex": 1, "optionContent": "イ. バイト", "isCorrect": true},
-      {"optionIndex": 2, "optionContent": "ウ.  ビット", "isCorrect": false},
-      {"optionIndex": 3, "optionContent": "エ. フラグ", "isCorrect": false}
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. テキスト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. バイト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ.  ビット",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. フラグ",
+        "isCorrect": false
+      }
     ]
   ]
 }

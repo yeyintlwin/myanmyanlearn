@@ -3,16 +3,12 @@
   "chapterId": "4",
   "questionNumber": 7,
   "questionContentPath": "/courses/jken/questions/chapter-4-q7.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
     [
       {
         "optionIndex": 0,
         "optionContent": "ア. MP3",
-        "isCorrect": false
+        "isCorrect": true
       },
       {
         "optionIndex": 1,
@@ -22,11 +18,11 @@
       {
         "optionIndex": 2,
         "optionContent": "ウ. WMV",
-        "isCorrect": true
+        "isCorrect": false
       }
     ],
     [
-    {
+      {
         "optionIndex": 0,
         "optionContent": "ア. JPEG",
         "isCorrect": false
@@ -34,12 +30,12 @@
       {
         "optionIndex": 1,
         "optionContent": "イ. MPEG",
-        "isCorrect": false
+        "isCorrect": true
       },
       {
         "optionIndex": 2,
         "optionContent": "ウ. PNG",
-        "isCorrect": true
+        "isCorrect": false
       }
     ],
     [
@@ -63,7 +59,7 @@
       {
         "optionIndex": 0,
         "optionContent": "ア. GIF",
-        "isCorrect": false
+        "isCorrect": true
       },
       {
         "optionIndex": 1,
@@ -73,7 +69,7 @@
       {
         "optionIndex": 2,
         "optionContent": "ウ. PNG",
-        "isCorrect": true
+        "isCorrect": false
       }
     ],
     [
@@ -85,7 +81,7 @@
       {
         "optionIndex": 1,
         "optionContent": "イ. ストリーミング",
-        "isCorrect": false
+        "isCorrect": true
       },
       {
         "optionIndex": 2,
@@ -114,7 +110,7 @@
       {
         "optionIndex": 0,
         "optionContent": "ア. CGI",
-        "isCorrect": false
+        "isCorrect": true
       },
       {
         "optionIndex": 1,
@@ -124,7 +120,7 @@
       {
         "optionIndex": 2,
         "optionContent": "ウ. プラグイン",
-        "isCorrect": true
+        "isCorrect": false
       }
     ]
   ]

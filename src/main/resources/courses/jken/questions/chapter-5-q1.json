@@ -3,10 +3,6 @@
   "chapterId": "5",
   "questionNumber": 1,
   "questionContentPath": "/courses/jken/questions/chapter-5-q1.md",
-  "correctOptionIndex": 0,
-  "marks": 8.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 8,
   "slotOptions": [
     [
       {
@@ -133,7 +129,6 @@
         "optionContent": "ク. 表計算ソフト",
         "isCorrect": true
       }
-
     ],
     [
       {

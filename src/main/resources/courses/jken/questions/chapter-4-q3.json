@@ -3,10 +3,6 @@
   "chapterId": "4",
   "questionNumber": 3,
   "questionContentPath": "/courses/jken/questions/chapter-4-q3.md",
-  "correctOptionIndex": 0,
-  "marks": 8.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 8,
   "slotOptions": [
     [
       {
@@ -120,7 +116,7 @@
         "optionContent": "ウ. 名刺",
         "isCorrect": false
       }
-        ],
+    ],
     [
       {
         "optionIndex": 0,
@@ -151,7 +147,7 @@
         "optionIndex": 5,
         "optionContent": "カ. Re:Fw:",
         "isCorrect": false
-      }  
+      }
     ],
     [
       {
@@ -183,7 +179,7 @@
         "optionIndex": 5,
         "optionContent": "カ. Re:Fw:",
         "isCorrect": false
-      } 
+      }
     ],
     [
       {
@@ -209,16 +205,15 @@
       {
         "optionIndex": 4,
         "optionContent": "オ. Re:",
-        "isCorrect":true
+        "isCorrect": true
       },
       {
         "optionIndex": 5,
         "optionContent": "カ. Re:Fw:",
         "isCorrect": false
-      } 
+      }
     ],
     [
-
       {
         "optionIndex": 0,
         "optionContent": "ア.BCC",
@@ -248,7 +243,7 @@
         "optionIndex": 5,
         "optionContent": "カ. Re:Fw:",
         "isCorrect": false
-      } 
+      }
     ]
   ]
 }

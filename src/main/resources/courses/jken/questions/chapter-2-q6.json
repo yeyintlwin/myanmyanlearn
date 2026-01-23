@@ -1,70 +1,226 @@
 {
-    "courseId": "jken",
-    "chapterId": "2",
-    "questionNumber": 6,
-    "questionContentPath": "/courses/jken/questions/chapter-2-q6.md",
-    "correctOptionIndex": 0,
-    "marks": 9.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 9,
-    "slotOptions": [
-        [
-            { "optionIndex": 0, "optionContent": "ア. バイト", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. ピクセル", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. ビット", "isCorrect": true },
-            { "optionIndex": 3, "optionContent": "エ. ワード", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア.バイト", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. ピクセル", "isCorrect":true },
-            { "optionIndex": 2, "optionContent": "ウ.  ビット", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. ワード", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. 8", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ.128", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. 256", "isCorrect": true },
-            { "optionIndex": 3, "optionContent": "エ.512", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. E(エクサ）", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. k(キロ)またはK(ケー)", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. P(ペタ)", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. T(テラ)", "isCorrect": true }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. E(エクサ）", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. k(キロ)またはK(ケー)", "isCorrect": true },
-            { "optionIndex": 2, "optionContent": "ウ. P(ペタ)", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. T(テラ)", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. a(アト)", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. d(デシ)", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. m(ミリ)", "isCorrect":true },
-            { "optionIndex": 3, "optionContent": "エ. n(ナノ)", "isCorrect": false}
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. a(アト)", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. d(デシ)", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. m(ミリ)", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. n(ナノ)", "isCorrect": true }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. a(アト)", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. d(デシ)", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. m(ミリ)", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. n(ナノ)", "isCorrect": true },
-            { "optionIndex": 4, "optionContent": "オ. p(ピコ)", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. μ(マイクロ)", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. a(アト)", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. d(デシ)", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. m(ミリ)", "isCorrect": true },
-            { "optionIndex": 3, "optionContent": "エ. n(ナノ)", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ.p(ピコ)", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ.  μ(マイクロ)", "isCorrect": false }
-        ]
+  "courseId": "jken",
+  "chapterId": "2",
+  "questionNumber": 6,
+  "questionContentPath": "/courses/jken/questions/chapter-2-q6.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. バイト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ピクセル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ビット",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ワード",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア.バイト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ピクセル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ.  ビット",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ワード",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 8",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ.128",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 256",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.512",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. E(エクサ）",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. k(キロ)またはK(ケー)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. P(ペタ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. T(テラ)",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. E(エクサ）",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. k(キロ)またはK(ケー)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. P(ペタ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. T(テラ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. a(アト)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. d(デシ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. m(ミリ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. n(ナノ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. a(アト)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. d(デシ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. m(ミリ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. n(ナノ)",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. a(アト)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. d(デシ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. m(ミリ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. n(ナノ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. p(ピコ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. μ(マイクロ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. a(アト)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. d(デシ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. m(ミリ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. n(ナノ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ.p(ピコ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ.  μ(マイクロ)",
+        "isCorrect": false
+      }
     ]
+  ]
 }

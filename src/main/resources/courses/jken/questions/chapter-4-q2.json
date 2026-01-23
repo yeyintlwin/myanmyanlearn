@@ -3,10 +3,6 @@
   "chapterId": "4",
   "questionNumber": 2,
   "questionContentPath": "/courses/jken/questions/chapter-4-q2.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
     [
       {
@@ -135,7 +131,6 @@
         "optionIndex": 1,
         "optionContent": "イ. カテゴリ",
         "isCorrect": false
-      
       },
       {
         "optionIndex": 2,

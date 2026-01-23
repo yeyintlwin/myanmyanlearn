@@ -92,8 +92,8 @@ public class QuestionDataSourceTest {
         assertEquals("test-course", q.getCourseId());
         assertEquals(1, q.getQuestionNumber());
         assertEquals("/courses/test/questions/q1.md", q.getQuestionContentPath());
-        assertEquals(0, q.getCorrectOptionIndex());
-        assertEquals(2.0f, q.getMarks());
+        assertEquals(1, q.getSlotCount());
+        assertEquals(1.0f, q.getMarks());
         assertEquals(2, q.getOptions().size());
         
     }
@@ -117,8 +117,8 @@ public class QuestionDataSourceTest {
         assertEquals("chapter-1", q.getChapterId());
         assertEquals(5, q.getQuestionNumber());
         assertEquals("/courses/custom/questions/q5.md", q.getQuestionContentPath());
-        assertEquals(1, q.getCorrectOptionIndex());
-        assertEquals(3.0f, q.getMarks());
+        assertEquals(1, q.getSlotCount());
+        assertEquals(1.0f, q.getMarks());
         
         assertEquals(3, q.getOptions().size());
         

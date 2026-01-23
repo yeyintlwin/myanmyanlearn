@@ -1,132 +1,127 @@
 {
-    "courseId": "jken",
-    "chapterId": "6",
-    "questionNumber": 4,
-    "questionContentPath": "/courses/jken/questions/chapter-6-q4.md",
-    "correctOptionIndex": 0,
-    "marks": 7.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 7,
-    
-        "slotOptions": [
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. ATM",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. ETC",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. Telnet",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. EUC",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. GPS",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. Wi-Fi",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. PDA",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. POS",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. キオスク端末",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. アクセスポイント",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. インターネットバンキング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. バーチャルモール",
-                    "isCorrect": true
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. eコマース",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. eラーニング",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. モバイルコンピューティング",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. ICタグ",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. スキミング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. テザリング",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. SNS",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. アフィリエイト",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. オフィシャルサイト",
-                    "isCorrect": false
-                }
-            ]
-        ]
-    }
+  "courseId": "jken",
+  "chapterId": "6",
+  "questionNumber": 4,
+  "questionContentPath": "/courses/jken/questions/chapter-6-q4.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ATM",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ETC",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Telnet",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. EUC",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. GPS",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Wi-Fi",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. PDA",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. POS",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. キオスク端末",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. アクセスポイント",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. インターネットバンキング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. バーチャルモール",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. eコマース",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. eラーニング",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. モバイルコンピューティング",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ICタグ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. スキミング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. テザリング",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. SNS",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. アフィリエイト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. オフィシャルサイト",
+        "isCorrect": false
+      }
+    ]
+  ]
+}

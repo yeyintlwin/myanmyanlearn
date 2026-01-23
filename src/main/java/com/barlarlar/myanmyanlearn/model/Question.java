@@ -1,28 +1,18 @@
 package com.barlarlar.myanmyanlearn.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Question {
     private String courseId;
     private String chapterId;
     private int questionNumber;
     private String questionContentPath;
-    private int correctOptionIndex;
-    private float marks;
-    private int slotCount;
-    
-    private String explanation;
     private List<QuestionOption> options;
     private List<List<QuestionOption>> slotOptions;
 
     public Question() {}
-
-    public Question(String courseId, int questionNumber, String questionContentPath, int correctOptionIndex) {
-        this.courseId = courseId;
-        this.questionNumber = questionNumber;
-        this.questionContentPath = questionContentPath;
-        this.correctOptionIndex = correctOptionIndex;
-    }
 
     public String getCourseId() {
         return courseId;
@@ -56,39 +46,15 @@ public class Question {
         this.questionContentPath = questionContentPath;
     }
 
-    public int getCorrectOptionIndex() {
-        return correctOptionIndex;
-    }
-
-    public void setCorrectOptionIndex(int correctOptionIndex) {
-        this.correctOptionIndex = correctOptionIndex;
-    }
-
     public float getMarks() {
-        return marks;
-    }
-
-    public void setMarks(float marks) {
-        this.marks = marks;
+        return (float) getSlotCount();
     }
 
     public int getSlotCount() {
-        return slotCount;
-    }
-
-    public void setSlotCount(int slotCount) {
-        this.slotCount = slotCount;
-    }
-
-
-    
-
-    public String getExplanation() {
-        return explanation;
-    }
-
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
+        if (slotOptions != null && !slotOptions.isEmpty()) {
+            return slotOptions.size();
+        }
+        return 1;
     }
 
     public List<QuestionOption> getOptions() {
@@ -115,10 +81,8 @@ public class Question {
                 ", chapterId='" + chapterId + '\'' +
                 ", questionNumber=" + questionNumber +
                 ", questionContentPath='" + questionContentPath + '\'' +
-                ", correctOptionIndex=" + correctOptionIndex +
-                ", marks=" + marks +
-                ", slotCount=" + slotCount +
-                ", explanation='" + explanation + '\'' +
+                ", marks=" + getMarks() +
+                ", slotCount=" + getSlotCount() +
                 '}';
     }
 }

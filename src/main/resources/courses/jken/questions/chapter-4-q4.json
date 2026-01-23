@@ -3,10 +3,6 @@
   "chapterId": "4",
   "questionNumber": 4,
   "questionContentPath": "/courses/jken/questions/chapter-4-q4.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
     [
       {
@@ -127,7 +123,7 @@
       {
         "optionIndex": 2,
         "optionContent": "ウ. ディレクトリ",
-        "isCorrect": true
+        "isCorrect": false
       },
       {
         "optionIndex": 3,

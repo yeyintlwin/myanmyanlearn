@@ -3,15 +3,23 @@
   "chapterId": "3",
   "questionNumber": 4,
   "questionContentPath": "/courses/jken/questions/chapter-3-q4.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
     [
-      { "optionIndex": 0, "optionContent": "ア. IPsec", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. IPv4", "isCorrect": true },
-      { "optionIndex": 2, "optionContent": "ウ. IPv6", "isCorrect": false }
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IPsec",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. IPv4",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. IPv6",
+        "isCorrect": false
+      }
     ],
     [
       {
@@ -31,19 +39,55 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. DNS", "isCorrect": true },
-      { "optionIndex": 1, "optionContent": "イ. ISP", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. SMTP", "isCorrect": false }
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DNS",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ISP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. SMTP",
+        "isCorrect": false
+      }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. DHCP", "isCorrect": true },
-      { "optionIndex": 1, "optionContent": "イ. FTP", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. POP", "isCorrect": false }
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DHCP",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. FTP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. POP",
+        "isCorrect": false
+      }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. FTTH", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. NIC", "isCorrect": true },
-      { "optionIndex": 2, "optionContent": "ウ. PPP", "isCorrect": false }
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. FTTH",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. NIC",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. PPP",
+        "isCorrect": false
+      }
     ],
     [
       {
@@ -56,7 +100,11 @@
         "optionContent": "イ. スプリッタ",
         "isCorrect": false
       },
-      { "optionIndex": 2, "optionContent": "ウ. ハブ", "isCorrect": true }
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ハブ",
+        "isCorrect": true
+      }
     ],
     [
       {

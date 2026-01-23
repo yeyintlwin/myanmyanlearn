@@ -3,247 +3,242 @@
   "chapterId": "5",
   "questionNumber": 4,
   "questionContentPath": "/courses/jken/questions/chapter-5-q4.md",
-  "correctOptionIndex": 0,
-  "marks": 8.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 8,
   "slotOptions": [
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. セル",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. ソート",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. ファイル",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. マージ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. マクロ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. ワークシート",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. セル",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. ソート",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. ファイル",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. マージ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. マクロ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. ワークシート",
-                  "isCorrect": true
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. セル",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. ソート",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. ファイル",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. マージ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. マクロ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. ワークシート",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. CREATE",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. DELETE",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. GRANT",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. INSERT",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. SELECT",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. UPDATE",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. CREATE",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. DELETE",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. GRANT",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. INSERT",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. SELECT",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. UPDATE",
-                  "isCorrect": true
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. CREATE",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. DELECT",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. GRANT",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. INSERT",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. SELECT",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. UPDATE",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. アニメーション",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. スライド",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. テンプレート",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. レイアウト",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. アニメーション",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. スライド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. テンプレート",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. レイアウト",
-                  "isCorrect": false
-              }
-          ]
-      ]
-  }
-
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. セル",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ソート",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ファイル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. マージ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. マクロ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ワークシート",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. セル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ソート",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ファイル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. マージ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. マクロ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ワークシート",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. セル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ソート",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ファイル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. マージ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. マクロ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ワークシート",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CREATE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DELETE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. GRANT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. INSERT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. SELECT",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. UPDATE",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CREATE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DELETE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. GRANT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. INSERT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. SELECT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. UPDATE",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CREATE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DELECT",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. GRANT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. INSERT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. SELECT",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. UPDATE",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. アニメーション",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. スライド",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. テンプレート",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. レイアウト",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. アニメーション",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. スライド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. テンプレート",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. レイアウト",
+        "isCorrect": false
+      }
+    ]
+  ]
+}

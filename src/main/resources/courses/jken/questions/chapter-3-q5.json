@@ -3,23 +3,43 @@
   "chapterId": "3",
   "questionNumber": 5,
   "questionContentPath": "/courses/jken/questions/chapter-3-q5.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
     [
-      { "optionIndex": 0, "optionContent": "ア. IPv4", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. IPsec", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. ISP", "isCorrect": false },
-      { "optionIndex": 3, "optionContent": "エ. TCP/IP", "isCorrect": false },
-      { "optionIndex": 4, "optionContent": "オ. UDP", "isCorrect": false },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IPv4",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. IPsec",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ISP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. TCP/IP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. UDP",
+        "isCorrect": false
+      },
       {
         "optionIndex": 5,
         "optionContent": "カ. ウェブサイト",
         "isCorrect": false
       },
-      { "optionIndex": 6, "optionContent": "キ. ブラウザ", "isCorrect": false },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ブラウザ",
+        "isCorrect": false
+      },
       {
         "optionIndex": 7,
         "optionContent": "ク. プロトコル",
@@ -27,17 +47,41 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. IPv4", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. IPsec", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. ISP", "isCorrect": false },
-      { "optionIndex": 3, "optionContent": "エ. TCP/IP", "isCorrect": true },
-      { "optionIndex": 4, "optionContent": "オ. UDP", "isCorrect": false },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IPv4",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. IPsec",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ISP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. TCP/IP",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. UDP",
+        "isCorrect": false
+      },
       {
         "optionIndex": 5,
         "optionContent": "カ. ウェブサイト",
         "isCorrect": false
       },
-      { "optionIndex": 6, "optionContent": "キ. ブラウザ", "isCorrect": false },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ブラウザ",
+        "isCorrect": false
+      },
       {
         "optionIndex": 7,
         "optionContent": "ク. プロトコル",
@@ -45,17 +89,41 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. IPv4", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. IPsec", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. ISP", "isCorrect": true },
-      { "optionIndex": 3, "optionContent": "エ. TCP/IP", "isCorrect": false },
-      { "optionIndex": 4, "optionContent": "オ. UDP", "isCorrect": false },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IPv4",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. IPsec",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ISP",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. TCP/IP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. UDP",
+        "isCorrect": false
+      },
       {
         "optionIndex": 5,
         "optionContent": "カ. ウェブサイト",
         "isCorrect": false
       },
-      { "optionIndex": 6, "optionContent": "キ. ブラウザ", "isCorrect": false },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ブラウザ",
+        "isCorrect": false
+      },
       {
         "optionIndex": 7,
         "optionContent": "ク. プロトコル",
@@ -63,17 +131,41 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. IPv4", "isCorrect": true },
-      { "optionIndex": 1, "optionContent": "イ. IPsec", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. ISP", "isCorrect": false },
-      { "optionIndex": 3, "optionContent": "エ. TCP/IP", "isCorrect": false },
-      { "optionIndex": 4, "optionContent": "オ. UDP", "isCorrect": false },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IPv4",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. IPsec",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ISP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. TCP/IP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. UDP",
+        "isCorrect": false
+      },
       {
         "optionIndex": 5,
         "optionContent": "カ. ウェブサイト",
         "isCorrect": false
       },
-      { "optionIndex": 6, "optionContent": "キ. ブラウザ", "isCorrect": false },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ブラウザ",
+        "isCorrect": false
+      },
       {
         "optionIndex": 7,
         "optionContent": "ク. プロトコル",
@@ -81,10 +173,26 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. DHCP", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. DNS", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. HTTP", "isCorrect": false },
-      { "optionIndex": 3, "optionContent": "エ. PPP", "isCorrect": false },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DHCP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DNS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. HTTP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. PPP",
+        "isCorrect": false
+      },
       {
         "optionIndex": 4,
         "optionContent": "オ. アカウント名",
@@ -97,10 +205,26 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. DHCP", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. DNS", "isCorrect": true },
-      { "optionIndex": 2, "optionContent": "ウ. HTTP", "isCorrect": false },
-      { "optionIndex": 3, "optionContent": "エ. PPP", "isCorrect": false },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DHCP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DNS",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. HTTP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. PPP",
+        "isCorrect": false
+      },
       {
         "optionIndex": 4,
         "optionContent": "オ. アカウント名",
@@ -113,10 +237,26 @@
       }
     ],
     [
-      { "optionIndex": 0, "optionContent": "ア. DHCP", "isCorrect": true },
-      { "optionIndex": 1, "optionContent": "イ. DNS", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. HTTP", "isCorrect": false },
-      { "optionIndex": 3, "optionContent": "エ. PPP", "isCorrect": false },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DHCP",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DNS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. HTTP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. PPP",
+        "isCorrect": false
+      },
       {
         "optionIndex": 4,
         "optionContent": "オ. アカウント名",

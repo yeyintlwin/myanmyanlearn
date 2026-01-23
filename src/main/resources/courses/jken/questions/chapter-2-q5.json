@@ -1,368 +1,364 @@
 {
-    "courseId": "jken",
-    "chapterId": "2",
-    "questionNumber": 5,
-    "questionContentPath": "/courses/jken/questions/chapter-2-q5.md",
-    "correctOptionIndex": 0,
-    "marks": 8.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 8,
-    "slotOptions": [
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 演算算",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. キャッシュメモリ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. クロックジェネレータ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 主記憶",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. 出力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. 制御制御",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 6,
-                "optionContent": "キ. ディスクキャッシュ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 7,
-                "optionContent": "ク. 入力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 8,
-                "optionContent": "ケ. バス",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 9,
-                "optionContent": "コ. 補助記憶",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 演算算",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. キャッシュメモリ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. クロックジェネレータ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 主記憶",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. 出力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. 制御制御",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 6,
-                "optionContent": "キ. ディスクキャッシュ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 7,
-                "optionContent": "ク. 入力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 8,
-                "optionContent": "ケ. バス",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 9,
-                "optionContent": "コ. 補助記憶",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 演算算",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. キャッシュメモリ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. クロックジェネレータ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 主記憶",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. 出力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. 制御制御",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 6,
-                "optionContent": "キ. ディスクキャッシュ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 7,
-                "optionContent": "ク. 入力",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 8,
-                "optionContent": "ケ. バス",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 9,
-                "optionContent": "コ. 補助記憶",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 演算算",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. キャッシュメモリ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. クロックジェネレータ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 主記憶",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. 出力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. 制御制御",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 6,
-                "optionContent": "キ. ディスクキャッシュ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 7,
-                "optionContent": "ク. 入力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 8,
-                "optionContent": "ケ. バス",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 9,
-                "optionContent": "コ. 補助記憶",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 演算算",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. キャッシュメモリ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. クロックジェネレータ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 主記憶",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. 出力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. 制御制御",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 6,
-                "optionContent": "キ. ディスクキャッシュ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 7,
-                "optionContent": "ク. 入力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 8,
-                "optionContent": "ケ. バス",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 9,
-                "optionContent": "コ. 補助記憶",
-                "isCorrect": true
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 演算算",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. キャッシュメモリ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. クロックジェネレータ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 主記憶",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. 出力",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. 制御制御",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 6,
-                "optionContent": "キ. ディスクキャッシュ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 7,
-                "optionContent": "ク. 入力",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 8,
-                "optionContent": "ケ. バス",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 9,
-                "optionContent": "コ. 補助記憶",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. カーネルカーネル",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. 基本ソフトウェア",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. グループウェア",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. ミドルウェア",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. Option 1",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. Option 2",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. Option 3",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. Option 4",
-                "isCorrect": true
-            }
-        ]
+  "courseId": "jken",
+  "chapterId": "2",
+  "questionNumber": 5,
+  "questionContentPath": "/courses/jken/questions/chapter-2-q5.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クロックジェネレータ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 出力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. 制御制御",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 入力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 8,
+        "optionContent": "ケ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 9,
+        "optionContent": "コ. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算算",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クロックジェネレータ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 出力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. 制御制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 入力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 8,
+        "optionContent": "ケ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 9,
+        "optionContent": "コ. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クロックジェネレータ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 出力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. 制御制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 入力",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 8,
+        "optionContent": "ケ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 9,
+        "optionContent": "コ. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クロックジェネレータ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 主記憶",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 出力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. 制御制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 入力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 8,
+        "optionContent": "ケ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 9,
+        "optionContent": "コ. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クロックジェネレータ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 出力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. 制御制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 入力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 8,
+        "optionContent": "ケ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 9,
+        "optionContent": "コ. 補助記憶",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クロックジェネレータ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. 出力",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. 制御制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 入力",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 8,
+        "optionContent": "ケ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 9,
+        "optionContent": "コ. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. カーネルカーネル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 基本ソフトウェア",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. グループウェア",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ミドルウェア",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Option 1",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. Option 2",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Option 3",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. Option 4",
+        "isCorrect": true
+      }
     ]
+  ]
 }

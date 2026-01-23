@@ -3,188 +3,183 @@
   "chapterId": "5",
   "questionNumber": 6,
   "questionContentPath": "/courses/jken/questions/chapter-5-q6.md",
-  "correctOptionIndex": 0,
-  "marks": 6.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 6,
   "slotOptions": [
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. CDドライブ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. DVDドライブ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. Webカメラ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. イメージスキャナ",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. インカム",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. ハードディスク",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. CDドライブ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. DVDドライブ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. Webカメラ",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. イメージスキャナ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. インカム",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. ハードディスク",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. CD ドライブ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. DVD ドライブ",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. Web カメラ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. イメージスキャナ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. インカム",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. ハードディスク",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. DTP ソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. オーサリングソフト",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. 基本ソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. グラフィックソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. サウンドクリエイトソフト",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. DTPソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. オーサリングソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. 基本ソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. グラフィックソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. サウンドクリエイトソフト",
-                  "isCorrect": true
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. DTPソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. オーサリングソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. 基本ソフト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. グラフィックソフト",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. サウンドクリエイトソフト",
-                  "isCorrect": false
-              }
-          ]
-      ]
-  }
-
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CDドライブ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DVDドライブ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Webカメラ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. イメージスキャナ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. インカム",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ハードディスク",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CDドライブ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DVDドライブ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Webカメラ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. イメージスキャナ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. インカム",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ハードディスク",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. CD ドライブ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DVD ドライブ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Web カメラ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. イメージスキャナ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. インカム",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ハードディスク",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DTP ソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. オーサリングソフト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 基本ソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. グラフィックソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. サウンドクリエイトソフト",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DTPソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. オーサリングソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 基本ソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. グラフィックソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. サウンドクリエイトソフト",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DTPソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. オーサリングソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 基本ソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. グラフィックソフト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. サウンドクリエイトソフト",
+        "isCorrect": false
+      }
+    ]
+  ]
+}

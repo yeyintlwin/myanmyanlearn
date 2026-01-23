@@ -1,74 +1,262 @@
 {
-    "courseId": "jken",
-    "chapterId": "2",
-    "questionNumber": 7,
-    "questionContentPath": "/courses/jken/questions/chapter-2-q7.md",
-    "correctOptionIndex": 0,
-    "marks": 7.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 7,
-    "slotOptions": [
-        [
-            { "optionIndex": 0, "optionContent": "ア. 演算", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. キャッシュメモリ", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. 主記憶", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ.制御", "isCorrect": true },
-            { "optionIndex": 4, "optionContent": "オ.中央処理", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. ディスクキャッシュ", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. バス", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. 補助記憶", "isCorrect": false }
-        ],
-        [
-                       { "optionIndex": 0, "optionContent": "ア. 演算", "isCorrect": true },
-            { "optionIndex": 1, "optionContent": "イ. キャッシュメモリ", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. 主記憶", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ.制御", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ.中央処理", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. ディスクキャッシュ", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. バス", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. 補助記憶", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. 演算", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. キャッシュメモリ", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. 主記憶", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ.制御", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ.中央処理", "isCorrect": true },
-            { "optionIndex": 5, "optionContent": "カ. ディスクキャッシュ", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. バス", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. 補助記憶", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. 演算", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. キャッシュメモリ", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. 主記憶", "isCorrect": true  },
-            { "optionIndex": 3, "optionContent": "エ.制御", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ.中央処理", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. ディスクキャッシュ", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. バス", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. 補助記憶", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. 演算", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. キャッシュメモリ", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. 主記憶", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ.制御", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ.中央処理", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. ディスクキャッシュ", "isCorrect": false },
-            { "optionIndex": 6, "optionContent": "キ. バス", "isCorrect": false },
-            { "optionIndex": 7, "optionContent": "ク. 補助記憶", "isCorrect":  true  }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア.イメージスキャナ、キーボード、マウス", "isCorrect": true },
-            { "optionIndex": 1, "optionContent": "イ. イメージスキャナ、プリンター、マウス", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. キーボード、ジョイスティック、プリンター", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. プリンタ、ディスプレイ", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア.イメージスキャナ、キーボード、マウス", "isCorrect": false},
-            { "optionIndex": 1, "optionContent": "イ. イメージスキャナ、プリンター、マウス", "isCorrect": true },
-            { "optionIndex": 2, "optionContent": "ウ. キーボード、ジョイスティック、プリンター", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. プリンタ、ディスプレイ", "isCorrect": false }
+  "courseId": "jken",
+  "chapterId": "2",
+  "questionNumber": 7,
+  "questionContentPath": "/courses/jken/questions/chapter-2-q7.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.制御",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ.中央処理",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ.中央処理",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ.中央処理",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 主記憶",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ.中央処理",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 補助記憶",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 演算",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. キャッシュメモリ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 主記憶",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ.制御",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ.中央処理",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ディスクキャッシュ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. バス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 7,
+        "optionContent": "ク. 補助記憶",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア.イメージスキャナ、キーボード、マウス",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. イメージスキャナ、プリンター、マウス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. キーボード、ジョイスティック、プリンター",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. プリンタ、ディスプレイ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア.イメージスキャナ、キーボード、マウス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. イメージスキャナ、プリンター、マウス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. キーボード、ジョイスティック、プリンター",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. プリンタ、ディスプレイ",
+        "isCorrect": true
+      }
     ]
-]
+  ]
 }

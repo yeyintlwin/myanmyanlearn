@@ -3,160 +3,155 @@
   "chapterId": "1",
   "questionNumber": 2,
   "questionContentPath": "/courses/jken/questions/chapter-1-q2.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. m(ミリ)",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. n(ナノ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. p(ピコ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. μ(マイクロ)",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. m(ミリ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. n(ナノ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. p(ピコ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. μ(マイクロ)",
-                "isCorrect": true
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. m(ミリ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. n(ナノ)",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. p(ピコ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. μ(マイクロ)",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. m(ミリ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. n(ナノ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. p(ピコ)",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. μ(マイクロ)",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 5千",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. 1万",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. ５万",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 10万",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. P(ペタ),T(テラ),G(ギガ),M(メガ)",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. T(テラ),G(ギガ),M(メガ),P(ペタ)",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. T(テラ),P(ペタ),G(ギガ),M(メガ)",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 1千",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. 1万",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. 10万",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 100万",
-                "isCorrect": true
-            }
-        ]
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. m(ミリ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. n(ナノ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. p(ピコ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. μ(マイクロ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. m(ミリ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. n(ナノ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. p(ピコ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. μ(マイクロ)",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. m(ミリ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. n(ナノ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. p(ピコ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. μ(マイクロ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. m(ミリ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. n(ナノ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. p(ピコ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. μ(マイクロ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 5千",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 1万",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ５万",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 10万",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. P(ペタ),T(テラ),G(ギガ),M(メガ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. T(テラ),G(ギガ),M(メガ),P(ペタ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. T(テラ),P(ペタ),G(ギガ),M(メガ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 1千",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 1万",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 10万",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 100万",
+        "isCorrect": true
+      }
     ]
+  ]
 }
-

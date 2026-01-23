@@ -3,15 +3,23 @@
   "chapterId": "3",
   "questionNumber": 2,
   "questionContentPath": "/courses/jken/questions/chapter-3-q2.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
     [
-      { "optionIndex": 0, "optionContent": "ア. DHCP", "isCorrect": false },
-      { "optionIndex": 1, "optionContent": "イ. DNS", "isCorrect": false },
-      { "optionIndex": 2, "optionContent": "ウ. NIC", "isCorrect": true }
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. DHCP",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. DNS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. NIC",
+        "isCorrect": true
+      }
     ],
     [
       {
@@ -53,7 +61,11 @@
         "optionContent": "ア. スイッチングハブ",
         "isCorrect": false
       },
-      { "optionIndex": 1, "optionContent": "イ. モデム", "isCorrect": false },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. モデム",
+        "isCorrect": false
+      },
       {
         "optionIndex": 2,
         "optionContent": "ウ. リピータハブ",
@@ -66,7 +78,11 @@
         "optionContent": "ア. スイッチングハブ",
         "isCorrect": true
       },
-      { "optionIndex": 1, "optionContent": "イ. モデム", "isCorrect": false },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. モデム",
+        "isCorrect": false
+      },
       {
         "optionIndex": 2,
         "optionContent": "ウ. リピータハブ",
@@ -84,7 +100,11 @@
         "optionContent": "イ. ターミネーター",
         "isCorrect": false
       },
-      { "optionIndex": 2, "optionContent": "ウ. ルータ", "isCorrect": true }
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ルータ",
+        "isCorrect": true
+      }
     ],
     [
       {

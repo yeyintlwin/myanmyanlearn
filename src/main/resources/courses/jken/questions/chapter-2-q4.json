@@ -1,61 +1,197 @@
 {
-    "courseId": "jken",
-    "chapterId": "2",
-    "questionNumber": 4,
-    "questionContentPath": "/courses/jken/questions/chapter-2-q4.md",
-    "correctOptionIndex": 0,
-    "marks": 7.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 7,
-    "slotOptions": [
-        [
-            { "optionIndex": 0, "optionContent": "ア. バイト", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. ピクセル", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. ビットト", "isCorrect": true },
-            { "optionIndex": 3, "optionContent": "エ. ボクセル", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. バイト", "isCorrect": true },
-            { "optionIndex": 1, "optionContent": "イ. ピクセル", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. ビットト", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. ボクセル", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. f(フェムト)", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. M(メガ)", "isCorrect": true },
-            { "optionIndex": 2, "optionContent": "ウ. p(ピコ)", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. T(テラ)", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. μ(マイクロ)", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. Z(ゼタ)", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. f(フェムト)", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. M(メガ)", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. p(ピコ)", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. T(テラ)", "isCorrect": true },
-            { "optionIndex": 4, "optionContent": "オ. μ(マイクロ)", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. Z(ゼタ)", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": false },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": true },
-            { "optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. Option 1", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. Option 2", "isCorrect": false },
-            { "optionIndex": 2, "optionContent": "ウ. Option 3", "isCorrect": true },
-            { "optionIndex": 3, "optionContent": "エ. Option 4", "isCorrect": false },
-            { "optionIndex": 4, "optionContent": "オ. Option 5", "isCorrect": false },
-            { "optionIndex": 5, "optionContent": "カ. Option 6", "isCorrect": false }
-        ],
-        [
-            { "optionIndex": 0, "optionContent": "ア. 80", "isCorrect": false },
-            { "optionIndex": 1, "optionContent": "イ. 100", "isCorrect": true },
-            { "optionIndex": 0, "optionContent": "ア. 125", "isCorrect": false }
-        ]
+  "courseId": "jken",
+  "chapterId": "2",
+  "questionNumber": 4,
+  "questionContentPath": "/courses/jken/questions/chapter-2-q4.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. バイト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ピクセル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ビットト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ボクセル",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. バイト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ピクセル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ビットト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ボクセル",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. f(フェムト)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. M(メガ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. p(ピコ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. T(テラ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. μ(マイクロ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. Z(ゼタ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. f(フェムト)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. M(メガ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. p(ピコ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. T(テラ)",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. μ(マイクロ)",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. Z(ゼタ)",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Option 1",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. Option 2",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Option 3",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. Option 4",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. Option 5",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. Option 6",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Option 1",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. Option 2",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. Option 3",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. Option 4",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. Option 5",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. Option 6",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 80",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 100",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 125",
+        "isCorrect": false
+      }
     ]
+  ]
 }

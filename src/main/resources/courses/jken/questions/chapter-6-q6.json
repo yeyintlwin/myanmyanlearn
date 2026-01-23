@@ -1,256 +1,252 @@
 {
-    "courseId": "jken",
-    "chapterId": "6",
-    "questionNumber": 6,
-    "questionContentPath": "/courses/jken/questions/chapter-6-q6.md",
-    "correctOptionIndex": 0,
-    "marks": 7.0,
-    "slotCount": 7,
-    
-        "slotOptions": [
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. LINE",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. YouTube",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. インスタグラム",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. テザリング",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. トンネリング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. ハッシュタグ",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 6,
-                    "optionContent": "キ. ブログ",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. LINE",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. YouTube",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. インスタグラム",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. テザリング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. トンネリング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. ハッシュタグ",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 6,
-                    "optionContent": "キ. ブログ",
-                    "isCorrect": true
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. LINE",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. YouTube",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. インスタグラム",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. テザリング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. トンネリング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. ハッシュタグ",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 6,
-                    "optionContent": "キ. ブログ",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. LINE",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. YouTube",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. インスタグラム",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. テザリング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. トンネリング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. ハッシュタグ",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 6,
-                    "optionContent": "キ. ブログ",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. eコマース",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. eラーニング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. POSシステム",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. SOHO",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. インターネットオークション",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. バーチャルモール",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. eコマース",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. eラーニング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. POSシステム",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. SOHO",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. インターネットオークション",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. バーチャルモール",
-                    "isCorrect": true
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. eコマース",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. eラーニング",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. POSシステム",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. SOHO",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. インターネットオークション",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. バーチャルモール",
-                    "isCorrect": false
-                }
-            ]
-        ]
-    }
+  "courseId": "jken",
+  "chapterId": "6",
+  "questionNumber": 6,
+  "questionContentPath": "/courses/jken/questions/chapter-6-q6.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. LINE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. YouTube",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. インスタグラム",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. テザリング",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. トンネリング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ハッシュタグ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ブログ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. LINE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. YouTube",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. インスタグラム",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. テザリング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. トンネリング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ハッシュタグ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ブログ",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. LINE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. YouTube",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. インスタグラム",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. テザリング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. トンネリング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ハッシュタグ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ブログ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. LINE",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. YouTube",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. インスタグラム",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. テザリング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. トンネリング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ハッシュタグ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 6,
+        "optionContent": "キ. ブログ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. eコマース",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. eラーニング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. POSシステム",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SOHO",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. インターネットオークション",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. バーチャルモール",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. eコマース",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. eラーニング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. POSシステム",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SOHO",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. インターネットオークション",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. バーチャルモール",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. eコマース",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. eラーニング",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. POSシステム",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SOHO",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. インターネットオークション",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. バーチャルモール",
+        "isCorrect": false
+      }
+    ]
+  ]
+}

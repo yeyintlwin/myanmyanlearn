@@ -1,211 +1,202 @@
 {
-    "courseId": "jken",
-    "chapterId": "6",
-    "questionNumber": 1,
-    "questionContentPath": "/courses/jken/questions/chapter-6-q1.md",
-    "correctOptionIndex": 0,
-    "marks": 7.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 7,
-        "slotOptions": [
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. ウェブブラウザ",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. オフィシャルサイト",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. クライアント",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. スマートフォン",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. タブレットPC",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. ブログ",
-                    "isCorrect": true
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. ウェブブラウザ",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. オフィシャルサイト",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. クライアント",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. スマートフォン",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. タブレットPC",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. ブログ",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. ウェブブラウザ",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. オフィシャルサイト",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. クライアント",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. スマートフォン",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. タブレットPC",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 5,
-                    "optionContent": "カ. ブログ",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. Eメール",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. LINE",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. PDA",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. SNS",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. Telnet",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. Eメール",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. LINE",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. PDA",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. SNS",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. Telnet",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. Eメール",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. LINE",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. PDA",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 3,
-                    "optionContent": "エ. SNS",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 4,
-                    "optionContent": "オ. Telnet",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. アクセスポイント",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. テザリング",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. ホットスポット",
-                    "isCorrect": false
-                }
-            ]
-            
-
-
-            
-
-        ]
-    }
+  "courseId": "jken",
+  "chapterId": "6",
+  "questionNumber": 1,
+  "questionContentPath": "/courses/jken/questions/chapter-6-q1.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ウェブブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. オフィシャルサイト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クライアント",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. スマートフォン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. タブレットPC",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ブログ",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ウェブブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. オフィシャルサイト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クライアント",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. スマートフォン",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. タブレットPC",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ブログ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ウェブブラウザ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. オフィシャルサイト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. クライアント",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. スマートフォン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. タブレットPC",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ブログ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Eメール",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. LINE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. PDA",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SNS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. Telnet",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Eメール",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. LINE",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. PDA",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SNS",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. Telnet",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. Eメール",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. LINE",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. PDA",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SNS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. Telnet",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. アクセスポイント",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. テザリング",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ホットスポット",
+        "isCorrect": false
+      }
+    ]
+  ]
+}

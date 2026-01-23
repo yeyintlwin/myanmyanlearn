@@ -1,132 +1,127 @@
 {
-    "courseId": "jken",
-    "chapterId": "6",
-    "questionNumber": 3,
-    "questionContentPath": "/courses/jken/questions/chapter-6-q3.md",
-    "correctOptionIndex": 0,
-    "marks": 7.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 7,
-   
-        "slotOptions": [
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. クライアント",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. クラッカー",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. スキマー",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. アプレット",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. コンピュータウイルス",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. スパムメール",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. アカウント",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. ドメイン名",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. パスワード",
-                    "isCorrect": true
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. サイバーテロ",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. テレワーク",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. なりすまし",
-                    "isCorrect": true
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. ダイジェスト",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. バイオメトリクス",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. ベーシック",
-                    "isCorrect": false
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. スキミング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. ストリーミング",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. フィッシング",
-                    "isCorrect": true
-                }
-            ],
-            [
-                {
-                    "optionIndex": 0,
-                    "optionContent": "ア. 基本ソフト",
-                    "isCorrect": false
-                },
-                {
-                    "optionIndex": 1,
-                    "optionContent": "イ. フィルタリングソフト",
-                    "isCorrect": true
-                },
-                {
-                    "optionIndex": 2,
-                    "optionContent": "ウ. ドライバソフト",
-                    "isCorrect": false
-                }
-            ]
-        ]
-    }
+  "courseId": "jken",
+  "chapterId": "6",
+  "questionNumber": 3,
+  "questionContentPath": "/courses/jken/questions/chapter-6-q3.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. クライアント",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. クラッカー",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. スキマー",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. アプレット",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. コンピュータウイルス",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. スパムメール",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. アカウント",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ドメイン名",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. パスワード",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. サイバーテロ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. テレワーク",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. なりすまし",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ダイジェスト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. バイオメトリクス",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ベーシック",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. スキミング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. ストリーミング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. フィッシング",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 基本ソフト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. フィルタリングソフト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ドライバソフト",
+        "isCorrect": false
+      }
+    ]
+  ]
+}

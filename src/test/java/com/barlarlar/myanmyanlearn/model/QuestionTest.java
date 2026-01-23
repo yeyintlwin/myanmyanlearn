@@ -1,16 +1,13 @@
 package com.barlarlar.myanmyanlearn.model;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for Question model
- */
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 public class QuestionTest {
 
     private Question question;
@@ -18,12 +15,10 @@ public class QuestionTest {
 
     @BeforeEach
     public void setUp() {
-        question = new Question(
-                "jken",
-                1,
-                "/courses/jken/questions/chapter-1-q1.md",
-                0);
-        question.setMarks(1.0f);
+        question = new Question();
+        question.setCourseId("jken");
+        question.setQuestionNumber(1);
+        question.setQuestionContentPath("/courses/jken/questions/chapter-1-q1.md");
 
         options = new ArrayList<>();
         QuestionOption opt1 = new QuestionOption(0, "Option 1");
@@ -40,21 +35,11 @@ public class QuestionTest {
         assertEquals("jken", question.getCourseId());
         assertEquals(1, question.getQuestionNumber());
         assertEquals("/courses/jken/questions/chapter-1-q1.md", question.getQuestionContentPath());
-        assertEquals(0, question.getCorrectOptionIndex());
     }
 
     @Test
     public void testQuestionMarks() {
         assertEquals(1.0f, question.getMarks());
-        question.setMarks(2.5f);
-        assertEquals(2.5f, question.getMarks());
-    }
-
-    @Test
-    public void testQuestionMarksUpdate() {
-        assertEquals(1.0f, question.getMarks());
-        question.setMarks(3.0f);
-        assertEquals(3.0f, question.getMarks());
     }
 
     @Test
@@ -68,12 +53,19 @@ public class QuestionTest {
 
     @Test
     public void testQuestionSlots() {
-        assertEquals(0, question.getSlotCount());
-        question.setSlotCount(3);
+        assertEquals(1, question.getSlotCount());
+
+        List<List<QuestionOption>> slotOptions = new ArrayList<>();
+        slotOptions.add(new ArrayList<>(options));
+        slotOptions.add(new ArrayList<>(options));
+        slotOptions.add(new ArrayList<>(options));
+        question.setSlotOptions(slotOptions);
+
         assertEquals(3, question.getSlotCount());
-        // Per-slot correctness is stored within each option (isCorrect),
-        // not via a separate indices list.
+        assertEquals(3.0f, question.getMarks());
     }
+
+    @Test
     public void testQuestionChapterId() {
         assertNull(question.getChapterId());
         question.setChapterId("chapter_1");
@@ -81,14 +73,6 @@ public class QuestionTest {
     }
 
     @Test
-    public void testQuestionExplanation() {
-        assertNull(question.getExplanation());
-        String explanation = "This is the correct explanation.";
-        question.setExplanation(explanation);
-        assertEquals(explanation, question.getExplanation());
-    }
-
-    
     public void testQuestionToString() {
         String toString = question.toString();
         assertNotNull(toString);

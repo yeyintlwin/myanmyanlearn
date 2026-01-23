@@ -9,6 +9,7 @@ import java.io.IOException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class QuestionDataSource {
@@ -16,6 +17,7 @@ public class QuestionDataSource {
         List<Question> questions = new ArrayList<>();
         try {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
             Resource[] resources = resolver.getResources("classpath*:courses/*/questions/*.json");
 
@@ -41,8 +43,10 @@ public class QuestionDataSource {
             int correctOptionIndex,
             float marks,
             List<QuestionOption> options) {
-        Question q = new Question(courseId, questionNumber, questionContentPath, correctOptionIndex);
-        q.setMarks(marks);
+        Question q = new Question();
+        q.setCourseId(courseId);
+        q.setQuestionNumber(questionNumber);
+        q.setQuestionContentPath(questionContentPath);
         q.setOptions(options);
         
         for (QuestionOption option : options) {
@@ -67,11 +71,11 @@ public class QuestionDataSource {
         options.add(new QuestionOption(1, optB));
         options.add(new QuestionOption(2, optC));
 
-        Question q = new Question(courseId, questionNumber, questionContentPath, correctOptionIndex);
+        Question q = new Question();
+        q.setCourseId(courseId);
+        q.setQuestionNumber(questionNumber);
+        q.setQuestionContentPath(questionContentPath);
         q.setChapterId(chapterId);
-        
-        q.setMarks(marks);
-        
         q.setOptions(options);
         for (QuestionOption option : options) {
             option.setIsCorrect(option.getOptionIndex() == correctOptionIndex);

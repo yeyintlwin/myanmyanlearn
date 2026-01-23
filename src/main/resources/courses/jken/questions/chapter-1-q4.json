@@ -3,181 +3,175 @@
   "chapterId": "1",
   "questionNumber": 4,
   "questionContentPath": "/courses/jken/questions/chapter-1-q4.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. リーダを決めて、プレーンストミングのように意見を出し合う",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. リーダを決めて、リーダの指名のより一度だけ意見を述べる",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. リーダは決めずに、一人ずつ順番に意見を述べる",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. テーマガグループごとに異なるため、グループの意見をそのまま成果とする",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. グループにより異なる意見もあるので、グループの意見を羅列したものを成果とする",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. グループ五と意見を発表し、そのあとに全体で討論した結論を成果とする",
-                "isCorrect": true
-            }
-        ]
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. 批判されるのが嫌なので、発言をせずに聞き役にまわった。",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. 自分の意見を批判されたので、相手の意見も批判した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 実現できそうもないアイデアが発言されたが、歓迎した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. 他のメンバーの発言に似てはいたが、自分のアイデアを加えて発言した。",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. テーマとは多少ずれていたが、思い切って発言した。",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. リーダを決めて、プレーンストミングのように意見を出し合う",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. リーダを決めて、リーダの指名のより一度だけ意見を述べる",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. リーダは決めずに、一人ずつ順番に意見を述べる",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. テーマガグループごとに異なるため、グループの意見をそのまま成果とする",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. グループにより異なる意見もあるので、グループの意見を羅列したものを成果とする",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. グループ五と意見を発表し、そのあとに全体で討論した結論を成果とする",
+        "isCorrect": true
+      }
     ]
+  ]
 }
-  
-

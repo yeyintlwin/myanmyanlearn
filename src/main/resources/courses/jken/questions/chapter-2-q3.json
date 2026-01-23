@@ -3,165 +3,160 @@
   "chapterId": "2",
   "questionNumber": 3,
   "questionContentPath": "/courses/jken/questions/chapter-2-q3.md",
-  "correctOptionIndex": 0,
-  "marks": 7.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 7,
   "slotOptions": [
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. コマンドボタン",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. コマンドボタン",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. ドロップダウンリスト",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. ラジオボタン",
-                "isCorrect": true
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. コマンドボタン",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. コマンドボタン",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. ドロップダウンリスト",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. ラジオボタン",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. コマンドボタン",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. チェックボックス",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. ドロップダウンリスト",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. ラジオボタン",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. スタートメニュー",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. スライドメニュー",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. プルダウンメニュー",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. ポップアップメニュー",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. スタートメニュー",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. スライドメニュー",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. プルダウンメニュー",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. ポップアップメニュー",
-                "isCorrect": true
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. インターナショナル",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. グラフィック",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. ユーザビリティ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. ユニバーサル",
-                "isCorrect": true
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. インターナショナル",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. グラフィック",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. ユーザビリティ",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. ユニバーサル",
-                "isCorrect": false
-            }
-        ]
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. コマンドボタン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. コマンドボタン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ドロップダウンリスト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ラジオボタン",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. コマンドボタン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. コマンドボタン",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ドロップダウンリスト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ラジオボタン",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. コマンドボタン",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. チェックボックス",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ドロップダウンリスト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ラジオボタン",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. スタートメニュー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. スライドメニュー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. プルダウンメニュー",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ポップアップメニュー",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. スタートメニュー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. スライドメニュー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. プルダウンメニュー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ポップアップメニュー",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. インターナショナル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. グラフィック",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ユーザビリティ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ユニバーサル",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. インターナショナル",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. グラフィック",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. ユーザビリティ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ユニバーサル",
+        "isCorrect": false
+      }
     ]
+  ]
 }
-

@@ -1,221 +1,217 @@
 {
-    "courseId": "jken",
-    "chapterId": "6",
-    "questionNumber": 2,
-    "questionContentPath": "/courses/jken/questions/chapter-6-q2.md",
-    "correctOptionIndex": 0,
-    "marks": 7.0,
-    "explanation": "Select the correct option for each blank.",
-    "slotCount": 7,
-    "slotOptions": [
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. e ラーニング",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. インターネットオークション",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. オンライントレード",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. コンシューマ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. バーチャルモール",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. e ラーニング",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. インターネットオークション",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. オンライントレード",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. コンシューマ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. バーチャルモール",
-                "isCorrect": true
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. e ラーニング",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. インターネットオークション",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. オンライントレード",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. コンシューマ",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. バーチャルモール",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. ATM",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. EOS",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. POS",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. SOHO",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. eコマース",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. ユビキタス",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. ATM",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. EOS",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. POS",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. SOHO",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. eコマース",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. ユビキタス",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. ATM",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. EOS",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. POS",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. SOHO",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. eコマース",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. ユビキタス",
-                "isCorrect": false
-            }
-        ],
-        [
-            {
-                "optionIndex": 0,
-                "optionContent": "ア. ATM",
-                "isCorrect": true
-            },
-            {
-                "optionIndex": 1,
-                "optionContent": "イ. EOS",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 2,
-                "optionContent": "ウ. POS",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 3,
-                "optionContent": "エ. SOHO",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 4,
-                "optionContent": "オ. eコマース",
-                "isCorrect": false
-            },
-            {
-                "optionIndex": 5,
-                "optionContent": "カ. ユビキタス",
-                "isCorrect": false
-            }
-        ]
+  "courseId": "jken",
+  "chapterId": "6",
+  "questionNumber": 2,
+  "questionContentPath": "/courses/jken/questions/chapter-6-q2.md",
+  "slotOptions": [
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. e ラーニング",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. インターネットオークション",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. オンライントレード",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. コンシューマ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. バーチャルモール",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. e ラーニング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. インターネットオークション",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. オンライントレード",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. コンシューマ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. バーチャルモール",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. e ラーニング",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. インターネットオークション",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. オンライントレード",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. コンシューマ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. バーチャルモール",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ATM",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. EOS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. POS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SOHO",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. eコマース",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ユビキタス",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ATM",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. EOS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. POS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SOHO",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. eコマース",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ユビキタス",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ATM",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. EOS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. POS",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SOHO",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. eコマース",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ユビキタス",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. ATM",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. EOS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. POS",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. SOHO",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. eコマース",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. ユビキタス",
+        "isCorrect": false
+      }
     ]
+  ]
 }

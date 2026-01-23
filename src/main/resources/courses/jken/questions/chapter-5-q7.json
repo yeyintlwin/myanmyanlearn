@@ -3,267 +3,262 @@
   "chapterId": "5",
   "questionNumber": 7,
   "questionContentPath": "/courses/jken/questions/chapter-5-q7.md",
-  "correctOptionIndex": 0,
-  "marks": 8.0,
-  "explanation": "Select the correct option for each blank.",
-  "slotCount": 8,
   "slotOptions": [
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. IME",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. グリッド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. コマンド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. ショットカットキー",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. ファンクションキー",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. マージン",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. IME",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. グリッド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. コマンド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. ショットカットキー",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. ファンクションキー",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. マージン",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. IME",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. グリッド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. コマンド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. ショットカットキー",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. ファンクションキー",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. マージン",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. IME",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. グリッド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. コマンド",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. ショットカットキー",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. ファンクションキー",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. マージン",
-                  "isCorrect": true
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. カット＆ペースト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. コピー＆ペースト",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. 整列",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. ヘッダ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. フッタ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. マクロ",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. カット＆ペースト",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. コピー＆ペースト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. 整列",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. ヘッダ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. フッタ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. マクロ",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. カット＆ペースト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. コピー＆ペースト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. 整列",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. ヘッダ",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. フッタ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. マクロ",
-                  "isCorrect": false
-              }
-          ],
-          [
-              {
-                  "optionIndex": 0,
-                  "optionContent": "ア. カット＆ペースト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 1,
-                  "optionContent": "イ. コピー＆ペースト",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 2,
-                  "optionContent": "ウ. 整列",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 3,
-                  "optionContent": "エ. ヘッダ",
-                  "isCorrect": false
-              },
-              {
-                  "optionIndex": 4,
-                  "optionContent": "オ. フッタ",
-                  "isCorrect": true
-              },
-              {
-                  "optionIndex": 5,
-                  "optionContent": "カ. マクロ",
-                  "isCorrect": false
-              }
-          ]
-      ]
-  }
-
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IME",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. グリッド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. コマンド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ショットカットキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ファンクションキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. マージン",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IME",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. グリッド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. コマンド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ショットカットキー",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ファンクションキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. マージン",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IME",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. グリッド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. コマンド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ショットカットキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ファンクションキー",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. マージン",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. IME",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. グリッド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. コマンド",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ショットカットキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. ファンクションキー",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. マージン",
+        "isCorrect": true
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. カット＆ペースト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. コピー＆ペースト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 整列",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ヘッダ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. フッタ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. マクロ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. カット＆ペースト",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. コピー＆ペースト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 整列",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ヘッダ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. フッタ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. マクロ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. カット＆ペースト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. コピー＆ペースト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 整列",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ヘッダ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. フッタ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. マクロ",
+        "isCorrect": false
+      }
+    ],
+    [
+      {
+        "optionIndex": 0,
+        "optionContent": "ア. カット＆ペースト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 1,
+        "optionContent": "イ. コピー＆ペースト",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 2,
+        "optionContent": "ウ. 整列",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 3,
+        "optionContent": "エ. ヘッダ",
+        "isCorrect": false
+      },
+      {
+        "optionIndex": 4,
+        "optionContent": "オ. フッタ",
+        "isCorrect": true
+      },
+      {
+        "optionIndex": 5,
+        "optionContent": "カ. マクロ",
+        "isCorrect": false
+      }
+    ]
+  ]
+}
