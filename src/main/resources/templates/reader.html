@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -42,10 +42,14 @@
 
       @keyframes aiTranslateBorderShift {
         0% {
-          background-position: 0 0, 0 0;
+          background-position:
+            0 0,
+            0 0;
         }
         100% {
-          background-position: 0 0, 200% 0;
+          background-position:
+            0 0,
+            200% 0;
         }
       }
 
@@ -73,15 +77,16 @@
         padding: 0 0.875rem;
         border-radius: 9999px;
         border: 3px solid transparent;
-        background: linear-gradient(
-              var(--ai-translate-fill),
-              var(--ai-translate-fill)
-            )
+        background:
+          linear-gradient(var(--ai-translate-fill), var(--ai-translate-fill))
             padding-box,
           linear-gradient(90deg, #9ca3af, #9ca3af) border-box;
         color: var(--ai-translate-text);
-        transition: transform 0.15s ease, background 0.2s ease,
-          box-shadow 0.2s ease, color 0.2s ease;
+        transition:
+          transform 0.15s ease,
+          background 0.2s ease,
+          box-shadow 0.2s ease,
+          color 0.2s ease;
       }
 
       .ai-translate-btn:hover {
@@ -98,7 +103,8 @@
       }
 
       .ai-translate-btn.is-active {
-        background: linear-gradient(
+        background:
+          linear-gradient(
               var(--ai-translate-fill-active),
               var(--ai-translate-fill-active)
             )
@@ -109,14 +115,17 @@
       }
 
       .ai-translate-btn.is-loading {
-        background: linear-gradient(
+        background:
+          linear-gradient(
               var(--ai-translate-fill-active),
               var(--ai-translate-fill-active)
             )
             padding-box,
           linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #f97316, #22c55e)
             border-box;
-        background-size: 100% 100%, 200% 100%;
+        background-size:
+          100% 100%,
+          200% 100%;
         animation: aiTranslateBorderShift 1s linear infinite;
       }
 
@@ -358,7 +367,9 @@
         max-height: 0;
         overflow: hidden;
         opacity: 0;
-        transition: max-height 0.3s ease, opacity 0.2s ease;
+        transition:
+          max-height 0.3s ease,
+          opacity 0.2s ease;
       }
 
       .drawer-acc.open {
@@ -610,17 +621,19 @@
               >
                 <!-- Prev (always visible) -->
                 <a
+                  id="readerPrevPage"
                   class="inline-flex items-center justify-center h-9 w-9 rounded-md border bg-white/80 text-slate-700 no-underline transition focus:outline-none focus:ring-2 focus:ring-primary-500/30"
-                  th:classappend="${sub.order > 1} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
-                  th:attr="href=${sub.order > 1} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order - 1})} : null, aria-disabled=${sub.order <= 1}, title=#{reader.pagination.previous}"
+                  th:classappend="${hasPrev} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
+                  th:attr="href=${hasPrev} ? @{/reader(courseId=${course.id}, ch=${prevCh}, sc=${prevSc})} : null, aria-disabled=${!hasPrev}, title=#{reader.pagination.previous}"
                 >
                   <i class="fas fa-chevron-left text-xs"></i>
                 </a>
                 <!-- Next (always visible) -->
                 <a
+                  id="readerNextPage"
                   class="inline-flex items-center justify-center h-9 w-9 rounded-md border bg-white/80 text-slate-700 no-underline transition focus:outline-none focus:ring-2 focus:ring-primary-500/30"
-                  th:classappend="${sub.order < #lists.size(content.subcontents)} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
-                  th:attr="href=${sub.order < #lists.size(content.subcontents)} ? @{/reader(courseId=${course.id}, ch=${content.order}, sc=${sub.order + 1})} : null, aria-disabled=${sub.order >= #lists.size(content.subcontents)}, title=#{reader.pagination.next}"
+                  th:classappend="${hasNext} ? ' border-slate-200 hover:bg-white' : ' border-slate-100 text-slate-300 bg-white/60 cursor-not-allowed pointer-events-none opacity-60'"
+                  th:attr="href=${hasNext} ? @{/reader(courseId=${course.id}, ch=${nextCh}, sc=${nextSc})} : null, aria-disabled=${!hasNext}, title=#{reader.pagination.next}"
                 >
                   <i class="fas fa-chevron-right text-xs"></i>
                 </a>
@@ -772,12 +785,12 @@
           document.getElementById("mdThemeToggleLabel");
         const mdTranslateBtn = document.getElementById("mdTranslateBtn");
         const mdTranslateBtnLabel = document.getElementById(
-          "mdTranslateBtnLabel"
+          "mdTranslateBtnLabel",
         );
         const mdTranslateBtnIcon =
           document.getElementById("mdTranslateBtnIcon");
         const mdFontSizeButtons = Array.from(
-          document.querySelectorAll("[data-md-font-size]")
+          document.querySelectorAll("[data-md-font-size]"),
         );
         const hljsThemeLight = document.getElementById("hljsThemeLight");
         const hljsThemeDark = document.getElementById("hljsThemeDark");
@@ -792,7 +805,7 @@
           mdTranslateBtn.classList.toggle("is-loading", !!translateLoading);
           mdTranslateBtn.setAttribute(
             "aria-pressed",
-            showingTranslated ? "true" : "false"
+            showingTranslated ? "true" : "false",
           );
         };
 
@@ -806,7 +819,7 @@
           if (mdThemeToggle) {
             mdThemeToggle.setAttribute(
               "aria-pressed",
-              enabled ? "true" : "false"
+              enabled ? "true" : "false",
             );
             mdThemeToggle.setAttribute("aria-label", ariaLabel);
             mdThemeToggle.setAttribute("title", ariaLabel);
@@ -883,7 +896,7 @@
           container.innerHTML = md ? md.render(text) : text;
 
           const checkboxes = container.querySelectorAll(
-            'input[type="checkbox"]'
+            'input[type="checkbox"]',
           );
           checkboxes.forEach((cb) => {
             cb.disabled = true;
@@ -920,7 +933,7 @@
             try {
               mermaid.initialize({ startOnLoad: false, theme: "default" });
               const blocks = container.querySelectorAll(
-                "pre code.language-mermaid"
+                "pre code.language-mermaid",
               );
               blocks.forEach((codeEl) => {
                 const graphDef = codeEl.textContent.trim();
@@ -955,7 +968,7 @@
           }
           const tokenMeta = document.querySelector('meta[name="_csrf"]');
           const headerMeta = document.querySelector(
-            'meta[name="_csrf_header"]'
+            'meta[name="_csrf_header"]',
           );
           const token = tokenMeta ? tokenMeta.getAttribute("content") : "";
           const headerName = headerMeta
@@ -984,7 +997,7 @@
               throw new Error("TRANSLATE_MISSING_API_KEY");
             }
             throw new Error(
-              `HTTP ${res.status}${body ? " " + body.slice(0, 300) : ""}`
+              `HTTP ${res.status}${body ? " " + body.slice(0, 300) : ""}`,
             );
           }
           const out = await res.text();
@@ -1019,9 +1032,8 @@
             translateLoading = true;
             syncTranslateBtnState();
             try {
-              const translated = await translateWithGoogleStudio(
-                rawMarkdownText
-              );
+              const translated =
+                await translateWithGoogleStudio(rawMarkdownText);
               translatedMarkdownText = translated;
               renderMarkdown(translatedMarkdownText);
               showingTranslated = true;
@@ -1048,7 +1060,7 @@
         const apiUrl =
           courseId && ch && sc
             ? `/reader/md?courseId=${encodeURIComponent(
-                courseId
+                courseId,
               )}&ch=${encodeURIComponent(ch)}&sc=${encodeURIComponent(sc)}`
             : null;
 
@@ -1210,10 +1222,10 @@
 
             // Drawer accordion: only one chapter open at a time
             const chapterButtons = Array.from(
-              document.querySelectorAll("#subDrawer .chapter-toggle")
+              document.querySelectorAll("#subDrawer .chapter-toggle"),
             );
             const panels = Array.from(
-              document.querySelectorAll("#subDrawer .drawer-acc")
+              document.querySelectorAll("#subDrawer .drawer-acc"),
             );
             const syncIcons = () => {
               chapterButtons.forEach((btn, idx) => {
@@ -1252,12 +1264,42 @@
             }
             err.classList.remove("hidden");
           });
+
+        const isTypingTarget = (t) => {
+          if (!t) return false;
+          const tag = (t.tagName || "").toLowerCase();
+          if (tag === "input" || tag === "textarea" || tag === "select") {
+            return true;
+          }
+          return !!t.isContentEditable;
+        };
+
+        const openNavLink = (el) => {
+          if (!el) return false;
+          if ((el.getAttribute("aria-disabled") || "").toLowerCase() === "true")
+            return false;
+          const href = el.getAttribute("href");
+          if (!href) return false;
+          window.location.assign(href);
+          return true;
+        };
+
+        document.addEventListener("keydown", (e) => {
+          if (!e || e.defaultPrevented) return;
+          if (e.ctrlKey || e.metaKey || e.altKey) return;
+          if (isTypingTarget(e.target)) return;
+
+          const prev = document.getElementById("readerPrevPage");
+          const next = document.getElementById("readerNextPage");
+
+          if (e.key === "ArrowLeft" || e.key === "PageUp") {
+            if (openNavLink(prev)) e.preventDefault();
+          } else if (e.key === "ArrowRight" || e.key === "PageDown") {
+            if (openNavLink(next)) e.preventDefault();
+          }
+        });
       })();
     </script>
     <script src="/js/navbar.js"></script>
-    <script
-      src="https://kit.fontawesome.com/6cfb6b7f24.js"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>

@@ -1,8 +1,11 @@
 # JKEN Chapter 2 – Question 7 Explanation
 
-Detail reasoning and relate to the exercises.
+【解説】
 
-- Key concept: pronoun case
-- Why correct: subject/object case matches role
-- Common pitfalls: using “me” as subject
+1～5：ハードウェアは、パソコンの基本機能に対応する装置をるち、それらは五大装置と呼ばれ
+次図の構造となる。
+![問1-1問題1](../images/c2s5_ex.jpg)
 
+6： 入力装置は、データやプログラムを電気信号に変換して、パソコン内部の主記憶装置に転送する装置である。代表的なものにキーボードやマウス、イメージスキャナ、OCR、OMRなどがある。
+
+7: 出力装置は、処理した結果を文字、音声、画像など人間が理解できる情報に変換する装置である。代表的なものには、プリンタやディスプレイなどがある。

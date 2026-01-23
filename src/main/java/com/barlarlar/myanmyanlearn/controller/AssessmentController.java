@@ -190,7 +190,6 @@ public class AssessmentController {
             com.barlarlar.myanmyanlearn.model.Question q = questions.get(i);
             int idx = i + 1;
             java.util.List<java.util.Map<String, Object>> slotViews = new java.util.ArrayList<>();
-            boolean allSlotsCorrect = true;
             int slotCount = q.getSlotCount();
             if (slotCount <= 0)
                 slotCount = 1;
@@ -225,9 +224,7 @@ public class AssessmentController {
                     }
                 }
                 boolean isCorrect = (selectedIdx != -1) && correctIndices.contains(selectedIdx);
-                if (!isCorrect) {
-                    allSlotsCorrect = false;
-                } else {
+                if (isCorrect) {
                     earnedForQuestion = earnedForQuestion.add(perSlotMarks);
                 }
                 Integer correctIdx = correctIndices.isEmpty() ? null : correctIndices.get(0);

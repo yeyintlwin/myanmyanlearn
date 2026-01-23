@@ -228,15 +228,38 @@ public class ReaderController {
         return v;
     }
 
+    private String languageLabel(String langCode) {
+        if (langCode == null || langCode.isBlank()) {
+            return "";
+        }
+        String v = langCode.trim().toLowerCase();
+        if ("my".equals(v)) {
+            return "Burmese (Myanmar)";
+        }
+        if ("ms".equals(v)) {
+            return "Malay";
+        }
+        if ("ja".equals(v)) {
+            return "Japanese";
+        }
+        if ("en".equals(v)) {
+            return "English";
+        }
+        return v;
+    }
+
     private String translateMarkdown(String apiKey, String sourceLang, String targetLang, String text)
             throws Exception {
         String modelName = getGenerateContentModel(apiKey);
         String url = "https://generativelanguage.googleapis.com/v1beta/" + modelName + ":generateContent?key="
                 + URLEncoder.encode(apiKey, StandardCharsets.UTF_8);
+        String sourceLabel = sourceLang == null ? null : languageLabel(sourceLang);
+        String targetLabel = languageLabel(targetLang);
         String prompt = (sourceLang == null || sourceLang.isBlank())
-                ? "Translate the following Markdown to " + targetLang + ". "
-                : "Translate the following Markdown from " + sourceLang + " to " + targetLang + ". ";
-        prompt += "Preserve Markdown formatting, links, code blocks, and inline code. "
+                ? "Translate the following Markdown to " + targetLabel + ". "
+                : "Translate the following Markdown from " + sourceLabel + " to " + targetLabel + ". ";
+        prompt += "Keep technical terms in English (e.g., programming keywords, API names, product names, identifiers, and code symbols). "
+                + "Preserve Markdown formatting, links, code blocks, and inline code. "
                 + "Return only the translated Markdown.\n\n" + text;
 
         ObjectNode body = objectMapper.createObjectNode();

@@ -1,8 +1,21 @@
 # JKEN Chapter 2 – Question 2 Explanation
 
-Explain the logic and connect to examples from Chapter 2.
+問2-2
 
-- Key concept: adjectives vs. adverbs
-- Why correct: correct modifier type for the sentence
-- Common pitfalls: using adjective in place of adverb
+（情報活用試験 3級 平成28年度前期問題2）
 
+【解説】
+
+1：画面上の位置や移動量などの情報を入力でき、ウインドウのメニューやアイコンを選択するときに使用するのは、マウスである。
+
+2、3：一度押すのがシングルクリック、続いて二度押すのがダブルクリックである。
+
+4： あらかじめ決められた位置に選択式の記入欄が並んでいる用紙に、鉛筆などの筆記具でこれを塗りつぶしたものに光を当てて、塗りつぶされている箇所を読み取る装置は、OMR （Optical
+Mark Reader： 光学式マーク読取装置）である。
+
+5：手書き文字や印字された文字を読み取る装置は、OCR （Optical Character Reader：光学式文字読取装置）である。
+
+6：写真や絵画などの画像や文字の書かれた書類などを読み取り、ディジタルデータに変換して入力する装置は、イメージスキャナである。
+
+7： 線の太さや間隔の違いによって表されるデータを読み取る装置は、バーコードリーダである。
+スーパーのレジなどに利用されているが、書籍に用いられるISBNコードや流通用の段ボール印刷などに用いるITFコード、携帯電話のカメラなどで読み取る2次コードのQRコードがある。
