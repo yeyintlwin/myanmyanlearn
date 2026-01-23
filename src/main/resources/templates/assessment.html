@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -199,6 +199,21 @@
       #mdError2,
       #mdError3 {
         color: #fecaca;
+      }
+
+      .question-card article img,
+      .question-card article svg,
+      .question-card article video,
+      .question-card article iframe {
+        display: block;
+        max-width: min(100%, 720px);
+        height: auto;
+        margin: 0.75rem auto;
+      }
+
+      .question-card article img {
+        max-height: 60vh;
+        border-radius: 0.75rem;
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
@@ -528,9 +543,29 @@
 
         const articles = Array.from(
           document.querySelectorAll(
-            "article[data-md-src], article[data-content]"
-          )
+            "article[data-md-src], article[data-content]",
+          ),
         );
+
+        function resolveRelativeImages(container, mdSrc) {
+          if (!container || !mdSrc) return;
+          let base;
+          try {
+            base = new URL(mdSrc, window.location.origin);
+          } catch (_) {
+            return;
+          }
+          container.querySelectorAll("img[src]").forEach((img) => {
+            const src = img.getAttribute("src") || "";
+            if (!src) return;
+            if (/^(https?:|data:|blob:)/i.test(src)) return;
+            if (src.startsWith("/") || src.startsWith("#")) return;
+            try {
+              img.setAttribute("src", new URL(src, base).toString());
+            } catch (_) {}
+          });
+        }
+
         articles.forEach(async (el) => {
           const mdSrc = el.getAttribute("data-md-src");
           const inlineSrc = el.getAttribute("data-content") || "";
@@ -547,6 +582,7 @@
               cb.disabled = true;
               cb.setAttribute("aria-disabled", "true");
             });
+            resolveRelativeImages(el, mdSrc);
             if (errEl) errEl.classList.add("hidden");
           } catch (e) {
             if (errEl) {
@@ -601,11 +637,11 @@
         submitBtn &&
           submitBtn.addEventListener("click", () => {
             const cards = Array.from(
-              document.querySelectorAll(".question-card")
+              document.querySelectorAll(".question-card"),
             );
             const results = cards.map((card, idx) => {
               const answerFields = Array.from(
-                card.querySelectorAll("input[data-answer-field][name^='q']")
+                card.querySelectorAll("input[data-answer-field][name^='q']"),
               );
               const selected = answerFields.map((f) => {
                 const v = f.value;
@@ -664,7 +700,7 @@
               try {
                 sessionStorage.setItem(
                   "assessmentResults",
-                  JSON.stringify(payload)
+                  JSON.stringify(payload),
                 );
               } catch (_) {}
               var form = document.createElement("form");
@@ -683,8 +719,8 @@
               try {
                 Array.from(
                   document.querySelectorAll(
-                    "input[data-answer-field][name^='q']"
-                  )
+                    "input[data-answer-field][name^='q']",
+                  ),
                 ).forEach(function (f) {
                   if (f && f.name && f.value && f.value !== "") {
                     addField(f.name, f.value);
@@ -704,7 +740,7 @@
         // Compute total score from question marks
         const totalScoreEl = document.getElementById("totalScoreVal");
         const questionEls = Array.from(
-          document.querySelectorAll(".question-card")
+          document.querySelectorAll(".question-card"),
         );
         const totalScore = questionEls.reduce((sum, el) => {
           const mark = parseFloat(el.dataset.mark);
@@ -724,7 +760,7 @@
             const m = Math.floor(remainingSeconds / 60);
             const s = remainingSeconds % 60;
             timerDisplay.textContent = `${String(m).padStart(2, "0")}:${String(
-              s
+              s,
             ).padStart(2, "0")}`;
 
             if (remainingSeconds <= 300) {
@@ -755,7 +791,9 @@
               // Copying the submission logic (lines 529-587) for safety.
 
               const results = Array.from(
-                document.querySelectorAll("input[data-answer-field][name^='q']")
+                document.querySelectorAll(
+                  "input[data-answer-field][name^='q']",
+                ),
               )
                 .map((el) => {
                   const parts = el.name.match(/q(\d+)-s(\d+)/);

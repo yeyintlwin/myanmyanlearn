@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -52,11 +52,11 @@
             onclick="switchTab('learn')"
           >
             <i class="fas fa-book-open"></i>
-            <span>Learn</span>
+            <span th:text="#{contents.tab.learn}">Learn</span>
           </button>
           <button
             id="vocabTab"
-            class="px-4 py-2 text-sm font-medium text-white/70 hover:text-white border-b-2 border-transparent hover:border-white/30 focus:outline-none transition-colors flex items-center gap-2"
+            class="hidden px-4 py-2 text-sm font-medium text-white/70 hover:text-white border-b-2 border-transparent hover:border-white/30 focus:outline-none transition-colors flex items-center gap-2"
             onclick="switchTab('vocab')"
           >
             <i class="fas fa-language"></i>
@@ -68,7 +68,7 @@
             onclick="switchTab('test')"
           >
             <i class="fas fa-clipboard-check"></i>
-            <span>Assessment</span>
+            <span th:text="#{contents.tab.test}">Quiz</span>
           </button>
         </div>
 
@@ -876,7 +876,7 @@
         } else {
           customCheckbox.classList.remove(
             "bg-primary-500",
-            "border-primary-500"
+            "border-primary-500",
           );
           checkIcon.classList.add("opacity-0");
         }
@@ -890,7 +890,7 @@
       // Select random chapters
       function selectRandomChapters() {
         const checkboxes = Array.from(
-          document.querySelectorAll(".chapter-checkbox")
+          document.querySelectorAll(".chapter-checkbox"),
         );
         if (checkboxes.length === 0) return;
 
@@ -903,7 +903,7 @@
         // Select random chapters (at least 1, at most all)
         const randomCount = Math.max(
           1,
-          Math.floor(Math.random() * checkboxes.length) + 1
+          Math.floor(Math.random() * checkboxes.length) + 1,
         );
         const shuffled = [...checkboxes].sort(() => 0.5 - Math.random());
 
@@ -916,7 +916,7 @@
 
       function toggleSelectAllChapters() {
         const checkboxes = Array.from(
-          document.querySelectorAll(".chapter-checkbox")
+          document.querySelectorAll(".chapter-checkbox"),
         );
         if (checkboxes.length === 0) return;
 
@@ -951,7 +951,7 @@
             tab.classList.remove(
               "text-white/70",
               "border-transparent",
-              "hover:border-white/30"
+              "hover:border-white/30",
             );
             tab.classList.add("text-white", "border-primary-400");
           } else {
@@ -959,7 +959,7 @@
             tab.classList.add(
               "text-white/70",
               "border-transparent",
-              "hover:border-white/30"
+              "hover:border-white/30",
             );
           }
         });
@@ -976,10 +976,10 @@
 
         // Initialize progress circles
         const rings = Array.from(
-          learnContent.querySelectorAll(".progress-ring")
+          learnContent.querySelectorAll(".progress-ring"),
         );
         const texts = Array.from(
-          learnContent.querySelectorAll(".progress-text")
+          learnContent.querySelectorAll(".progress-text"),
         );
 
         const radius = 15;
@@ -1071,7 +1071,7 @@
         // Handle Take Test button click
         if (e.target.closest("#takeTestBtn") || e.target.id === "takeTestBtn") {
           const selectedChapters = Array.from(
-            document.querySelectorAll(".chapter-checkbox:checked")
+            document.querySelectorAll(".chapter-checkbox:checked"),
           ).map((checkbox) => checkbox.value);
 
           if (selectedChapters.length > 0) {
@@ -1085,7 +1085,7 @@
 
             // Preserve courseId so Assessment can navigate back to the correct Contents page
             const currentUrlParams = new URLSearchParams(
-              window.location.search
+              window.location.search,
             );
             const courseId = currentUrlParams.get("courseId");
             if (courseId) {

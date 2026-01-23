@@ -185,7 +185,7 @@ public class AssessmentController {
 
         // Build scored view model aligned with sorted questions
         java.util.List<java.util.Map<String, Object>> scoredQuestions = new java.util.ArrayList<>();
-        int fullyCorrectCount = 0;
+        java.math.BigDecimal earnedTotal = java.math.BigDecimal.ZERO;
         for (int i = 0; i < questions.size(); i++) {
             com.barlarlar.myanmyanlearn.model.Question q = questions.get(i);
             int idx = i + 1;
@@ -194,6 +194,12 @@ public class AssessmentController {
             int slotCount = q.getSlotCount();
             if (slotCount <= 0)
                 slotCount = 1;
+            java.math.BigDecimal qMarks = java.math.BigDecimal.valueOf((double) q.getMarks());
+            java.math.BigDecimal perSlotMarks = qMarks.divide(
+                    java.math.BigDecimal.valueOf((long) slotCount),
+                    6,
+                    java.math.RoundingMode.HALF_UP);
+            java.math.BigDecimal earnedForQuestion = java.math.BigDecimal.ZERO;
             for (int slot = 1; slot <= slotCount; slot++) {
                 java.util.List<com.barlarlar.myanmyanlearn.model.QuestionOption> opts = (q.getSlotOptions() != null
                         && q.getSlotOptions().size() >= slot)
@@ -205,23 +211,27 @@ public class AssessmentController {
                     selectedIdx = selectionMap.get(key);
                 }
                 String selectedText = null;
-                Integer correctIdx = null;
-                String correctText = null;
+                java.util.List<Integer> correctIndices = new java.util.ArrayList<>();
+                java.util.List<String> correctTexts = new java.util.ArrayList<>();
                 if (opts != null) {
                     for (com.barlarlar.myanmyanlearn.model.QuestionOption opt : opts) {
                         if (opt.getOptionIndex() == selectedIdx) {
                             selectedText = opt.getOptionContent();
                         }
                         if (opt.getIsCorrect()) {
-                            correctIdx = opt.getOptionIndex();
-                            correctText = opt.getOptionContent();
+                            correctIndices.add(opt.getOptionIndex());
+                            correctTexts.add(opt.getOptionContent());
                         }
                     }
                 }
-                boolean isCorrect = (correctIdx != null) && (selectedIdx == correctIdx);
+                boolean isCorrect = (selectedIdx != -1) && correctIndices.contains(selectedIdx);
                 if (!isCorrect) {
                     allSlotsCorrect = false;
+                } else {
+                    earnedForQuestion = earnedForQuestion.add(perSlotMarks);
                 }
+                Integer correctIdx = correctIndices.isEmpty() ? null : correctIndices.get(0);
+                String correctText = correctTexts.isEmpty() ? null : String.join(", ", correctTexts);
                 java.util.Map<String, Object> slotView = new java.util.HashMap<>();
                 slotView.put("slotNum", slot);
                 slotView.put("selectedIndex", selectedIdx);
@@ -231,9 +241,7 @@ public class AssessmentController {
                 slotView.put("isCorrect", isCorrect);
                 slotViews.add(slotView);
             }
-            if (allSlotsCorrect) {
-                fullyCorrectCount++;
-            }
+            earnedTotal = earnedTotal.add(earnedForQuestion);
             java.util.Map<String, Object> qView = new java.util.HashMap<>();
             qView.put("q", q);
             qView.put("index", idx);
@@ -241,7 +249,7 @@ public class AssessmentController {
             scoredQuestions.add(qView);
         }
         model.addAttribute("scoredQuestions", scoredQuestions);
-        model.addAttribute("yourScore", fullyCorrectCount);
+        model.addAttribute("yourScore", earnedTotal.stripTrailingZeros().toPlainString());
 
         try {
             var root = objectMapper.createObjectNode();
