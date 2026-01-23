@@ -26,6 +26,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
+import java.util.Comparator;
 import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.util.List;
@@ -77,10 +78,82 @@ public class ReaderController {
         }
         Subcontent sub = subOpt.get();
 
+        Integer prevCh = null;
+        Integer prevSc = null;
+        Integer nextCh = null;
+        Integer nextSc = null;
+
+        List<Content> orderedContents = Optional.ofNullable(course.getContents()).orElse(List.of()).stream()
+                .filter(Objects::nonNull)
+                .filter(c -> c.getSubcontents() != null && !c.getSubcontents().isEmpty())
+                .sorted(Comparator.comparingInt(Content::getOrder))
+                .toList();
+
+        int currentChapterIdx = -1;
+        for (int i = 0; i < orderedContents.size(); i++) {
+            if (orderedContents.get(i).getOrder() == chapterOrder) {
+                currentChapterIdx = i;
+                break;
+            }
+        }
+
+        List<Subcontent> orderedSubs = Optional.ofNullable(content.getSubcontents()).orElse(List.of()).stream()
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparingInt(Subcontent::getOrder))
+                .toList();
+
+        Subcontent prevSub = null;
+        Subcontent nextSub = null;
+        for (Subcontent s : orderedSubs) {
+            int o = s.getOrder();
+            if (o < subOrder && (prevSub == null || o > prevSub.getOrder())) {
+                prevSub = s;
+            }
+            if (o > subOrder && (nextSub == null || o < nextSub.getOrder())) {
+                nextSub = s;
+            }
+        }
+
+        if (prevSub != null) {
+            prevCh = chapterOrder;
+            prevSc = prevSub.getOrder();
+        } else if (currentChapterIdx > 0) {
+            Content prevChapter = orderedContents.get(currentChapterIdx - 1);
+            List<Subcontent> prevSubs = Optional.ofNullable(prevChapter.getSubcontents()).orElse(List.of()).stream()
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparingInt(Subcontent::getOrder))
+                    .toList();
+            if (!prevSubs.isEmpty()) {
+                prevCh = prevChapter.getOrder();
+                prevSc = prevSubs.get(prevSubs.size() - 1).getOrder();
+            }
+        }
+
+        if (nextSub != null) {
+            nextCh = chapterOrder;
+            nextSc = nextSub.getOrder();
+        } else if (currentChapterIdx >= 0 && currentChapterIdx < orderedContents.size() - 1) {
+            Content nextChapter = orderedContents.get(currentChapterIdx + 1);
+            List<Subcontent> nextSubs = Optional.ofNullable(nextChapter.getSubcontents()).orElse(List.of()).stream()
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparingInt(Subcontent::getOrder))
+                    .toList();
+            if (!nextSubs.isEmpty()) {
+                nextCh = nextChapter.getOrder();
+                nextSc = nextSubs.get(0).getOrder();
+            }
+        }
+
         model.addAttribute("course", course);
         model.addAttribute("content", content);
         model.addAttribute("sub", sub);
         model.addAttribute("markdownPath", sub.getMarkdownPath());
+        model.addAttribute("hasPrev", prevCh != null && prevSc != null);
+        model.addAttribute("prevCh", prevCh);
+        model.addAttribute("prevSc", prevSc);
+        model.addAttribute("hasNext", nextCh != null && nextSc != null);
+        model.addAttribute("nextCh", nextCh);
+        model.addAttribute("nextSc", nextSc);
         return "reader";
     }
 
