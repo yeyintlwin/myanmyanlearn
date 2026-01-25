@@ -174,4 +174,12 @@ public class LoginAttemptService {
             System.err.println("Error resetting failed attempts for user " + username + ": " + e.getMessage());
         }
     }
+
+    public void deleteAttemptsForUser(String username) {
+        if (username == null || username.isBlank()) {
+            return;
+        }
+        lockoutTimes.remove(username);
+        resetUserFailedAttempts(username);
+    }
 }

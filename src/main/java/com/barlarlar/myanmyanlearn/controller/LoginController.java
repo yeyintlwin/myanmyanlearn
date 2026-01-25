@@ -33,6 +33,7 @@ public class LoginController {
     @GetMapping("/login")
     public String showMyLoginPage(@RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
+            @RequestParam(value = "deleted", required = false) String deleted,
             @RequestParam(value = "locked", required = false) String locked,
             @RequestParam(value = "disabled", required = false) String disabled,
             @RequestParam(value = "expired", required = false) String expired,
@@ -43,6 +44,9 @@ public class LoginController {
         }
         if (logout != null) {
             model.addAttribute("logout", true);
+        }
+        if (deleted != null) {
+            model.addAttribute("deleted", true);
         }
         if (locked != null) {
             model.addAttribute("locked", true);

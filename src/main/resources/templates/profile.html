@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Profile</title>
+    <title th:text="#{profile.pageTitle}">MYAN MYAN LEARN - Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -20,7 +20,7 @@
   </head>
 
   <body class="min-h-screen font-sans text-gray-800 flex flex-col">
-    <nav th:replace="fragments/navbar :: appNavbar('Profile')"></nav>
+    <nav th:replace="fragments/navbar :: appNavbar(#{nav.profile})"></nav>
 
     <!-- Main Content -->
     <main class="flex-1 pt-28 pb-16">
@@ -28,7 +28,7 @@
         <div class="flex items-center justify-between mb-6 gap-4">
           <div class="min-w-0">
             <h1 class="text-white text-3xl sm:text-4xl font-extrabold">
-              Profile
+              <span th:text="#{nav.profile}">Profile</span>
             </h1>
           </div>
           <a
@@ -79,7 +79,7 @@
                     th:classappend="${userEmailVerified ? 'fa-check' : 'fa-exclamation'}"
                   ></i>
                   <span
-                    th:text="${userEmailVerified ? 'Email Verified' : 'Email Pending'}"
+                    th:text="${userEmailVerified} ? #{profile.badge.emailVerified} : #{profile.badge.emailPending}"
                   ></span>
                 </span>
                 <span
@@ -90,7 +90,9 @@
                     class="fas fa-user mr-1"
                     th:classappend="${userActive ? 'fa-check' : 'fa-times'}"
                   ></i>
-                  <span th:text="${userActive ? 'Active' : 'Inactive'}"></span>
+                  <span
+                    th:text="${userActive} ? #{profile.badge.active} : #{profile.badge.inactive}"
+                  ></span>
                 </span>
               </div>
             </div>
@@ -106,20 +108,24 @@
             >
               <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
                 <i class="fas fa-user-circle mr-3 text-primary-400"></i>
-                Personal Information
+                <span th:text="#{profile.section.personalInformation}"
+                  >Personal Information</span
+                >
               </h2>
 
               <div class="space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div class="flex-1">
                     <label class="block text-white/80 text-sm font-medium mb-2"
-                      >First Name</label
+                      ><span th:text="#{profile.field.firstName}"
+                        >First Name</span
+                      ></label
                     >
                     <div
                       class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20"
                     >
                       <span
-                        th:text="${userFirstName ?: 'Not provided'}"
+                        th:text="${userFirstName} ?: #{profile.value.notProvided}"
                         data-first-name="${userFirstName ?: ''}"
                         >Not provided</span
                       >
@@ -127,13 +133,15 @@
                   </div>
                   <div class="flex-1">
                     <label class="block text-white/80 text-sm font-medium mb-2"
-                      >Last Name</label
+                      ><span th:text="#{profile.field.lastName}"
+                        >Last Name</span
+                      ></label
                     >
                     <div
                       class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20"
                     >
                       <span
-                        th:text="${userLastName ?: 'Not provided'}"
+                        th:text="${userLastName} ?: #{profile.value.notProvided}"
                         data-last-name="${userLastName ?: ''}"
                         >Not provided</span
                       >
@@ -143,14 +151,16 @@
 
                 <div>
                   <label class="block text-white/80 text-sm font-medium mb-2"
-                    >Email Address</label
+                    ><span th:text="#{profile.field.emailAddress}"
+                      >Email Address</span
+                    ></label
                   >
                   <div
                     class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 flex items-center gap-3"
                   >
                     <i class="fas fa-envelope text-primary-400"></i>
                     <span
-                      th:text="${userEmail ?: 'Not provided'}"
+                      th:text="${userEmail} ?: #{profile.value.notProvided}"
                       data-email="${userEmail ?: ''}"
                       >Not provided</span
                     >
@@ -163,7 +173,7 @@
                         th:classappend="${userEmailVerified ? '' : 'fa-exclamation'}"
                       ></i>
                       <span
-                        th:text="${userEmailVerified ? 'Verified' : 'Pending'}"
+                        th:text="${userEmailVerified} ? #{profile.badge.verified} : #{profile.badge.pending}"
                       ></span>
                     </span>
                   </div>
@@ -171,13 +181,15 @@
 
                 <div>
                   <label class="block text-white/80 text-sm font-medium mb-2"
-                    >Username</label
+                    ><span th:text="#{profile.field.username}"
+                      >Username</span
+                    ></label
                   >
                   <div
                     class="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 flex items-center gap-3"
                   >
                     <i class="fas fa-at text-secondary-400"></i>
-                    <span th:text="${username ?: 'Not provided'}"
+                    <span th:text="${username} ?: #{profile.value.notProvided}"
                       >Not provided</span
                     >
                   </div>
@@ -193,30 +205,40 @@
         >
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-white flex items-center">
-              <i class="fas fa-user-edit mr-3 text-primary-400"></i> Change Name
+              <i class="fas fa-user-edit mr-3 text-primary-400"></i>
+              <span th:text="#{profile.changeName.title}">Change Name</span>
             </h3>
             <button
               id="toggleNameForm"
               class="px-6 py-3 bg-gradient-to-r from-primary-500 to-secondary-600 hover:from-primary-600 hover:to-secondary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
             >
               <i class="fas fa-edit mr-2"></i>
-              Edit Name
+              <span th:text="#{profile.changeName.edit}">Edit Name</span>
             </button>
           </div>
 
           <form id="changeNameForm" class="space-y-6 hidden">
+            <input type="hidden" id="csrfToken" th:value="${_csrf.token}" />
+            <input
+              type="hidden"
+              id="csrfHeader"
+              th:value="${_csrf.headerName}"
+            />
             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
               <div class="flex-1">
                 <label
                   for="newFirstName"
                   class="block text-white/80 text-sm font-medium mb-2"
-                  >First Name</label
+                  ><span th:text="#{profile.field.firstName}"
+                    >First Name</span
+                  ></label
                 >
                 <input
                   type="text"
                   id="newFirstName"
                   name="newFirstName"
                   class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  th:placeholder="#{profile.changeName.placeholder.first}"
                   placeholder="Enter your first name"
                   required
                 />
@@ -225,13 +247,16 @@
                 <label
                   for="newLastName"
                   class="block text-white/80 text-sm font-medium mb-2"
-                  >Last Name</label
+                  ><span th:text="#{profile.field.lastName}"
+                    >Last Name</span
+                  ></label
                 >
                 <input
                   type="text"
                   id="newLastName"
                   name="newLastName"
                   class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  th:placeholder="#{profile.changeName.placeholder.last}"
                   placeholder="Enter your last name"
                   required
                 />
@@ -241,89 +266,10 @@
             <div class="flex gap-4">
               <button
                 type="submit"
-                class="flex-1 px-6 py-3 bg-gradient-to-r from-primary-500 to-secondary-600 hover:from-primary-600 hover:to-secondary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                class="w-full px-6 py-3 bg-gradient-to-r from-primary-500 to-secondary-600 hover:from-primary-600 hover:to-secondary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
               >
                 <i class="fas fa-save mr-2"></i>
-                Update Name
-              </button>
-              <button
-                type="button"
-                id="cancelNameChange"
-                class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Change Email Section -->
-        <div
-          class="mt-8 bg-white/10 border border-white/10 rounded-2xl p-6 sm:p-8"
-        >
-          <div class="flex items-center justify-between mb-6">
-            <h3 class="text-2xl font-bold text-white flex items-center">
-              <i class="fas fa-envelope mr-3 text-primary-400"></i> Change Email
-            </h3>
-            <button
-              id="toggleEmailForm"
-              class="px-6 py-3 bg-gradient-to-r from-primary-500 to-red-600 hover:from-primary-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
-            >
-              <i class="fas fa-edit mr-2"></i>
-              Change Email
-            </button>
-          </div>
-
-          <form id="changeEmailForm" class="space-y-6 hidden">
-            <div>
-              <label
-                for="newEmail"
-                class="block text-white/80 text-sm font-medium mb-2"
-                >New Email Address</label
-              >
-              <input
-                type="email"
-                id="newEmail"
-                name="newEmail"
-                class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                placeholder="Enter your new email address"
-                required
-              />
-              <p class="text-white/60 text-xs mt-1">
-                A verification email will be sent to the new address
-              </p>
-            </div>
-
-            <div>
-              <label
-                for="confirmEmail"
-                class="block text-white/80 text-sm font-medium mb-2"
-                >Confirm New Email</label
-              >
-              <input
-                type="email"
-                id="confirmEmail"
-                name="confirmEmail"
-                class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                placeholder="Confirm your new email address"
-                required
-              />
-            </div>
-
-            <div class="flex gap-4">
-              <button
-                type="submit"
-                class="flex-1 px-6 py-3 bg-gradient-to-r from-primary-500 to-red-600 hover:from-primary-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
-              >
-                <i class="fas fa-save mr-2"></i>
-                Update Email
-              </button>
-              <button
-                type="button"
-                id="cancelEmailChange"
-                class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105"
-              >
-                Cancel
+                <span th:text="#{profile.changeName.update}">Update Name</span>
               </button>
             </div>
           </form>
@@ -335,14 +281,19 @@
         >
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-white flex items-center">
-              <i class="fas fa-lock mr-3 text-green-400"></i> Change Password
+              <i class="fas fa-lock mr-3 text-green-400"></i>
+              <span th:text="#{profile.changePassword.title}"
+                >Change Password</span
+              >
             </h3>
             <button
               id="togglePasswordForm"
               class="px-6 py-3 bg-gradient-to-r from-green-500 to-primary-600 hover:from-green-600 hover:to-primary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
             >
               <i class="fas fa-key mr-2"></i>
-              Change Password
+              <span th:text="#{profile.changePassword.change}"
+                >Change Password</span
+              >
             </button>
           </div>
 
@@ -351,7 +302,9 @@
               <label
                 for="oldPassword"
                 class="block text-white/80 text-sm font-medium mb-2"
-                >Current Password</label
+                ><span th:text="#{profile.changePassword.current}"
+                  >Current Password</span
+                ></label
               >
               <div class="relative">
                 <input
@@ -359,6 +312,7 @@
                   id="oldPassword"
                   name="oldPassword"
                   class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  th:placeholder="#{profile.changePassword.placeholder.current}"
                   placeholder="Enter your current password"
                   required
                 />
@@ -376,7 +330,9 @@
               <label
                 for="newPassword"
                 class="block text-white/80 text-sm font-medium mb-2"
-                >New Password</label
+                ><span th:text="#{profile.changePassword.new}"
+                  >New Password</span
+                ></label
               >
               <div class="relative">
                 <input
@@ -384,6 +340,7 @@
                   id="newPassword"
                   name="newPassword"
                   class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  th:placeholder="#{profile.changePassword.placeholder.new}"
                   placeholder="Enter your new password"
                   required
                   minlength="8"
@@ -397,7 +354,9 @@
                 </button>
               </div>
               <p class="text-white/60 text-xs mt-1">
-                Password must be at least 8 characters long
+                <span th:text="#{profile.changePassword.hint.minLength}"
+                  >Password must be at least 8 characters long</span
+                >
               </p>
             </div>
 
@@ -405,7 +364,9 @@
               <label
                 for="confirmPassword"
                 class="block text-white/80 text-sm font-medium mb-2"
-                >Confirm New Password</label
+                ><span th:text="#{profile.changePassword.confirm}"
+                  >Confirm New Password</span
+                ></label
               >
               <div class="relative">
                 <input
@@ -413,6 +374,7 @@
                   id="confirmPassword"
                   name="confirmPassword"
                   class="w-full bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  th:placeholder="#{profile.changePassword.placeholder.confirm}"
                   placeholder="Confirm your new password"
                   required
                 />
@@ -432,14 +394,9 @@
                 class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-primary-600 hover:from-green-600 hover:to-primary-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
               >
                 <i class="fas fa-save mr-2"></i>
-                Change Password
-              </button>
-              <button
-                type="button"
-                id="cancelPasswordChange"
-                class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105"
-              >
-                Cancel
+                <span th:text="#{profile.changePassword.change}"
+                  >Change Password</span
+                >
               </button>
             </div>
           </form>
@@ -455,17 +412,25 @@
             >
               <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-red-300 mb-2">Danger Zone</h3>
+            <h3 class="text-2xl font-bold text-red-300 mb-2">
+              <span th:text="#{profile.deleteAccount.danger.title}"
+                >Danger Zone</span
+              >
+            </h3>
             <p class="text-red-200/80 mb-6 max-w-2xl mx-auto">
-              Once you delete your account, there is no going back. Please be
-              certain. All your data will be permanently removed.
+              <span th:text="#{profile.deleteAccount.danger.desc}"
+                >Once you delete your account, there is no going back. Please be
+                certain. All your data will be permanently removed.</span
+              >
             </p>
             <button
               id="deleteAccountBtn"
               class="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl border-2 border-red-500"
             >
               <i class="fas fa-trash mr-2"></i>
-              Delete My Account
+              <span th:text="#{profile.deleteAccount.button.open}"
+                >Delete My Account</span
+              >
             </button>
           </div>
         </div>
@@ -486,10 +451,16 @@
           >
             <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
           </div>
-          <h3 class="text-2xl font-bold text-white mb-2">Delete Account</h3>
+          <h3 class="text-2xl font-bold text-white mb-2">
+            <span th:text="#{profile.deleteAccount.modal.title}"
+              >Delete Account</span
+            >
+          </h3>
           <p class="text-white/80 mb-6">
-            Are you sure you want to delete your account? This action cannot be
-            undone and all your data will be permanently removed.
+            <span th:text="#{profile.deleteAccount.modal.desc}"
+              >Are you sure you want to delete your account? This action cannot
+              be undone and all your data will be permanently removed.</span
+            >
           </p>
 
           <!-- Confirmation Text Input -->
@@ -497,21 +468,24 @@
             <label
               for="deleteConfirmation"
               class="block text-white/80 text-sm font-medium mb-2"
+              th:utext="#{profile.deleteAccount.modal.confirmLabel}"
+              >Type <span class="font-bold text-red-300">delete</span> to
+              confirm:</label
             >
-              Type <span class="font-bold text-red-300">delete</span> to
-              confirm:
-            </label>
             <input
               type="text"
               id="deleteConfirmation"
               class="w-full px-4 py-3 bg-white/10 backdrop-blur-md rounded-xl text-white border border-white/20 focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-300"
+              th:placeholder="#{profile.deleteAccount.modal.placeholder}"
               placeholder="Type 'delete' here"
             />
             <div
               id="confirmationError"
               class="text-red-400 text-sm mt-2 hidden"
             >
-              Please type "delete" exactly to confirm account deletion.
+              <span th:text="#{profile.deleteAccount.modal.error}"
+                >Please type "delete" exactly to confirm account deletion.</span
+              >
             </div>
           </div>
 
@@ -520,21 +494,95 @@
               id="cancelDelete"
               class="flex-1 px-4 py-3 bg-white/20 backdrop-blur-md rounded-xl text-white font-medium transition-all duration-300 hover:bg-white/30 border border-white/30"
             >
-              Cancel
+              <span th:text="#{profile.deleteAccount.button.cancel}"
+                >Cancel</span
+              >
             </button>
             <button
               id="confirmDelete"
               class="flex-1 px-4 py-3 bg-red-500/20 backdrop-blur-md rounded-xl text-red-300 font-medium transition-all duration-300 hover:bg-red-500/30 border border-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled
             >
-              Delete Account
+              <span th:text="#{profile.deleteAccount.button.confirm}"
+                >Delete Account</span
+              >
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <script>
+    <script th:inline="javascript">
+      const CHANGE_NAME_LABEL_EDIT =
+        /*[[#{profile.changeName.edit}]]*/ "Edit Name";
+      const CHANGE_NAME_LABEL_CANCEL =
+        /*[[#{profile.changeName.cancel}]]*/ "Cancel";
+      const CHANGE_NAME_TOGGLE_EDIT_HTML =
+        '<i class="fas fa-edit mr-2"></i>' + CHANGE_NAME_LABEL_EDIT;
+      const CHANGE_NAME_TOGGLE_CANCEL_HTML =
+        '<i class="fas fa-times mr-2"></i>' + CHANGE_NAME_LABEL_CANCEL;
+
+      const CHANGE_NAME_MSG_REQUIRED =
+        /*[[#{profile.changeName.msg.required}]]*/ "Both first name and last name are required!";
+      const CHANGE_NAME_MSG_MIN_LENGTH =
+        /*[[#{profile.changeName.msg.minLength}]]*/ "Names must be at least 2 characters long!";
+      const CHANGE_NAME_MSG_MAX_LENGTH =
+        /*[[#{profile.changeName.msg.maxLength}]]*/ "Names must be 50 characters or fewer!";
+      const CHANGE_NAME_MSG_UPDATING =
+        /*[[#{profile.changeName.msg.updating}]]*/ "Updating...";
+      const CHANGE_NAME_MSG_SUCCESS =
+        /*[[#{profile.changeName.msg.success}]]*/ "Name updated successfully!";
+      const CHANGE_NAME_MSG_FAIL =
+        /*[[#{profile.changeName.msg.fail}]]*/ "Failed to update name!";
+      const CHANGE_NAME_MSG_ERROR =
+        /*[[#{profile.changeName.msg.error}]]*/ "An error occurred while updating name!";
+      const CHANGE_NAME_MSG_CSRF =
+        /*[[#{profile.changeName.msg.csrf}]]*/ "Request blocked (CSRF). Please refresh and try again.";
+      const CHANGE_NAME_MSG_HTTP_FAIL =
+        /*[[#{profile.changeName.msg.httpFail}]]*/ "Request failed. Please try again.";
+
+      const CHANGE_PASSWORD_LABEL_CHANGE =
+        /*[[#{profile.changePassword.change}]]*/ "Change Password";
+      const CHANGE_PASSWORD_LABEL_CANCEL =
+        /*[[#{profile.changePassword.cancel}]]*/ "Cancel";
+      const CHANGE_PASSWORD_TOGGLE_CHANGE_HTML =
+        '<i class="fas fa-key mr-2"></i>' + CHANGE_PASSWORD_LABEL_CHANGE;
+      const CHANGE_PASSWORD_TOGGLE_CANCEL_HTML =
+        '<i class="fas fa-times mr-2"></i>' + CHANGE_PASSWORD_LABEL_CANCEL;
+
+      const CHANGE_PASSWORD_MSG_MISMATCH =
+        /*[[#{profile.changePassword.msg.mismatch}]]*/ "New passwords do not match!";
+      const CHANGE_PASSWORD_MSG_MIN_LENGTH =
+        /*[[#{profile.changePassword.msg.minLength}]]*/ "New password must be at least 8 characters long!";
+      const CHANGE_PASSWORD_MSG_DIFFERENT =
+        /*[[#{profile.changePassword.msg.different}]]*/ "New password must be different from current password!";
+      const CHANGE_PASSWORD_MSG_SUCCESS =
+        /*[[#{profile.changePassword.msg.success}]]*/ "Password changed successfully!";
+      const CHANGE_PASSWORD_MSG_FAIL =
+        /*[[#{profile.changePassword.msg.fail}]]*/ "Failed to change password!";
+      const CHANGE_PASSWORD_MSG_ERROR =
+        /*[[#{profile.changePassword.msg.error}]]*/ "An error occurred while changing password!";
+      const CHANGE_PASSWORD_MSG_CHANGING =
+        /*[[#{profile.changePassword.msg.changing}]]*/ "Changing...";
+      const CHANGE_PASSWORD_MSG_CSRF =
+        /*[[#{profile.changePassword.msg.csrf}]]*/ "Request blocked (CSRF). Please refresh and try again.";
+      const CHANGE_PASSWORD_MSG_HTTP_FAIL =
+        /*[[#{profile.changePassword.msg.httpFail}]]*/ "Request failed. Please try again.";
+
+      const DELETE_ACCOUNT_LABEL_CONFIRM =
+        /*[[#{profile.deleteAccount.button.confirm}]]*/ "Delete Account";
+      const DELETE_ACCOUNT_LABEL_DELETING =
+        /*[[#{profile.deleteAccount.msg.deleting}]]*/ "Deleting...";
+      const DELETE_ACCOUNT_BTN_CONFIRM_HTML =
+        '<i class="fas fa-trash mr-2"></i>' + DELETE_ACCOUNT_LABEL_CONFIRM;
+
+      const DELETE_ACCOUNT_MSG_FAIL =
+        /*[[#{profile.deleteAccount.msg.fail}]]*/ "Failed to delete account. Please try again.";
+      const DELETE_ACCOUNT_MSG_ERROR =
+        /*[[#{profile.deleteAccount.msg.error}]]*/ "An error occurred. Please try again.";
+      const DELETE_ACCOUNT_MSG_CSRF =
+        /*[[#{profile.deleteAccount.msg.csrf}]]*/ "Request blocked (CSRF). Please refresh and try again.";
+
       document.addEventListener("DOMContentLoaded", function () {
         const deleteBtn = document.getElementById("deleteAccountBtn");
         const deleteModal = document.getElementById("deleteModal");
@@ -583,30 +631,58 @@
           }
 
           confirmBtn.innerHTML =
-            '<i class="fas fa-spinner fa-spin mr-2"></i>Deleting...';
+            '<i class="fas fa-spinner fa-spin mr-2"></i>' +
+            DELETE_ACCOUNT_LABEL_DELETING;
           confirmBtn.disabled = true;
+
+          const csrfTokenEl = document.getElementById("csrfToken");
+          const csrfHeaderEl = document.getElementById("csrfHeader");
+          const csrfToken = csrfTokenEl ? csrfTokenEl.value : "";
+          const csrfHeader = csrfHeaderEl ? csrfHeaderEl.value : "X-CSRF-TOKEN";
+          const headers = {
+            "Content-Type": "application/json",
+          };
+          if (csrfToken) {
+            headers[csrfHeader] = csrfToken;
+          }
 
           fetch("/profile/delete", {
             method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers,
+            credentials: "same-origin",
           })
-            .then((response) => {
-              if (response.ok) {
-                // Redirect to login page after successful deletion
-                window.location.href = "/login?deleted=true";
-              } else {
-                alert("Failed to delete account. Please try again.");
-                confirmBtn.innerHTML =
-                  '<i class="fas fa-trash mr-2"></i>Delete Account';
-                confirmBtn.disabled = false;
+            .then(async (response) => {
+              const text = await response.text();
+              try {
+                return { response, data: JSON.parse(text) };
+              } catch (e) {
+                return {
+                  response,
+                  data: {
+                    success: false,
+                    message:
+                      response.status === 403
+                        ? DELETE_ACCOUNT_MSG_CSRF
+                        : `${DELETE_ACCOUNT_MSG_FAIL} (${response.status})`,
+                  },
+                };
               }
             })
+            .then(({ response, data }) => {
+              if (response.ok && data && data.success) {
+                window.location.href = "/login?deleted=true";
+                return;
+              }
+              showMessage(
+                (data && data.message) || DELETE_ACCOUNT_MSG_FAIL,
+                "error",
+              );
+              confirmBtn.innerHTML = DELETE_ACCOUNT_BTN_CONFIRM_HTML;
+              confirmBtn.disabled = false;
+            })
             .catch(() => {
-              alert("An error occurred. Please try again.");
-              confirmBtn.innerHTML =
-                '<i class="fas fa-trash mr-2"></i>Delete Account';
+              showMessage(DELETE_ACCOUNT_MSG_ERROR, "error");
+              confirmBtn.innerHTML = DELETE_ACCOUNT_BTN_CONFIRM_HTML;
               confirmBtn.disabled = false;
             });
         });
@@ -617,85 +693,7 @@
           }
         });
 
-        const changeEmailForm = document.getElementById("changeEmailForm");
-        const cancelEmailChange = document.getElementById("cancelEmailChange");
-        const toggleEmailForm = document.getElementById("toggleEmailForm");
-
-        if (toggleEmailForm) {
-          toggleEmailForm.addEventListener("click", function () {
-            const form = document.getElementById("changeEmailForm");
-            if (form.classList.contains("hidden")) {
-              form.classList.remove("hidden");
-              this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
-              this.classList.remove(
-                "from-primary-500",
-                "to-red-600",
-                "hover:from-primary-600",
-                "hover:to-red-700",
-              );
-              this.classList.add(
-                "from-red-500",
-                "to-primary-600",
-                "hover:from-red-600",
-                "hover:to-primary-700",
-              );
-              var el = document.querySelector("[data-email]");
-              document.getElementById("newEmail").value = el
-                ? el.textContent
-                : "";
-              document.getElementById("confirmEmail").value = "";
-            } else {
-              form.classList.add("hidden");
-              this.innerHTML = '<i class="fas fa-edit mr-2"></i>Change Email';
-              this.classList.remove(
-                "from-red-500",
-                "to-primary-600",
-                "hover:from-red-600",
-                "hover:to-primary-700",
-              );
-              this.classList.add(
-                "from-primary-500",
-                "to-red-600",
-                "hover:from-primary-600",
-                "hover:to-red-700",
-              );
-              clearEmailForm();
-            }
-          });
-        }
-
-        if (changeEmailForm) {
-          changeEmailForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-            handleEmailChange();
-          });
-        }
-
-        if (cancelEmailChange) {
-          cancelEmailChange.addEventListener("click", function () {
-            clearEmailForm();
-            const form = document.getElementById("changeEmailForm");
-            const toggleBtn = document.getElementById("toggleEmailForm");
-            form.classList.add("hidden");
-            toggleBtn.innerHTML =
-              '<i class="fas fa-edit mr-2"></i>Change Email';
-            toggleBtn.classList.remove(
-              "from-red-500",
-              "to-primary-600",
-              "hover:from-red-600",
-              "hover:to-primary-700",
-            );
-            toggleBtn.classList.add(
-              "from-primary-500",
-              "to-red-600",
-              "hover:from-primary-600",
-              "hover:to-red-700",
-            );
-          });
-        }
-
         const changeNameForm = document.getElementById("changeNameForm");
-        const cancelNameChange = document.getElementById("cancelNameChange");
         const toggleNameForm = document.getElementById("toggleNameForm");
 
         if (toggleNameForm) {
@@ -703,7 +701,7 @@
             const form = document.getElementById("changeNameForm");
             if (form.classList.contains("hidden")) {
               form.classList.remove("hidden");
-              this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
+              this.innerHTML = CHANGE_NAME_TOGGLE_CANCEL_HTML;
               this.classList.remove(
                 "from-primary-500",
                 "to-secondary-600",
@@ -726,7 +724,7 @@
                 : "";
             } else {
               form.classList.add("hidden");
-              this.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
+              this.innerHTML = CHANGE_NAME_TOGGLE_EDIT_HTML;
               this.classList.remove(
                 "from-red-500",
                 "to-primary-600",
@@ -751,33 +749,8 @@
           });
         }
 
-        if (cancelNameChange) {
-          cancelNameChange.addEventListener("click", function () {
-            clearNameForm();
-            const form = document.getElementById("changeNameForm");
-            const toggleBtn = document.getElementById("toggleNameForm");
-            form.classList.add("hidden");
-            toggleBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
-            toggleBtn.classList.remove(
-              "from-red-500",
-              "to-primary-600",
-              "hover:from-red-600",
-              "hover:to-primary-700",
-            );
-            toggleBtn.classList.add(
-              "from-primary-500",
-              "to-secondary-600",
-              "hover:from-primary-600",
-              "hover:to-secondary-700",
-            );
-          });
-        }
-
         const changePasswordForm =
           document.getElementById("changePasswordForm");
-        const cancelPasswordChange = document.getElementById(
-          "cancelPasswordChange",
-        );
         const togglePasswordForm =
           document.getElementById("togglePasswordForm");
 
@@ -786,7 +759,7 @@
             const form = document.getElementById("changePasswordForm");
             if (form.classList.contains("hidden")) {
               form.classList.remove("hidden");
-              this.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
+              this.innerHTML = CHANGE_PASSWORD_TOGGLE_CANCEL_HTML;
               this.classList.remove(
                 "from-green-500",
                 "to-primary-600",
@@ -801,7 +774,7 @@
               );
             } else {
               form.classList.add("hidden");
-              this.innerHTML = '<i class="fas fa-key mr-2"></i>Change Password';
+              this.innerHTML = CHANGE_PASSWORD_TOGGLE_CHANGE_HTML;
               this.classList.remove(
                 "from-red-500",
                 "to-primary-600",
@@ -823,29 +796,6 @@
           changePasswordForm.addEventListener("submit", function (e) {
             e.preventDefault();
             handlePasswordChange();
-          });
-        }
-
-        if (cancelPasswordChange) {
-          cancelPasswordChange.addEventListener("click", function () {
-            clearPasswordForm();
-            const form = document.getElementById("changePasswordForm");
-            const toggleBtn = document.getElementById("togglePasswordForm");
-            form.classList.add("hidden");
-            toggleBtn.innerHTML =
-              '<i class="fas fa-key mr-2"></i>Change Password';
-            toggleBtn.classList.remove(
-              "from-red-500",
-              "to-primary-600",
-              "hover:from-red-600",
-              "hover:to-primary-700",
-            );
-            toggleBtn.classList.add(
-              "from-green-500",
-              "to-primary-600",
-              "hover:from-green-600",
-              "hover:to-primary-700",
-            );
           });
         }
       });
@@ -872,23 +822,17 @@
           document.getElementById("confirmPassword").value;
 
         if (newPassword !== confirmPassword) {
-          showMessage("New passwords do not match!", "error");
+          showMessage(CHANGE_PASSWORD_MSG_MISMATCH, "error");
           return;
         }
 
         if (newPassword.length < 8) {
-          showMessage(
-            "New password must be at least 8 characters long!",
-            "error",
-          );
+          showMessage(CHANGE_PASSWORD_MSG_MIN_LENGTH, "error");
           return;
         }
 
         if (oldPassword === newPassword) {
-          showMessage(
-            "New password must be different from current password!",
-            "error",
-          );
+          showMessage(CHANGE_PASSWORD_MSG_DIFFERENT, "error");
           return;
         }
 
@@ -898,29 +842,52 @@
         );
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML =
-          '<i class="fas fa-spinner fa-spin mr-2"></i>Changing...';
+          '<i class="fas fa-spinner fa-spin mr-2"></i>' +
+          CHANGE_PASSWORD_MSG_CHANGING;
         submitBtn.disabled = true;
+
+        const csrfTokenEl = document.getElementById("csrfToken");
+        const csrfHeaderEl = document.getElementById("csrfHeader");
+        const csrfToken = csrfTokenEl ? csrfTokenEl.value : "";
+        const csrfHeader = csrfHeaderEl ? csrfHeaderEl.value : "X-CSRF-TOKEN";
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        if (csrfToken) {
+          headers[csrfHeader] = csrfToken;
+        }
 
         fetch("/profile/change-password", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers,
+          credentials: "same-origin",
           body: JSON.stringify({
             oldPassword: oldPassword,
             newPassword: newPassword,
           }),
         })
-          .then((response) => response.json())
+          .then(async (response) => {
+            const text = await response.text();
+            try {
+              return JSON.parse(text);
+            } catch (e) {
+              return {
+                success: false,
+                message:
+                  response.status === 403
+                    ? CHANGE_PASSWORD_MSG_CSRF
+                    : `${CHANGE_PASSWORD_MSG_HTTP_FAIL} (${response.status})`,
+              };
+            }
+          })
           .then((data) => {
             if (data.success) {
-              showMessage("Password changed successfully!", "success");
+              showMessage(CHANGE_PASSWORD_MSG_SUCCESS, "success");
               clearPasswordForm();
               const form = document.getElementById("changePasswordForm");
               const toggleBtn = document.getElementById("togglePasswordForm");
               form.classList.add("hidden");
-              toggleBtn.innerHTML =
-                '<i class="fas fa-key mr-2"></i>Change Password';
+              toggleBtn.innerHTML = CHANGE_PASSWORD_TOGGLE_CHANGE_HTML;
               toggleBtn.classList.remove(
                 "from-red-500",
                 "to-primary-600",
@@ -934,106 +901,16 @@
                 "hover:to-primary-700",
               );
             } else {
-              showMessage(
-                data.message || "Failed to change password!",
-                "error",
-              );
+              showMessage(data.message || CHANGE_PASSWORD_MSG_FAIL, "error");
             }
           })
           .catch(() => {
-            showMessage("An error occurred while changing password!", "error");
+            showMessage(CHANGE_PASSWORD_MSG_ERROR, "error");
           })
           .finally(() => {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
           });
-      }
-
-      function handleEmailChange() {
-        const newEmail = document.getElementById("newEmail").value.trim();
-        const confirmEmail = document
-          .getElementById("confirmEmail")
-          .value.trim();
-
-        if (!newEmail || !confirmEmail) {
-          showMessage("Both email fields are required!", "error");
-          return;
-        }
-
-        if (newEmail !== confirmEmail) {
-          showMessage("Email addresses do not match!", "error");
-          return;
-        }
-
-        // Basic email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(newEmail)) {
-          showMessage("Please enter a valid email address!", "error");
-          return;
-        }
-
-        // Show loading state
-        const submitBtn = document.querySelector(
-          '#changeEmailForm button[type="submit"]',
-        );
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML =
-          '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
-        submitBtn.disabled = true;
-
-        fetch("/profile/change-email", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            newEmail: newEmail,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              showMessage(
-                "Email update request sent! Please check your new email for verification.",
-                "success",
-              );
-              clearEmailForm();
-              const form = document.getElementById("changeEmailForm");
-              const toggleBtn = document.getElementById("toggleEmailForm");
-              form.classList.add("hidden");
-              toggleBtn.innerHTML =
-                '<i class="fas fa-edit mr-2"></i>Change Email';
-              toggleBtn.classList.remove(
-                "from-red-500",
-                "to-primary-600",
-                "hover:from-red-600",
-                "hover:to-primary-700",
-              );
-              toggleBtn.classList.add(
-                "from-primary-500",
-                "to-red-600",
-                "hover:from-primary-600",
-                "hover:to-red-700",
-              );
-              setTimeout(() => {
-                window.location.reload();
-              }, 2000);
-            } else {
-              showMessage(data.message || "Failed to update email!", "error");
-            }
-          })
-          .catch(() => {
-            showMessage("An error occurred while updating email!", "error");
-          })
-          .finally(() => {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-          });
-      }
-
-      function clearEmailForm() {
-        document.getElementById("newEmail").value = "";
-        document.getElementById("confirmEmail").value = "";
       }
 
       function handleNameChange() {
@@ -1043,12 +920,17 @@
         const newLastName = document.getElementById("newLastName").value.trim();
 
         if (!newFirstName || !newLastName) {
-          showMessage("Both first name and last name are required!", "error");
+          showMessage(CHANGE_NAME_MSG_REQUIRED, "error");
           return;
         }
 
         if (newFirstName.length < 2 || newLastName.length < 2) {
-          showMessage("Names must be at least 2 characters long!", "error");
+          showMessage(CHANGE_NAME_MSG_MIN_LENGTH, "error");
+          return;
+        }
+
+        if (newFirstName.length > 50 || newLastName.length > 50) {
+          showMessage(CHANGE_NAME_MSG_MAX_LENGTH, "error");
           return;
         }
 
@@ -1058,28 +940,51 @@
         );
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML =
-          '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
+          '<i class="fas fa-spinner fa-spin mr-2"></i>' +
+          CHANGE_NAME_MSG_UPDATING;
         submitBtn.disabled = true;
+
+        const csrfTokenEl = document.getElementById("csrfToken");
+        const csrfHeaderEl = document.getElementById("csrfHeader");
+        const csrfToken = csrfTokenEl ? csrfTokenEl.value : "";
+        const csrfHeader = csrfHeaderEl ? csrfHeaderEl.value : "X-CSRF-TOKEN";
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        if (csrfToken) {
+          headers[csrfHeader] = csrfToken;
+        }
 
         fetch("/profile/change-name", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers,
           body: JSON.stringify({
             firstName: newFirstName,
             lastName: newLastName,
           }),
         })
-          .then((response) => response.json())
+          .then(async (response) => {
+            const text = await response.text();
+            try {
+              return JSON.parse(text);
+            } catch (e) {
+              return {
+                success: false,
+                message:
+                  response.status === 403
+                    ? CHANGE_NAME_MSG_CSRF
+                    : `${CHANGE_NAME_MSG_HTTP_FAIL} (${response.status})`,
+              };
+            }
+          })
           .then((data) => {
             if (data.success) {
-              showMessage("Name updated successfully!", "success");
+              showMessage(CHANGE_NAME_MSG_SUCCESS, "success");
               clearNameForm();
               const form = document.getElementById("changeNameForm");
               const toggleBtn = document.getElementById("toggleNameForm");
               form.classList.add("hidden");
-              toggleBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Name';
+              toggleBtn.innerHTML = CHANGE_NAME_TOGGLE_EDIT_HTML;
               toggleBtn.classList.remove(
                 "from-red-500",
                 "to-primary-600",
@@ -1096,11 +1001,11 @@
                 window.location.reload();
               }, 1500);
             } else {
-              showMessage(data.message || "Failed to update name!", "error");
+              showMessage(data.message || CHANGE_NAME_MSG_FAIL, "error");
             }
           })
           .catch(() => {
-            showMessage("An error occurred while updating name!", "error");
+            showMessage(CHANGE_NAME_MSG_ERROR, "error");
           })
           .finally(() => {
             submitBtn.innerHTML = originalText;

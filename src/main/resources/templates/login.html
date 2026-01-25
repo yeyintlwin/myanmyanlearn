@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -219,6 +219,22 @@
           </div>
         </div>
 
+        <!-- Account Deleted Message -->
+        <div
+          th:if="${deleted}"
+          class="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-2xl backdrop-blur-sm"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-400 mr-3"></i>
+            <div
+              class="text-green-200 text-sm font-medium"
+              th:text="#{login.deletedSuccess}"
+            >
+              Your account has been deleted successfully.
+            </div>
+          </div>
+        </div>
+
         <!-- Username Field -->
         <div class="mb-6">
           <label
@@ -396,7 +412,7 @@
 
       // Login Form Validation
       const loginForm = document.querySelector(
-        'form[th\\:action="@{/authenticateTheUser}"]'
+        'form[th\\:action="@{/authenticateTheUser}"]',
       );
       const usernameInput = document.getElementById("username");
       const passwordInput = document.getElementById("password");

@@ -1,8 +1,15 @@
 package com.barlarlar.myanmyanlearn.controller;
 
 import com.barlarlar.myanmyanlearn.entity.Member;
+import com.barlarlar.myanmyanlearn.repository.AssessmentScoreRecordRepository;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
+import com.barlarlar.myanmyanlearn.repository.OtpVerificationRepository;
+import com.barlarlar.myanmyanlearn.repository.PasswordResetTokenRepository;
+import com.barlarlar.myanmyanlearn.repository.RoleRepository;
+import com.barlarlar.myanmyanlearn.service.LoginAttemptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,9 +22,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +41,28 @@ public class ProfileController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private OtpVerificationRepository otpVerificationRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private AssessmentScoreRecordRepository assessmentScoreRecordRepository;
+
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+
+    private static final int NAME_MIN_LENGTH = 2;
+    private static final int NAME_MAX_LENGTH = 50;
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[\\p{L}\\p{M}][\\p{L}\\p{M} '\\-]*[\\p{L}\\p{M}]$");
 
     @GetMapping("/profile")
     public String profilePage(Model model) {
@@ -113,15 +145,21 @@ public class ProfileController {
     }
 
     @DeleteMapping("/profile/delete")
-    public ResponseEntity<String> deleteAccount(HttpServletRequest request, HttpServletResponse response) {
+    @ResponseBody
+    @Transactional
+    public ResponseEntity<Map<String, Object>> deleteAccount(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("=== ProfileController.deleteAccount() called ===");
+
+        Map<String, Object> body = new HashMap<>();
 
         try {
             // Get authenticated user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated() ||
                     authentication.getName().equals("anonymousUser")) {
-                return ResponseEntity.status(401).body("Not authenticated");
+                body.put("success", false);
+                body.put("message", msg("profile.deleteAccount.msg.unauth"));
+                return ResponseEntity.status(401).body(body);
             }
 
             String username = authentication.getName();
@@ -133,105 +171,38 @@ public class ProfileController {
                 Member member = memberOpt.get();
                 System.out.println("Found user: " + member.getFirstName() + " " + member.getLastName());
 
-                // Delete the user from database
+                String email = member.getEmail();
+
+                assessmentScoreRecordRepository.deleteByUserId(username);
+                roleRepository.deleteByUserId(username);
+                otpVerificationRepository.deleteByUserId(username);
+                if (email != null && !email.isBlank()) {
+                    passwordResetTokenRepository.deleteByEmail(email);
+                    otpVerificationRepository.deleteByEmail(email);
+                }
+                loginAttemptService.deleteAttemptsForUser(username);
+
                 memberRepository.delete(member);
                 System.out.println("User account deleted successfully");
 
                 // Logout the user
                 new SecurityContextLogoutHandler().logout(request, response, authentication);
 
-                return ResponseEntity.ok("Account deleted successfully");
+                body.put("success", true);
+                body.put("message", msg("profile.deleteAccount.msg.success"));
+                return ResponseEntity.ok(body);
             } else {
                 System.out.println("User not found: " + username);
-                return ResponseEntity.status(404).body("User not found");
+                body.put("success", false);
+                body.put("message", msg("profile.deleteAccount.msg.notFound"));
+                return ResponseEntity.status(404).body(body);
             }
         } catch (Exception e) {
             System.err.println("Error deleting account: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Error deleting account");
-        }
-    }
-
-    /**
-     * Change user email
-     */
-    @PostMapping("/profile/change-email")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> changeEmail(@RequestBody Map<String, String> request) {
-        System.out.println("=== ProfileController.changeEmail() called ===");
-
-        Map<String, Object> response = new HashMap<>();
-
-        try {
-            // Get authenticated user
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-
-            if (username == null || username.equals("anonymousUser")) {
-                response.put("success", false);
-                response.put("message", "User not authenticated");
-                return ResponseEntity.status(401).body(response);
-            }
-
-            // Get request parameters
-            String newEmail = request.get("newEmail");
-
-            if (newEmail == null || newEmail.trim().isEmpty()) {
-                response.put("success", false);
-                response.put("message", "New email address is required");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Basic email validation
-            if (!newEmail.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
-                response.put("success", false);
-                response.put("message", "Please enter a valid email address");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Find user in database
-            Optional<Member> memberOptional = memberRepository.findByUserIdAndActive(username, true);
-            if (!memberOptional.isPresent()) {
-                response.put("success", false);
-                response.put("message", "User not found");
-                return ResponseEntity.status(404).body(response);
-            }
-
-            Member member = memberOptional.get();
-
-            // Check if email is already in use by another user
-            Optional<Member> existingEmailMember = memberRepository.findByEmail(newEmail.trim());
-            if (existingEmailMember.isPresent() && !existingEmailMember.get().getUserId().equals(username)) {
-                response.put("success", false);
-                response.put("message", "This email address is already in use by another account");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Check if it's the same email
-            if (member.getEmail().equals(newEmail.trim())) {
-                response.put("success", false);
-                response.put("message", "New email must be different from current email");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Update email and set as unverified
-            member.setEmail(newEmail.trim());
-            member.setEmailVerified(false);
-            memberRepository.save(member);
-
-            System.out.println("Email change request processed for user: " + username + " to: " + newEmail);
-
-            response.put("success", true);
-            response.put("message", "Email change request processed. Please check your new email for verification.");
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            System.err.println("Error changing email: " + e.getMessage());
-            e.printStackTrace();
-
-            response.put("success", false);
-            response.put("message", "An error occurred while updating email");
-            return ResponseEntity.status(500).body(response);
+            body.put("success", false);
+            body.put("message", msg("profile.deleteAccount.msg.error"));
+            return ResponseEntity.status(500).body(body);
         }
     }
 
@@ -246,53 +217,60 @@ public class ProfileController {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // Get authenticated user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
             if (username == null || username.equals("anonymousUser")) {
                 response.put("success", false);
-                response.put("message", "User not authenticated");
+                response.put("message", msg("profile.changeName.msg.unauth"));
                 return ResponseEntity.status(401).body(response);
             }
 
-            // Get request parameters
-            String firstName = request.get("firstName");
-            String lastName = request.get("lastName");
+            String firstName = request.get("firstName") != null ? request.get("firstName").trim() : null;
+            String lastName = request.get("lastName") != null ? request.get("lastName").trim() : null;
 
-            if (firstName == null || lastName == null || firstName.trim().isEmpty() || lastName.trim().isEmpty()) {
+            if (firstName == null || lastName == null || firstName.isEmpty() || lastName.isEmpty()) {
                 response.put("success", false);
-                response.put("message", "Both first name and last name are required");
+                response.put("message", msg("profile.changeName.msg.required"));
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Validate name length
-            if (firstName.trim().length() < 2 || lastName.trim().length() < 2) {
+            if (firstName.length() < NAME_MIN_LENGTH || lastName.length() < NAME_MIN_LENGTH) {
                 response.put("success", false);
-                response.put("message", "Names must be at least 2 characters long");
+                response.put("message", msg("profile.changeName.msg.minLength"));
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Find user in database
+            if (firstName.length() > NAME_MAX_LENGTH || lastName.length() > NAME_MAX_LENGTH) {
+                response.put("success", false);
+                response.put("message", msg("profile.changeName.msg.maxLength"));
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (!NAME_PATTERN.matcher(firstName).matches() || !NAME_PATTERN.matcher(lastName).matches()) {
+                response.put("success", false);
+                response.put("message", msg("profile.changeName.msg.invalid"));
+                return ResponseEntity.badRequest().body(response);
+            }
+
             Optional<Member> memberOptional = memberRepository.findByUserIdAndActive(username, true);
             if (!memberOptional.isPresent()) {
                 response.put("success", false);
-                response.put("message", "User not found");
+                response.put("message", msg("profile.changeName.msg.notFound"));
                 return ResponseEntity.status(404).body(response);
             }
 
             Member member = memberOptional.get();
 
-            // Update names
-            member.setFirstName(firstName.trim());
-            member.setLastName(lastName.trim());
+            member.setFirstName(firstName);
+            member.setLastName(lastName);
             memberRepository.save(member);
 
             System.out
                     .println("Name changed successfully for user: " + username + " to: " + firstName + " " + lastName);
 
             response.put("success", true);
-            response.put("message", "Name updated successfully");
+            response.put("message", msg("profile.changeName.msg.success"));
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
@@ -300,7 +278,12 @@ public class ProfileController {
             e.printStackTrace();
 
             response.put("success", false);
-            response.put("message", "An error occurred while updating name");
+            String rootMessage = rootMessage(e);
+            if (rootMessage != null && rootMessage.toLowerCase().contains("incorrect string value")) {
+                response.put("message", msg("profile.changeName.msg.charset"));
+            } else {
+                response.put("message", msg("profile.changeName.msg.error"));
+            }
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -322,7 +305,7 @@ public class ProfileController {
 
             if (username == null || username.equals("anonymousUser")) {
                 response.put("success", false);
-                response.put("message", "User not authenticated");
+                response.put("message", msg("profile.changePassword.msg.unauth"));
                 return ResponseEntity.status(401).body(response);
             }
 
@@ -333,14 +316,14 @@ public class ProfileController {
             if (oldPassword == null || newPassword == null || oldPassword.trim().isEmpty()
                     || newPassword.trim().isEmpty()) {
                 response.put("success", false);
-                response.put("message", "Old password and new password are required");
+                response.put("message", msg("profile.changePassword.msg.required"));
                 return ResponseEntity.badRequest().body(response);
             }
 
             // Validate new password length
             if (newPassword.length() < 8) {
                 response.put("success", false);
-                response.put("message", "New password must be at least 8 characters long");
+                response.put("message", msg("profile.changePassword.msg.minLength"));
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -348,7 +331,7 @@ public class ProfileController {
             Optional<Member> memberOptional = memberRepository.findByUserIdAndActive(username, true);
             if (!memberOptional.isPresent()) {
                 response.put("success", false);
-                response.put("message", "User not found");
+                response.put("message", msg("profile.changePassword.msg.notFound"));
                 return ResponseEntity.status(404).body(response);
             }
 
@@ -357,14 +340,14 @@ public class ProfileController {
             // Verify old password
             if (!passwordEncoder.matches(oldPassword, member.getPassword())) {
                 response.put("success", false);
-                response.put("message", "Current password is incorrect");
+                response.put("message", msg("profile.changePassword.msg.incorrect"));
                 return ResponseEntity.badRequest().body(response);
             }
 
             // Check if new password is different from old password
             if (passwordEncoder.matches(newPassword, member.getPassword())) {
                 response.put("success", false);
-                response.put("message", "New password must be different from current password");
+                response.put("message", msg("profile.changePassword.msg.same"));
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -376,7 +359,7 @@ public class ProfileController {
             System.out.println("Password changed successfully for user: " + username);
 
             response.put("success", true);
-            response.put("message", "Password changed successfully");
+            response.put("message", msg("profile.changePassword.msg.success"));
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
@@ -384,8 +367,21 @@ public class ProfileController {
             e.printStackTrace();
 
             response.put("success", false);
-            response.put("message", "An error occurred while changing password");
+            response.put("message", msg("profile.changePassword.msg.error"));
             return ResponseEntity.status(500).body(response);
         }
+    }
+
+    private String msg(String code) {
+        Locale locale = LocaleContextHolder.getLocale();
+        return messageSource.getMessage(code, null, code, locale);
+    }
+
+    private String rootMessage(Throwable t) {
+        Throwable cur = t;
+        while (cur.getCause() != null && cur.getCause() != cur) {
+            cur = cur.getCause();
+        }
+        return cur.getMessage();
     }
 }
