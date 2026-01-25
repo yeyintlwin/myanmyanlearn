@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -20,65 +20,30 @@
   </head>
 
   <body class="min-h-screen font-sans text-gray-800 flex flex-col">
-    <!-- Navbar -->
-    <nav
-      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
-    >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-18">
-          <!-- Brand Section -->
-          <div
-            class="flex items-center gap-2 group cursor-pointer"
-            onclick="window.location.href='/home'"
-          >
-            <div class="relative">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-              ></div>
-              <div
-                class="relative p-2 group-hover:scale-105 transition-all duration-300"
-              >
-                <img
-                  th:src="@{/images/logo.svg}"
-                  alt="Myan Myan Learn"
-                  class="w-12 h-12 drop-shadow-lg"
-                />
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div
-                class="text-white font-bold text-xl brand-font tracking-wide"
-              >
-                Myan Myan Learn
-              </div>
-              <div
-                class="text-white/70 text-xs font-medium tracking-wider uppercase"
-              >
-                Learning Platform
-              </div>
-            </div>
-          </div>
-
-          <!-- Back Button -->
-          <div class="flex items-center gap-4">
-            <a
-              href="/home"
-              class="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-xl text-white font-medium text-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 hover:shadow-xl border border-white/20"
-            >
-              <i class="fas fa-arrow-left text-sm"></i>
-              <span>Back to Home</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <nav th:replace="fragments/navbar :: appNavbar('Profile')"></nav>
 
     <!-- Main Content -->
-    <main class="flex-1 pt-24 pb-8">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <main class="flex-1 pt-28 pb-16">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-6 gap-4">
+          <div class="min-w-0">
+            <h1 class="text-white text-3xl sm:text-4xl font-extrabold">
+              Profile
+            </h1>
+          </div>
+          <a
+            th:href="@{/home}"
+            href="/home"
+            class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0"
+          >
+            <i class="fas fa-arrow-left text-xs"></i>
+            <span th:text="#{reader.back}">Back</span>
+          </a>
+        </div>
+
         <!-- Profile Header -->
         <div
-          class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 mb-8"
+          class="bg-white/10 border border-white/10 rounded-2xl p-6 sm:p-8 mb-8"
         >
           <div
             class="flex flex-col md:flex-row items-center md:items-start gap-6"
@@ -129,25 +94,15 @@
                 </span>
               </div>
             </div>
-
-            <!-- Edit Profile Button -->
-            <div class="flex flex-col gap-3">
-              <button
-                class="px-6 py-3 bg-white/20 backdrop-blur-md rounded-xl text-white font-medium transition-all duration-300 hover:bg-white/30 hover:scale-105 hover:shadow-xl border border-white/30"
-              >
-                <i class="fas fa-edit mr-2"></i>
-                Edit Profile
-              </button>
-            </div>
           </div>
         </div>
 
         <!-- Profile Content Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="space-y-8">
           <!-- Personal Information -->
-          <div class="lg:col-span-2">
+          <div>
             <div
-              class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6 mb-8"
+              class="bg-white/10 border border-white/10 rounded-2xl p-6 sm:p-8"
             >
               <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
                 <i class="fas fa-user-circle mr-3 text-primary-400"></i>
@@ -230,61 +185,11 @@
               </div>
             </div>
           </div>
-
-          <!-- Sidebar -->
-          <div class="space-y-6">
-            <!-- Account Status -->
-            <div
-              class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-6"
-            >
-              <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-                <i class="fas fa-info-circle mr-2 text-primary-400"></i> Account
-                Status
-              </h3>
-
-              <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                  <span class="text-white/80 text-sm">Account Type</span>
-                  <span
-                    class="px-2 py-1 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-full text-white text-xs font-medium"
-                  >
-                    Standard
-                  </span>
-                </div>
-
-                <div class="flex items-center justify-between">
-                  <span class="text-white/80 text-sm">Member Since</span>
-                  <span class="text-white text-sm">Jan 2024</span>
-                </div>
-
-                <div class="flex items-center justify-between">
-                  <span class="text-white/80 text-sm">Last Login</span>
-                  <span class="text-white text-sm">Today</span>
-                </div>
-
-                <div class="flex items-center justify-between">
-                  <span class="text-white/80 text-sm">Email Status</span>
-                  <span
-                    class="px-2 py-1 rounded-full text-xs font-medium"
-                    th:classappend="${userEmailVerified ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'}"
-                  >
-                    <i
-                      class="fas fa-check mr-1"
-                      th:classappend="${userEmailVerified ? '' : 'fa-exclamation'}"
-                    ></i>
-                    <span
-                      th:text="${userEmailVerified ? 'Verified' : 'Pending'}"
-                    ></span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Change Name Section -->
         <div
-          class="mt-8 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8"
+          class="mt-8 bg-white/10 border border-white/10 rounded-2xl p-6 sm:p-8"
         >
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-white flex items-center">
@@ -354,7 +259,7 @@
 
         <!-- Change Email Section -->
         <div
-          class="mt-8 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8"
+          class="mt-8 bg-white/10 border border-white/10 rounded-2xl p-6 sm:p-8"
         >
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-white flex items-center">
@@ -426,7 +331,7 @@
 
         <!-- Change Password Section -->
         <div
-          class="mt-8 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8"
+          class="mt-8 bg-white/10 border border-white/10 rounded-2xl p-6 sm:p-8"
         >
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-white flex items-center">
@@ -542,7 +447,7 @@
 
         <!-- Delete Account Section -->
         <div
-          class="mt-12 bg-red-500/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-red-500/20 p-8"
+          class="mt-12 bg-red-500/10 border border-red-500/20 rounded-2xl p-6 sm:p-8"
         >
           <div class="text-center">
             <div
@@ -573,7 +478,7 @@
       class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4"
     >
       <div
-        class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 max-w-md w-full"
+        class="bg-white/10 border border-white/10 rounded-2xl p-6 sm:p-8 max-w-md w-full"
       >
         <div class="text-center">
           <div
@@ -630,11 +535,7 @@
     </div>
 
     <script>
-      // Add any interactive functionality here
       document.addEventListener("DOMContentLoaded", function () {
-        console.log("Profile page loaded");
-
-        // Delete account functionality
         const deleteBtn = document.getElementById("deleteAccountBtn");
         const deleteModal = document.getElementById("deleteModal");
         const cancelBtn = document.getElementById("cancelDelete");
@@ -644,7 +545,6 @@
 
         deleteBtn.addEventListener("click", function () {
           deleteModal.classList.remove("hidden");
-          // Reset form when opening modal
           confirmationInput.value = "";
           confirmBtn.disabled = true;
           confirmationError.classList.add("hidden");
@@ -652,13 +552,11 @@
 
         cancelBtn.addEventListener("click", function () {
           deleteModal.classList.add("hidden");
-          // Reset form when canceling
           confirmationInput.value = "";
           confirmBtn.disabled = true;
           confirmationError.classList.add("hidden");
         });
 
-        // Handle text input validation
         confirmationInput.addEventListener("input", function () {
           const inputValue = this.value.toLowerCase().trim();
           const deleteText = "delete";
@@ -684,12 +582,10 @@
             return;
           }
 
-          // Show loading state
           confirmBtn.innerHTML =
             '<i class="fas fa-spinner fa-spin mr-2"></i>Deleting...';
           confirmBtn.disabled = true;
 
-          // Send delete request
           fetch("/profile/delete", {
             method: "DELETE",
             headers: {
@@ -707,8 +603,7 @@
                 confirmBtn.disabled = false;
               }
             })
-            .catch((error) => {
-              console.error("Error:", error);
+            .catch(() => {
               alert("An error occurred. Please try again.");
               confirmBtn.innerHTML =
                 '<i class="fas fa-trash mr-2"></i>Delete Account';
@@ -716,14 +611,12 @@
             });
         });
 
-        // Close modal when clicking outside
         deleteModal.addEventListener("click", function (e) {
           if (e.target === deleteModal) {
             deleteModal.classList.add("hidden");
           }
         });
 
-        // Change email form functionality
         const changeEmailForm = document.getElementById("changeEmailForm");
         const cancelEmailChange = document.getElementById("cancelEmailChange");
         const toggleEmailForm = document.getElementById("toggleEmailForm");
@@ -738,15 +631,14 @@
                 "from-primary-500",
                 "to-red-600",
                 "hover:from-primary-600",
-                "hover:to-red-700"
+                "hover:to-red-700",
               );
               this.classList.add(
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
-              // Pre-fill current email
               var el = document.querySelector("[data-email]");
               document.getElementById("newEmail").value = el
                 ? el.textContent
@@ -759,13 +651,13 @@
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
               this.classList.add(
                 "from-primary-500",
                 "to-red-600",
                 "hover:from-primary-600",
-                "hover:to-red-700"
+                "hover:to-red-700",
               );
               clearEmailForm();
             }
@@ -791,18 +683,17 @@
               "from-red-500",
               "to-primary-600",
               "hover:from-red-600",
-              "hover:to-primary-700"
+              "hover:to-primary-700",
             );
             toggleBtn.classList.add(
               "from-primary-500",
               "to-red-600",
               "hover:from-primary-600",
-              "hover:to-red-700"
+              "hover:to-red-700",
             );
           });
         }
 
-        // Change name form functionality
         const changeNameForm = document.getElementById("changeNameForm");
         const cancelNameChange = document.getElementById("cancelNameChange");
         const toggleNameForm = document.getElementById("toggleNameForm");
@@ -817,15 +708,14 @@
                 "from-primary-500",
                 "to-secondary-600",
                 "hover:from-primary-600",
-                "hover:to-secondary-700"
+                "hover:to-secondary-700",
               );
               this.classList.add(
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
-              // Pre-fill current values
               var fn = document.querySelector("[data-first-name]");
               document.getElementById("newFirstName").value = fn
                 ? fn.textContent
@@ -841,13 +731,13 @@
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
               this.classList.add(
                 "from-primary-500",
                 "to-secondary-600",
                 "hover:from-primary-600",
-                "hover:to-secondary-700"
+                "hover:to-secondary-700",
               );
               clearNameForm();
             }
@@ -872,22 +762,21 @@
               "from-red-500",
               "to-primary-600",
               "hover:from-red-600",
-              "hover:to-primary-700"
+              "hover:to-primary-700",
             );
             toggleBtn.classList.add(
               "from-primary-500",
               "to-secondary-600",
               "hover:from-primary-600",
-              "hover:to-secondary-700"
+              "hover:to-secondary-700",
             );
           });
         }
 
-        // Change password form functionality
         const changePasswordForm =
           document.getElementById("changePasswordForm");
         const cancelPasswordChange = document.getElementById(
-          "cancelPasswordChange"
+          "cancelPasswordChange",
         );
         const togglePasswordForm =
           document.getElementById("togglePasswordForm");
@@ -902,13 +791,13 @@
                 "from-green-500",
                 "to-primary-600",
                 "hover:from-green-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
               this.classList.add(
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
             } else {
               form.classList.add("hidden");
@@ -917,13 +806,13 @@
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
               this.classList.add(
                 "from-green-500",
                 "to-primary-600",
                 "hover:from-green-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
               clearPasswordForm();
             }
@@ -949,19 +838,18 @@
               "from-red-500",
               "to-primary-600",
               "hover:from-red-600",
-              "hover:to-primary-700"
+              "hover:to-primary-700",
             );
             toggleBtn.classList.add(
               "from-green-500",
               "to-primary-600",
               "hover:from-green-600",
-              "hover:to-primary-700"
+              "hover:to-primary-700",
             );
           });
         }
       });
 
-      // Toggle password visibility
       function togglePasswordVisibility(fieldId) {
         const field = document.getElementById(fieldId);
         const toggle = document.getElementById(fieldId + "Toggle");
@@ -977,14 +865,12 @@
         }
       }
 
-      // Handle password change
       function handlePasswordChange() {
         const oldPassword = document.getElementById("oldPassword").value;
         const newPassword = document.getElementById("newPassword").value;
         const confirmPassword =
           document.getElementById("confirmPassword").value;
 
-        // Validate passwords
         if (newPassword !== confirmPassword) {
           showMessage("New passwords do not match!", "error");
           return;
@@ -993,7 +879,7 @@
         if (newPassword.length < 8) {
           showMessage(
             "New password must be at least 8 characters long!",
-            "error"
+            "error",
           );
           return;
         }
@@ -1001,21 +887,20 @@
         if (oldPassword === newPassword) {
           showMessage(
             "New password must be different from current password!",
-            "error"
+            "error",
           );
           return;
         }
 
         // Show loading state
         const submitBtn = document.querySelector(
-          '#changePasswordForm button[type="submit"]'
+          '#changePasswordForm button[type="submit"]',
         );
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML =
           '<i class="fas fa-spinner fa-spin mr-2"></i>Changing...';
         submitBtn.disabled = true;
 
-        // Send password change request
         fetch("/profile/change-password", {
           method: "POST",
           headers: {
@@ -1031,7 +916,6 @@
             if (data.success) {
               showMessage("Password changed successfully!", "success");
               clearPasswordForm();
-              // Hide the form after successful password change
               const form = document.getElementById("changePasswordForm");
               const toggleBtn = document.getElementById("togglePasswordForm");
               form.classList.add("hidden");
@@ -1041,40 +925,36 @@
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
               toggleBtn.classList.add(
                 "from-green-500",
                 "to-primary-600",
                 "hover:from-green-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
             } else {
               showMessage(
                 data.message || "Failed to change password!",
-                "error"
+                "error",
               );
             }
           })
-          .catch((error) => {
-            console.error("Error:", error);
+          .catch(() => {
             showMessage("An error occurred while changing password!", "error");
           })
           .finally(() => {
-            // Reset button state
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
           });
       }
 
-      // Handle email change
       function handleEmailChange() {
         const newEmail = document.getElementById("newEmail").value.trim();
         const confirmEmail = document
           .getElementById("confirmEmail")
           .value.trim();
 
-        // Validate emails
         if (!newEmail || !confirmEmail) {
           showMessage("Both email fields are required!", "error");
           return;
@@ -1094,14 +974,13 @@
 
         // Show loading state
         const submitBtn = document.querySelector(
-          '#changeEmailForm button[type="submit"]'
+          '#changeEmailForm button[type="submit"]',
         );
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML =
           '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
         submitBtn.disabled = true;
 
-        // Send email change request
         fetch("/profile/change-email", {
           method: "POST",
           headers: {
@@ -1116,10 +995,9 @@
             if (data.success) {
               showMessage(
                 "Email update request sent! Please check your new email for verification.",
-                "success"
+                "success",
               );
               clearEmailForm();
-              // Hide the form after successful email change request
               const form = document.getElementById("changeEmailForm");
               const toggleBtn = document.getElementById("toggleEmailForm");
               form.classList.add("hidden");
@@ -1129,15 +1007,14 @@
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
               toggleBtn.classList.add(
                 "from-primary-500",
                 "to-red-600",
                 "hover:from-primary-600",
-                "hover:to-red-700"
+                "hover:to-red-700",
               );
-              // Reload page to show updated status
               setTimeout(() => {
                 window.location.reload();
               }, 2000);
@@ -1145,31 +1022,26 @@
               showMessage(data.message || "Failed to update email!", "error");
             }
           })
-          .catch((error) => {
-            console.error("Error:", error);
+          .catch(() => {
             showMessage("An error occurred while updating email!", "error");
           })
           .finally(() => {
-            // Reset button state
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
           });
       }
 
-      // Clear email form
       function clearEmailForm() {
         document.getElementById("newEmail").value = "";
         document.getElementById("confirmEmail").value = "";
       }
 
-      // Handle name change
       function handleNameChange() {
         const newFirstName = document
           .getElementById("newFirstName")
           .value.trim();
         const newLastName = document.getElementById("newLastName").value.trim();
 
-        // Validate names
         if (!newFirstName || !newLastName) {
           showMessage("Both first name and last name are required!", "error");
           return;
@@ -1182,14 +1054,13 @@
 
         // Show loading state
         const submitBtn = document.querySelector(
-          '#changeNameForm button[type="submit"]'
+          '#changeNameForm button[type="submit"]',
         );
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML =
           '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
         submitBtn.disabled = true;
 
-        // Send name change request
         fetch("/profile/change-name", {
           method: "POST",
           headers: {
@@ -1205,7 +1076,6 @@
             if (data.success) {
               showMessage("Name updated successfully!", "success");
               clearNameForm();
-              // Hide the form after successful name change
               const form = document.getElementById("changeNameForm");
               const toggleBtn = document.getElementById("toggleNameForm");
               form.classList.add("hidden");
@@ -1214,15 +1084,14 @@
                 "from-red-500",
                 "to-primary-600",
                 "hover:from-red-600",
-                "hover:to-primary-700"
+                "hover:to-primary-700",
               );
               toggleBtn.classList.add(
                 "from-primary-500",
                 "to-secondary-600",
                 "hover:from-primary-600",
-                "hover:to-secondary-700"
+                "hover:to-secondary-700",
               );
-              // Reload page to show updated name
               setTimeout(() => {
                 window.location.reload();
               }, 1500);
@@ -1230,35 +1099,29 @@
               showMessage(data.message || "Failed to update name!", "error");
             }
           })
-          .catch((error) => {
-            console.error("Error:", error);
+          .catch(() => {
             showMessage("An error occurred while updating name!", "error");
           })
           .finally(() => {
-            // Reset button state
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
           });
       }
 
-      // Clear name form
       function clearNameForm() {
         document.getElementById("newFirstName").value = "";
         document.getElementById("newLastName").value = "";
       }
 
-      // Clear password form
       function clearPasswordForm() {
         document.getElementById("oldPassword").value = "";
         document.getElementById("newPassword").value = "";
         document.getElementById("confirmPassword").value = "";
       }
 
-      // Show message
       function showMessage(message, type) {
-        // Create message element
         const messageDiv = document.createElement("div");
-        messageDiv.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-xl shadow-xl transition-all duration-300 ${
+        messageDiv.className = `fixed top-24 right-4 z-50 px-6 py-3 rounded-xl shadow-xl transition-all duration-300 ${
           type === "success"
             ? "bg-green-500 text-white"
             : "bg-red-500 text-white"
@@ -1274,11 +1137,11 @@
 
         document.body.appendChild(messageDiv);
 
-        // Remove message after 5 seconds
         setTimeout(() => {
           messageDiv.remove();
         }, 5000);
       }
     </script>
+    <script src="/js/navbar.js"></script>
   </body>
 </html>
