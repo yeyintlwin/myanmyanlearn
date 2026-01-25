@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 @Transactional
 public class RegistrationService {
 
+    private static final Object REGISTRATION_LOCK = new Object();
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String ROLE_TEACHER = "ROLE_TEACHER";
+    private static final String ROLE_STUDENT = "ROLE_STUDENT";
+
     @Autowired
     private MemberRepository memberRepository;
 
@@ -35,47 +40,44 @@ public class RegistrationService {
      * Register a new user with email verification
      */
     public Member registerUser(String userId, String password, String firstName, String lastName, String email) {
-        // Check if user already exists
-        if (memberRepository.existsByUserId(userId)) {
-            throw new IllegalArgumentException(
-                    "Username '" + userId + "' is already taken. Please choose a different username.");
+        synchronized (REGISTRATION_LOCK) {
+            if (memberRepository.existsByUserId(userId)) {
+                throw new IllegalArgumentException(
+                        "Username '" + userId + "' is already taken. Please choose a different username.");
+            }
+
+            if (memberRepository.existsByEmail(email)) {
+                throw new IllegalArgumentException(
+                        "Email '" + email + "' is already registered. Please use a different email or try logging in.");
+            }
+
+            boolean firstUser = memberRepository.count() == 0;
+            String assignedRole = firstUser ? ROLE_ADMIN : ROLE_STUDENT;
+
+            Member member = new Member();
+            member.setUserId(userId);
+            member.setPassword(passwordEncoder.encode(password));
+            member.setActive(true);
+            member.setFirstName(firstName);
+            member.setLastName(lastName);
+            member.setEmail(email);
+            member.setEmailVerified(false);
+
+            member = memberRepository.save(member);
+
+            roleRepository.save(new Role(userId, assignedRole));
+
+            String otpCode = otpService.generateOtp();
+            LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
+
+            member.setOtpCode(otpCode);
+            member.setOtpExpiresAt(expiresAt);
+            memberRepository.save(member);
+
+            emailService.sendOtpEmail(email, otpCode);
+
+            return member;
         }
-
-        // Check if email already exists
-        if (memberRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException(
-                    "Email '" + email + "' is already registered. Please use a different email or try logging in.");
-        }
-
-        // Create new member
-        Member member = new Member();
-        member.setUserId(userId);
-        member.setPassword(passwordEncoder.encode(password));
-        member.setActive(true);
-        member.setFirstName(firstName);
-        member.setLastName(lastName);
-        member.setEmail(email);
-        member.setEmailVerified(false);
-
-        // Save member
-        member = memberRepository.save(member);
-
-        // Assign default role (ROLE_EMPLOYEE)
-        Role role = new Role(userId, "ROLE_EMPLOYEE");
-        roleRepository.save(role);
-
-        // Generate and send OTP
-        String otpCode = otpService.generateOtp();
-        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10); // 10 minutes expiry
-
-        member.setOtpCode(otpCode);
-        member.setOtpExpiresAt(expiresAt);
-        memberRepository.save(member);
-
-        // Send OTP email
-        emailService.sendOtpEmail(email, otpCode);
-
-        return member;
     }
 
     /**
