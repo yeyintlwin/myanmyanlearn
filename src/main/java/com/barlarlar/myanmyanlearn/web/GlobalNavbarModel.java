@@ -2,8 +2,11 @@ package com.barlarlar.myanmyanlearn.web;
 
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
@@ -17,17 +20,26 @@ public class GlobalNavbarModel {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @ModelAttribute
     public void addGlobalUser(Model model) {
-        // Only set if not already present
         if (model.containsAttribute("userFullName") && model.containsAttribute("username")
-                && model.containsAttribute("userInitials") && model.containsAttribute("userEmail")) {
+                && model.containsAttribute("userInitials") && model.containsAttribute("userEmail")
+                && model.containsAttribute("userRoleLabel")) {
             return;
         }
 
         Authentication auth = SecurityContextHolder.getContext() != null
                 ? SecurityContextHolder.getContext().getAuthentication()
                 : null;
+
+        if (!model.containsAttribute("userRoleLabel")) {
+            String roleKey = resolveRoleKey(auth);
+            String label = messageSource.getMessage(roleKey, null, LocaleContextHolder.getLocale());
+            model.addAttribute("userRoleLabel", label);
+        }
 
         String displayName = null;
         String username = null;
@@ -105,5 +117,24 @@ public class GlobalNavbarModel {
         if (firstName == null) return lastName.substring(0, 1).toUpperCase();
         if (lastName == null) return firstName.substring(0, 1).toUpperCase();
         return (firstName.substring(0, 1) + lastName.substring(0, 1)).toUpperCase();
+    }
+
+    private String resolveRoleKey(Authentication auth) {
+        if (auth == null || auth.getAuthorities() == null) {
+            return "nav.member";
+        }
+        boolean admin = false;
+        boolean teacher = false;
+        boolean student = false;
+        for (GrantedAuthority a : auth.getAuthorities()) {
+            String r = a != null ? a.getAuthority() : null;
+            if ("ROLE_ADMIN".equals(r)) admin = true;
+            else if ("ROLE_TEACHER".equals(r)) teacher = true;
+            else if ("ROLE_STUDENT".equals(r)) student = true;
+        }
+        if (admin) return "nav.role.admin";
+        if (teacher) return "nav.role.teacher";
+        if (student) return "nav.role.student";
+        return "nav.member";
     }
 }

@@ -35,7 +35,7 @@ public class SecurityConfig {
 
                 // define query to retrieve a user by username
                 jdbcUserDetailsManager.setUsersByUsernameQuery(
-                                "select user_id, pw, active from members where user_id=?");
+                                "select user_id, pw, active from members where user_id=? and email_verified=1");
 
                 // define query to retrieve the authorities/roles by username
                 jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(

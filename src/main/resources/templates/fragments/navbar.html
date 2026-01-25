@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <body>
     <!-- Reusable Navbar Fragment (full Home navbar) -->
@@ -58,7 +58,7 @@
                     class="text-sm font-semibold"
                     th:text="${userFullName ?: username ?: 'User'}"
                   ></span>
-                  <span class="text-xs opacity-70" th:text="#{nav.member}"
+                  <span class="text-xs opacity-70" th:text="${userRoleLabel}"
                     >Member</span
                   >
                 </div>
