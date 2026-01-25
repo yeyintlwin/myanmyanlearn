@@ -1,37 +1,56 @@
 # MYAN MYAN LEARN
 
-A Spring Boot application designed for efficient JKen preparation with instant translation capabilities and comprehensive learning modules.
-
-## Description
-
-MYAN MYAN LEARN is designed for efficient JKen preparation. Documents are available with instant translation to your preferred language for rapid comprehension. The platform provides separate Learn and Test modules, including post-lesson quizzes and a comprehensive score chart for progress tracking.
+A Spring Boot learning platform for international students in Japan, designed to support multiple school subjects with instant translation into the learner’s preferred language.
 
 ## Features
 
 - **Instant Translation**: Documents available with instant translation to your preferred language for rapid comprehension
-- **Learn Module**: Dedicated learning section for JKen preparation
+- **Learn Module**: Dedicated learning section for course/subject content
 - **Test Module**: Comprehensive testing capabilities
 - **Post-lesson Quizzes**: Interactive quizzes after each lesson
 - **Score Chart**: Comprehensive progress tracking with score visualization
 - **Multi-language Support**: Translation capabilities for various languages
 
-## Technology Stack
-
-- **Java 21**: Modern Java development
-- **Spring Boot 3.5.6**: Enterprise-grade Java framework
-- **Spring Web**: RESTful web services
-- **Lombok**: Reduces boilerplate code
-- **Gradle**: Build automation and dependency management
-- **JUnit 5**: Testing framework
-
 ## Prerequisites
 
-- Java 21 or higher
-- Gradle 7.0 or higher
+- Java 21
+- MySQL 8.x
 
 ## Getting Started
 
-### Installation
+### 1) Configure the database
+
+- The schema SQL is in [scripts/backups](scripts/backups) (schema-only dump).
+
+```bash
+mysql -u root -p -e "CREATE DATABASE user_directory DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_0900_ai_ci;"
+mysql -u root -p user_directory < scripts/backups/user_directory_20260109_195828.sql
+```
+
+### 2) Configure application.properties
+
+Copy the example config and fill in values:
+
+```bash
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+```
+
+Required properties:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/user_directory
+spring.datasource.username=<db_username>
+spring.datasource.password=<db_password>
+app.jwt.reset.secret=<replace_with_256bit_secret>
+```
+
+Optional (enables translation in Reader):
+
+```properties
+google.studio.api-key=<your_api_key>
+```
+
+### 3) Run
 
 1. Clone the repository:
 
@@ -40,27 +59,11 @@ git clone <repository-url>
 cd myanmyanlearn
 ```
 
-2. Build the application:
-
-```bash
-./gradlew build
-```
-
-3. Run the application:
-
 ```bash
 ./gradlew bootRun
 ```
 
 The application will be available at `http://localhost:8080`
-
-### Development
-
-For development with auto-reload:
-
-```bash
-./gradlew bootRun --continuous
-```
 
 ### Testing
 
@@ -69,38 +72,6 @@ Run the test suite:
 ```bash
 ./gradlew test
 ```
-
-## Project Structure
-
-```
-src/
-├── main/
-│   ├── java/com/barlarlar/myanmyanlearn/
-│   │   └── MyanmyanlearnApplication.java
-│   └── resources/
-│       ├── application.properties
-│       ├── static/
-│       └── templates/
-└── test/
-    └── java/com/barlarlar/myanmyanlearn/
-        └── MyanmyanlearnApplicationTests.java
-```
-
-## Configuration
-
-The application can be configured through `src/main/resources/application.properties`:
-
-```properties
-spring.application.name=myanmyanlearn
-```
-
-## API Documentation
-
-This application provides RESTful web services. For detailed API documentation, refer to the Spring Boot guides:
-
-- [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-- [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-- [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
 
 ## Contributing
 
