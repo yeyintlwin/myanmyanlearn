@@ -403,24 +403,34 @@ public class HomeController {
 
     @PostMapping("/admin/users/active")
     @Transactional
-    public String adminUpdateUserActive(
+    public Object adminUpdateUserActive(
             @RequestParam("userId") String userId,
             @RequestParam(name = "active", required = false) Boolean active,
             @RequestParam(name = "q", required = false) String q,
             @RequestParam(name = "field", required = false) String field,
-            @RequestParam(name = "roleFilter", required = false) String roleFilter) {
+            @RequestParam(name = "roleFilter", required = false) String roleFilter,
+            HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!isAdmin(auth)) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.status(403).build();
+            }
             return "redirect:/admin?section=users";
         }
 
         String targetUserId = userId != null ? userId.trim() : "";
         if (targetUserId.isBlank()) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.badRequest().build();
+            }
             return redirectAdminUsers(q, field, roleFilter);
         }
 
         Optional<Member> memberOpt = memberRepository.findById(targetUserId);
         if (memberOpt.isEmpty()) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.notFound().build();
+            }
             return redirectAdminUsers(q, field, roleFilter);
         }
 
@@ -428,6 +438,9 @@ public class HomeController {
 
         boolean targetIsAdmin = roleRepository.existsByUserIdAndRole(targetUserId, ROLE_ADMIN);
         if (targetIsAdmin && !newActive) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.status(409).build();
+            }
             return redirectAdminUsers(q, field, roleFilter);
         }
 
@@ -435,12 +448,15 @@ public class HomeController {
         member.setActive(newActive);
         memberRepository.save(member);
 
+        if (isAjax(request)) {
+            return org.springframework.http.ResponseEntity.noContent().build();
+        }
         return redirectAdminUsers(q, field, roleFilter);
     }
 
     @PostMapping("/admin/users/student-meta")
     @Transactional
-    public String adminUpdateStudentMeta(
+    public Object adminUpdateStudentMeta(
             @RequestParam("userId") String userId,
             @RequestParam(name = "currentClass", required = false) String currentClass,
             @RequestParam(name = "schoolYear", required = false) String schoolYear,
@@ -450,30 +466,48 @@ public class HomeController {
             HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!isAdmin(auth)) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.status(403).build();
+            }
             return "redirect:/admin?section=users";
         }
 
         String targetUserId = userId != null ? userId.trim() : "";
         if (targetUserId.isBlank()) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.badRequest().build();
+            }
             return redirectAdminUsers(q, field, roleFilter);
         }
 
         String currentUserId = auth != null ? auth.getName() : null;
         if (currentUserId != null && currentUserId.equals(targetUserId)) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.status(403).build();
+            }
             return redirectAdminUsers(q, field, roleFilter);
         }
 
         boolean targetIsAdmin = roleRepository.existsByUserIdAndRole(targetUserId, ROLE_ADMIN);
         if (targetIsAdmin) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.status(403).build();
+            }
             return redirectAdminUsers(q, field, roleFilter);
         }
         boolean targetIsTeacher = roleRepository.existsByUserIdAndRole(targetUserId, ROLE_TEACHER);
         if (targetIsTeacher) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.status(403).build();
+            }
             return redirectAdminUsers(q, field, roleFilter);
         }
 
         ensureMemberStudentMetaColumns();
         if (!memberStudentMetaAvailable) {
+            if (isAjax(request)) {
+                return org.springframework.http.ResponseEntity.status(500).build();
+            }
             return redirectAdminUsers(q, field, roleFilter);
         }
 
@@ -506,7 +540,22 @@ public class HomeController {
                     targetUserId);
         }
 
+        if (isAjax(request)) {
+            return org.springframework.http.ResponseEntity.noContent().build();
+        }
         return redirectAdminUsers(q, field, roleFilter);
+    }
+
+    private boolean isAjax(HttpServletRequest request) {
+        if (request == null) {
+            return false;
+        }
+        String xrw = request.getHeader("X-Requested-With");
+        if (xrw != null && "XMLHttpRequest".equalsIgnoreCase(xrw.trim())) {
+            return true;
+        }
+        String accept = request.getHeader("Accept");
+        return accept != null && accept.contains("application/json");
     }
 
     private String normalizeNullable(String value, int maxLen) {

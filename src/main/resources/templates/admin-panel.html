@@ -330,6 +330,7 @@
                             method="post"
                             action="/admin/users/student-meta"
                             th:action="@{/admin/users/student-meta}"
+                            data-async="true"
                             class="inline-flex items-center"
                           >
                             <input
@@ -361,7 +362,7 @@
                               </div>
                               <select
                                 name="currentClass"
-                                onchange="this.form.submit()"
+                                onchange="submitAsyncForm(this.form)"
                                 class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-2 pr-7 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 cursor-pointer w-[90px]"
                               >
                                 <option
@@ -540,6 +541,7 @@
                             method="post"
                             action="/admin/users/student-meta"
                             th:action="@{/admin/users/student-meta}"
+                            data-async="true"
                             class="inline-flex items-center"
                           >
                             <input
@@ -571,7 +573,7 @@
                               </div>
                               <select
                                 name="schoolYear"
-                                onchange="this.form.submit()"
+                                onchange="submitAsyncForm(this.form)"
                                 class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-3 pr-7 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 cursor-pointer w-[112px]"
                               >
                                 <option
@@ -659,6 +661,7 @@
                               action="/admin/users/active"
                               th:action="@{/admin/users/active}"
                               th:if="${u.roleKey != 'ADMIN'}"
+                              data-async="true"
                               class="flex items-center"
                             >
                               <input
@@ -705,7 +708,33 @@
                                     if (h) {
                                       h.value = this.checked ? 'true' : 'false';
                                     }
-                                    this.form.submit();
+                                    var badge = this.form.parentElement
+                                      ? this.form.parentElement.querySelector(
+                                          'span',
+                                        )
+                                      : null;
+                                    if (badge) {
+                                      badge.textContent = this.checked
+                                        ? 'Active'
+                                        : 'Inactive';
+                                      badge.classList.remove(
+                                        'bg-emerald-500/20',
+                                        'text-emerald-200',
+                                        'bg-rose-500/20',
+                                        'text-rose-200',
+                                      );
+                                      badge.classList.add(
+                                        this.checked
+                                          ? 'bg-emerald-500/20'
+                                          : 'bg-rose-500/20',
+                                      );
+                                      badge.classList.add(
+                                        this.checked
+                                          ? 'text-emerald-200'
+                                          : 'text-rose-200',
+                                      );
+                                    }
+                                    submitAsyncForm(this.form);
                                   "
                                 />
                                 <div
@@ -1102,6 +1131,79 @@
             return false;
           } catch (e) {
             return true;
+          }
+        };
+      })();
+    </script>
+    <div
+      id="adminAsyncToast"
+      class="fixed bottom-4 right-4 z-[60] hidden items-center gap-2 rounded-xl border border-white/15 bg-slate-950/90 px-4 py-3 text-sm text-white shadow-2xl backdrop-blur"
+    >
+      <span id="adminAsyncToastText">Saved</span>
+    </div>
+    <script>
+      (function () {
+        var toast = document.getElementById("adminAsyncToast");
+        var toastText = document.getElementById("adminAsyncToastText");
+        var toastTimer = null;
+
+        function showToast(message, ok) {
+          if (!toast || !toastText) return;
+          toastText.textContent = message || (ok ? "Saved" : "Failed to save");
+          toast.classList.remove("hidden");
+          toast.classList.add("flex");
+          toast.classList.toggle("border-emerald-500/30", !!ok);
+          toast.classList.toggle("border-rose-500/30", !ok);
+          if (toastTimer) clearTimeout(toastTimer);
+          toastTimer = setTimeout(
+            function () {
+              toast.classList.add("hidden");
+              toast.classList.remove("flex");
+            },
+            ok ? 1200 : 2500,
+          );
+        }
+
+        window.submitAsyncForm = function (form) {
+          try {
+            if (!form) return;
+            if (!form.hasAttribute("data-async")) {
+              form.submit();
+              return;
+            }
+            if (form.dataset.submitting === "true") return;
+            form.dataset.submitting = "true";
+
+            var action = form.getAttribute("action") || form.action;
+            var method = (form.getAttribute("method") || "GET").toUpperCase();
+            if (method !== "POST" || !action) {
+              form.submit();
+              return;
+            }
+
+            fetch(action, {
+              method: "POST",
+              body: new FormData(form),
+              credentials: "same-origin",
+              headers: { "X-Requested-With": "XMLHttpRequest" },
+            })
+              .then(function (res) {
+                if (res && res.ok) {
+                  showToast("Saved", true);
+                } else {
+                  showToast("Failed to save", false);
+                }
+              })
+              .catch(function () {
+                showToast("Failed to save", false);
+              })
+              .finally(function () {
+                form.dataset.submitting = "false";
+              });
+          } catch (e) {
+            try {
+              form.submit();
+            } catch (e2) {}
           }
         };
       })();
