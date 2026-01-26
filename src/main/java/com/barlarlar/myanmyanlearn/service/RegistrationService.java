@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,7 @@ public class RegistrationService {
     private static final Object REGISTRATION_LOCK = new Object();
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String ROLE_STUDENT = "ROLE_STUDENT";
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9._]{3,50}$");
 
     @Autowired
     private MemberRepository memberRepository;
@@ -43,9 +45,15 @@ public class RegistrationService {
      */
     public Member registerUser(String userId, String password, String firstName, String lastName, String email) {
         synchronized (REGISTRATION_LOCK) {
-            if (memberRepository.existsByUserId(userId)) {
+            String normalizedUserId = userId != null ? userId.trim() : "";
+            if (!USERNAME_PATTERN.matcher(normalizedUserId).matches()) {
                 throw new IllegalArgumentException(
-                        "Username '" + userId + "' is already taken. Please choose a different username.");
+                        "Username must be 3-50 characters and can contain letters, numbers, underscores, and dots.");
+            }
+
+            if (memberRepository.existsByUserId(normalizedUserId)) {
+                throw new IllegalArgumentException(
+                        "Username '" + normalizedUserId + "' is already taken. Please choose a different username.");
             }
 
             if (memberRepository.existsByEmail(email)) {
@@ -65,7 +73,7 @@ public class RegistrationService {
             String assignedRole = firstUser ? ROLE_ADMIN : ROLE_STUDENT;
 
             Member member = new Member();
-            member.setUserId(userId);
+            member.setUserId(normalizedUserId);
             member.setPassword(passwordEncoder.encode(password));
             member.setActive(true);
             member.setFirstName(firstName);
@@ -75,7 +83,7 @@ public class RegistrationService {
 
             member = memberRepository.save(member);
 
-            roleRepository.save(new Role(userId, assignedRole));
+            roleRepository.save(new Role(normalizedUserId, assignedRole));
 
             String otpCode = otpService.generateOtp();
             LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
