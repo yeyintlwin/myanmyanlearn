@@ -60,6 +60,7 @@ public class SecurityConfig {
                                                 "/images/**", "/css/**", "/js/**",
                                                 "/webjars/**")
                                 .permitAll()
+                                .requestMatchers("/admin", "/admin/**").hasAnyRole("ADMIN", "TEACHER")
                                 .requestMatchers("/assessment", "/assessment/**").authenticated()
                                 .anyRequest().authenticated())
                                 .formLogin(form -> form.loginPage("/login")

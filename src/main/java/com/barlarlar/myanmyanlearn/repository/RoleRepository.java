@@ -15,6 +15,8 @@ public interface RoleRepository extends JpaRepository<Role, RoleId> {
     // Find all roles for a user
     List<Role> findByUserId(String userId);
 
+    List<Role> findByUserIdIn(List<String> userIds);
+
     // Find all roles for a user with specific role
     List<Role> findByUserIdAndRole(String userId, String role);
 

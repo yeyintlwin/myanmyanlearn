@@ -18,7 +18,6 @@ public class RegistrationService {
 
     private static final Object REGISTRATION_LOCK = new Object();
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
-    private static final String ROLE_TEACHER = "ROLE_TEACHER";
     private static final String ROLE_STUDENT = "ROLE_STUDENT";
 
     @Autowired

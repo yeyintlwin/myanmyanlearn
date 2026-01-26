@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="#{adminPanel.pageTitle}">
+      MYAN MYAN LEARN - Admin Panel
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .show {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen font-sans text-gray-800 flex flex-col">
+    <nav th:replace="fragments/navbar :: appNavbar(#{nav.adminPanel})"></nav>
+
+    <main class="flex-1 pt-28 pb-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between gap-4 mb-6">
+          <h1 class="text-white text-3xl sm:text-4xl font-extrabold">
+            <span th:text="#{nav.adminPanel}">Admin Panel</span>
+          </h1>
+          <a
+            th:href="@{/home}"
+            href="/home"
+            class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0"
+          >
+            <i class="fas fa-arrow-left text-xs"></i>
+            <span th:text="#{reader.back}">Back</span>
+          </a>
+        </div>
+
+        <section
+          class="bg-white/10 border border-white/10 rounded-2xl backdrop-blur-xl min-h-[360px] overflow-hidden"
+          th:with="section=${param.section != null ? param.section[0] : 'courses'}"
+        >
+          <div class="flex flex-col sm:flex-row min-h-[360px]">
+            <aside class="sm:w-64 flex-shrink-0 p-2">
+              <nav class="space-y-1">
+                <a
+                  th:href="@{/admin(section='courses')}"
+                  href="/admin?section=courses"
+                  th:classappend="${section == 'courses'} ? ' bg-white/15 border-white/20 text-white' : ' border-transparent'"
+                  class="flex items-center gap-2 px-3 py-2 rounded-lg text-white/90 no-underline hover:bg-white/10 transition border text-sm"
+                >
+                  <div
+                    th:classappend="${section == 'courses'} ? ' bg-white/15' : ''"
+                    class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"
+                  >
+                    <i class="fas fa-book text-sm"></i>
+                  </div>
+                  <div
+                    class="flex-1 font-semibold"
+                    th:text="#{adminPanel.courses}"
+                  >
+                    Courses
+                  </div>
+                </a>
+
+                <a
+                  th:if="${isAdmin}"
+                  th:href="@{/admin(section='users')}"
+                  href="/admin?section=users"
+                  th:classappend="${section == 'users'} ? ' bg-white/15 border-white/20 text-white' : ' border-transparent'"
+                  class="flex items-center gap-2 px-3 py-2 rounded-lg text-white/90 no-underline hover:bg-white/10 transition border text-sm"
+                >
+                  <div
+                    th:classappend="${section == 'users'} ? ' bg-white/15' : ''"
+                    class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"
+                  >
+                    <i class="fas fa-users text-sm"></i>
+                  </div>
+                  <div
+                    class="flex-1 font-semibold"
+                    th:text="#{adminPanel.userManagement}"
+                  >
+                    User Management
+                  </div>
+                </a>
+              </nav>
+            </aside>
+
+            <div class="sm:hidden h-px bg-white/10"></div>
+            <div class="hidden sm:block w-px bg-white/10 flex-shrink-0"></div>
+
+            <div class="flex-1 p-5 sm:p-6 min-w-0">
+              <div th:if="${section == 'users' and isAdmin}" class="space-y-2">
+                <h2 class="text-white text-2xl font-bold">
+                  <span th:text="#{adminPanel.userManagement}"
+                    >User Management</span
+                  >
+                </h2>
+                <form
+                  th:action="@{/admin}"
+                  action="/admin"
+                  method="get"
+                  class="mt-3"
+                >
+                  <input type="hidden" name="section" value="users" />
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2"
+                  >
+                    <div
+                      class="relative w-full sm:max-w-[360px] sm:flex-1 min-w-0"
+                    >
+                      <div
+                        class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-white/60"
+                      >
+                        <i class="fas fa-magnifying-glass"></i>
+                      </div>
+                      <input
+                        name="q"
+                        th:value="${userQ}"
+                        type="text"
+                        placeholder="Search users..."
+                        class="bg-white/10 text-white text-sm rounded-lg pl-9 pr-3 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 w-full"
+                      />
+                    </div>
+
+                    <div class="relative w-full sm:w-[120px] flex-shrink-0">
+                      <div
+                        class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2 text-white/60"
+                      >
+                        <i class="fas fa-filter text-xs"></i>
+                      </div>
+                      <div
+                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-white/60"
+                      >
+                        <i class="fas fa-chevron-down text-xs"></i>
+                      </div>
+                      <select
+                        name="field"
+                        class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-7 pr-6 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 w-full cursor-pointer"
+                      >
+                        <option
+                          value="name"
+                          th:selected="${userField == null || userField == 'name'}"
+                        >
+                          Name
+                        </option>
+                        <option
+                          value="username"
+                          th:selected="${userField == 'username'}"
+                        >
+                          Username
+                        </option>
+                        <option
+                          value="email"
+                          th:selected="${userField == 'email'}"
+                        >
+                          Email
+                        </option>
+                      </select>
+                    </div>
+
+                    <div class="relative w-full sm:w-[104px] flex-shrink-0">
+                      <div
+                        class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2 text-white/60"
+                      >
+                        <i class="fas fa-users text-xs"></i>
+                      </div>
+                      <div
+                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-white/60"
+                      >
+                        <i class="fas fa-chevron-down text-xs"></i>
+                      </div>
+                      <select
+                        name="role"
+                        class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-7 pr-6 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 w-full cursor-pointer"
+                      >
+                        <option
+                          value=""
+                          th:selected="${userRole == null || userRole.isBlank()}"
+                        >
+                          Any
+                        </option>
+                        <option
+                          value="ADMIN"
+                          th:selected="${userRole == 'ADMIN'}"
+                        >
+                          Admin
+                        </option>
+                        <option
+                          value="TEACHER"
+                          th:selected="${userRole == 'TEACHER'}"
+                        >
+                          Teacher
+                        </option>
+                        <option
+                          value="STUDENT"
+                          th:selected="${userRole == 'STUDENT'}"
+                        >
+                          Student
+                        </option>
+                      </select>
+                    </div>
+
+                    <button
+                      type="submit"
+                      class="bg-white/15 hover:bg-white/20 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition w-full sm:w-auto inline-flex items-center justify-center gap-2 flex-shrink-0"
+                    >
+                      <i class="fas fa-magnifying-glass text-xs"></i>
+                      <span>Search</span>
+                    </button>
+
+                    <a
+                      th:href="@{/admin(section='users')}"
+                      href="/admin?section=users"
+                      class="bg-white/10 hover:bg-white/15 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition no-underline inline-flex items-center justify-center gap-2 w-full sm:w-auto flex-shrink-0"
+                    >
+                      <i class="fas fa-rotate-left text-xs"></i>
+                      <span>Clear</span>
+                    </a>
+                  </div>
+                </form>
+
+                <div
+                  class="text-white/70 text-sm"
+                  th:text="${adminUsers != null ? (adminUsers.size() + ' users') : '0 users'}"
+                >
+                  0 users
+                </div>
+
+                <div th:if="${adminUsers == null || adminUsers.isEmpty()}">
+                  <p class="text-white/70 text-sm">No users found.</p>
+                </div>
+
+                <div
+                  th:if="${adminUsers != null && !adminUsers.isEmpty()}"
+                  class="mt-2 w-full min-w-0 overflow-x-auto rounded-xl border border-white/10"
+                >
+                  <table class="min-w-max text-left text-sm">
+                    <thead class="bg-white/10 text-white/80">
+                      <tr>
+                        <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                          User ID
+                        </th>
+                        <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                          Name
+                        </th>
+                        <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                          Email
+                        </th>
+                        <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                          Roles
+                        </th>
+                        <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                          Active
+                        </th>
+                        <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                          Email Verified
+                        </th>
+                        <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                          Profile Image
+                        </th>
+                        <th class="px-4 py-3 font-semibold whitespace-nowrap">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/10 text-white/80">
+                      <tr th:each="u : ${adminUsers}" class="hover:bg-white/5">
+                        <td
+                          class="px-4 py-3 font-medium text-white whitespace-nowrap"
+                          th:text="${u.userId}"
+                        >
+                          user
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <span
+                            th:text="${(u.firstName ?: '') + (u.lastName != null ? (' ' + u.lastName) : '')}"
+                          >
+                            Name
+                          </span>
+                        </td>
+                        <td
+                          class="px-4 py-3 whitespace-nowrap"
+                          th:text="${u.email ?: '-'}"
+                        >
+                          email
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <span
+                            class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold border"
+                            th:classappend="${u.roleKey == 'ADMIN'} ? ' bg-rose-500/20 text-rose-200 border-rose-500/30' : (${u.roleKey == 'TEACHER'} ? ' bg-sky-500/20 text-sky-200 border-sky-500/30' : ' bg-emerald-500/20 text-emerald-200 border-emerald-500/30')"
+                            th:text="${u.roleKey != null && !u.roleKey.isBlank() ? u.roleKey : 'STUDENT'}"
+                          >
+                            STUDENT
+                          </span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <span
+                            class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold"
+                            th:classappend="${u.active != null && u.active} ? ' bg-emerald-500/20 text-emerald-200' : ' bg-rose-500/20 text-rose-200'"
+                            th:text="${u.active != null && u.active} ? 'Active' : 'Inactive'"
+                          >
+                            Active
+                          </span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <span
+                            class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold"
+                            th:classappend="${u.emailVerified != null && u.emailVerified} ? ' bg-emerald-500/20 text-emerald-200' : ' bg-amber-500/20 text-amber-200'"
+                            th:text="${u.emailVerified != null && u.emailVerified} ? 'Verified' : 'Unverified'"
+                          >
+                            Verified
+                          </span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <a
+                            th:if="${u.profileImage != null && !u.profileImage.isBlank()}"
+                            th:href="${u.profileImage}"
+                            href="#"
+                            target="_blank"
+                            rel="noreferrer"
+                            class="text-white/80 hover:text-white underline decoration-white/30 hover:decoration-white transition"
+                            >View</a
+                          >
+                          <span
+                            th:if="${u.profileImage == null || u.profileImage.isBlank()}"
+                            >-</span
+                          >
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex flex-col sm:flex-row gap-2">
+                            <form
+                              method="post"
+                              action="/admin/users/role"
+                              th:action="@{/admin/users/role}"
+                              th:if="${currentUserId == null || u.userId != currentUserId}"
+                              onsubmit="return confirmAdminAssign(this);"
+                              class="flex items-center gap-2"
+                            >
+                              <input
+                                type="hidden"
+                                th:name="${_csrf.parameterName}"
+                                th:value="${_csrf.token}"
+                              />
+                              <input
+                                type="hidden"
+                                name="userId"
+                                th:value="${u.userId}"
+                              />
+                              <input
+                                type="hidden"
+                                name="q"
+                                th:value="${userQ}"
+                              />
+                              <input
+                                type="hidden"
+                                name="field"
+                                th:value="${userField}"
+                              />
+                              <input
+                                type="hidden"
+                                name="roleFilter"
+                                th:value="${userRole}"
+                              />
+                              <div class="relative">
+                                <div
+                                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-white/60"
+                                >
+                                  <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                                <select
+                                  name="role"
+                                  class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-2 pr-7 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 cursor-pointer"
+                                >
+                                  <option
+                                    value="ADMIN"
+                                    th:selected="${u.roleKey == 'ADMIN'}"
+                                  >
+                                    Admin
+                                  </option>
+                                  <option
+                                    value="TEACHER"
+                                    th:selected="${u.roleKey == 'TEACHER'}"
+                                  >
+                                    Teacher
+                                  </option>
+                                  <option
+                                    value="STUDENT"
+                                    th:selected="${u.roleKey == 'STUDENT' || u.roleKey == null || u.roleKey.isBlank()}"
+                                  >
+                                    Student
+                                  </option>
+                                </select>
+                              </div>
+                              <button
+                                type="submit"
+                                class="bg-white/15 hover:bg-white/20 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition inline-flex items-center justify-center gap-2 flex-shrink-0"
+                              >
+                                Update
+                              </button>
+                            </form>
+
+                            <form
+                              method="post"
+                              action="/admin/users/delete"
+                              th:action="@{/admin/users/delete}"
+                              th:if="${currentUserId == null || u.userId != currentUserId}"
+                              onsubmit="return confirm('Delete this user?');"
+                            >
+                              <input
+                                type="hidden"
+                                th:name="${_csrf.parameterName}"
+                                th:value="${_csrf.token}"
+                              />
+                              <input
+                                type="hidden"
+                                name="userId"
+                                th:value="${u.userId}"
+                              />
+                              <input
+                                type="hidden"
+                                name="q"
+                                th:value="${userQ}"
+                              />
+                              <input
+                                type="hidden"
+                                name="field"
+                                th:value="${userField}"
+                              />
+                              <input
+                                type="hidden"
+                                name="roleFilter"
+                                th:value="${userRole}"
+                              />
+                              <button
+                                type="submit"
+                                class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 text-xs px-3 h-9 rounded-lg border border-rose-500/30 transition inline-flex items-center justify-center flex-shrink-0 w-full sm:w-auto"
+                              >
+                                Delete
+                              </button>
+                            </form>
+                            <span
+                              th:if="${currentUserId != null && u.userId == currentUserId}"
+                              class="inline-flex items-center text-white/50 text-xs h-9"
+                              >-</span
+                            >
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div th:if="${section != 'users' or !isAdmin}" class="space-y-2">
+                <h2 class="text-white text-2xl font-bold">
+                  <span th:text="#{adminPanel.courses}">Courses</span>
+                </h2>
+                <p class="text-white/70 text-sm">Coming soon.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div
+      id="assignAdminModal"
+      class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/70"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="assignAdminTitle"
+    >
+      <div
+        class="w-full max-w-lg rounded-2xl border border-rose-500/30 bg-slate-950/90 backdrop-blur-xl shadow-2xl"
+      >
+        <div class="p-5 sm:p-6">
+          <div class="flex items-start gap-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center flex-shrink-0"
+            >
+              <i class="fas fa-triangle-exclamation text-rose-200"></i>
+            </div>
+            <div class="min-w-0">
+              <h3
+                id="assignAdminTitle"
+                class="text-white text-lg sm:text-xl font-bold"
+              >
+                Assign Admin role?
+              </h3>
+              <p class="text-white/80 text-sm mt-2">
+                You are about to assign the Admin role to
+                <span
+                  id="assignAdminTargetUserId"
+                  class="font-semibold text-white"
+                ></span
+                >.
+              </p>
+              <div
+                class="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4"
+              >
+                <div class="text-amber-200 font-semibold text-sm">
+                  Your role will be changed to Teacher and you will be logged
+                  out.
+                </div>
+                <div class="text-white/75 text-sm mt-1">
+                  This is required to ensure there is always at least one Admin.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 flex flex-col sm:flex-row gap-2 sm:justify-end">
+            <button
+              id="assignAdminCancel"
+              type="button"
+              class="bg-white/10 hover:bg-white/15 text-white text-sm px-4 h-10 rounded-lg border border-white/10 transition inline-flex items-center justify-center"
+            >
+              Cancel
+            </button>
+            <button
+              id="assignAdminConfirm"
+              type="button"
+              class="bg-rose-500/30 hover:bg-rose-500/40 text-rose-100 text-sm px-4 h-10 rounded-lg border border-rose-500/40 transition inline-flex items-center justify-center"
+            >
+              Assign Admin &amp; Log out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/navbar.js"></script>
+    <script>
+      (function () {
+        var modal = document.getElementById("assignAdminModal");
+        var targetEl = document.getElementById("assignAdminTargetUserId");
+        var cancelBtn = document.getElementById("assignAdminCancel");
+        var confirmBtn = document.getElementById("assignAdminConfirm");
+        if (!modal || !targetEl || !cancelBtn || !confirmBtn) return;
+
+        var pendingForm = null;
+
+        function closeModal() {
+          modal.classList.add("hidden");
+          pendingForm = null;
+          targetEl.textContent = "";
+        }
+
+        cancelBtn.addEventListener("click", function () {
+          closeModal();
+        });
+
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) closeModal();
+        });
+
+        confirmBtn.addEventListener("click", function () {
+          if (pendingForm) pendingForm.submit();
+        });
+
+        window.confirmAdminAssign = function (form) {
+          try {
+            var select = form.querySelector('select[name="role"]');
+            if (!select || select.value !== "ADMIN") return true;
+
+            var userIdInput = form.querySelector('input[name="userId"]');
+            targetEl.textContent = userIdInput
+              ? userIdInput.value
+              : "this user";
+            pendingForm = form;
+            modal.classList.remove("hidden");
+            return false;
+          } catch (e) {
+            return true;
+          }
+        };
+      })();
+    </script>
+  </body>
+</html>

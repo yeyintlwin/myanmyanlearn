@@ -112,6 +112,29 @@
                       </div>
                       <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                     </a>
+                    <a
+                      th:if="${canSeeAdminPanel}"
+                      th:href="@{/admin}"
+                      href="/admin"
+                      class="flex items-center gap-3 px-4 py-2 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-slate-50 hover:text-slate-800 group"
+                    >
+                      <div
+                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center"
+                      >
+                        <i
+                          class="fas fa-shield-halved text-slate-600 text-sm"
+                        ></i>
+                      </div>
+                      <div class="flex-1">
+                        <div
+                          class="font-medium text-sm"
+                          th:text="#{nav.adminPanel}"
+                        >
+                          Admin Panel
+                        </div>
+                      </div>
+                      <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                    </a>
                     <!-- Languages submenu (hover to open) -->
                     <div class="relative group mt-1">
                       <div
