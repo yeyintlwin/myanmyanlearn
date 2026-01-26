@@ -21,6 +21,10 @@ public class WebConfig implements WebMvcConfigurer {
         // Serve course assets directly from classpath:/courses/**
         registry.addResourceHandler("/courses/**")
                 .addResourceLocations("classpath:/courses/");
+        String home = System.getProperty("user.home");
+        String base = (home != null ? home : "") + "/.myanmyanlearn/uploads/";
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:" + base);
         // Also ensure standard static resources continue to work (usually auto-configured)
     }
 

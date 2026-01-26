@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown Editor</title>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+    <style>
+      #preview h1,
+      #preview h2,
+      #preview h3,
+      #preview h4,
+      #preview h5,
+      #preview h6 {
+        color: white;
+      }
+      #preview p,
+      #preview li {
+        color: rgba(255, 255, 255, 0.85);
+      }
+      #preview a {
+        color: rgba(147, 197, 253, 1);
+        text-decoration: underline;
+      }
+      #preview pre {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        overflow: auto;
+      }
+      #preview code {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 0.5rem;
+        padding: 0.1rem 0.35rem;
+      }
+      #preview pre code {
+        background: transparent;
+        border: none;
+        padding: 0;
+      }
+      #preview img {
+        display: block;
+        max-width: min(100%, 680px);
+        height: auto;
+        margin: 0.75rem auto;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen font-sans app-bg app-bg-gradient text-white">
+    <nav th:replace="fragments/navbar :: appNavbar('Admin')"></nav>
+
+    <main
+      class="pt-24 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
+      th:attr="data-course-id=${courseId},data-chapter-id=${chapterId},data-subchapter-id=${subchapterId}"
+      id="mdEditorRoot"
+    >
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+          <a
+            href="/admin?section=courses"
+            class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-4 h-10 text-sm font-semibold text-white hover:bg-white/15 transition w-fit"
+          >
+            <i class="fas fa-arrow-left text-xs"></i>
+            <span>Back</span>
+          </a>
+
+          <div class="min-w-0 flex-1">
+            <div id="breadcrumb" class="text-white font-bold truncate">
+              Markdown Editor
+            </div>
+            <div class="text-white/70 text-sm mt-1">
+              Saved locally in your browser for now.
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <label
+              for="imageInput"
+              class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-4 h-10 text-sm font-semibold text-white hover:bg-white/15 transition cursor-pointer"
+            >
+              <i class="fas fa-image text-xs"></i>
+              <span>Add image</span>
+            </label>
+            <input
+              id="imageInput"
+              type="file"
+              accept="image/*"
+              class="hidden"
+            />
+
+            <button
+              id="saveBtn"
+              type="button"
+              class="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/20 px-4 h-10 text-sm font-semibold text-emerald-50 hover:bg-emerald-500/30 transition"
+            >
+              <i class="fas fa-floppy-disk text-xs"></i>
+              <span>Save</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="toast" class="hidden"></div>
+
+        <div
+          class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4"
+        >
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <div id="modeTitle" class="text-white font-semibold">
+                Markdown
+              </div>
+              <div id="modeHint" class="text-white/60 text-xs mt-1">
+                Tip: Paste images or use “Add image”.
+              </div>
+            </div>
+            <button
+              id="modeToggleBtn"
+              type="button"
+              class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-10 text-sm font-semibold text-white hover:bg-white/15 transition flex-shrink-0"
+            >
+              <i id="modeToggleIcon" class="fas fa-eye text-xs"></i>
+              <span id="modeToggleText">Preview</span>
+            </button>
+          </div>
+
+          <textarea
+            id="editor"
+            class="mt-3 w-full h-[70vh] bg-white/10 text-white text-sm rounded-xl px-3 py-3 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 placeholder:text-white/40 resize-none font-mono"
+            placeholder="# Start writing..."
+          ></textarea>
+
+          <div
+            id="preview"
+            class="hidden mt-3 rounded-xl border border-white/10 bg-white/5 p-4 overflow-auto h-[70vh]"
+          ></div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.getElementById("mdEditorRoot");
+        if (!root) return;
+
+        var courseId = root.getAttribute("data-course-id") || "";
+        var chapterId = root.getAttribute("data-chapter-id") || "";
+        var subchapterId = root.getAttribute("data-subchapter-id") || "";
+
+        var editor = document.getElementById("editor");
+        var preview = document.getElementById("preview");
+        var breadcrumb = document.getElementById("breadcrumb");
+        var saveBtn = document.getElementById("saveBtn");
+        var toast = document.getElementById("toast");
+        var imageInput = document.getElementById("imageInput");
+        var modeToggleBtn = document.getElementById("modeToggleBtn");
+        var modeToggleIcon = document.getElementById("modeToggleIcon");
+        var modeToggleText = document.getElementById("modeToggleText");
+        var modeTitle = document.getElementById("modeTitle");
+        var modeHint = document.getElementById("modeHint");
+
+        var md = window.markdownit
+          ? window.markdownit({ html: true, linkify: true, breaks: true })
+          : null;
+        var mode = "edit";
+
+        function showToast(ok, message) {
+          if (!toast) return;
+          toast.className =
+            "rounded-xl border px-4 py-3 text-sm " +
+            (ok
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-100"
+              : "border-rose-500/30 bg-rose-500/10 text-rose-100");
+          toast.textContent = message || (ok ? "Saved" : "Failed");
+          toast.classList.remove("hidden");
+          setTimeout(
+            function () {
+              toast.classList.add("hidden");
+            },
+            ok ? 1200 : 2500,
+          );
+        }
+
+        function editorKey() {
+          return (
+            "adminMarkdown_v1::" +
+            encodeURIComponent(courseId) +
+            "::" +
+            encodeURIComponent(chapterId) +
+            "::" +
+            encodeURIComponent(subchapterId)
+          );
+        }
+
+        function loadBreadcrumb() {
+          try {
+            var storageKey = "adminCoursesDraft_v1";
+            var raw = localStorage.getItem(storageKey);
+            if (!raw) return;
+            var data = JSON.parse(raw);
+            if (!data || !Array.isArray(data.courses)) return;
+            var course = data.courses.find(function (c) {
+              return c && c.id === courseId;
+            });
+            var chapter =
+              course && Array.isArray(course.chapters)
+                ? course.chapters.find(function (ch) {
+                    return ch && ch.id === chapterId;
+                  })
+                : null;
+            var sub =
+              chapter && Array.isArray(chapter.subchapters)
+                ? chapter.subchapters.find(function (s) {
+                    return s && s.id === subchapterId;
+                  })
+                : null;
+
+            var parts = [];
+            if (course && course.title) parts.push(course.title);
+            if (chapter) {
+              var chLabel =
+                "Chapter " +
+                (chapter.number || 0) +
+                (chapter.name ? " · " + chapter.name : "");
+              parts.push(chLabel);
+            }
+            if (sub && sub.title) parts.push(sub.title);
+            if (!parts.length) parts.push("Markdown Editor");
+            if (breadcrumb) breadcrumb.textContent = parts.join(" / ");
+          } catch (e) {}
+        }
+
+        function render() {
+          if (!preview) return;
+          var text = editor ? editor.value || "" : "";
+          if (!md) {
+            preview.textContent = text;
+            return;
+          }
+          preview.innerHTML = md.render(text);
+        }
+
+        function setMode(nextMode) {
+          mode = nextMode === "preview" ? "preview" : "edit";
+          try {
+            localStorage.setItem("adminMarkdownEditorMode_v1", mode);
+          } catch (e) {}
+
+          if (editor) editor.classList.toggle("hidden", mode !== "edit");
+          if (preview) preview.classList.toggle("hidden", mode !== "preview");
+
+          if (modeTitle)
+            modeTitle.textContent = mode === "edit" ? "Markdown" : "Preview";
+          if (modeHint) {
+            modeHint.textContent =
+              mode === "edit"
+                ? "Tip: Paste images or use “Add image”."
+                : "Rendered";
+          }
+
+          if (modeToggleText)
+            modeToggleText.textContent = mode === "edit" ? "Preview" : "Edit";
+          if (modeToggleIcon) {
+            modeToggleIcon.className =
+              "fas " + (mode === "edit" ? "fa-eye" : "fa-pen") + " text-xs";
+          }
+
+          if (mode === "preview") render();
+        }
+
+        function save() {
+          try {
+            localStorage.setItem(editorKey(), editor ? editor.value || "" : "");
+            showToast(true, "Saved");
+          } catch (e) {
+            showToast(false, "Failed to save");
+          }
+        }
+
+        function insertAtCursor(text) {
+          if (!editor) return;
+          var start = editor.selectionStart || 0;
+          var end = editor.selectionEnd || 0;
+          var v = editor.value || "";
+          editor.value = v.slice(0, start) + text + v.slice(end);
+          var pos = start + text.length;
+          editor.selectionStart = pos;
+          editor.selectionEnd = pos;
+          editor.focus();
+          render();
+        }
+
+        async function uploadImage(file) {
+          var tokenMeta = document.querySelector('meta[name="_csrf"]');
+          var headerMeta = document.querySelector('meta[name="_csrf_header"]');
+          var token = tokenMeta ? tokenMeta.getAttribute("content") : "";
+          var headerName = headerMeta ? headerMeta.getAttribute("content") : "";
+          var headers = {};
+          if (token && headerName) headers[headerName] = token;
+
+          var form = new FormData();
+          form.append("file", file);
+
+          var res = await fetch("/admin/markdown-editor/upload", {
+            method: "POST",
+            headers: headers,
+            credentials: "same-origin",
+            body: form,
+          });
+
+          var json = null;
+          try {
+            json = await res.json();
+          } catch (e) {}
+          if (!res.ok || !json || !json.ok || !json.url) {
+            throw new Error(
+              (json && json.message) || "Upload failed (" + res.status + ")",
+            );
+          }
+          return String(json.url);
+        }
+
+        async function handleFiles(files) {
+          if (!files || !files.length) return;
+          var file = files[0];
+          if (!file) return;
+          if (!file.type || file.type.indexOf("image/") !== 0) {
+            showToast(false, "Please choose an image file.");
+            return;
+          }
+          try {
+            showToast(true, "Uploading...");
+            var url = await uploadImage(file);
+            var alt = file.name ? file.name.replace(/\.[^/.]+$/, "") : "image";
+            insertAtCursor("\n![" + alt + "](" + url + ")\n");
+            showToast(true, "Image added");
+          } catch (e) {
+            showToast(false, e && e.message ? e.message : "Upload failed");
+          }
+        }
+
+        loadBreadcrumb();
+
+        try {
+          var m = localStorage.getItem("adminMarkdownEditorMode_v1");
+          if (m === "preview" || m === "edit") mode = m;
+        } catch (e) {}
+
+        try {
+          var existing = localStorage.getItem(editorKey());
+          if (existing && editor) editor.value = existing;
+        } catch (e) {}
+
+        if (editor) {
+          editor.addEventListener("input", function () {
+            render();
+          });
+          editor.addEventListener("keydown", function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+              e.preventDefault();
+              save();
+            }
+          });
+          editor.addEventListener("paste", function (e) {
+            try {
+              var items = e.clipboardData ? e.clipboardData.items : null;
+              if (!items || !items.length) return;
+              for (var i = 0; i < items.length; i++) {
+                var it = items[i];
+                if (it && it.kind === "file") {
+                  var f = it.getAsFile();
+                  if (f) {
+                    e.preventDefault();
+                    handleFiles([f]);
+                    return;
+                  }
+                }
+              }
+            } catch (e2) {}
+          });
+        }
+
+        if (saveBtn) saveBtn.addEventListener("click", save);
+
+        if (imageInput)
+          imageInput.addEventListener("change", function () {
+            handleFiles(this.files);
+            this.value = "";
+          });
+
+        if (modeToggleBtn)
+          modeToggleBtn.addEventListener("click", function () {
+            setMode(mode === "edit" ? "preview" : "edit");
+          });
+
+        setMode(mode);
+        render();
+      })();
+    </script>
+  </body>
+</html>
