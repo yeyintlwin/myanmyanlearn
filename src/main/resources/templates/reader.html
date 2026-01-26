@@ -386,7 +386,6 @@
     <main class="flex-1 pt-24 pb-16">
       <div id="contentWrap" class="transition-all">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <!-- Header row matching Contents header: title left, Back button right -->
           <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div class="flex items-center gap-3 sm:gap-3 min-w-0">
               <button
@@ -409,7 +408,61 @@
             </a>
           </div>
 
-          <!-- Markdown container: light yellow background for readability -->
+          <div class="mb-4">
+            <nav
+              class="flex items-center text-sm sm:text-base text-white/85"
+              aria-label="Breadcrumb"
+            >
+              <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                <li
+                  th:if="${course != null}"
+                  class="flex items-center gap-1 min-w-0"
+                >
+                  <span class="truncate max-w-[8rem] sm:max-w-[14rem]">
+                    <span
+                      class="px-2 py-0.5 rounded-full bg-white/15 text-white font-semibold"
+                      th:text="${course.title}"
+                    >
+                      Course Title
+                    </span>
+                  </span>
+                </li>
+                <li
+                  th:if="${course != null && content != null}"
+                  class="text-white/40"
+                >
+                  <i class="fas fa-chevron-right text-[9px]"></i>
+                </li>
+                <li
+                  th:if="${content != null}"
+                  class="flex items-center gap-1 min-w-0"
+                >
+                  <span
+                    class="truncate max-w-[8rem] sm:max-w-[11rem] font-medium"
+                    th:text="${content.chapter != null ? content.chapter : 'Chapter ' + content.order}"
+                    >Chapter 1</span
+                  >
+                </li>
+                <li
+                  th:if="${content != null && sub != null}"
+                  class="text-white/40"
+                >
+                  <i class="fas fa-chevron-right text-[9px]"></i>
+                </li>
+                <li
+                  th:if="${sub != null}"
+                  class="flex items-center gap-1 min-w-0"
+                >
+                  <span
+                    class="truncate max-w-[11rem] sm:max-w-[16rem] font-medium"
+                    th:text="${sub.title}"
+                    >Subchapter Title</span
+                  >
+                </li>
+              </ol>
+            </nav>
+          </div>
+
           <div
             id="mdPanel"
             class="bg-amber-50/70 border border-slate-200 rounded-xl p-3 sm:p-4 mb-3 transition-colors duration-200"

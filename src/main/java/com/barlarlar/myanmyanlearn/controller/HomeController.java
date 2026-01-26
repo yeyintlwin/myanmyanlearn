@@ -12,10 +12,10 @@ import com.barlarlar.myanmyanlearn.model.Course;
 import com.barlarlar.myanmyanlearn.service.AssessmentScoreRecordService;
 import com.barlarlar.myanmyanlearn.service.CourseService;
 import com.barlarlar.myanmyanlearn.service.LoginAttemptService;
+import com.barlarlar.myanmyanlearn.service.RegistrationSettingsService;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -23,7 +23,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -71,6 +73,15 @@ public class HomeController {
 
     @Autowired
     private UserDetailsManager userDetailsManager;
+
+    @Autowired
+    private RegistrationSettingsService registrationSettingsService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private volatile boolean memberStudentMetaInitialized;
+    private volatile boolean memberStudentMetaAvailable;
 
     private static final Set<String> ALLOWED_USER_ROLES = Set.of("ADMIN", "TEACHER", "STUDENT");
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -143,95 +154,124 @@ public class HomeController {
             @RequestParam(name = "field", required = false) String field,
             @RequestParam(name = "role", required = false) String role,
             Model model) {
-        if ("users".equals(section)) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (isAdmin(auth)) {
-                model.addAttribute("currentUserId", auth != null ? auth.getName() : null);
-                String query = q != null ? q.trim() : "";
-                String fieldKey = (field == null || field.isBlank()) ? "name" : field.trim().toLowerCase(Locale.ROOT);
-                String roleKey = role != null ? role.trim() : "";
-                String roleKeyNorm = roleKey.isBlank() ? "" : roleKey.toUpperCase(Locale.ROOT);
-                model.addAttribute("userQ", query);
-                model.addAttribute("userField", fieldKey);
-                model.addAttribute("userRole", roleKeyNorm);
+        String effectiveSection = (section == null || section.isBlank()) ? "courses" : section;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-                List<Member> members = memberRepository.findAll();
-                List<String> userIds = new ArrayList<>();
-                for (Member m : members) {
-                    if (m != null && m.getUserId() != null) {
-                        userIds.add(m.getUserId());
-                    }
+        if ("users".equals(effectiveSection) && isAdmin(auth)) {
+            model.addAttribute("currentUserId", auth != null ? auth.getName() : null);
+            String query = q != null ? q.trim() : "";
+            String fieldKey = (field == null || field.isBlank()) ? "name" : field.trim().toLowerCase(Locale.ROOT);
+            String roleKey = role != null ? role.trim() : "";
+            String roleKeyNorm = roleKey.isBlank() ? "" : roleKey.toUpperCase(Locale.ROOT);
+            model.addAttribute("userQ", query);
+            model.addAttribute("userField", fieldKey);
+            model.addAttribute("userRole", roleKeyNorm);
+
+            List<Member> members = memberRepository.findAll();
+            List<String> userIds = new ArrayList<>();
+            for (Member m : members) {
+                if (m != null && m.getUserId() != null) {
+                    userIds.add(m.getUserId());
                 }
-
-                Map<String, List<String>> rolesByUser = new HashMap<>();
-                if (!userIds.isEmpty()) {
-                    List<Role> roles = roleRepository.findByUserIdIn(userIds);
-                    for (Role r : roles) {
-                        if (r == null || r.getUserId() == null || r.getRole() == null) {
-                            continue;
-                        }
-                        rolesByUser.computeIfAbsent(r.getUserId(), k -> new ArrayList<>()).add(r.getRole());
-                    }
-                    for (List<String> rs : rolesByUser.values()) {
-                        rs.sort(String::compareTo);
-                    }
-                }
-
-                members.sort((a, b) -> {
-                    if (a == null && b == null) {
-                        return 0;
-                    }
-                    if (a == null) {
-                        return 1;
-                    }
-                    if (b == null) {
-                        return -1;
-                    }
-                    String aId = a.getUserId() != null ? a.getUserId() : "";
-                    String bId = b.getUserId() != null ? b.getUserId() : "";
-
-                    int aRank = roleRankFromKey(resolvePrimaryRoleKey(rolesByUser.get(aId)));
-                    int bRank = roleRankFromKey(resolvePrimaryRoleKey(rolesByUser.get(bId)));
-                    if (aRank != bRank) {
-                        return Integer.compare(aRank, bRank);
-                    }
-                    return aId.compareToIgnoreCase(bId);
-                });
-
-                List<AdminUserRow> rows = new ArrayList<>();
-                for (Member m : members) {
-                    if (m == null) {
-                        continue;
-                    }
-                    if (!roleKeyNorm.isBlank()) {
-                        List<String> rs = rolesByUser.get(m.getUserId());
-                        if (!matchesRoleFilter(rs, roleKeyNorm)) {
-                            continue;
-                        }
-                    }
-
-                    if (!query.isBlank() && !matchesUserSearch(m, fieldKey, query)) {
-                        continue;
-                    }
-
-                    List<String> rs = rolesByUser.get(m.getUserId());
-                    String rolesDisplay = (rs == null || rs.isEmpty()) ? "-" : String.join(", ", rs);
-                    String primaryRoleKey = resolvePrimaryRoleKey(rs);
-                    rows.add(new AdminUserRow(
-                            m.getUserId(),
-                            m.getFirstName(),
-                            m.getLastName(),
-                            m.getEmail(),
-                            m.getActive(),
-                            m.getEmailVerified(),
-                            rolesDisplay,
-                            primaryRoleKey,
-                            m.getProfileImage()));
-                }
-                model.addAttribute("adminUsers", rows);
             }
+
+            Map<String, List<String>> rolesByUser = new HashMap<>();
+            if (!userIds.isEmpty()) {
+                List<Role> roles = roleRepository.findByUserIdIn(userIds);
+                for (Role r : roles) {
+                    if (r == null || r.getUserId() == null || r.getRole() == null) {
+                        continue;
+                    }
+                    rolesByUser.computeIfAbsent(r.getUserId(), k -> new ArrayList<>()).add(r.getRole());
+                }
+                for (List<String> rs : rolesByUser.values()) {
+                    rs.sort(String::compareTo);
+                }
+            }
+
+            members.sort((a, b) -> {
+                if (a == null && b == null) {
+                    return 0;
+                }
+                if (a == null) {
+                    return 1;
+                }
+                if (b == null) {
+                    return -1;
+                }
+                String aId = a.getUserId() != null ? a.getUserId() : "";
+                String bId = b.getUserId() != null ? b.getUserId() : "";
+
+                int aRank = roleRankFromKey(resolvePrimaryRoleKey(rolesByUser.get(aId)));
+                int bRank = roleRankFromKey(resolvePrimaryRoleKey(rolesByUser.get(bId)));
+                if (aRank != bRank) {
+                    return Integer.compare(aRank, bRank);
+                }
+                return aId.compareToIgnoreCase(bId);
+            });
+
+            Map<String, StudentMeta> studentMetaByUser = loadStudentMetaByUserId(userIds);
+
+            List<AdminUserRow> rows = new ArrayList<>();
+            for (Member m : members) {
+                if (m == null) {
+                    continue;
+                }
+                if (!roleKeyNorm.isBlank()) {
+                    List<String> rs = rolesByUser.get(m.getUserId());
+                    if (!matchesRoleFilter(rs, roleKeyNorm)) {
+                        continue;
+                    }
+                }
+
+                if (!query.isBlank() && !matchesUserSearch(m, fieldKey, query)) {
+                    continue;
+                }
+
+                List<String> rs = rolesByUser.get(m.getUserId());
+                String rolesDisplay = (rs == null || rs.isEmpty()) ? "-" : String.join(", ", rs);
+                String primaryRoleKey = resolvePrimaryRoleKey(rs);
+                StudentMeta meta = studentMetaByUser.get(m.getUserId());
+                rows.add(new AdminUserRow(
+                        m.getUserId(),
+                        m.getFirstName(),
+                        m.getLastName(),
+                        m.getEmail(),
+                        m.getActive(),
+                        m.getEmailVerified(),
+                        rolesDisplay,
+                        primaryRoleKey,
+                        m.getProfileImage(),
+                        meta != null ? meta.currentClass : null,
+                        meta != null ? meta.schoolYear : null));
+            }
+            model.addAttribute("adminUsers", rows);
         }
+
+        if ("settings".equals(effectiveSection) && isAdmin(auth)) {
+            RegistrationSettingsService.SettingsView settings = registrationSettingsService.getSettings();
+            model.addAttribute("registrationDomainEnforced", settings.isEnforceDomain());
+            model.addAttribute("registrationDomainDisplay", registrationSettingsService.getDisplayDomain());
+        }
+
+        model.addAttribute("section", effectiveSection);
         return "admin-panel";
+    }
+
+    @PostMapping("/admin/settings/registration-domain")
+    @Transactional
+    public String updateRegistrationDomainSettings(
+            @RequestParam(name = "allowedDomain", required = false) String allowedDomain,
+            @RequestParam(name = "enforceDomain", required = false) Boolean enforceDomain) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!isAdmin(auth)) {
+            return "redirect:/admin?section=settings";
+        }
+
+        boolean enforce = enforceDomain != null && enforceDomain;
+        registrationSettingsService.updateSettings(allowedDomain, enforce);
+
+        return "redirect:/admin?section=settings";
     }
 
     private int roleRankFromKey(String roleKey) {
@@ -359,6 +399,128 @@ public class HomeController {
         memberRepository.delete(member);
 
         return redirectAdminUsers(q, field, roleFilter);
+    }
+
+    @PostMapping("/admin/users/active")
+    @Transactional
+    public String adminUpdateUserActive(
+            @RequestParam("userId") String userId,
+            @RequestParam(name = "active", required = false) Boolean active,
+            @RequestParam(name = "q", required = false) String q,
+            @RequestParam(name = "field", required = false) String field,
+            @RequestParam(name = "roleFilter", required = false) String roleFilter) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!isAdmin(auth)) {
+            return "redirect:/admin?section=users";
+        }
+
+        String targetUserId = userId != null ? userId.trim() : "";
+        if (targetUserId.isBlank()) {
+            return redirectAdminUsers(q, field, roleFilter);
+        }
+
+        Optional<Member> memberOpt = memberRepository.findById(targetUserId);
+        if (memberOpt.isEmpty()) {
+            return redirectAdminUsers(q, field, roleFilter);
+        }
+
+        boolean newActive = active != null && active;
+
+        boolean targetIsAdmin = roleRepository.existsByUserIdAndRole(targetUserId, ROLE_ADMIN);
+        if (targetIsAdmin && !newActive) {
+            return redirectAdminUsers(q, field, roleFilter);
+        }
+
+        Member member = memberOpt.get();
+        member.setActive(newActive);
+        memberRepository.save(member);
+
+        return redirectAdminUsers(q, field, roleFilter);
+    }
+
+    @PostMapping("/admin/users/student-meta")
+    @Transactional
+    public String adminUpdateStudentMeta(
+            @RequestParam("userId") String userId,
+            @RequestParam(name = "currentClass", required = false) String currentClass,
+            @RequestParam(name = "schoolYear", required = false) String schoolYear,
+            @RequestParam(name = "q", required = false) String q,
+            @RequestParam(name = "field", required = false) String field,
+            @RequestParam(name = "roleFilter", required = false) String roleFilter,
+            HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!isAdmin(auth)) {
+            return "redirect:/admin?section=users";
+        }
+
+        String targetUserId = userId != null ? userId.trim() : "";
+        if (targetUserId.isBlank()) {
+            return redirectAdminUsers(q, field, roleFilter);
+        }
+
+        String currentUserId = auth != null ? auth.getName() : null;
+        if (currentUserId != null && currentUserId.equals(targetUserId)) {
+            return redirectAdminUsers(q, field, roleFilter);
+        }
+
+        boolean targetIsAdmin = roleRepository.existsByUserIdAndRole(targetUserId, ROLE_ADMIN);
+        if (targetIsAdmin) {
+            return redirectAdminUsers(q, field, roleFilter);
+        }
+        boolean targetIsTeacher = roleRepository.existsByUserIdAndRole(targetUserId, ROLE_TEACHER);
+        if (targetIsTeacher) {
+            return redirectAdminUsers(q, field, roleFilter);
+        }
+
+        ensureMemberStudentMetaColumns();
+        if (!memberStudentMetaAvailable) {
+            return redirectAdminUsers(q, field, roleFilter);
+        }
+
+        boolean hasCurrentClassParam = request != null
+                && request.getParameterMap() != null
+                && request.getParameterMap().containsKey("currentClass");
+        boolean hasSchoolYearParam = request != null
+                && request.getParameterMap() != null
+                && request.getParameterMap().containsKey("schoolYear");
+
+        if (hasCurrentClassParam && hasSchoolYearParam) {
+            String cls = normalizeNullable(currentClass, 100);
+            String year = normalizeNullable(schoolYear, 20);
+            jdbcTemplate.update(
+                    "UPDATE members SET current_class = ?, school_year = ? WHERE user_id = ?",
+                    cls,
+                    year,
+                    targetUserId);
+        } else if (hasCurrentClassParam) {
+            String cls = normalizeNullable(currentClass, 100);
+            jdbcTemplate.update(
+                    "UPDATE members SET current_class = ? WHERE user_id = ?",
+                    cls,
+                    targetUserId);
+        } else if (hasSchoolYearParam) {
+            String year = normalizeNullable(schoolYear, 20);
+            jdbcTemplate.update(
+                    "UPDATE members SET school_year = ? WHERE user_id = ?",
+                    year,
+                    targetUserId);
+        }
+
+        return redirectAdminUsers(q, field, roleFilter);
+    }
+
+    private String normalizeNullable(String value, int maxLen) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        if (trimmed.isEmpty()) {
+            return null;
+        }
+        if (trimmed.length() > maxLen) {
+            return trimmed.substring(0, maxLen);
+        }
+        return trimmed;
     }
 
     private boolean matchesUserSearch(Member m, String fieldKey, String query) {
@@ -497,6 +659,79 @@ public class HomeController {
         }
     }
 
+    private void ensureMemberStudentMetaColumns() {
+        if (memberStudentMetaInitialized) {
+            return;
+        }
+        synchronized (this) {
+            if (memberStudentMetaInitialized) {
+                return;
+            }
+
+            boolean available = false;
+            try {
+                if (!hasColumn("members", "current_class")) {
+                    jdbcTemplate.execute("ALTER TABLE members ADD COLUMN current_class VARCHAR(100) NULL");
+                }
+                if (!hasColumn("members", "school_year")) {
+                    jdbcTemplate.execute("ALTER TABLE members ADD COLUMN school_year VARCHAR(20) NULL");
+                }
+                available = hasColumn("members", "current_class") && hasColumn("members", "school_year");
+            } catch (Exception ignored) {
+                available = false;
+            }
+
+            memberStudentMetaAvailable = available;
+            memberStudentMetaInitialized = true;
+        }
+    }
+
+    private boolean hasColumn(String tableName, String columnName) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?",
+                Integer.class,
+                tableName,
+                columnName);
+        return count != null && count > 0;
+    }
+
+    private Map<String, StudentMeta> loadStudentMetaByUserId(List<String> userIds) {
+        ensureMemberStudentMetaColumns();
+        if (!memberStudentMetaAvailable || userIds == null || userIds.isEmpty()) {
+            return Map.of();
+        }
+
+        try {
+            String placeholders = userIds.stream().map(x -> "?").collect(Collectors.joining(","));
+            String sql = "SELECT user_id, current_class, school_year FROM members WHERE user_id IN (" + placeholders
+                    + ")";
+            Object[] args = userIds.toArray();
+            Map<String, StudentMeta> out = new HashMap<>();
+            jdbcTemplate.query(sql, (rs, rowNum) -> {
+                String userId = rs.getString("user_id");
+                if (userId != null) {
+                    out.put(userId, new StudentMeta(
+                            rs.getString("current_class"),
+                            rs.getString("school_year")));
+                }
+                return 1;
+            }, args);
+            return out;
+        } catch (Exception ignored) {
+            return Map.of();
+        }
+    }
+
+    private static class StudentMeta {
+        private final String currentClass;
+        private final String schoolYear;
+
+        private StudentMeta(String currentClass, String schoolYear) {
+            this.currentClass = currentClass;
+            this.schoolYear = schoolYear;
+        }
+    }
+
     public static class AdminUserRow {
         private final String userId;
         private final String firstName;
@@ -507,9 +742,13 @@ public class HomeController {
         private final String roles;
         private final String roleKey;
         private final String profileImage;
+        private final String currentClass;
+        private final String schoolYear;
 
         public AdminUserRow(String userId, String firstName, String lastName, String email,
-                Boolean active, Boolean emailVerified, String roles, String roleKey, String profileImage) {
+                Boolean active, Boolean emailVerified, String roles, String roleKey, String profileImage,
+                String currentClass,
+                String schoolYear) {
             this.userId = userId;
             this.firstName = firstName;
             this.lastName = lastName;
@@ -519,6 +758,8 @@ public class HomeController {
             this.roles = roles;
             this.roleKey = roleKey;
             this.profileImage = profileImage;
+            this.currentClass = currentClass;
+            this.schoolYear = schoolYear;
         }
 
         public String getUserId() {
@@ -555,6 +796,14 @@ public class HomeController {
 
         public String getProfileImage() {
             return profileImage;
+        }
+
+        public String getCurrentClass() {
+            return currentClass;
+        }
+
+        public String getSchoolYear() {
+            return schoolYear;
         }
     }
 

@@ -11,6 +11,10 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 
 import javax.sql.DataSource;
 
@@ -66,7 +70,18 @@ public class SecurityConfig {
                                 .formLogin(form -> form.loginPage("/login")
                                                 .loginProcessingUrl("/authenticateTheUser")
                                                 .successHandler(customAuthenticationSuccessHandler)
-                                                .failureUrl("/login?error=true")
+                                                .failureHandler((request, response, exception) -> {
+                                                        String target = "/login?error=true";
+                                                        if (exception instanceof DisabledException) {
+                                                                target = "/login?disabled=true";
+                                                        } else if (exception instanceof LockedException) {
+                                                                target = "/login?locked=true";
+                                                        } else if (exception instanceof AccountExpiredException
+                                                                        || exception instanceof CredentialsExpiredException) {
+                                                                target = "/login?expired=true";
+                                                        }
+                                                        response.sendRedirect(target);
+                                                })
                                                 .permitAll())
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")

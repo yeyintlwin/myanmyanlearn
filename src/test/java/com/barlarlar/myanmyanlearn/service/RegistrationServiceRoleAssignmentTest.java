@@ -36,6 +36,9 @@ class RegistrationServiceRoleAssignmentTest {
     @Mock
     private OtpService otpService;
 
+    @Mock
+    private RegistrationSettingsService registrationSettingsService;
+
     @InjectMocks
     private RegistrationService registrationService;
 
@@ -44,6 +47,7 @@ class RegistrationServiceRoleAssignmentTest {
         when(memberRepository.existsByUserId(eq("user1"))).thenReturn(false);
         when(memberRepository.existsByEmail(eq("user1@example.com"))).thenReturn(false);
         when(memberRepository.count()).thenReturn(0L);
+        when(registrationSettingsService.isRegistrationEmailAllowed(any())).thenReturn(true);
         when(passwordEncoder.encode(eq("pw"))).thenReturn("encoded");
         when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(otpService.generateOtp()).thenReturn("123456");
@@ -62,6 +66,7 @@ class RegistrationServiceRoleAssignmentTest {
         when(memberRepository.existsByUserId(eq("user2"))).thenReturn(false);
         when(memberRepository.existsByEmail(eq("user2@example.com"))).thenReturn(false);
         when(memberRepository.count()).thenReturn(1L);
+        when(registrationSettingsService.isRegistrationEmailAllowed(any())).thenReturn(true);
         when(passwordEncoder.encode(eq("pw"))).thenReturn("encoded");
         when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(otpService.generateOtp()).thenReturn("654321");
@@ -75,4 +80,3 @@ class RegistrationServiceRoleAssignmentTest {
         verify(emailService).sendOtpEmail("user2@example.com", "654321");
     }
 }
-

@@ -35,6 +35,9 @@ public class RegistrationService {
     @Autowired
     private OtpService otpService;
 
+    @Autowired
+    private RegistrationSettingsService registrationSettingsService;
+
     /**
      * Register a new user with email verification
      */
@@ -48,6 +51,14 @@ public class RegistrationService {
             if (memberRepository.existsByEmail(email)) {
                 throw new IllegalArgumentException(
                         "Email '" + email + "' is already registered. Please use a different email or try logging in.");
+            }
+
+            if (!registrationSettingsService.isRegistrationEmailAllowed(email)) {
+                String domain = registrationSettingsService.getDisplayDomain();
+                String message = (domain != null && !domain.isBlank())
+                        ? "Registration is restricted to email addresses ending with @" + domain + "."
+                        : "Registration is currently restricted by email domain policy.";
+                throw new IllegalArgumentException(message);
             }
 
             boolean firstUser = memberRepository.count() == 0;
