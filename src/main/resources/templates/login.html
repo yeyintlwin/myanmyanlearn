@@ -414,9 +414,9 @@
       });
 
       // Login Form Validation
-      const loginForm = document.querySelector(
-        'form[th\\:action="@{/authenticateTheUser}"]',
-      );
+      const loginForm =
+        document.querySelector('form[action$="authenticateTheUser"]') ||
+        document.querySelector("form");
       const usernameInput = document.getElementById("username");
       const passwordInput = document.getElementById("password");
       const submitButton = document.querySelector('button[type="submit"]');
@@ -508,84 +508,94 @@
       }
 
       // Username validation
-      usernameInput.addEventListener("blur", function () {
-        const validation = validateUsername(this.value);
-        if (!validation.valid) {
-          showFieldError(this, validation.message);
-        } else {
-          clearFieldError(this);
-        }
-      });
-
-      usernameInput.addEventListener("input", function () {
-        if (this.classList.contains("border-red-400")) {
+      if (usernameInput) {
+        usernameInput.addEventListener("blur", function () {
           const validation = validateUsername(this.value);
-          if (validation.valid) {
+          if (!validation.valid) {
+            showFieldError(this, validation.message);
+          } else {
             clearFieldError(this);
           }
-        }
-      });
+        });
+      }
+
+      if (usernameInput) {
+        usernameInput.addEventListener("input", function () {
+          if (this.classList.contains("border-red-400")) {
+            const validation = validateUsername(this.value);
+            if (validation.valid) {
+              clearFieldError(this);
+            }
+          }
+        });
+      }
 
       // Password validation
-      passwordInput.addEventListener("blur", function () {
-        const validation = validatePassword(this.value);
-        if (!validation.valid) {
-          showFieldError(this, validation.message);
-        } else {
-          clearFieldError(this);
-        }
-      });
-
-      passwordInput.addEventListener("input", function () {
-        if (this.classList.contains("border-red-400")) {
+      if (passwordInput) {
+        passwordInput.addEventListener("blur", function () {
           const validation = validatePassword(this.value);
-          if (validation.valid) {
+          if (!validation.valid) {
+            showFieldError(this, validation.message);
+          } else {
             clearFieldError(this);
           }
-        }
-      });
+        });
+      }
+
+      if (passwordInput) {
+        passwordInput.addEventListener("input", function () {
+          if (this.classList.contains("border-red-400")) {
+            const validation = validatePassword(this.value);
+            if (validation.valid) {
+              clearFieldError(this);
+            }
+          }
+        });
+      }
 
       // Form submission validation
-      loginForm.addEventListener("submit", function (e) {
-        e.preventDefault();
+      if (loginForm) {
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
 
-        const username = usernameInput.value.trim();
-        const password = passwordInput.value;
+          const username = usernameInput ? usernameInput.value.trim() : "";
+          const password = passwordInput ? passwordInput.value : "";
 
-        const usernameValidation = validateUsername(username);
-        const passwordValidation = validatePassword(password);
+          const usernameValidation = validateUsername(username);
+          const passwordValidation = validatePassword(password);
 
-        let hasErrors = false;
+          let hasErrors = false;
 
-        if (!usernameValidation.valid) {
-          showFieldError(usernameInput, usernameValidation.message);
-          hasErrors = true;
-        } else {
-          clearFieldError(usernameInput);
-        }
-
-        if (!passwordValidation.valid) {
-          showFieldError(passwordInput, passwordValidation.message);
-          hasErrors = true;
-        } else {
-          clearFieldError(passwordInput);
-        }
-
-        if (hasErrors) {
-          // Show general error message (text is already localized in the template)
-          const generalError = document.querySelector(".general-error");
-          if (generalError) {
-            generalError.classList.remove("hidden");
+          if (!usernameValidation.valid) {
+            if (usernameInput)
+              showFieldError(usernameInput, usernameValidation.message);
+            hasErrors = true;
+          } else if (usernameInput) {
+            clearFieldError(usernameInput);
           }
-          return;
-        }
 
-        // If all validations pass, submit the form
-        this.submit();
-      });
+          if (!passwordValidation.valid) {
+            if (passwordInput)
+              showFieldError(passwordInput, passwordValidation.message);
+            hasErrors = true;
+          } else if (passwordInput) {
+            clearFieldError(passwordInput);
+          }
+
+          if (hasErrors) {
+            const generalError = document.querySelector(".general-error");
+            if (generalError) {
+              generalError.classList.remove("hidden");
+            }
+            return;
+          }
+
+          this.submit();
+        });
+      }
 
       // Clear general error when user starts typing
-      [usernameInput, passwordInput].forEach((input) => {
+      [usernameInput, passwordInput].filter(Boolean).forEach((input) => {
         input.addEventListener("input", function () {
           const generalError = document.querySelector(".general-error");
           if (generalError) {
@@ -595,11 +605,13 @@
       });
 
       // Add loading state to submit button
-      loginForm.addEventListener("submit", function () {
-        submitButton.disabled = true;
-        submitButton.innerHTML =
-          '<i class="fas fa-spinner fa-spin mr-2"></i>Signing In...';
-      });
+      if (loginForm && submitButton) {
+        loginForm.addEventListener("submit", function () {
+          submitButton.disabled = true;
+          submitButton.innerHTML =
+            '<i class="fas fa-spinner fa-spin mr-2"></i>Signing In...';
+        });
+      }
     </script>
   </body>
 </html>

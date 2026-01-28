@@ -1,0 +1,1988 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Editor</title>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body class="min-h-screen font-sans app-bg app-bg-gradient text-white">
+    <nav th:replace="fragments/navbar :: appNavbar('Admin')"></nav>
+
+    <main class="pt-24 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div
+        id="courseEditorRoot"
+        class="space-y-4"
+        th:attr="data-course-id=${courseId}"
+        data-storage-key="adminCoursesDraft_v1"
+      >
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+        >
+          <div class="min-w-0 flex-1">
+            <div id="courseEditorTitle" class="text-white font-bold truncate">
+              Course Editor
+            </div>
+            <div class="text-white/70 text-sm mt-1">
+              Manage chapters, subchapters, learning content, and questions (UI
+              only).
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <button
+              id="saveCourseBtn"
+              type="button"
+              class="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/15 px-4 h-10 text-sm font-semibold text-emerald-50 hover:bg-emerald-500/20 transition w-fit"
+            >
+              <i class="fas fa-floppy-disk text-xs"></i>
+              <span>Save</span>
+            </button>
+            <a
+              href="/admin?section=courses"
+              class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-4 h-10 text-sm font-semibold text-white hover:bg-white/15 transition w-fit no-underline"
+            >
+              <i class="fas fa-arrow-left text-xs"></i>
+              <span>Back</span>
+            </a>
+          </div>
+        </div>
+
+        <div id="courseEditorFlash" class="hidden"></div>
+
+        <div class="space-y-4">
+          <div class="rounded-2xl border border-white/10 p-5 sm:p-6">
+            <div class="flex items-start gap-4">
+              <div
+                id="courseCoverBox"
+                class="w-20 h-28 rounded-xl overflow-hidden border border-white/10 flex items-center justify-center flex-shrink-0"
+              >
+                <i class="fas fa-book text-white/50 text-2xl"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div
+                  id="courseTitleText"
+                  class="text-white text-lg font-bold break-words"
+                >
+                  -
+                </div>
+                <div
+                  id="courseDescriptionText"
+                  class="text-white/70 text-sm mt-1 break-words"
+                >
+                  -
+                </div>
+                <div class="text-white/50 text-xs mt-2">
+                  Course ID:
+                  <span id="courseIdText" class="text-white/70 font-semibold"
+                    >-</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="rounded-2xl border border-white/10 overflow-hidden grid grid-cols-1 lg:grid-cols-[320px_1fr] divide-y divide-white/10 lg:divide-y-0 lg:divide-x"
+          >
+            <div class="p-5 sm:p-6">
+              <div class="flex items-center justify-between gap-3">
+                <div class="text-white font-semibold">Chapters</div>
+                <button
+                  id="addChapterBtn"
+                  type="button"
+                  class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition"
+                >
+                  <i class="fas fa-plus text-[10px]"></i>
+                  <span>Add</span>
+                </button>
+              </div>
+              <div id="chaptersEmpty" class="mt-3 text-sm text-white/60">
+                No chapters yet.
+              </div>
+              <div
+                id="chaptersList"
+                class="mt-3 border border-white/10 rounded-xl overflow-hidden divide-y divide-white/10"
+              ></div>
+            </div>
+
+            <div class="p-5 sm:p-6">
+              <div class="flex items-center justify-between gap-3">
+                <div id="chapterDetailTitle" class="text-white font-semibold">
+                  Chapter
+                </div>
+              </div>
+              <div id="chapterDetailEmpty" class="mt-3 text-sm text-white/60">
+                Select a chapter to edit.
+              </div>
+              <div id="chapterDetail" class="mt-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="/js/navbar.js"></script>
+    <script>
+      (function () {
+        var root = document.getElementById("courseEditorRoot");
+        if (!root) return;
+
+        var courseId = root.getAttribute("data-course-id") || "";
+        var uiStorageKey = "adminCourseEditorUi_v1:" + courseId;
+
+        var state = { courses: [] };
+        var expandedChapterById = {};
+        var chapterTabByChapterId = {};
+        var activeSubchapterByChapter = {};
+        var activeQuestionByChapter = {};
+        var activeSlotByQuestion = {};
+        var openChapterId = null;
+        var lastFocus = null;
+
+        var courseEditorTitle = document.getElementById("courseEditorTitle");
+        var courseEditorFlash = document.getElementById("courseEditorFlash");
+        var saveCourseBtn = document.getElementById("saveCourseBtn");
+
+        var courseCoverBox = document.getElementById("courseCoverBox");
+        var courseTitleText = document.getElementById("courseTitleText");
+        var courseDescriptionText = document.getElementById(
+          "courseDescriptionText",
+        );
+        var courseIdText = document.getElementById("courseIdText");
+
+        var addChapterBtn = document.getElementById("addChapterBtn");
+        var chaptersList = document.getElementById("chaptersList");
+        var chaptersEmpty = document.getElementById("chaptersEmpty");
+        var chapterDetail = document.getElementById("chapterDetail");
+        var chapterDetailEmpty = document.getElementById("chapterDetailEmpty");
+        var chapterDetailTitle = document.getElementById("chapterDetailTitle");
+
+        function uid(prefix) {
+          return (
+            (prefix || "id") +
+            "_" +
+            Math.random().toString(16).slice(2) +
+            "_" +
+            Date.now().toString(16)
+          );
+        }
+
+        function safeJsonParse(raw) {
+          try {
+            return JSON.parse(raw);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function csrfHeaders() {
+          try {
+            var tokenMeta = document.querySelector('meta[name="_csrf"]');
+            var headerMeta = document.querySelector(
+              'meta[name="_csrf_header"]',
+            );
+            var token = tokenMeta ? tokenMeta.getAttribute("content") : null;
+            var headerName = headerMeta
+              ? headerMeta.getAttribute("content")
+              : null;
+            if (!token || !headerName) return {};
+            var headers = {};
+            headers[headerName] = token;
+            return headers;
+          } catch (e) {
+            return {};
+          }
+        }
+
+        function apiFetch(url, opts) {
+          var options = opts && typeof opts === "object" ? opts : {};
+          if (!options.headers) options.headers = {};
+          var csrf = csrfHeaders();
+          var keys = Object.keys(csrf);
+          for (var i = 0; i < keys.length; i++) {
+            options.headers[keys[i]] = csrf[keys[i]];
+          }
+          options.credentials = "same-origin";
+          return fetch(url, options);
+        }
+
+        function showFlash(variant, message) {
+          if (!courseEditorFlash) return;
+          if (!message) {
+            courseEditorFlash.className = "hidden";
+            courseEditorFlash.innerHTML = "";
+            return;
+          }
+          var base = "rounded-xl border px-4 py-3 text-sm font-medium";
+          var style = "border-white/10 text-white/80";
+          if (variant === "success")
+            style = "border-emerald-500/30 text-emerald-50";
+          if (variant === "error") style = "border-rose-500/30 text-rose-100";
+          if (variant === "info") style = "border-white/15 text-white/80";
+          courseEditorFlash.className = base + " " + style;
+          courseEditorFlash.textContent = String(message || "");
+        }
+
+        function loadState() {
+          return;
+        }
+
+        function saveState() {
+          return;
+        }
+
+        function shallowCopy(obj) {
+          var out = {};
+          if (!obj || typeof obj !== "object") return out;
+          var keys = Object.keys(obj);
+          for (var i = 0; i < keys.length; i++) out[keys[i]] = obj[keys[i]];
+          return out;
+        }
+
+        function snapshotUiState() {
+          return {
+            openChapterId: openChapterId || null,
+            expandedChapterById: shallowCopy(expandedChapterById),
+            chapterTabByChapterId: shallowCopy(chapterTabByChapterId),
+            activeSubchapterByChapter: shallowCopy(activeSubchapterByChapter),
+            activeQuestionByChapter: shallowCopy(activeQuestionByChapter),
+            activeSlotByQuestion: shallowCopy(activeSlotByQuestion),
+            lastFocus: lastFocus || null,
+          };
+        }
+
+        function saveUiState() {
+          try {
+            localStorage.setItem(
+              uiStorageKey,
+              JSON.stringify(snapshotUiState()),
+            );
+          } catch (e) {}
+        }
+
+        function loadUiState() {
+          try {
+            var raw = localStorage.getItem(uiStorageKey);
+            if (!raw) return null;
+            return safeJsonParse(raw);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function applyUiState(ui) {
+          if (!ui || typeof ui !== "object") return;
+          if (
+            ui.expandedChapterById &&
+            typeof ui.expandedChapterById === "object"
+          )
+            expandedChapterById = ui.expandedChapterById;
+          if (
+            ui.chapterTabByChapterId &&
+            typeof ui.chapterTabByChapterId === "object"
+          )
+            chapterTabByChapterId = ui.chapterTabByChapterId;
+          if (
+            ui.activeSubchapterByChapter &&
+            typeof ui.activeSubchapterByChapter === "object"
+          )
+            activeSubchapterByChapter = ui.activeSubchapterByChapter;
+          if (
+            ui.activeQuestionByChapter &&
+            typeof ui.activeQuestionByChapter === "object"
+          )
+            activeQuestionByChapter = ui.activeQuestionByChapter;
+          if (
+            ui.activeSlotByQuestion &&
+            typeof ui.activeSlotByQuestion === "object"
+          )
+            activeSlotByQuestion = ui.activeSlotByQuestion;
+          if (ui.lastFocus && typeof ui.lastFocus === "object")
+            lastFocus = ui.lastFocus;
+          if (typeof ui.openChapterId === "string" && ui.openChapterId)
+            openChapterId = ui.openChapterId;
+        }
+
+        function ensureCourseShape(course) {
+          if (!course || typeof course !== "object") return null;
+          if (!course.id) course.id = uid("course");
+          if (typeof course.title !== "string") course.title = "";
+          if (typeof course.description !== "string") course.description = "";
+          if (typeof course.language !== "string") course.language = "";
+          if (typeof course.published !== "boolean") course.published = true;
+          if (
+            !course.targetStudents ||
+            typeof course.targetStudents !== "object"
+          )
+            course.targetStudents = { schoolYears: [], classes: [] };
+          if (!Array.isArray(course.targetStudents.schoolYears))
+            course.targetStudents.schoolYears = [];
+          if (!Array.isArray(course.targetStudents.classes))
+            course.targetStudents.classes = [];
+          if (typeof course.coverImageDataUrl !== "string")
+            course.coverImageDataUrl = null;
+          if (!Array.isArray(course.chapters)) course.chapters = [];
+          for (var i = 0; i < course.chapters.length; i++) {
+            course.chapters[i] = ensureChapterShape(course.chapters[i]);
+          }
+          course.chapters = course.chapters.filter(Boolean);
+          return course;
+        }
+
+        function ensureChapterShape(chapter) {
+          if (!chapter || typeof chapter !== "object") return null;
+          if (!chapter.id) chapter.id = uid("chapter");
+          if (typeof chapter.number !== "number") chapter.number = 1;
+          if (typeof chapter.name !== "string") chapter.name = "";
+          if (!Array.isArray(chapter.subchapters)) chapter.subchapters = [];
+          if (!Array.isArray(chapter.questions)) chapter.questions = [];
+          for (var i = 0; i < chapter.subchapters.length; i++) {
+            chapter.subchapters[i] = ensureSubchapterShape(
+              chapter.subchapters[i],
+            );
+          }
+          chapter.subchapters = chapter.subchapters.filter(Boolean);
+          for (var j = 0; j < chapter.questions.length; j++) {
+            chapter.questions[j] = ensureQuestionShape(chapter.questions[j]);
+          }
+          chapter.questions = chapter.questions.filter(Boolean);
+          return chapter;
+        }
+
+        function ensureSubchapterShape(sc) {
+          if (!sc || typeof sc !== "object") return null;
+          if (!sc.id) sc.id = uid("subchapter");
+          if (typeof sc.number !== "number") sc.number = 1;
+          if (typeof sc.name !== "string") sc.name = "";
+          if (typeof sc.markdown !== "string") sc.markdown = "";
+          return sc;
+        }
+
+        function ensureQuestionShape(q) {
+          if (!q || typeof q !== "object") return null;
+          if (!q.id) q.id = uid("question");
+          if (typeof q.questionNumber !== "number") q.questionNumber = 1;
+          if (typeof q.questionMarkdown !== "string") q.questionMarkdown = "";
+          if (typeof q.explanationMarkdown !== "string")
+            q.explanationMarkdown = "";
+          if (!Array.isArray(q.slotOptions)) q.slotOptions = [];
+          for (var s = 0; s < q.slotOptions.length; s++) {
+            if (!Array.isArray(q.slotOptions[s])) q.slotOptions[s] = [];
+            for (var o = 0; o < q.slotOptions[s].length; o++) {
+              q.slotOptions[s][o] = ensureSlotOptionShape(
+                q.slotOptions[s][o],
+                o,
+              );
+            }
+            q.slotOptions[s] = q.slotOptions[s].filter(Boolean);
+          }
+          return q;
+        }
+
+        function ensureSlotOptionShape(opt, optionIndex) {
+          if (!opt || typeof opt !== "object") return null;
+          if (typeof opt.optionIndex !== "number")
+            opt.optionIndex = optionIndex || 0;
+          if (typeof opt.optionContent !== "string") opt.optionContent = "";
+          if (typeof opt.isCorrect !== "boolean") opt.isCorrect = false;
+          return opt;
+        }
+
+        function normalizeState() {
+          if (!Array.isArray(state.courses)) state.courses = [];
+          var out = [];
+          for (var i = 0; i < state.courses.length; i++) {
+            var c = ensureCourseShape(state.courses[i]);
+            if (c && Array.isArray(c.chapters)) {
+              c.chapters.sort(function (a, b) {
+                return sortByNumber(a, b, "number");
+              });
+              for (var j = 0; j < c.chapters.length; j++) {
+                c.chapters[j].number = j + 1;
+                if (Array.isArray(c.chapters[j].subchapters)) {
+                  c.chapters[j].subchapters.sort(function (a, b) {
+                    return sortByNumber(a, b, "number");
+                  });
+                  for (var s = 0; s < c.chapters[j].subchapters.length; s++) {
+                    c.chapters[j].subchapters[s].number = s + 1;
+                  }
+                }
+
+                if (Array.isArray(c.chapters[j].questions)) {
+                  c.chapters[j].questions.sort(function (a, b) {
+                    return sortByNumber(a, b, "questionNumber");
+                  });
+                  for (var q = 0; q < c.chapters[j].questions.length; q++) {
+                    c.chapters[j].questions[q].questionNumber = q + 1;
+                  }
+                }
+              }
+            }
+            if (c) out.push(c);
+          }
+          state.courses = out;
+        }
+
+        function findCourseById(id) {
+          for (var i = 0; i < state.courses.length; i++) {
+            if (state.courses[i] && state.courses[i].id === id)
+              return state.courses[i];
+          }
+          return null;
+        }
+
+        function findChapterById(course, chapterId) {
+          if (!course || !Array.isArray(course.chapters)) return null;
+          for (var i = 0; i < course.chapters.length; i++) {
+            if (course.chapters[i] && course.chapters[i].id === chapterId)
+              return course.chapters[i];
+          }
+          return null;
+        }
+
+        function findQuestionById(chapter, questionId) {
+          if (!chapter || !Array.isArray(chapter.questions)) return null;
+          for (var i = 0; i < chapter.questions.length; i++) {
+            if (chapter.questions[i] && chapter.questions[i].id === questionId)
+              return chapter.questions[i];
+          }
+          return null;
+        }
+
+        function sortByNumber(a, b, key) {
+          var av = a && typeof a[key] === "number" ? a[key] : 0;
+          var bv = b && typeof b[key] === "number" ? b[key] : 0;
+          return av - bv;
+        }
+
+        function clearElement(el) {
+          if (!el) return;
+          while (el.firstChild) el.removeChild(el.firstChild);
+        }
+
+        function renderCourseHeader(course) {
+          if (!courseIdText) return;
+          courseIdText.textContent = courseId || "-";
+          if (courseTitleText)
+            courseTitleText.textContent =
+              course && course.title ? course.title : "Untitled course";
+          if (courseDescriptionText)
+            courseDescriptionText.textContent =
+              course && course.description
+                ? course.description
+                : "No description available.";
+          if (courseEditorTitle)
+            courseEditorTitle.textContent =
+              (course && course.title ? course.title : "Course") + " · Editor";
+
+          if (courseCoverBox) {
+            clearElement(courseCoverBox);
+            if (course && course.coverImageDataUrl) {
+              var img = document.createElement("img");
+              img.src = course.coverImageDataUrl;
+              img.alt = course.title || "Course cover";
+              img.className = "w-full h-full object-cover object-top block";
+              courseCoverBox.appendChild(img);
+            } else {
+              var icon = document.createElement("i");
+              icon.className = "fas fa-book text-white/50 text-2xl";
+              courseCoverBox.appendChild(icon);
+            }
+          }
+        }
+
+        function renderChapters(course) {
+          if (!chaptersList || !chapterDetail) return;
+          clearElement(chaptersList);
+          clearElement(chapterDetail);
+          if (chapterDetailTitle) chapterDetailTitle.textContent = "Chapter";
+          if (chapterDetailEmpty) chapterDetailEmpty.classList.remove("hidden");
+          var chapters =
+            course && Array.isArray(course.chapters)
+              ? course.chapters.slice()
+              : [];
+          chapters.sort(function (a, b) {
+            return sortByNumber(a, b, "number");
+          });
+          if (chaptersEmpty)
+            chaptersEmpty.classList.toggle("hidden", chapters.length > 0);
+
+          if (
+            chapters.length > 0 &&
+            !openChapterId &&
+            !Object.keys(expandedChapterById || {}).some(function (k) {
+              return !!expandedChapterById[k];
+            })
+          ) {
+            setExclusiveChapterExpanded(chapters[0].id, true);
+          }
+
+          for (var i = 0; i < chapters.length; i++) {
+            var ch = chapters[i];
+            var selected = !!expandedChapterById[ch.id];
+
+            var row = document.createElement("button");
+            row.type = "button";
+            row.className =
+              "relative w-full text-left px-4 py-3 transition " +
+              (selected ? "bg-white/10" : "hover:bg-white/5");
+            row.setAttribute("data-action", "toggle-chapter");
+            row.setAttribute("data-chapter-id", ch.id);
+
+            var indicator = document.createElement("span");
+            indicator.className =
+              "absolute left-0 top-0 bottom-0 w-1 " +
+              (selected ? "bg-white/70" : "bg-transparent");
+
+            var left = document.createElement("div");
+            left.className = "min-w-0";
+
+            var title = document.createElement("div");
+            title.className = "text-white font-semibold truncate";
+            title.textContent =
+              "Chapter " +
+              String(ch.number || "") +
+              " · " +
+              (ch.name || "Untitled");
+
+            var meta = document.createElement("div");
+            meta.className = "text-white/60 text-xs mt-1";
+            meta.textContent =
+              String((ch.subchapters && ch.subchapters.length) || 0) +
+              " subchapters · " +
+              String((ch.questions && ch.questions.length) || 0) +
+              " questions";
+
+            left.appendChild(title);
+            left.appendChild(meta);
+
+            row.appendChild(indicator);
+            row.appendChild(left);
+            chaptersList.appendChild(row);
+          }
+
+          var selectedChapter = null;
+          if (openChapterId)
+            selectedChapter = findChapterById(course, openChapterId);
+          if (!selectedChapter) {
+            for (var i = 0; i < chapters.length; i++) {
+              if (expandedChapterById[chapters[i].id]) {
+                selectedChapter = chapters[i];
+                break;
+              }
+            }
+          }
+          if (!selectedChapter) return;
+
+          if (chapterDetailTitle)
+            chapterDetailTitle.textContent =
+              "Chapter " +
+              String(selectedChapter.number || "") +
+              " · " +
+              (selectedChapter.name || "Untitled");
+          if (chapterDetailEmpty) chapterDetailEmpty.classList.add("hidden");
+
+          var ch = selectedChapter;
+          var activeTab = chapterTabByChapterId[ch.id] || "content";
+
+          var detail = document.createElement("div");
+          detail.className = "space-y-4";
+
+          var panel = document.createElement("div");
+          panel.className = "space-y-4";
+
+          var fields = document.createElement("div");
+          fields.className = "flex items-end gap-3";
+
+          var nameBox = document.createElement("div");
+          nameBox.className = "min-w-0 flex-1 sm:max-w-lg";
+          var nameLabel = document.createElement("div");
+          nameLabel.className = "text-white/60 text-xs mb-1";
+          nameLabel.textContent = "Name";
+          var nameInput = document.createElement("input");
+          nameInput.type = "text";
+          nameInput.value = ch.name || "";
+          nameInput.className =
+            "bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40";
+          nameInput.placeholder = "Chapter name";
+          nameInput.setAttribute("data-action", "edit-chapter-name");
+          nameInput.setAttribute("data-chapter-id", ch.id);
+          nameBox.appendChild(nameLabel);
+          nameBox.appendChild(nameInput);
+
+          fields.appendChild(nameBox);
+
+          var dangerRow = document.createElement("div");
+          dangerRow.className = "flex items-center flex-shrink-0";
+
+          var del = document.createElement("button");
+          del.type = "button";
+          del.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-rose-500/40 bg-rose-500/15 px-3 h-9 text-xs font-semibold text-rose-100 hover:bg-rose-500/20 transition";
+          del.setAttribute("data-action", "delete-chapter");
+          del.setAttribute("data-chapter-id", ch.id);
+          del.innerHTML =
+            '<i class="fas fa-trash text-[10px]"></i><span>Delete chapter</span>';
+
+          dangerRow.appendChild(del);
+          fields.appendChild(dangerRow);
+
+          var tabs = document.createElement("div");
+          tabs.className =
+            "flex items-end gap-6 border-b border-white/10 flex-wrap";
+
+          var tabContent = document.createElement("button");
+          tabContent.type = "button";
+          tabContent.className =
+            "inline-flex items-center gap-2 px-1 pb-3 -mb-px text-sm font-semibold whitespace-nowrap border-b-2 transition " +
+            (activeTab === "content"
+              ? "text-white border-white"
+              : "text-white/60 border-transparent hover:text-white hover:border-white/40");
+          tabContent.setAttribute("data-action", "set-chapter-tab");
+          tabContent.setAttribute("data-chapter-id", ch.id);
+          tabContent.setAttribute("data-tab", "content");
+
+          var tabQuestions = document.createElement("button");
+          tabQuestions.type = "button";
+          tabQuestions.className =
+            "inline-flex items-center gap-2 px-1 pb-3 -mb-px text-sm font-semibold whitespace-nowrap border-b-2 transition " +
+            (activeTab === "questions"
+              ? "text-white border-white"
+              : "text-white/60 border-transparent hover:text-white hover:border-white/40");
+          tabQuestions.setAttribute("data-action", "set-chapter-tab");
+          tabQuestions.setAttribute("data-chapter-id", ch.id);
+          tabQuestions.setAttribute("data-tab", "questions");
+
+          var contentIcon = document.createElement("i");
+          contentIcon.className = "fas fa-book-open text-xs";
+          var contentLabel = document.createElement("span");
+          contentLabel.textContent = "Learning content";
+          var contentBadge = document.createElement("span");
+          contentBadge.className =
+            "inline-flex items-center justify-center min-w-6 h-5 px-2 rounded-full border border-white/15 bg-white/5 text-xs font-semibold text-white/80";
+          contentBadge.textContent = String(
+            (ch.subchapters && ch.subchapters.length) || 0,
+          );
+          tabContent.appendChild(contentIcon);
+          tabContent.appendChild(contentLabel);
+          tabContent.appendChild(contentBadge);
+
+          var qIcon = document.createElement("i");
+          qIcon.className = "fas fa-circle-question text-xs";
+          var qLabel = document.createElement("span");
+          qLabel.textContent = "Questions";
+          var qBadge = document.createElement("span");
+          qBadge.className =
+            "inline-flex items-center justify-center min-w-6 h-5 px-2 rounded-full border border-white/15 bg-white/5 text-xs font-semibold text-white/80";
+          qBadge.textContent = String(
+            (ch.questions && ch.questions.length) || 0,
+          );
+          tabQuestions.appendChild(qIcon);
+          tabQuestions.appendChild(qLabel);
+          tabQuestions.appendChild(qBadge);
+
+          tabs.appendChild(tabContent);
+          tabs.appendChild(tabQuestions);
+
+          var contentPane = document.createElement("div");
+          contentPane.className =
+            activeTab === "content" ? "space-y-4" : "hidden";
+
+          var contentTop = document.createElement("div");
+          contentTop.className = "flex items-center justify-between gap-3";
+          var contentTitle = document.createElement("div");
+          contentTitle.className = "text-white font-semibold";
+          contentTitle.textContent = "Subchapters";
+          var addSub = document.createElement("button");
+          addSub.type = "button";
+          addSub.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition";
+          addSub.setAttribute("data-action", "add-subchapter");
+          addSub.setAttribute("data-chapter-id", ch.id);
+          addSub.innerHTML =
+            '<i class="fas fa-plus text-[10px]"></i><span>Add subchapter</span>';
+          contentTop.appendChild(contentTitle);
+          contentTop.appendChild(addSub);
+
+          var subEmpty = document.createElement("div");
+          subEmpty.className = "text-sm text-white/60";
+          subEmpty.textContent = "No subchapters yet.";
+          var subList = document.createElement("div");
+          subList.className = "space-y-2";
+
+          contentPane.appendChild(contentTop);
+          contentPane.appendChild(subEmpty);
+          contentPane.appendChild(subList);
+
+          var questionsPane = document.createElement("div");
+          questionsPane.className =
+            activeTab === "questions" ? "space-y-4" : "hidden";
+
+          var questionsTop = document.createElement("div");
+          questionsTop.className = "flex items-center justify-between gap-3";
+          var questionsTitle = document.createElement("div");
+          questionsTitle.className = "text-white font-semibold";
+          questionsTitle.textContent = "Questions";
+          var addQ = document.createElement("button");
+          addQ.type = "button";
+          addQ.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition";
+          addQ.setAttribute("data-action", "add-question");
+          addQ.setAttribute("data-chapter-id", ch.id);
+          addQ.innerHTML =
+            '<i class="fas fa-plus text-[10px]"></i><span>Add question</span>';
+          questionsTop.appendChild(questionsTitle);
+          questionsTop.appendChild(addQ);
+
+          var qEmpty = document.createElement("div");
+          qEmpty.className = "text-sm text-white/60";
+          qEmpty.textContent = "No questions yet.";
+          var qList = document.createElement("div");
+          qList.className =
+            "mt-2 border border-white/10 rounded-xl overflow-hidden divide-y divide-white/10";
+
+          var qDetailEmpty = document.createElement("div");
+          qDetailEmpty.className = "text-sm text-white/60";
+          qDetailEmpty.textContent = "Select a question to edit.";
+
+          var qDetail = document.createElement("div");
+
+          questionsPane.appendChild(questionsTop);
+          var questionsBody = document.createElement("div");
+          questionsBody.className =
+            "grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-4";
+
+          var questionsLeft = document.createElement("div");
+          questionsLeft.className = "min-w-0";
+          questionsLeft.appendChild(qEmpty);
+          questionsLeft.appendChild(qList);
+
+          var questionsRight = document.createElement("div");
+          questionsRight.className = "min-w-0";
+          questionsRight.appendChild(qDetailEmpty);
+          questionsRight.appendChild(qDetail);
+
+          questionsBody.appendChild(questionsLeft);
+          questionsBody.appendChild(questionsRight);
+          questionsPane.appendChild(questionsBody);
+
+          panel.appendChild(fields);
+          panel.appendChild(tabs);
+          panel.appendChild(contentPane);
+          panel.appendChild(questionsPane);
+
+          detail.appendChild(panel);
+          chapterDetail.appendChild(detail);
+
+          renderSubchaptersInto(subList, subEmpty, ch);
+          renderQuestionsInto(qList, qEmpty, ch, qDetail, qDetailEmpty);
+        }
+
+        function renderSubchaptersInto(listEl, emptyEl, chapter) {
+          if (!listEl) return;
+          clearElement(listEl);
+          var list = Array.isArray(chapter.subchapters)
+            ? chapter.subchapters.slice()
+            : [];
+          list.sort(function (a, b) {
+            return sortByNumber(a, b, "number");
+          });
+          if (emptyEl) emptyEl.classList.toggle("hidden", list.length > 0);
+
+          var activeSubId = activeSubchapterByChapter[chapter.id] || null;
+          for (var i = 0; i < list.length; i++) {
+            var sc = list[i];
+            var active = sc.id === activeSubId;
+
+            var box = document.createElement("div");
+            box.className =
+              "rounded-xl border transition " +
+              (active ? "border-white/25" : "border-white/10");
+
+            var header = document.createElement("button");
+            header.type = "button";
+            header.className =
+              "w-full text-left px-4 py-3 flex items-start justify-between gap-3";
+            header.setAttribute("data-action", "toggle-subchapter");
+            header.setAttribute("data-chapter-id", chapter.id);
+            header.setAttribute("data-subchapter-id", sc.id);
+
+            var left = document.createElement("div");
+            left.className = "min-w-0 flex-1";
+
+            var t = document.createElement("div");
+            t.className = "text-white font-semibold break-words";
+            t.textContent =
+              String(sc.number || "") + ". " + (sc.name || "Untitled");
+            left.appendChild(t);
+
+            var chevron = document.createElement("i");
+            chevron.className =
+              "fas fa-chevron-down text-white/60 text-xs mt-1 flex-shrink-0 transition transform " +
+              (active ? "rotate-180" : "");
+
+            header.appendChild(left);
+            header.appendChild(chevron);
+
+            var panel = document.createElement("div");
+            panel.className = "px-4 pb-4 space-y-3" + (active ? "" : " hidden");
+
+            var fields = document.createElement("div");
+            fields.className = "flex items-end gap-3";
+
+            var nameBox = document.createElement("div");
+            nameBox.className = "min-w-0 flex-1 sm:max-w-lg";
+            var nameLabel = document.createElement("div");
+            nameLabel.className = "text-white/60 text-xs mb-1";
+            nameLabel.textContent = "Name";
+            var nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.value = sc.name || "";
+            nameInput.className =
+              "bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40";
+            nameInput.placeholder = "Subchapter name";
+            nameInput.setAttribute("data-action", "edit-subchapter-name");
+            nameInput.setAttribute("data-chapter-id", chapter.id);
+            nameInput.setAttribute("data-subchapter-id", sc.id);
+            nameBox.appendChild(nameLabel);
+            nameBox.appendChild(nameInput);
+
+            fields.appendChild(nameBox);
+
+            var actions = document.createElement("div");
+            actions.className = "flex items-center gap-2 flex-wrap";
+
+            var open = document.createElement("a");
+            open.href =
+              "/admin/markdown-editor?courseId=" +
+              encodeURIComponent(courseId) +
+              "&chapterId=" +
+              encodeURIComponent(chapter.id) +
+              "&subchapterId=" +
+              encodeURIComponent(sc.id) +
+              "&kind=subchapter";
+            open.setAttribute("data-editor-link", "1");
+            open.setAttribute("data-kind", "subchapter");
+            open.setAttribute("data-chapter-id", chapter.id);
+            open.setAttribute("data-subchapter-id", sc.id);
+            open.className =
+              "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition no-underline";
+            open.innerHTML =
+              '<i class="fas fa-pen-to-square text-[10px]"></i><span>Open editor</span>';
+
+            var del = document.createElement("button");
+            del.type = "button";
+            del.className =
+              "inline-flex items-center justify-center gap-2 rounded-lg border border-rose-500/40 bg-rose-500/15 px-3 h-9 text-xs font-semibold text-rose-100 hover:bg-rose-500/20 transition";
+            del.setAttribute("data-action", "delete-subchapter");
+            del.setAttribute("data-chapter-id", chapter.id);
+            del.setAttribute("data-subchapter-id", sc.id);
+            del.innerHTML =
+              '<i class="fas fa-trash text-[10px]"></i><span>Delete</span>';
+
+            actions.appendChild(open);
+            actions.appendChild(del);
+
+            panel.appendChild(fields);
+            panel.appendChild(actions);
+
+            box.appendChild(header);
+            box.appendChild(panel);
+            listEl.appendChild(box);
+          }
+        }
+
+        function renderQuestionsInto(
+          listEl,
+          emptyEl,
+          chapter,
+          detailEl,
+          detailEmptyEl,
+        ) {
+          if (!listEl) return;
+          clearElement(listEl);
+          if (detailEl) clearElement(detailEl);
+          var list = Array.isArray(chapter.questions)
+            ? chapter.questions.slice()
+            : [];
+          list.sort(function (a, b) {
+            return sortByNumber(a, b, "questionNumber");
+          });
+          if (emptyEl) emptyEl.classList.toggle("hidden", list.length > 0);
+
+          if (!list.length) {
+            if (detailEmptyEl) detailEmptyEl.classList.remove("hidden");
+            return;
+          }
+
+          var activeQId = activeQuestionByChapter[chapter.id] || null;
+          if (!activeQId) {
+            activeQId = list[0].id;
+            activeQuestionByChapter[chapter.id] = activeQId;
+          }
+
+          for (var i = 0; i < list.length; i++) {
+            var q = list[i];
+            var active = q.id === activeQId;
+
+            var row = document.createElement("button");
+            row.type = "button";
+            row.className =
+              "relative w-full text-left px-3 py-2 transition " +
+              (active ? "bg-white/10" : "hover:bg-white/5");
+            row.setAttribute("data-action", "toggle-question");
+            row.setAttribute("data-chapter-id", chapter.id);
+            row.setAttribute("data-question-id", q.id);
+
+            var indicator = document.createElement("span");
+            indicator.className =
+              "absolute left-0 top-0 bottom-0 w-1 " +
+              (active ? "bg-white/70" : "bg-transparent");
+
+            var left = document.createElement("div");
+            left.className = "min-w-0 pl-2";
+
+            var t = document.createElement("div");
+            t.className = "text-white font-semibold text-sm leading-5";
+            t.textContent = "Question " + String(q.questionNumber || "");
+
+            var meta = document.createElement("div");
+            meta.className = "text-white/50 text-[11px] mt-0.5 leading-4";
+            meta.textContent =
+              String((q.slotOptions && q.slotOptions.length) || 0) + " slots";
+
+            left.appendChild(t);
+            left.appendChild(meta);
+
+            row.appendChild(indicator);
+            row.appendChild(left);
+            listEl.appendChild(row);
+          }
+
+          if (!detailEl) return;
+
+          var activeQ = findQuestionById(chapter, activeQId);
+          if (!activeQ) return;
+
+          if (detailEmptyEl) detailEmptyEl.classList.add("hidden");
+
+          var header = document.createElement("div");
+          header.className = "flex items-start justify-between gap-3 flex-wrap";
+
+          var headerLeft = document.createElement("div");
+          headerLeft.className = "min-w-0";
+
+          var headerTitle = document.createElement("div");
+          headerTitle.className = "text-white font-semibold";
+          headerTitle.textContent =
+            "Question " + String(activeQ.questionNumber || "");
+
+          var headerMeta = document.createElement("div");
+          headerMeta.className = "text-white/60 text-xs mt-1";
+          headerMeta.textContent =
+            String((activeQ.slotOptions && activeQ.slotOptions.length) || 0) +
+            " slots";
+
+          headerLeft.appendChild(headerTitle);
+          headerLeft.appendChild(headerMeta);
+
+          header.appendChild(headerLeft);
+
+          var slotsBox = document.createElement("div");
+          slotsBox.className =
+            "rounded-xl border border-white/10 p-4 space-y-3";
+
+          var slotsTop = document.createElement("div");
+          slotsTop.className = "flex items-center justify-between gap-3";
+
+          var slotsLabel = document.createElement("div");
+          slotsLabel.className = "text-white font-semibold text-sm";
+          slotsLabel.textContent = "Slot options";
+
+          var addSlot = document.createElement("button");
+          addSlot.type = "button";
+          addSlot.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition";
+          addSlot.setAttribute("data-action", "add-slot");
+          addSlot.setAttribute("data-chapter-id", chapter.id);
+          addSlot.setAttribute("data-question-id", activeQ.id);
+          addSlot.innerHTML =
+            '<i class="fas fa-plus text-[10px]"></i><span>Add slot</span>';
+
+          slotsTop.appendChild(slotsLabel);
+          slotsTop.appendChild(addSlot);
+
+          var slotsEmptyLocal = document.createElement("div");
+          slotsEmptyLocal.className = "text-sm text-white/60";
+          slotsEmptyLocal.textContent = "No slots yet.";
+
+          var slotsListLocal = document.createElement("div");
+          slotsListLocal.className =
+            "border border-white/10 rounded-lg overflow-hidden divide-y divide-white/10";
+
+          var slotDetailEmpty = document.createElement("div");
+          slotDetailEmpty.className = "text-sm text-white/60";
+          slotDetailEmpty.textContent = "Select a slot.";
+
+          var slotDetail = document.createElement("div");
+
+          slotsBox.appendChild(slotsTop);
+          var slotsBody = document.createElement("div");
+          slotsBody.className =
+            "grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-4";
+
+          var slotsLeft = document.createElement("div");
+          slotsLeft.className = "min-w-0";
+          slotsLeft.appendChild(slotsEmptyLocal);
+          slotsLeft.appendChild(slotsListLocal);
+
+          var slotsRight = document.createElement("div");
+          slotsRight.className = "min-w-0";
+          slotsRight.appendChild(slotDetailEmpty);
+          slotsRight.appendChild(slotDetail);
+
+          slotsBody.appendChild(slotsLeft);
+          slotsBody.appendChild(slotsRight);
+          slotsBox.appendChild(slotsBody);
+
+          var openQ = document.createElement("a");
+          openQ.href =
+            "/admin/markdown-editor?courseId=" +
+            encodeURIComponent(courseId) +
+            "&chapterId=" +
+            encodeURIComponent(chapter.id) +
+            "&questionId=" +
+            encodeURIComponent(activeQ.id) +
+            "&kind=question";
+          openQ.setAttribute("data-editor-link", "1");
+          openQ.setAttribute("data-kind", "question");
+          openQ.setAttribute("data-chapter-id", chapter.id);
+          openQ.setAttribute("data-question-id", activeQ.id);
+          openQ.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition no-underline";
+          openQ.innerHTML =
+            '<i class="fas fa-pen-to-square text-[10px]"></i><span>Question</span>';
+
+          var openEx = document.createElement("a");
+          openEx.href =
+            "/admin/markdown-editor?courseId=" +
+            encodeURIComponent(courseId) +
+            "&chapterId=" +
+            encodeURIComponent(chapter.id) +
+            "&questionId=" +
+            encodeURIComponent(activeQ.id) +
+            "&kind=explanation";
+          openEx.setAttribute("data-editor-link", "1");
+          openEx.setAttribute("data-kind", "explanation");
+          openEx.setAttribute("data-chapter-id", chapter.id);
+          openEx.setAttribute("data-question-id", activeQ.id);
+          openEx.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition no-underline";
+          openEx.innerHTML =
+            '<i class="fas fa-pen-to-square text-[10px]"></i><span>Explanation</span>';
+
+          var del = document.createElement("button");
+          del.type = "button";
+          del.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-rose-500/40 bg-rose-500/15 px-3 h-9 text-xs font-semibold text-rose-100 hover:bg-rose-500/20 transition";
+          del.setAttribute("data-action", "delete-question");
+          del.setAttribute("data-chapter-id", chapter.id);
+          del.setAttribute("data-question-id", activeQ.id);
+          del.innerHTML =
+            '<i class="fas fa-trash text-[10px]"></i><span>Delete</span>';
+
+          var headerRight = document.createElement("div");
+          headerRight.className =
+            "flex items-center gap-2 flex-wrap justify-end";
+          headerRight.appendChild(openQ);
+          headerRight.appendChild(openEx);
+          headerRight.appendChild(del);
+          header.appendChild(headerRight);
+
+          detailEl.appendChild(header);
+          detailEl.appendChild(slotsBox);
+
+          renderSlotsInto(
+            slotsListLocal,
+            slotsEmptyLocal,
+            slotDetail,
+            slotDetailEmpty,
+            activeQ,
+            chapter.id,
+          );
+        }
+
+        function renderSlotsInto(
+          slotsListLocal,
+          slotsEmptyLocal,
+          slotDetail,
+          slotDetailEmpty,
+          q,
+          chapterId,
+        ) {
+          if (!slotsListLocal) return;
+          clearElement(slotsListLocal);
+          if (slotDetail) clearElement(slotDetail);
+          var slots = Array.isArray(q.slotOptions) ? q.slotOptions : [];
+          if (slotsEmptyLocal)
+            slotsEmptyLocal.classList.toggle("hidden", slots.length > 0);
+
+          if (!slots.length) {
+            if (slotsListLocal) slotsListLocal.classList.add("hidden");
+            if (slotDetailEmpty) {
+              slotDetailEmpty.textContent = "No slots yet.";
+              slotDetailEmpty.classList.remove("hidden");
+            }
+            if (slotDetail) slotDetail.classList.add("hidden");
+            return;
+          }
+
+          if (slotsListLocal) slotsListLocal.classList.remove("hidden");
+
+          var activeSlotIndex =
+            q && q.id && activeSlotByQuestion
+              ? activeSlotByQuestion[q.id]
+              : null;
+          if (
+            typeof activeSlotIndex !== "number" ||
+            activeSlotIndex < 0 ||
+            activeSlotIndex >= slots.length
+          ) {
+            activeSlotIndex = 0;
+            if (q && q.id && activeSlotByQuestion) {
+              activeSlotByQuestion[q.id] = activeSlotIndex;
+              saveUiState();
+            }
+          }
+
+          for (var s = 0; s < slots.length; s++) {
+            var selected = s === activeSlotIndex;
+            var item = document.createElement("button");
+            item.type = "button";
+            item.className =
+              "w-full text-left px-3 py-2 flex items-start justify-between gap-3 transition " +
+              (selected ? "bg-white/10" : "hover:bg-white/5");
+            item.setAttribute("data-action", "select-slot");
+            item.setAttribute("data-chapter-id", chapterId);
+            item.setAttribute("data-question-id", q.id);
+            item.setAttribute("data-slot-index", String(s));
+
+            var itemLeft = document.createElement("div");
+            itemLeft.className = "min-w-0";
+
+            var itemTitle = document.createElement("div");
+            itemTitle.className =
+              "text-white/90 font-semibold text-sm leading-5";
+            itemTitle.textContent = "Slot " + String(s + 1);
+
+            var itemMeta = document.createElement("div");
+            itemMeta.className = "text-white/50 text-[11px] mt-0.5 leading-4";
+            var options = Array.isArray(slots[s]) ? slots[s] : [];
+            itemMeta.textContent = String(options.length) + " options";
+
+            itemLeft.appendChild(itemTitle);
+            itemLeft.appendChild(itemMeta);
+
+            var chevron = document.createElement("div");
+            chevron.className = "text-white/30 text-xs pt-0.5";
+            chevron.innerHTML = selected
+              ? '<i class="fas fa-chevron-right"></i>'
+              : "";
+
+            item.appendChild(itemLeft);
+            item.appendChild(chevron);
+            slotsListLocal.appendChild(item);
+          }
+
+          var detailSlotOptions = Array.isArray(slots[activeSlotIndex])
+            ? slots[activeSlotIndex]
+            : [];
+          if (slotDetailEmpty) slotDetailEmpty.classList.add("hidden");
+          if (slotDetail) slotDetail.classList.remove("hidden");
+
+          if (!slotDetail) return;
+          var slotBox = document.createElement("div");
+          slotBox.className = "rounded-xl border border-white/10 p-3 space-y-3";
+
+          var top = document.createElement("div");
+          top.className = "flex items-center justify-between gap-3";
+
+          var label = document.createElement("div");
+          label.className = "text-white font-semibold text-sm";
+          label.textContent = "Slot " + String(activeSlotIndex + 1);
+
+          var removeSlot = document.createElement("button");
+          removeSlot.type = "button";
+          removeSlot.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-rose-500/40 bg-rose-500/15 px-3 h-9 text-xs font-semibold text-rose-100 hover:bg-rose-500/20 transition";
+          removeSlot.setAttribute("data-action", "remove-slot");
+          removeSlot.setAttribute("data-chapter-id", chapterId);
+          removeSlot.setAttribute("data-question-id", q.id);
+          removeSlot.setAttribute("data-slot-index", String(activeSlotIndex));
+          removeSlot.textContent = "Remove slot";
+
+          top.appendChild(label);
+          top.appendChild(removeSlot);
+          slotBox.appendChild(top);
+
+          for (var o = 0; o < detailSlotOptions.length; o++) {
+            var opt = detailSlotOptions[o];
+            var row = document.createElement("div");
+            row.className = "flex items-start gap-2";
+
+            var radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = "slot_correct_" + q.id + "_" + String(activeSlotIndex);
+            radio.checked = !!opt.isCorrect;
+            radio.className = "mt-1";
+            radio.setAttribute("data-action", "set-correct");
+            radio.setAttribute("data-chapter-id", chapterId);
+            radio.setAttribute("data-question-id", q.id);
+            radio.setAttribute("data-slot-index", String(activeSlotIndex));
+            radio.setAttribute("data-option-index", String(o));
+
+            var input = document.createElement("input");
+            input.type = "text";
+            input.value = opt.optionContent || "";
+            input.className =
+              "bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40";
+            input.placeholder = "Option content";
+            input.setAttribute("data-action", "edit-option");
+            input.setAttribute("data-chapter-id", chapterId);
+            input.setAttribute("data-question-id", q.id);
+            input.setAttribute("data-slot-index", String(activeSlotIndex));
+            input.setAttribute("data-option-index", String(o));
+
+            var removeOpt = document.createElement("button");
+            removeOpt.type = "button";
+            removeOpt.className =
+              "inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/5 w-10 h-10 text-xs font-semibold text-white/90 hover:bg-white/10 transition flex-shrink-0";
+            removeOpt.setAttribute("data-action", "remove-option");
+            removeOpt.setAttribute("data-chapter-id", chapterId);
+            removeOpt.setAttribute("data-question-id", q.id);
+            removeOpt.setAttribute("data-slot-index", String(activeSlotIndex));
+            removeOpt.setAttribute("data-option-index", String(o));
+            removeOpt.innerHTML = '<i class="fas fa-xmark text-[10px]"></i>';
+
+            row.appendChild(radio);
+            row.appendChild(input);
+            row.appendChild(removeOpt);
+            slotBox.appendChild(row);
+          }
+
+          var addOpt = document.createElement("button");
+          addOpt.type = "button";
+          addOpt.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition";
+          addOpt.setAttribute("data-action", "add-option");
+          addOpt.setAttribute("data-chapter-id", chapterId);
+          addOpt.setAttribute("data-question-id", q.id);
+          addOpt.setAttribute("data-slot-index", String(activeSlotIndex));
+          addOpt.innerHTML =
+            '<i class="fas fa-plus text-[10px]"></i><span>Add option</span>';
+
+          slotBox.appendChild(addOpt);
+          slotDetail.appendChild(slotBox);
+        }
+
+        function persistAndRerender() {
+          normalizeState();
+          saveUiState();
+          var course = findCourseById(courseId);
+          renderCourseHeader(course);
+          renderChapters(course);
+        }
+
+        function serializeCourseForSave(course) {
+          var c =
+            ensureCourseShape(course) || ensureCourseShape({ id: courseId });
+          var chapters =
+            c && Array.isArray(c.chapters)
+              ? c.chapters.map(function (ch) {
+                  return {
+                    id: ch.id,
+                    number: ch.number,
+                    name: ch.name,
+                    subchapters: Array.isArray(ch.subchapters)
+                      ? ch.subchapters.map(function (sc) {
+                          return {
+                            id: sc.id,
+                            number: sc.number,
+                            name: sc.name,
+                            markdown: sc.markdown,
+                          };
+                        })
+                      : [],
+                    questions: Array.isArray(ch.questions)
+                      ? ch.questions.map(function (q) {
+                          return {
+                            id: q.id,
+                            questionNumber: q.questionNumber,
+                            questionMarkdown: q.questionMarkdown,
+                            explanationMarkdown: q.explanationMarkdown,
+                            slotOptions: Array.isArray(q.slotOptions)
+                              ? q.slotOptions
+                              : [],
+                          };
+                        })
+                      : [],
+                  };
+                })
+              : [];
+
+          return {
+            id: c.id,
+            title: c.title || "Untitled course",
+            description: c.description || "",
+            language: c.language || "",
+            published: !!c.published,
+            targetStudents: c.targetStudents || {
+              schoolYears: [],
+              classes: [],
+            },
+            coverImageDataUrl: c.coverImageDataUrl || null,
+            chapters: chapters,
+          };
+        }
+
+        function loadCourseFromServer() {
+          return apiFetch(
+            "/api/admin/courses/" + encodeURIComponent(courseId) + "/editor",
+            { method: "GET", headers: { Accept: "application/json" } },
+          )
+            .then(function (res) {
+              if (!res) return { found: false, error: true, course: null };
+              if (res.status === 404)
+                return { found: false, error: false, course: null };
+              if (!res.ok) return { found: false, error: true, course: null };
+              return res.json().then(function (course) {
+                return { found: true, error: false, course: course };
+              });
+            })
+            .catch(function () {
+              return { found: false, error: true, course: null };
+            });
+        }
+
+        function saveCourseToServer(course) {
+          var payload = serializeCourseForSave(course);
+          return apiFetch(
+            "/api/admin/courses/" + encodeURIComponent(courseId) + "/editor",
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify(payload),
+            },
+          ).then(function (res) {
+            if (!res || !res.ok) throw new Error("Failed to save");
+          });
+        }
+
+        function setExclusiveChapterExpanded(chapterId, expanded) {
+          var keys = Object.keys(expandedChapterById || {});
+          for (var i = 0; i < keys.length; i++) {
+            expandedChapterById[keys[i]] = false;
+          }
+          if (expanded) {
+            expandedChapterById[chapterId] = true;
+            openChapterId = chapterId;
+          } else {
+            expandedChapterById[chapterId] = false;
+            if (openChapterId === chapterId) openChapterId = null;
+          }
+        }
+
+        function nextChapterNumber(course) {
+          var max = 0;
+          for (var i = 0; i < course.chapters.length; i++) {
+            max = Math.max(max, course.chapters[i].number || 0);
+          }
+          return max + 1;
+        }
+
+        function nextSubchapterNumber(chapter) {
+          var max = 0;
+          for (var i = 0; i < chapter.subchapters.length; i++) {
+            max = Math.max(max, chapter.subchapters[i].number || 0);
+          }
+          return max + 1;
+        }
+
+        function nextQuestionNumber(chapter) {
+          var max = 0;
+          for (var i = 0; i < chapter.questions.length; i++) {
+            max = Math.max(max, chapter.questions[i].questionNumber || 0);
+          }
+          return max + 1;
+        }
+
+        function addChapter(course) {
+          var n = nextChapterNumber(course);
+          course.chapters.push(
+            ensureChapterShape({
+              number: n,
+              name: "New chapter",
+              subchapters: [],
+              questions: [],
+            }),
+          );
+          var created = course.chapters[course.chapters.length - 1];
+          setExclusiveChapterExpanded(created.id, true);
+          chapterTabByChapterId[created.id] = "content";
+          persistAndRerender();
+          showFlash("success", "Chapter added.");
+        }
+
+        function addSubchapter(course, chapter) {
+          var n = nextSubchapterNumber(chapter);
+          chapter.subchapters.push(
+            ensureSubchapterShape({
+              number: n,
+              name: "New subchapter",
+              markdown: "",
+            }),
+          );
+          activeSubchapterByChapter[chapter.id] =
+            chapter.subchapters[chapter.subchapters.length - 1].id;
+          persistAndRerender();
+          showFlash("success", "Subchapter added.");
+        }
+
+        function addQuestion(course, chapter) {
+          var n = nextQuestionNumber(chapter);
+          chapter.questions.push(
+            ensureQuestionShape({
+              questionNumber: n,
+              questionMarkdown: "",
+              explanationMarkdown: "",
+              slotOptions: [],
+            }),
+          );
+          activeQuestionByChapter[chapter.id] =
+            chapter.questions[chapter.questions.length - 1].id;
+          setExclusiveChapterExpanded(chapter.id, true);
+          chapterTabByChapterId[chapter.id] = "questions";
+          persistAndRerender();
+          showFlash("success", "Question added.");
+        }
+
+        function addSlotToQuestion(chapter, q) {
+          q.slotOptions.push([]);
+          if (q && q.id) activeSlotByQuestion[q.id] = q.slotOptions.length - 1;
+          persistAndRerender();
+        }
+
+        function addOptionToSlot(q, slotIndex) {
+          if (!Array.isArray(q.slotOptions[slotIndex]))
+            q.slotOptions[slotIndex] = [];
+          var options = q.slotOptions[slotIndex];
+          var nextIndex = options.length;
+          options.push(
+            ensureSlotOptionShape(
+              {
+                optionIndex: nextIndex,
+                optionContent: "",
+                isCorrect: options.length === 0,
+              },
+              nextIndex,
+            ),
+          );
+          persistAndRerender();
+        }
+
+        function removeSlot(q, slotIndex) {
+          q.slotOptions.splice(slotIndex, 1);
+          if (q && q.id && activeSlotByQuestion) {
+            var next = activeSlotByQuestion[q.id];
+            if (typeof next !== "number") next = -1;
+            if (next === slotIndex) next = Math.max(0, next - 1);
+            if (next > slotIndex) next = next - 1;
+            if (!q.slotOptions.length) delete activeSlotByQuestion[q.id];
+            else
+              activeSlotByQuestion[q.id] = Math.min(
+                next,
+                q.slotOptions.length - 1,
+              );
+          }
+          persistAndRerender();
+        }
+
+        function removeOption(q, slotIndex, optionIndex) {
+          if (!Array.isArray(q.slotOptions[slotIndex])) return;
+          q.slotOptions[slotIndex].splice(optionIndex, 1);
+          for (var i = 0; i < q.slotOptions[slotIndex].length; i++) {
+            q.slotOptions[slotIndex][i].optionIndex = i;
+          }
+          var anyCorrect = false;
+          for (var j = 0; j < q.slotOptions[slotIndex].length; j++) {
+            if (q.slotOptions[slotIndex][j].isCorrect) anyCorrect = true;
+          }
+          if (!anyCorrect && q.slotOptions[slotIndex].length)
+            q.slotOptions[slotIndex][0].isCorrect = true;
+          persistAndRerender();
+        }
+
+        function setCorrectOption(q, slotIndex, optionIndex) {
+          if (!Array.isArray(q.slotOptions[slotIndex])) return;
+          for (var i = 0; i < q.slotOptions[slotIndex].length; i++) {
+            q.slotOptions[slotIndex][i].isCorrect = i === optionIndex;
+          }
+          persistAndRerender();
+        }
+
+        function updateOptionContent(q, slotIndex, optionIndex, value) {
+          if (!Array.isArray(q.slotOptions[slotIndex])) return;
+          if (!q.slotOptions[slotIndex][optionIndex]) return;
+          q.slotOptions[slotIndex][optionIndex].optionContent = String(
+            value || "",
+          );
+        }
+
+        function deleteChapter(course, chapterId) {
+          course.chapters = course.chapters.filter(function (c) {
+            return !(c && c.id === chapterId);
+          });
+          delete expandedChapterById[chapterId];
+          delete chapterTabByChapterId[chapterId];
+          delete activeSubchapterByChapter[chapterId];
+          delete activeQuestionByChapter[chapterId];
+          persistAndRerender();
+          showFlash("success", "Chapter deleted.");
+        }
+
+        function deleteSubchapter(chapter, subchapterId) {
+          chapter.subchapters = chapter.subchapters.filter(function (s) {
+            return !(s && s.id === subchapterId);
+          });
+          if (activeSubchapterByChapter[chapter.id] === subchapterId)
+            activeSubchapterByChapter[chapter.id] = null;
+          persistAndRerender();
+          showFlash("success", "Subchapter deleted.");
+        }
+
+        function deleteQuestion(chapter, questionId) {
+          chapter.questions = chapter.questions.filter(function (q) {
+            return !(q && q.id === questionId);
+          });
+          if (activeQuestionByChapter[chapter.id] === questionId)
+            activeQuestionByChapter[chapter.id] = null;
+          if (questionId && activeSlotByQuestion)
+            delete activeSlotByQuestion[questionId];
+          persistAndRerender();
+          showFlash("success", "Question deleted.");
+        }
+
+        function getActiveCourse() {
+          return findCourseById(courseId);
+        }
+
+        function attachEvents() {
+          if (saveCourseBtn) {
+            saveCourseBtn.addEventListener("click", function () {
+              var course = findCourseById(courseId);
+              normalizeState();
+              saveUiState();
+              saveCourseToServer(course)
+                .then(function () {
+                  showFlash("success", "Saved to database.");
+                })
+                .catch(function () {
+                  showFlash("error", "Failed to save to database.");
+                });
+            });
+          }
+
+          if (addChapterBtn)
+            addChapterBtn.addEventListener("click", function () {
+              var course = getActiveCourse();
+              if (!course) return;
+              addChapter(course);
+            });
+
+          root.addEventListener("click", function (e) {
+            var t = e.target;
+            var editorLink =
+              t && t.closest ? t.closest("[data-editor-link='1']") : null;
+            if (editorLink) {
+              var kind = editorLink.getAttribute("data-kind") || "";
+              var chapterId = editorLink.getAttribute("data-chapter-id") || "";
+              var subId = editorLink.getAttribute("data-subchapter-id") || "";
+              var qId = editorLink.getAttribute("data-question-id") || "";
+
+              if (chapterId) setExclusiveChapterExpanded(chapterId, true);
+              if (kind === "subchapter") {
+                if (chapterId) chapterTabByChapterId[chapterId] = "content";
+                if (chapterId && subId)
+                  activeSubchapterByChapter[chapterId] = subId;
+                lastFocus = {
+                  type: "subchapter",
+                  chapterId: chapterId,
+                  subchapterId: subId,
+                };
+              } else if (kind === "question" || kind === "explanation") {
+                if (chapterId) chapterTabByChapterId[chapterId] = "questions";
+                if (chapterId && qId) activeQuestionByChapter[chapterId] = qId;
+                lastFocus = {
+                  type: "question",
+                  chapterId: chapterId,
+                  questionId: qId,
+                  kind: kind,
+                };
+              }
+              saveUiState();
+              return;
+            }
+
+            var btn = t && t.closest ? t.closest("[data-action]") : null;
+            if (!btn) return;
+
+            var action = btn.getAttribute("data-action") || "";
+            var course = getActiveCourse();
+            if (!course) return;
+
+            var chapterId = btn.getAttribute("data-chapter-id") || "";
+            var subId = btn.getAttribute("data-subchapter-id") || "";
+            var qId = btn.getAttribute("data-question-id") || "";
+            var slotIndex = parseInt(
+              btn.getAttribute("data-slot-index") || "",
+              10,
+            );
+            var optionIndex = parseInt(
+              btn.getAttribute("data-option-index") || "",
+              10,
+            );
+            if (isNaN(slotIndex)) slotIndex = -1;
+            if (isNaN(optionIndex)) optionIndex = -1;
+
+            if (action === "toggle-chapter") {
+              if (!chapterId) return;
+              var next = !expandedChapterById[chapterId];
+              setExclusiveChapterExpanded(chapterId, next);
+              lastFocus = { type: "chapter", chapterId: chapterId };
+              persistAndRerender();
+              return;
+            }
+
+            if (action === "set-chapter-tab") {
+              if (!chapterId) return;
+              chapterTabByChapterId[chapterId] =
+                btn.getAttribute("data-tab") || "content";
+              lastFocus = { type: "chapter", chapterId: chapterId };
+              persistAndRerender();
+              return;
+            }
+
+            if (action === "delete-chapter") {
+              if (!chapterId) return;
+              var ok = window.confirm(
+                "Delete this chapter? This will also remove its subchapters and questions.",
+              );
+              if (!ok) return;
+              deleteChapter(course, chapterId);
+              return;
+            }
+
+            var chapter = chapterId ? findChapterById(course, chapterId) : null;
+            if (!chapter) return;
+
+            if (action === "add-subchapter") {
+              setExclusiveChapterExpanded(chapter.id, true);
+              chapterTabByChapterId[chapter.id] = "content";
+              addSubchapter(course, chapter);
+              return;
+            }
+
+            if (action === "toggle-subchapter") {
+              if (!subId) return;
+              var nextSub =
+                activeSubchapterByChapter[chapter.id] === subId ? null : subId;
+              activeSubchapterByChapter[chapter.id] = nextSub;
+              lastFocus = nextSub
+                ? {
+                    type: "subchapter",
+                    chapterId: chapter.id,
+                    subchapterId: subId,
+                  }
+                : { type: "chapter", chapterId: chapter.id };
+              persistAndRerender();
+              return;
+            }
+
+            if (action === "delete-subchapter") {
+              if (!subId) return;
+              var ok = window.confirm("Delete this subchapter?");
+              if (!ok) return;
+              deleteSubchapter(chapter, subId);
+              return;
+            }
+
+            if (action === "add-question") {
+              setExclusiveChapterExpanded(chapter.id, true);
+              chapterTabByChapterId[chapter.id] = "questions";
+              addQuestion(course, chapter);
+              return;
+            }
+
+            if (action === "toggle-question") {
+              if (!qId) return;
+              activeQuestionByChapter[chapter.id] = qId;
+              lastFocus = {
+                type: "question",
+                chapterId: chapter.id,
+                questionId: qId,
+              };
+              persistAndRerender();
+              return;
+            }
+
+            if (!qId) return;
+            var q = findQuestionById(chapter, qId);
+            if (!q) return;
+
+            if (action === "delete-question") {
+              var ok = window.confirm("Delete this question?");
+              if (!ok) return;
+              deleteQuestion(chapter, q.id);
+              return;
+            }
+            if (action === "select-slot") {
+              if (slotIndex < 0) return;
+              if (q && q.id && activeSlotByQuestion)
+                activeSlotByQuestion[q.id] = slotIndex;
+              persistAndRerender();
+              return;
+            }
+            if (action === "add-slot") {
+              addSlotToQuestion(chapter, q);
+              return;
+            }
+            if (action === "add-option") {
+              addOptionToSlot(q, slotIndex);
+              return;
+            }
+            if (action === "remove-slot") {
+              var ok = window.confirm("Remove this slot?");
+              if (!ok) return;
+              removeSlot(q, slotIndex);
+              return;
+            }
+            if (action === "remove-option") {
+              removeOption(q, slotIndex, optionIndex);
+              return;
+            }
+          });
+
+          root.addEventListener("input", function (e) {
+            var t = e.target;
+            if (!t || !t.getAttribute) return;
+            var action = t.getAttribute("data-action") || "";
+            if (!action) return;
+
+            var course = getActiveCourse();
+            if (!course) return;
+
+            if (action === "edit-chapter-name") {
+              var chapterId = t.getAttribute("data-chapter-id") || "";
+              var chapter = chapterId
+                ? findChapterById(course, chapterId)
+                : null;
+              if (!chapter) return;
+              chapter.name = String(t.value || "");
+              return;
+            }
+
+            if (action === "edit-subchapter-name") {
+              var chapterId = t.getAttribute("data-chapter-id") || "";
+              var subId = t.getAttribute("data-subchapter-id") || "";
+              var chapter = chapterId
+                ? findChapterById(course, chapterId)
+                : null;
+              if (!chapter) return;
+              var sub = null;
+              for (var i = 0; i < chapter.subchapters.length; i++) {
+                if (
+                  chapter.subchapters[i] &&
+                  chapter.subchapters[i].id === subId
+                )
+                  sub = chapter.subchapters[i];
+              }
+              if (!sub) return;
+              sub.name = String(t.value || "");
+              return;
+            }
+
+            if (action === "edit-option") {
+              var chapterId = t.getAttribute("data-chapter-id") || "";
+              var qId = t.getAttribute("data-question-id") || "";
+              var slotIndex = parseInt(
+                t.getAttribute("data-slot-index") || "",
+                10,
+              );
+              var optionIndex = parseInt(
+                t.getAttribute("data-option-index") || "",
+                10,
+              );
+              if (isNaN(slotIndex) || isNaN(optionIndex)) return;
+              var chapter = chapterId
+                ? findChapterById(course, chapterId)
+                : null;
+              var q = chapter ? findQuestionById(chapter, qId) : null;
+              if (!q) return;
+              updateOptionContent(q, slotIndex, optionIndex, t.value);
+              return;
+            }
+          });
+
+          root.addEventListener("change", function (e) {
+            var t = e.target;
+            if (!t || !t.getAttribute) return;
+            var action = t.getAttribute("data-action") || "";
+            if (!action) return;
+
+            var course = getActiveCourse();
+            if (!course) return;
+
+            if (action === "edit-chapter-name") {
+              persistAndRerender();
+              return;
+            }
+
+            if (action === "edit-subchapter-number") {
+              persistAndRerender();
+              return;
+            }
+
+            if (action === "edit-subchapter-name") {
+              persistAndRerender();
+              return;
+            }
+
+            if (action === "edit-question-number") {
+              persistAndRerender();
+              return;
+            }
+
+            if (action === "set-correct") {
+              var chapterId = t.getAttribute("data-chapter-id") || "";
+              var qId = t.getAttribute("data-question-id") || "";
+              var slotIndex = parseInt(
+                t.getAttribute("data-slot-index") || "",
+                10,
+              );
+              var optionIndex = parseInt(
+                t.getAttribute("data-option-index") || "",
+                10,
+              );
+              if (isNaN(slotIndex) || isNaN(optionIndex)) return;
+              var chapter = chapterId
+                ? findChapterById(course, chapterId)
+                : null;
+              var q = chapter ? findQuestionById(chapter, qId) : null;
+              if (!q) return;
+              setCorrectOption(q, slotIndex, optionIndex);
+              return;
+            }
+          });
+        }
+
+        function cssEscapeValue(value) {
+          try {
+            if (window.CSS && CSS.escape) return CSS.escape(String(value));
+          } catch (e) {}
+          return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+        }
+
+        function scrollToStoredFocus() {
+          if (!lastFocus || typeof lastFocus !== "object") return;
+          var el = null;
+          if (lastFocus.type === "subchapter") {
+            el = document.querySelector(
+              "[data-action='toggle-subchapter'][data-chapter-id='" +
+                cssEscapeValue(lastFocus.chapterId || "") +
+                "'][data-subchapter-id='" +
+                cssEscapeValue(lastFocus.subchapterId || "") +
+                "']",
+            );
+          } else if (lastFocus.type === "question") {
+            el = document.querySelector(
+              "[data-action='toggle-question'][data-chapter-id='" +
+                cssEscapeValue(lastFocus.chapterId || "") +
+                "'][data-question-id='" +
+                cssEscapeValue(lastFocus.questionId || "") +
+                "']",
+            );
+          } else if (lastFocus.type === "chapter") {
+            el = document.querySelector(
+              "[data-action='toggle-chapter'][data-chapter-id='" +
+                cssEscapeValue(lastFocus.chapterId || "") +
+                "']",
+            );
+          }
+          if (!el || !el.scrollIntoView) return;
+          el.scrollIntoView({ block: "center", behavior: "auto" });
+        }
+
+        function ensureExclusiveExpandedFromState() {
+          if (openChapterId) {
+            setExclusiveChapterExpanded(openChapterId, true);
+            return;
+          }
+          var keys = Object.keys(expandedChapterById || {});
+          for (var i = 0; i < keys.length; i++) {
+            if (expandedChapterById[keys[i]]) {
+              setExclusiveChapterExpanded(keys[i], true);
+              return;
+            }
+          }
+        }
+
+        var ui = loadUiState();
+        applyUiState(ui);
+        ensureExclusiveExpandedFromState();
+
+        attachEvents();
+
+        loadCourseFromServer().then(function (result) {
+          if (result && result.found && result.course) {
+            state.courses = [result.course];
+            normalizeState();
+            var course = findCourseById(courseId);
+            renderCourseHeader(course);
+            renderChapters(course);
+            setTimeout(scrollToStoredFocus, 0);
+            return;
+          }
+
+          state.courses = [
+            ensureCourseShape({ id: courseId, title: courseId }),
+          ];
+          normalizeState();
+          var fallback = findCourseById(courseId);
+          if (result && result.error) {
+            showFlash("error", "Failed to load course from database.");
+          } else {
+            showFlash(
+              "info",
+              "Course not found in database. Created a new draft.",
+            );
+          }
+          renderCourseHeader(fallback);
+          renderChapters(fallback);
+          setTimeout(scrollToStoredFocus, 0);
+        });
+      })();
+    </script>
+  </body>
+</html>

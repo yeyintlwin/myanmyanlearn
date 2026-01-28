@@ -65,6 +65,7 @@ public class SecurityConfig {
                                                 "/webjars/**")
                                 .permitAll()
                                 .requestMatchers("/admin", "/admin/**").hasAnyRole("ADMIN", "TEACHER")
+                                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "TEACHER")
                                 .requestMatchers("/assessment", "/assessment/**").authenticated()
                                 .anyRequest().authenticated())
                                 .formLogin(form -> form.loginPage("/login")

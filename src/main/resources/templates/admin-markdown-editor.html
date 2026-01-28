@@ -65,12 +65,13 @@
 
     <main
       class="pt-24 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
-      th:attr="data-course-id=${courseId},data-chapter-id=${chapterId},data-subchapter-id=${subchapterId}"
+      th:attr="data-course-id=${courseId},data-chapter-id=${chapterId},data-subchapter-id=${subchapterId},data-kind=${kind},data-question-id=${questionId}"
       id="mdEditorRoot"
     >
       <div class="flex flex-col gap-4">
         <div class="flex flex-col sm:flex-row sm:items-center gap-3">
           <a
+            id="backLink"
             href="/admin?section=courses"
             class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-4 h-10 text-sm font-semibold text-white hover:bg-white/15 transition w-fit"
           >
@@ -118,35 +119,67 @@
         <div
           class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4"
         >
-          <div class="flex items-center justify-between gap-3">
-            <div class="min-w-0">
-              <div id="modeTitle" class="text-white font-semibold">
-                Markdown
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-2">
+              <div class="flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <div id="modeTitle" class="text-white font-semibold">
+                    Markdown
+                  </div>
+                  <div id="modeHint" class="text-white/60 text-xs mt-1">
+                    Tip: Paste images or use “Add image”.
+                  </div>
+                </div>
+                <button
+                  id="modeToggleBtn"
+                  type="button"
+                  class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-10 text-sm font-semibold text-white hover:bg-white/15 transition flex-shrink-0"
+                >
+                  <i id="modeToggleIcon" class="fas fa-eye text-xs"></i>
+                  <span id="modeToggleText">Preview</span>
+                </button>
               </div>
-              <div id="modeHint" class="text-white/60 text-xs mt-1">
-                Tip: Paste images or use “Add image”.
+
+              <textarea
+                id="editor"
+                class="mt-3 w-full h-[70vh] bg-white/10 text-white text-sm rounded-xl px-3 py-3 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 placeholder:text-white/40 resize-none font-mono"
+                placeholder="# Start writing..."
+              ></textarea>
+
+              <div
+                id="preview"
+                class="hidden mt-3 rounded-xl border border-white/10 bg-white/5 p-4 overflow-auto h-[70vh]"
+              ></div>
+            </div>
+
+            <div class="lg:col-span-1">
+              <div
+                class="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3"
+              >
+                <div class="flex items-center justify-between gap-3">
+                  <div class="text-white font-semibold">Uploaded images</div>
+                  <button
+                    id="refreshImagesBtn"
+                    type="button"
+                    class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition flex-shrink-0"
+                  >
+                    <i class="fas fa-rotate text-[10px]"></i>
+                    <span>Refresh</span>
+                  </button>
+                </div>
+                <div class="text-white/60 text-xs">
+                  Insert images into markdown, copy URLs, or delete unused ones.
+                </div>
+                <div id="imagesEmpty" class="text-sm text-white/60">
+                  No uploaded images yet.
+                </div>
+                <div
+                  id="imagesList"
+                  class="space-y-2 max-h-[70vh] overflow-auto pr-1"
+                ></div>
               </div>
             </div>
-            <button
-              id="modeToggleBtn"
-              type="button"
-              class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-10 text-sm font-semibold text-white hover:bg-white/15 transition flex-shrink-0"
-            >
-              <i id="modeToggleIcon" class="fas fa-eye text-xs"></i>
-              <span id="modeToggleText">Preview</span>
-            </button>
           </div>
-
-          <textarea
-            id="editor"
-            class="mt-3 w-full h-[70vh] bg-white/10 text-white text-sm rounded-xl px-3 py-3 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 placeholder:text-white/40 resize-none font-mono"
-            placeholder="# Start writing..."
-          ></textarea>
-
-          <div
-            id="preview"
-            class="hidden mt-3 rounded-xl border border-white/10 bg-white/5 p-4 overflow-auto h-[70vh]"
-          ></div>
         </div>
       </div>
     </main>
@@ -159,10 +192,13 @@
         var courseId = root.getAttribute("data-course-id") || "";
         var chapterId = root.getAttribute("data-chapter-id") || "";
         var subchapterId = root.getAttribute("data-subchapter-id") || "";
+        var kind = (root.getAttribute("data-kind") || "").trim();
+        var questionId = (root.getAttribute("data-question-id") || "").trim();
 
         var editor = document.getElementById("editor");
         var preview = document.getElementById("preview");
         var breadcrumb = document.getElementById("breadcrumb");
+        var backLink = document.getElementById("backLink");
         var saveBtn = document.getElementById("saveBtn");
         var toast = document.getElementById("toast");
         var imageInput = document.getElementById("imageInput");
@@ -171,6 +207,9 @@
         var modeToggleText = document.getElementById("modeToggleText");
         var modeTitle = document.getElementById("modeTitle");
         var modeHint = document.getElementById("modeHint");
+        var imagesList = document.getElementById("imagesList");
+        var imagesEmpty = document.getElementById("imagesEmpty");
+        var refreshImagesBtn = document.getElementById("refreshImagesBtn");
 
         var md = window.markdownit
           ? window.markdownit({ html: true, linkify: true, breaks: true })
@@ -205,28 +244,90 @@
           );
         }
 
+        function coursesStorageKey() {
+          return "adminCoursesDraft_v1";
+        }
+
+        function loadCoursesState() {
+          try {
+            var raw = localStorage.getItem(coursesStorageKey());
+            if (!raw) return null;
+            var parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return { courses: parsed };
+            if (
+              parsed &&
+              typeof parsed === "object" &&
+              Array.isArray(parsed.courses)
+            )
+              return parsed;
+            return null;
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function saveCoursesState(state) {
+          try {
+            if (!state) return false;
+            localStorage.setItem(coursesStorageKey(), JSON.stringify(state));
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        function findCourse(state) {
+          if (!state || !Array.isArray(state.courses)) return null;
+          for (var i = 0; i < state.courses.length; i++) {
+            if (state.courses[i] && state.courses[i].id === courseId)
+              return state.courses[i];
+          }
+          return null;
+        }
+
+        function findChapter(course) {
+          if (!course || !Array.isArray(course.chapters)) return null;
+          for (var i = 0; i < course.chapters.length; i++) {
+            if (course.chapters[i] && course.chapters[i].id === chapterId)
+              return course.chapters[i];
+          }
+          return null;
+        }
+
+        function findSubchapter(chapter) {
+          if (!chapter || !Array.isArray(chapter.subchapters)) return null;
+          for (var i = 0; i < chapter.subchapters.length; i++) {
+            if (
+              chapter.subchapters[i] &&
+              chapter.subchapters[i].id === subchapterId
+            )
+              return chapter.subchapters[i];
+          }
+          return null;
+        }
+
+        function findQuestion(chapter) {
+          if (!chapter || !Array.isArray(chapter.questions)) return null;
+          for (var i = 0; i < chapter.questions.length; i++) {
+            if (chapter.questions[i] && chapter.questions[i].id === questionId)
+              return chapter.questions[i];
+          }
+          return null;
+        }
+
+        function normalizeKind(v) {
+          var k = (v || "").trim().toLowerCase();
+          if (k === "question") return "question";
+          if (k === "explanation") return "explanation";
+          return "subchapter";
+        }
+
         function loadBreadcrumb() {
           try {
-            var storageKey = "adminCoursesDraft_v1";
-            var raw = localStorage.getItem(storageKey);
-            if (!raw) return;
-            var data = JSON.parse(raw);
-            if (!data || !Array.isArray(data.courses)) return;
-            var course = data.courses.find(function (c) {
-              return c && c.id === courseId;
-            });
-            var chapter =
-              course && Array.isArray(course.chapters)
-                ? course.chapters.find(function (ch) {
-                    return ch && ch.id === chapterId;
-                  })
-                : null;
-            var sub =
-              chapter && Array.isArray(chapter.subchapters)
-                ? chapter.subchapters.find(function (s) {
-                    return s && s.id === subchapterId;
-                  })
-                : null;
+            var state = loadCoursesState();
+            var course = findCourse(state);
+            var chapter = findChapter(course);
+            var k = normalizeKind(kind);
 
             var parts = [];
             if (course && course.title) parts.push(course.title);
@@ -237,7 +338,24 @@
                 (chapter.name ? " · " + chapter.name : "");
               parts.push(chLabel);
             }
-            if (sub && sub.title) parts.push(sub.title);
+            if (k === "subchapter") {
+              var sub = findSubchapter(chapter);
+              if (sub) {
+                var subLabel =
+                  (sub.number ? String(sub.number) + ". " : "") +
+                  (sub.name ? sub.name : "Subchapter");
+                parts.push(subLabel);
+              }
+            } else {
+              var q = findQuestion(chapter);
+              if (q) {
+                var qLabel = "Question " + (q.questionNumber || 0);
+                parts.push(qLabel);
+                parts.push(k === "explanation" ? "Explanation" : "Question");
+              } else {
+                parts.push(k === "explanation" ? "Explanation" : "Question");
+              }
+            }
             if (!parts.length) parts.push("Markdown Editor");
             if (breadcrumb) breadcrumb.textContent = parts.join(" / ");
           } catch (e) {}
@@ -282,12 +400,35 @@
         }
 
         function save() {
-          try {
-            localStorage.setItem(editorKey(), editor ? editor.value || "" : "");
-            showToast(true, "Saved");
-          } catch (e) {
-            showToast(false, "Failed to save");
+          var text = editor ? editor.value || "" : "";
+          var state = loadCoursesState();
+          var course = findCourse(state);
+          var chapter = findChapter(course);
+          var k = normalizeKind(kind);
+          var saved = false;
+
+          if (state && course && chapter) {
+            if (k === "subchapter") {
+              var sub = findSubchapter(chapter);
+              if (sub) {
+                sub.markdown = String(text);
+                saved = saveCoursesState(state);
+              }
+            } else {
+              var q = findQuestion(chapter);
+              if (q) {
+                if (k === "explanation") q.explanationMarkdown = String(text);
+                else q.questionMarkdown = String(text);
+                saved = saveCoursesState(state);
+              }
+            }
           }
+
+          try {
+            localStorage.setItem(editorKey(), text);
+          } catch (e) {}
+
+          showToast(saved, saved ? "Saved" : "Failed to save");
         }
 
         function insertAtCursor(text) {
@@ -304,6 +445,9 @@
         }
 
         async function uploadImage(file) {
+          if (!courseId) {
+            throw new Error("Missing courseId");
+          }
           var tokenMeta = document.querySelector('meta[name="_csrf"]');
           var headerMeta = document.querySelector('meta[name="_csrf_header"]');
           var token = tokenMeta ? tokenMeta.getAttribute("content") : "";
@@ -312,6 +456,7 @@
           if (token && headerName) headers[headerName] = token;
 
           var form = new FormData();
+          form.append("courseId", courseId);
           form.append("file", file);
 
           var res = await fetch("/admin/markdown-editor/upload", {
@@ -330,7 +475,7 @@
               (json && json.message) || "Upload failed (" + res.status + ")",
             );
           }
-          return String(json.url);
+          return { url: String(json.url), name: String(json.name || "") };
         }
 
         async function handleFiles(files) {
@@ -343,16 +488,236 @@
           }
           try {
             showToast(true, "Uploading...");
-            var url = await uploadImage(file);
+            var uploaded = await uploadImage(file);
+            var url = uploaded && uploaded.url ? uploaded.url : "";
             var alt = file.name ? file.name.replace(/\.[^/.]+$/, "") : "image";
             insertAtCursor("\n![" + alt + "](" + url + ")\n");
             showToast(true, "Image added");
+            await refreshImages();
           } catch (e) {
             showToast(false, e && e.message ? e.message : "Upload failed");
           }
         }
 
+        function formatBytes(bytes) {
+          var n =
+            typeof bytes === "number" ? bytes : parseInt(bytes || "0", 10);
+          if (!n || n < 0) return "0 B";
+          var units = ["B", "KB", "MB", "GB"];
+          var i = 0;
+          var v = n;
+          while (v >= 1024 && i < units.length - 1) {
+            v = v / 1024;
+            i++;
+          }
+          var s = i === 0 ? String(Math.round(v)) : v.toFixed(1);
+          return s + " " + units[i];
+        }
+
+        async function fetchImages() {
+          if (!courseId) return [];
+          var res = await fetch(
+            "/admin/markdown-editor/images?courseId=" + encodeURIComponent(courseId),
+            {
+            method: "GET",
+            credentials: "same-origin",
+            headers: { Accept: "application/json" },
+            },
+          );
+          var json = null;
+          try {
+            json = await res.json();
+          } catch (e) {}
+          if (!res.ok || !json || !json.ok || !Array.isArray(json.items)) {
+            throw new Error((json && json.message) || "Failed to load images");
+          }
+          return json.items;
+        }
+
+        async function deleteImageByName(name) {
+          if (!courseId) {
+            throw new Error("Missing courseId");
+          }
+          var tokenMeta = document.querySelector('meta[name="_csrf"]');
+          var headerMeta = document.querySelector('meta[name="_csrf_header"]');
+          var token = tokenMeta ? tokenMeta.getAttribute("content") : "";
+          var headerName = headerMeta ? headerMeta.getAttribute("content") : "";
+          var headers = {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          };
+          if (token && headerName) headers[headerName] = token;
+
+          var body =
+            "courseId=" +
+            encodeURIComponent(String(courseId || "")) +
+            "&name=" +
+            encodeURIComponent(String(name || ""));
+          var res = await fetch("/admin/markdown-editor/images/delete", {
+            method: "POST",
+            headers: headers,
+            credentials: "same-origin",
+            body: body,
+          });
+          var json = null;
+          try {
+            json = await res.json();
+          } catch (e) {}
+          if (!res.ok || !json || !json.ok) {
+            throw new Error((json && json.message) || "Failed to delete image");
+          }
+          return true;
+        }
+
+        async function copyText(text) {
+          var t = String(text || "");
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(t);
+              return true;
+            }
+          } catch (e) {}
+          try {
+            var ta = document.createElement("textarea");
+            ta.value = t;
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            var ok = document.execCommand("copy");
+            ta.remove();
+            return !!ok;
+          } catch (e2) {
+            return false;
+          }
+        }
+
+        function renderImages(items) {
+          if (!imagesList) return;
+          while (imagesList.firstChild)
+            imagesList.removeChild(imagesList.firstChild);
+          var list = Array.isArray(items) ? items : [];
+          if (imagesEmpty)
+            imagesEmpty.classList.toggle("hidden", list.length > 0);
+
+          for (var i = 0; i < list.length; i++) {
+            var img = list[i] || {};
+            var name = String(img.name || "");
+            var url = String(img.url || "");
+
+            var row = document.createElement("div");
+            row.className =
+              "rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition p-3";
+
+            var top = document.createElement("div");
+            top.className = "flex items-start gap-3";
+
+            var thumb = document.createElement("img");
+            thumb.src = url;
+            thumb.alt = name || "image";
+            thumb.className =
+              "h-16 w-16 rounded-lg border border-white/10 object-cover bg-white/5 flex-shrink-0";
+
+            var meta = document.createElement("div");
+            meta.className = "min-w-0 flex-1";
+
+            var title = document.createElement("div");
+            title.className = "text-white text-sm font-semibold truncate";
+            title.textContent = name || url;
+
+            var sub = document.createElement("div");
+            sub.className = "text-white/60 text-xs mt-1";
+            sub.textContent = formatBytes(img.sizeBytes);
+
+            meta.appendChild(title);
+            meta.appendChild(sub);
+
+            top.appendChild(thumb);
+            top.appendChild(meta);
+            row.appendChild(top);
+
+            var actions = document.createElement("div");
+            actions.className = "mt-3 flex items-center gap-2 flex-wrap";
+
+            var insertBtn = document.createElement("button");
+            insertBtn.type = "button";
+            insertBtn.className =
+              "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition";
+            insertBtn.innerHTML =
+              '<i class="fas fa-plus text-[10px]"></i><span>Insert</span>';
+            insertBtn.addEventListener(
+              "click",
+              (function (u, n) {
+                return function () {
+                  var alt = n ? n.replace(/\.[^/.]+$/, "") : "image";
+                  insertAtCursor("\n![" + alt + "](" + u + ")\n");
+                  showToast(true, "Inserted");
+                };
+              })(url, name),
+            );
+
+            var copyBtn = document.createElement("button");
+            copyBtn.type = "button";
+            copyBtn.className =
+              "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 h-9 text-xs font-semibold text-white/90 hover:bg-white/10 transition";
+            copyBtn.innerHTML =
+              '<i class="fas fa-link text-[10px]"></i><span>Copy URL</span>';
+            copyBtn.addEventListener(
+              "click",
+              (function (u) {
+                return async function () {
+                  var ok = await copyText(u);
+                  showToast(ok, ok ? "Copied" : "Copy failed");
+                };
+              })(url),
+            );
+
+            var delBtn = document.createElement("button");
+            delBtn.type = "button";
+            delBtn.className =
+              "inline-flex items-center justify-center gap-2 rounded-lg border border-rose-500/40 bg-rose-500/15 px-3 h-9 text-xs font-semibold text-rose-100 hover:bg-rose-500/20 transition";
+            delBtn.innerHTML =
+              '<i class="fas fa-trash text-[10px]"></i><span>Delete</span>';
+            delBtn.addEventListener(
+              "click",
+              (function (n) {
+                return async function () {
+                  try {
+                    await deleteImageByName(n);
+                    showToast(true, "Deleted");
+                    await refreshImages();
+                  } catch (e) {
+                    showToast(
+                      false,
+                      e && e.message ? e.message : "Delete failed",
+                    );
+                  }
+                };
+              })(name),
+            );
+
+            actions.appendChild(insertBtn);
+            actions.appendChild(copyBtn);
+            actions.appendChild(delBtn);
+            row.appendChild(actions);
+
+            imagesList.appendChild(row);
+          }
+        }
+
+        async function refreshImages() {
+          try {
+            var items = await fetchImages();
+            renderImages(items);
+          } catch (e) {
+            if (imagesEmpty) imagesEmpty.classList.remove("hidden");
+            if (imagesEmpty) imagesEmpty.textContent = "Failed to load images.";
+          }
+        }
+
         loadBreadcrumb();
+        if (backLink && courseId)
+          backLink.href = "/admin/courses/" + encodeURIComponent(courseId);
 
         try {
           var m = localStorage.getItem("adminMarkdownEditorMode_v1");
@@ -360,8 +725,33 @@
         } catch (e) {}
 
         try {
-          var existing = localStorage.getItem(editorKey());
-          if (existing && editor) editor.value = existing;
+          var state = loadCoursesState();
+          var course = findCourse(state);
+          var chapter = findChapter(course);
+          var k = normalizeKind(kind);
+          var text = "";
+          if (state && course && chapter) {
+            if (k === "subchapter") {
+              var sub = findSubchapter(chapter);
+              if (sub && typeof sub.markdown === "string") text = sub.markdown;
+            } else {
+              var q = findQuestion(chapter);
+              if (q) {
+                if (
+                  k === "explanation" &&
+                  typeof q.explanationMarkdown === "string"
+                )
+                  text = q.explanationMarkdown;
+                if (k === "question" && typeof q.questionMarkdown === "string")
+                  text = q.questionMarkdown;
+              }
+            }
+          }
+          if (!text) {
+            var existing = localStorage.getItem(editorKey());
+            if (existing) text = existing;
+          }
+          if (editor) editor.value = text;
         } catch (e) {}
 
         if (editor) {
@@ -408,6 +798,12 @@
 
         setMode(mode);
         render();
+        refreshImages();
+
+        if (refreshImagesBtn)
+          refreshImagesBtn.addEventListener("click", function () {
+            refreshImages();
+          });
       })();
     </script>
   </body>

@@ -156,8 +156,13 @@ public class HomeController {
             Model model) {
         String effectiveSection = (section == null || section.isBlank()) ? "courses" : section;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean admin = isAdmin(auth);
 
-        if ("users".equals(effectiveSection) && isAdmin(auth)) {
+        if ("users".equals(effectiveSection) && !admin) {
+            effectiveSection = "courses";
+        }
+
+        if ("users".equals(effectiveSection) && admin) {
             model.addAttribute("currentUserId", auth != null ? auth.getName() : null);
             String query = q != null ? q.trim() : "";
             String fieldKey = (field == null || field.isBlank()) ? "name" : field.trim().toLowerCase(Locale.ROOT);
@@ -248,7 +253,7 @@ public class HomeController {
             model.addAttribute("adminUsers", rows);
         }
 
-        if ("settings".equals(effectiveSection) && isAdmin(auth)) {
+        if ("settings".equals(effectiveSection) && admin) {
             RegistrationSettingsService.SettingsView settings = registrationSettingsService.getSettings();
             model.addAttribute("registrationDomainEnforced", settings.isEnforceDomain());
             model.addAttribute("registrationDomainDisplay", registrationSettingsService.getDisplayDomain());

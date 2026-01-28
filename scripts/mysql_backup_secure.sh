@@ -4,10 +4,6 @@ set -euo pipefail
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
 PROPS_PATH="${1:-src/main/resources/application.properties}"
-MODE="${2:-full}"
-if [ "$MODE" = "--schema-only" ]; then
-  MODE="schema-only"
-fi
 
 get_prop() {
   local key="$1"
@@ -74,30 +70,18 @@ trap 'rm -f "$CONFIG_FILE"' EXIT
   fi
 } > "$CONFIG_FILE"
 
-if [ "$MODE" = "schema-only" ]; then
-  mysqldump \
-    --defaults-extra-file="$CONFIG_FILE" \
-    --no-data \
-    --skip-triggers \
-    --single-transaction \
-    --quick \
-    --skip-lock-tables \
-    --no-tablespaces \
-    --set-gtid-purged=OFF \
-    "$DB_NAME" > "$BACKUP_FILE"
-else
-  mysqldump \
-    --defaults-extra-file="$CONFIG_FILE" \
-    --routines \
-    --triggers \
-    --events \
-    --single-transaction \
-    --quick \
-    --skip-lock-tables \
-    --no-tablespaces \
-    --set-gtid-purged=OFF \
-    "$DB_NAME" > "$BACKUP_FILE"
-fi
+mysqldump \
+  --defaults-extra-file="$CONFIG_FILE" \
+  --routines \
+  --triggers \
+  --events \
+  --single-transaction \
+  --quick \
+  --skip-lock-tables \
+  --no-tablespaces \
+  --set-gtid-purged=OFF \
+  --add-drop-table \
+  "$DB_NAME" > "$BACKUP_FILE"
 
 ls -lh "$BACKUP_FILE"
 
