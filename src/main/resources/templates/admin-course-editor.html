@@ -32,8 +32,7 @@
               Course Editor
             </div>
             <div class="text-white/70 text-sm mt-1">
-              Manage chapters, subchapters, learning content, and questions (UI
-              only).
+              Manage chapters, subchapters, learning content, and questions.
             </div>
           </div>
 
@@ -863,7 +862,7 @@
 
             var open = document.createElement("a");
             open.href =
-              "/admin/markdown-editor?courseId=" +
+              "/markdown-editor?courseId=" +
               encodeURIComponent(courseId) +
               "&chapterId=" +
               encodeURIComponent(chapter.id) +
@@ -1054,9 +1053,19 @@
           slotsBody.appendChild(slotsRight);
           slotsBox.appendChild(slotsBody);
 
+          var del = document.createElement("button");
+          del.type = "button";
+          del.className =
+            "inline-flex items-center justify-center gap-2 rounded-lg border border-rose-500/40 bg-rose-500/15 px-3 h-9 text-xs font-semibold text-rose-100 hover:bg-rose-500/20 transition";
+          del.setAttribute("data-action", "delete-question");
+          del.setAttribute("data-chapter-id", chapter.id);
+          del.setAttribute("data-question-id", activeQ.id);
+          del.innerHTML =
+            '<i class="fas fa-trash text-[10px]"></i><span>Delete</span>';
+
           var openQ = document.createElement("a");
           openQ.href =
-            "/admin/markdown-editor?courseId=" +
+            "/markdown-editor?courseId=" +
             encodeURIComponent(courseId) +
             "&chapterId=" +
             encodeURIComponent(chapter.id) +
@@ -1074,7 +1083,7 @@
 
           var openEx = document.createElement("a");
           openEx.href =
-            "/admin/markdown-editor?courseId=" +
+            "/markdown-editor?courseId=" +
             encodeURIComponent(courseId) +
             "&chapterId=" +
             encodeURIComponent(chapter.id) +
@@ -1089,16 +1098,6 @@
             "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition no-underline";
           openEx.innerHTML =
             '<i class="fas fa-pen-to-square text-[10px]"></i><span>Explanation</span>';
-
-          var del = document.createElement("button");
-          del.type = "button";
-          del.className =
-            "inline-flex items-center justify-center gap-2 rounded-lg border border-rose-500/40 bg-rose-500/15 px-3 h-9 text-xs font-semibold text-rose-100 hover:bg-rose-500/20 transition";
-          del.setAttribute("data-action", "delete-question");
-          del.setAttribute("data-chapter-id", chapter.id);
-          del.setAttribute("data-question-id", activeQ.id);
-          del.innerHTML =
-            '<i class="fas fa-trash text-[10px]"></i><span>Delete</span>';
 
           var headerRight = document.createElement("div");
           headerRight.className =
@@ -1373,9 +1372,11 @@
             });
         }
 
+        var saveCourseInFlight = null;
         function saveCourseToServer(course) {
+          if (saveCourseInFlight) return saveCourseInFlight;
           var payload = serializeCourseForSave(course);
-          return apiFetch(
+          saveCourseInFlight = apiFetch(
             "/api/admin/courses/" + encodeURIComponent(courseId) + "/editor",
             {
               method: "PUT",
@@ -1385,9 +1386,35 @@
               },
               body: JSON.stringify(payload),
             },
-          ).then(function (res) {
-            if (!res || !res.ok) throw new Error("Failed to save");
-          });
+          )
+            .then(function (res) {
+              if (!res || !res.ok) {
+                var status = res ? res.status : 0;
+                return (
+                  res && res.text ? res.text() : Promise.resolve("")
+                ).then(function (t) {
+                  var raw = t ? String(t) : "";
+                  var msg = raw;
+                  try {
+                    var j = JSON.parse(raw);
+                    if (j && j.message) msg = String(j.message);
+                    else if (j && j.error) msg = String(j.error);
+                    else if (j && j.status) msg = "HTTP " + String(j.status);
+                  } catch (e) {}
+                  if (!msg) msg = "Failed to save";
+                  throw new Error(
+                    "Save failed (" + String(status) + "): " + msg,
+                  );
+                });
+              }
+              saveCourseInFlight = null;
+              return;
+            })
+            .catch(function (e) {
+              saveCourseInFlight = null;
+              throw e;
+            });
+          return saveCourseInFlight;
         }
 
         function setExclusiveChapterExpanded(chapterId, expanded) {
@@ -1598,8 +1625,12 @@
                 .then(function () {
                   showFlash("success", "Saved to database.");
                 })
-                .catch(function () {
-                  showFlash("error", "Failed to save to database.");
+                .catch(function (e) {
+                  var msg =
+                    e && e.message
+                      ? String(e.message)
+                      : "Failed to save to database.";
+                  showFlash("error", msg);
                 });
             });
           }
@@ -1616,10 +1647,43 @@
             var editorLink =
               t && t.closest ? t.closest("[data-editor-link='1']") : null;
             if (editorLink) {
+              e.preventDefault();
               var kind = editorLink.getAttribute("data-kind") || "";
               var chapterId = editorLink.getAttribute("data-chapter-id") || "";
               var subId = editorLink.getAttribute("data-subchapter-id") || "";
               var qId = editorLink.getAttribute("data-question-id") || "";
+              var href =
+                editorLink.getAttribute("href") || editorLink.href || "";
+              try {
+                if (href) {
+                  var u = new URL(href, window.location.origin);
+                  if (u.origin === window.location.origin) {
+                    var returnTo =
+                      window.location.pathname +
+                      window.location.search +
+                      window.location.hash;
+                    u.searchParams.set("returnTo", returnTo);
+                    href = u.pathname + u.search + u.hash;
+                  }
+                }
+              } catch (e) {}
+              var openInNew = !!(e.metaKey || e.ctrlKey || e.shiftKey);
+              var popup = null;
+              if (openInNew && href) {
+                try {
+                  popup = window.open("about:blank", "_blank");
+                } catch (e) {
+                  popup = null;
+                }
+              }
+              var navigateToEditor = function () {
+                if (!href) return;
+                if (popup && !popup.closed) {
+                  popup.location.href = href;
+                  return;
+                }
+                window.location.href = href;
+              };
 
               if (chapterId) setExclusiveChapterExpanded(chapterId, true);
               if (kind === "subchapter") {
@@ -1641,10 +1705,52 @@
                   kind: kind,
                 };
               }
+              normalizeState();
               saveUiState();
+              if (!href) return;
+              var existsHref = href.replace(
+                "/markdown-editor?",
+                "/markdown-editor/exists?",
+              );
+              var checkExists = function () {
+                return apiFetch(existsHref, {
+                  method: "GET",
+                  headers: { Accept: "application/json" },
+                });
+              };
+              checkExists()
+                .then(function (res) {
+                  if (res && res.ok) return true;
+                  return false;
+                })
+                .then(function (exists) {
+                  if (exists) {
+                    navigateToEditor();
+                    return;
+                  }
+                  var course = getActiveCourse();
+                  if (!course) throw new Error("Missing course");
+                  return saveCourseToServer(course)
+                    .then(function () {
+                      return checkExists();
+                    })
+                    .then(function (res2) {
+                      if (res2 && res2.ok) {
+                        navigateToEditor();
+                        return;
+                      }
+                      throw new Error("Missing target after save");
+                    });
+                })
+                .catch(function () {
+                  if (popup && !popup.closed) popup.close();
+                  showFlash(
+                    "error",
+                    "Open editor failed. Please click Save and try again.",
+                  );
+                });
               return;
             }
-
             var btn = t && t.closest ? t.closest("[data-action]") : null;
             if (!btn) return;
 

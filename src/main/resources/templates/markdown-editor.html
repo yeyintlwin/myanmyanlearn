@@ -1,0 +1,1959 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown Editor</title>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/tailwind-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-task-lists@2.1.1/dist/markdown-it-task-lists.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-footnote@4.0.0/dist/markdown-it-footnote.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-emoji@3.0.0/dist/markdown-it-emoji.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.8.1/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/markdown-it-github-alerts@1.0.0/styles/github-colors-light.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/markdown-it-github-alerts@1.0.0/styles/github-base.css"
+    />
+    <script type="module">
+      import MarkdownItGitHubAlerts from "https://cdn.jsdelivr.net/npm/markdown-it-github-alerts@1.0.0";
+      try {
+        window.markdownitGithubAlerts = MarkdownItGitHubAlerts;
+        if (window.__markdownEditorUsePlugin) {
+          window.__markdownEditorUsePlugin(window.markdownitGithubAlerts);
+        }
+      } catch (e) {}
+    </script>
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\\\(", "\\\\)"],
+          ],
+          displayMath: [
+            ["$$", "$$"],
+            ["\\\\[", "\\\\]"],
+          ],
+        },
+        options: {
+          skipHtmlTags: [
+            "script",
+            "noscript",
+            "style",
+            "textarea",
+            "pre",
+            "code",
+          ],
+        },
+        svg: { fontCache: "global" },
+      };
+    </script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+    ></script>
+    <style>
+      .md-btn {
+        height: 2.5rem;
+        min-width: 2.5rem;
+        padding: 0 0.6rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        color: #334155;
+        font-size: 0.75rem;
+        font-weight: 700;
+        transition:
+          background-color 150ms,
+          border-color 150ms,
+          color 150ms,
+          box-shadow 150ms,
+          transform 80ms;
+      }
+      .md-btn:hover {
+        background: #f8fafc;
+      }
+      .md-btn:active {
+        transform: translateY(1px);
+      }
+      .md-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18);
+        border-color: #93c5fd;
+      }
+
+      #preview h1 {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+        font-weight: 800;
+        margin: 1rem 0 0.75rem;
+        color: #0f172a;
+      }
+      #preview h2 {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        font-weight: 750;
+        margin: 1rem 0 0.75rem;
+        color: #0f172a;
+      }
+      #preview h3 {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        font-weight: 700;
+        margin: 1rem 0 0.65rem;
+        color: #0f172a;
+      }
+      #preview h4 {
+        font-size: 1.125rem;
+        line-height: 1.6rem;
+        font-weight: 700;
+        margin: 0.9rem 0 0.6rem;
+        color: #0f172a;
+      }
+      #preview h5 {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 700;
+        margin: 0.8rem 0 0.5rem;
+        color: #0f172a;
+      }
+      #preview h6 {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin: 0.8rem 0 0.5rem;
+        color: #334155;
+      }
+      #preview p {
+        margin: 0.75rem 0;
+        color: #334155;
+      }
+      #preview a {
+        color: #2563eb;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      #preview ul,
+      #preview ol {
+        margin: 0.75rem 0 0.75rem 1.25rem;
+        padding-left: 1.25rem;
+        color: #334155;
+      }
+      #preview blockquote {
+        border-left: 4px solid #e2e8f0;
+        padding: 0.5rem 1rem;
+        margin: 1rem 0;
+        color: #334155;
+        background: #f8fafc;
+        border-radius: 0.5rem;
+      }
+      #preview pre {
+        background: #f6f8fa;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        padding: 0.85rem 1rem;
+        overflow: auto;
+      }
+      #preview code {
+        background: #f1f5f9;
+        color: #0f172a;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+      }
+      #preview pre code {
+        background: transparent;
+        padding: 0;
+      }
+      #preview table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+      #preview th,
+      #preview td {
+        border: 1px solid #e5e7eb;
+        padding: 0.5rem 0.6rem;
+      }
+      #preview th {
+        background: #f8fafc;
+        text-align: left;
+        color: #0f172a;
+      }
+      #preview hr {
+        border: none;
+        height: 1px;
+        background: #e5e7eb;
+        margin: 1.25rem 0;
+      }
+      #preview img,
+      #preview svg,
+      #preview video,
+      #preview iframe {
+        display: block;
+        max-width: min(100%, 840px);
+        height: auto;
+        margin: 0.5rem auto;
+      }
+      #preview h1,
+      #preview h2,
+      #preview h3,
+      #preview h4,
+      #preview h5,
+      #preview h6 {
+        scroll-margin-top: 16px;
+      }
+
+      #preview .task-list-item {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      #preview .task-list-item input[type="checkbox"] {
+        margin-right: 0.5rem;
+      }
+    </style>
+  </head>
+  <body
+    class="h-screen overflow-hidden font-sans text-slate-900 bg-white flex flex-col"
+    th:attr="data-course-id=${courseId},data-chapter-id=${chapterId},data-kind=${kind},data-subchapter-id=${subchapterId},data-question-id=${questionId}"
+  >
+    <nav th:replace="fragments/navbar :: appNavbar('Markdown Editor')"></nav>
+
+    <main class="flex-1 min-h-0 pt-18 overflow-hidden">
+      <div
+        class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col"
+      >
+        <div
+          class="flex items-start justify-between gap-4 mb-4 flex-wrap shrink-0"
+        >
+          <div class="min-w-0">
+            <h1 class="text-slate-900 text-2xl sm:text-3xl font-extrabold">
+              Document Editor
+            </h1>
+            <div
+              class="text-slate-500 text-sm mt-1 break-words"
+              th:text="${contextLabel}"
+            ></div>
+          </div>
+          <a
+            th:href="@{/admin(section='courses')}"
+            href="/admin?section=courses"
+            id="backBtn"
+            class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 h-10 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition no-underline flex-shrink-0"
+          >
+            <i class="fas fa-arrow-left text-xs"></i>
+            <span>Back</span>
+          </a>
+        </div>
+
+        <section
+          class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex-1 min-h-0"
+        >
+          <div
+            class="grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] h-full min-h-0"
+          >
+            <aside
+              class="border-b xl:border-b-0 xl:border-r border-slate-200 bg-white h-full min-h-0"
+            >
+              <div class="px-4 py-4 h-full flex flex-col min-h-0">
+                <div>
+                  <div
+                    class="text-xs font-semibold text-slate-500 tracking-wide uppercase"
+                  >
+                    Assets
+                  </div>
+
+                  <div class="mt-4 flex items-center justify-between gap-2">
+                    <div
+                      class="text-xs font-semibold text-slate-500 tracking-wide uppercase"
+                    >
+                      Chapter images
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <label
+                        class="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-2.5 h-8 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+                      >
+                        <i class="fas fa-image text-[11px]"></i>
+                        <span>Upload</span>
+                        <input
+                          id="imageInput"
+                          type="file"
+                          accept="image/*"
+                          class="hidden"
+                        />
+                      </label>
+                      <button
+                        id="assetsRefreshBtn"
+                        type="button"
+                        class="inline-flex items-center justify-center h-8 w-8 rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition"
+                        aria-label="Refresh assets"
+                        title="Refresh assets"
+                      >
+                        <i class="fas fa-rotate-right text-[12px]"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    id="assetsGallery"
+                    class="mt-3 space-y-3 flex-1 min-h-0 overflow-auto pr-1"
+                  ></div>
+                </div>
+              </div>
+            </aside>
+
+            <div class="min-w-0 flex flex-col min-h-0">
+              <div
+                class="sticky top-0 z-10 bg-white border-b border-slate-200 shrink-0"
+              >
+                <div
+                  class="px-4 py-3 flex items-center justify-between gap-3 flex-wrap"
+                >
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <button
+                      id="saveBtn"
+                      type="button"
+                      class="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-600 bg-emerald-600 px-3 h-10 text-xs font-semibold text-white hover:bg-emerald-700 transition"
+                    >
+                      <i class="fas fa-floppy-disk text-[12px]"></i>
+                      <span>Save</span>
+                    </button>
+
+                    <div
+                      class="h-10 w-px bg-slate-200 mx-1 hidden sm:block"
+                    ></div>
+
+                    <div id="toolbar" class="flex items-center gap-1 flex-wrap">
+                      <button
+                        type="button"
+                        data-md-action="bold"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-bold"></i>
+                      </button>
+                      <button
+                        type="button"
+                        data-md-action="italic"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-italic"></i>
+                      </button>
+                      <button
+                        type="button"
+                        data-md-action="underline"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-underline"></i>
+                      </button>
+                      <button
+                        type="button"
+                        data-md-action="strike"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-strikethrough"></i>
+                      </button>
+                      <span class="w-px h-6 bg-slate-200 mx-1"></span>
+                      <div class="relative">
+                        <button
+                          id="headingMenuBtn"
+                          type="button"
+                          class="md-btn"
+                          aria-haspopup="menu"
+                          aria-expanded="false"
+                        >
+                          <i class="fas fa-heading"></i>
+                          <span class="hidden sm:inline">Heading</span>
+                          <i
+                            class="fas fa-chevron-down text-[10px] opacity-70"
+                          ></i>
+                        </button>
+                        <div
+                          id="headingMenu"
+                          class="hidden absolute left-0 mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden"
+                        >
+                          <div
+                            class="px-3 py-2 text-xs font-semibold text-slate-500 bg-slate-50 border-b border-slate-200"
+                          >
+                            Heading
+                          </div>
+                          <button
+                            type="button"
+                            data-md-action="h1"
+                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
+                          >
+                            # Heading 1
+                          </button>
+                          <button
+                            type="button"
+                            data-md-action="h2"
+                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
+                          >
+                            ## Heading 2
+                          </button>
+                          <button
+                            type="button"
+                            data-md-action="h3"
+                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
+                          >
+                            ### Heading 3
+                          </button>
+                          <button
+                            type="button"
+                            data-md-action="h4"
+                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
+                          >
+                            #### Heading 4
+                          </button>
+                          <button
+                            type="button"
+                            data-md-action="h5"
+                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
+                          >
+                            ##### Heading 5
+                          </button>
+                          <button
+                            type="button"
+                            data-md-action="h6"
+                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
+                          >
+                            ###### Heading 6
+                          </button>
+                        </div>
+                      </div>
+                      <span class="w-px h-6 bg-slate-200 mx-1"></span>
+                      <button type="button" data-md-action="ul" class="md-btn">
+                        <i class="fas fa-list-ul"></i>
+                      </button>
+                      <button type="button" data-md-action="ol" class="md-btn">
+                        <i class="fas fa-list-ol"></i>
+                      </button>
+                      <button
+                        type="button"
+                        data-md-action="quote"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-quote-left"></i>
+                      </button>
+                      <button
+                        type="button"
+                        data-md-action="code"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-code"></i>
+                      </button>
+                      <button
+                        type="button"
+                        data-md-action="codeblock"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-file-code"></i>
+                      </button>
+                      <button type="button" data-md-action="hr" class="md-btn">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <span class="w-px h-6 bg-slate-200 mx-1"></span>
+                      <button
+                        type="button"
+                        data-md-action="link"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-link"></i>
+                      </button>
+                      <button
+                        type="button"
+                        data-md-action="image"
+                        class="md-btn"
+                      >
+                        <i class="fas fa-image"></i>
+                      </button>
+                      <span class="w-px h-6 bg-slate-200 mx-1"></span>
+                      <div class="relative">
+                        <button
+                          id="outlineMenuBtn"
+                          type="button"
+                          class="md-btn"
+                          aria-haspopup="menu"
+                          aria-expanded="false"
+                        >
+                          <i class="fas fa-list"></i>
+                          <span class="hidden sm:inline">Outline</span>
+                          <i
+                            class="fas fa-chevron-down text-[10px] opacity-70"
+                          ></i>
+                        </button>
+                        <div
+                          id="outlineMenu"
+                          class="hidden absolute right-0 mt-2 w-80 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden"
+                        >
+                          <div
+                            class="px-3 py-2 text-xs font-semibold text-slate-500 bg-slate-50 border-b border-slate-200"
+                          >
+                            Outline
+                          </div>
+                          <div
+                            id="outlineMenuList"
+                            class="py-1 max-h-[360px] overflow-auto"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    id="status"
+                    class="text-xs text-slate-500 min-h-[16px]"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 flex-1 min-h-0">
+                <div
+                  class="min-w-0 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col min-h-0"
+                >
+                  <div
+                    class="px-4 h-12 bg-slate-50 border-b border-slate-200 flex items-center"
+                  >
+                    <div
+                      class="text-xs font-semibold text-slate-600 tracking-wide uppercase"
+                    >
+                      Editor
+                    </div>
+                  </div>
+                  <div class="p-4 flex-1 min-h-0">
+                    <textarea
+                      id="editor"
+                      class="w-full h-full min-h-0 bg-white text-slate-900 text-sm rounded-xl px-4 py-3 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500/30 resize-none font-mono leading-6"
+                      th:text="${markdown}"
+                      spellcheck="false"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="min-w-0 flex flex-col min-h-0">
+                  <div
+                    class="px-4 h-12 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2"
+                  >
+                    <div
+                      class="text-xs font-semibold text-slate-600 tracking-wide uppercase"
+                    >
+                      Preview
+                    </div>
+                    <button
+                      id="previewScrollSync"
+                      type="button"
+                      class="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-2.5 h-8 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 transition"
+                      aria-pressed="true"
+                    >
+                      <i class="fas fa-arrows-up-down text-[12px]"></i>
+                      <span>Sync scroll</span>
+                    </button>
+                  </div>
+                  <div class="p-4 flex-1 min-h-0">
+                    <div
+                      id="preview"
+                      class="markdown-body h-full min-h-0 overflow-auto rounded-xl border border-slate-200 bg-white p-4"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="/js/navbar.js"></script>
+    <script>
+      (function () {
+        var root = document.body;
+        var editor = document.getElementById("editor");
+        var saveBtn = document.getElementById("saveBtn");
+        var imageInput = document.getElementById("imageInput");
+        var statusEl = document.getElementById("status");
+        var backBtn = document.getElementById("backBtn");
+        var previewEl = document.getElementById("preview");
+        var toolbar = document.getElementById("toolbar");
+        var previewScrollSyncBtn = document.getElementById("previewScrollSync");
+        var assetsGallery = document.getElementById("assetsGallery");
+        var assetsRefreshBtn = document.getElementById("assetsRefreshBtn");
+        var assetPreviewModal = document.getElementById("assetPreviewModal");
+        var assetPreviewImg = document.getElementById("assetPreviewImg");
+        var assetPreviewLink = document.getElementById("assetPreviewLink");
+        var assetPreviewDeleteBtn = document.getElementById(
+          "assetPreviewDeleteBtn",
+        );
+        var assetPreviewName = document.getElementById("assetPreviewName");
+        var headingMenuBtn = document.getElementById("headingMenuBtn");
+        var headingMenu = document.getElementById("headingMenu");
+        var outlineMenuBtn = document.getElementById("outlineMenuBtn");
+        var outlineMenu = document.getElementById("outlineMenu");
+        var outlineMenuList = document.getElementById("outlineMenuList");
+
+        var csrfToken = (document.querySelector("meta[name='_csrf']") || {})
+          .content;
+        var csrfHeader = (
+          document.querySelector("meta[name='_csrf_header']") || {}
+        ).content;
+
+        var ctx = {
+          courseId: root.getAttribute("data-course-id") || "",
+          chapterId: root.getAttribute("data-chapter-id") || "",
+          kind: root.getAttribute("data-kind") || "",
+          subchapterId: root.getAttribute("data-subchapter-id") || "",
+          questionId: root.getAttribute("data-question-id") || "",
+        };
+
+        var lastUrl = "";
+        var defaultBack = backBtn
+          ? backBtn.getAttribute("href")
+          : "/admin?section=courses";
+
+        function normalizeReturnTo(raw) {
+          if (!raw) return "";
+          try {
+            var u = new URL(String(raw), window.location.origin);
+            if (u.origin !== window.location.origin) return "";
+            return u.pathname + u.search + u.hash;
+          } catch (e) {
+            return "";
+          }
+        }
+
+        (function initBack() {
+          if (!backBtn) return;
+          var params = new URLSearchParams(window.location.search || "");
+          var fromParam = normalizeReturnTo(params.get("returnTo"));
+          var fromReferrer = normalizeReturnTo(document.referrer);
+          var fromSession = normalizeReturnTo(
+            (window.sessionStorage || {}).getItem
+              ? window.sessionStorage.getItem("markdownEditor:returnTo")
+              : "",
+          );
+          var returnTo =
+            fromParam || fromReferrer || fromSession || defaultBack;
+          try {
+            if (window.sessionStorage && returnTo)
+              window.sessionStorage.setItem(
+                "markdownEditor:returnTo",
+                returnTo,
+              );
+          } catch (e) {}
+          backBtn.setAttribute("href", returnTo || defaultBack);
+          backBtn.addEventListener("click", function (e) {
+            var href =
+              normalizeReturnTo(backBtn.getAttribute("href")) || defaultBack;
+            var ref = normalizeReturnTo(document.referrer);
+            if (
+              window.history &&
+              window.history.length > 1 &&
+              ref &&
+              ref === href
+            ) {
+              e.preventDefault();
+              window.history.back();
+              return;
+            }
+            if (href) {
+              e.preventDefault();
+              window.location.assign(href);
+            }
+          });
+        })();
+
+        function setStatus(text, type) {
+          statusEl.textContent = text || "";
+          statusEl.className =
+            "text-xs min-h-[16px] " +
+            (type === "error" ? "text-rose-600" : "text-slate-500");
+        }
+
+        function markdownImageForAsset(url, name) {
+          var raw = String(name || "");
+          var base = raw.replace(/\.[a-z0-9]{1,8}$/i, "");
+          var alt = base || "image";
+          alt = alt.replaceAll("]", "\\]");
+          return "![" + alt + "](" + String(url || "") + ")";
+        }
+
+        function insertAssetIntoEditor(url, name) {
+          if (!url) return;
+          insertAtCursor(markdownImageForAsset(url, name));
+          setStatus("Inserted image.", "");
+          renderPreview(editor ? editor.value : "");
+          syncPreviewScroll();
+        }
+
+        function openAssetPreview(url, key, name) {
+          if (!assetPreviewModal) return;
+          if (assetPreviewImg) assetPreviewImg.src = url || "";
+          if (assetPreviewLink) assetPreviewLink.href = url || "#";
+          if (assetPreviewName) assetPreviewName.textContent = name || "";
+          if (assetPreviewDeleteBtn)
+            assetPreviewDeleteBtn.setAttribute("data-asset-key", key || "");
+          assetPreviewModal.classList.remove("hidden");
+          assetPreviewModal.setAttribute("aria-hidden", "false");
+        }
+
+        function closeAssetPreview() {
+          if (!assetPreviewModal) return;
+          assetPreviewModal.classList.add("hidden");
+          assetPreviewModal.setAttribute("aria-hidden", "true");
+          if (assetPreviewImg) assetPreviewImg.src = "";
+          if (assetPreviewDeleteBtn)
+            assetPreviewDeleteBtn.setAttribute("data-asset-key", "");
+        }
+
+        async function fetchAssets() {
+          if (!assetsGallery) return;
+          try {
+            var qs = new URLSearchParams({
+              courseId: ctx.courseId,
+              chapterId: ctx.chapterId,
+            });
+            var res = await fetch("/markdown-editor/assets?" + qs.toString(), {
+              method: "GET",
+              headers: (function () {
+                var h = {};
+                if (csrfHeader && csrfToken) h[csrfHeader] = csrfToken;
+                return h;
+              })(),
+            });
+            var data = await res.json().catch(function () {
+              return null;
+            });
+            if (!res.ok || !data || !data.ok) {
+              throw new Error(
+                (data && data.message) || "Failed to load assets.",
+              );
+            }
+            var items = Array.isArray(data.items) ? data.items : [];
+            renderAssets(items);
+          } catch (e) {
+            assetsGallery.innerHTML =
+              '<div class="text-sm text-rose-600">Assets load failed.</div>';
+          }
+        }
+
+        function renderAssets(items) {
+          if (!assetsGallery) return;
+          if (!items || !items.length) {
+            assetsGallery.innerHTML =
+              '<div class="text-sm text-slate-500">No images in this chapter yet.</div>';
+            return;
+          }
+          var groups = new Map();
+          for (var i = 0; i < items.length; i++) {
+            var it = items[i] || {};
+            var gk = String(it.groupKey || "");
+            var gl = String(it.groupLabel || "");
+            if (!gk) continue;
+            if (!groups.has(gk)) groups.set(gk, { label: gl, items: [] });
+            groups.get(gk).items.push(it);
+          }
+          var html = "";
+          Array.from(groups.entries()).forEach(function (entry) {
+            var g = entry[1];
+            html +=
+              '<div class="rounded-xl border border-slate-200 bg-white p-3">' +
+              '<div class="text-xs font-semibold text-slate-700">' +
+              escapeHtml(g.label || "Assets") +
+              "</div>" +
+              '<div class="mt-2 grid grid-cols-3 gap-2">';
+            for (var j = 0; j < g.items.length; j++) {
+              var a = g.items[j] || {};
+              var url = String(a.url || "");
+              var key = String(a.key || "");
+              var name = String(a.name || "");
+              if (!url || !key) continue;
+              html +=
+                '<div class="relative group rounded-lg border border-slate-200 bg-slate-50 overflow-hidden">' +
+                '<button type="button" class="block w-full aspect-square overflow-hidden bg-slate-50" data-asset-insert="1" data-asset-url="' +
+                escapeHtml(url) +
+                '" data-asset-key="' +
+                escapeHtml(key) +
+                '" data-asset-name="' +
+                escapeHtml(name) +
+                '">' +
+                '<img src="' +
+                escapeHtml(url) +
+                '" alt="' +
+                escapeHtml(name) +
+                '" class="h-full w-full object-cover" loading="lazy" />' +
+                "</button>" +
+                '<button type="button" class="absolute top-1 left-1 h-7 w-7 inline-flex items-center justify-center rounded-md bg-white/90 border border-slate-200 text-slate-600 hover:bg-white transition opacity-0 group-hover:opacity-100" data-asset-preview="1" data-asset-url="' +
+                escapeHtml(url) +
+                '" data-asset-key="' +
+                escapeHtml(key) +
+                '" data-asset-name="' +
+                escapeHtml(name) +
+                '" aria-label="Preview image" title="Preview image">' +
+                '<i class="fas fa-up-right-and-down-left-from-center text-[12px]"></i>' +
+                "</button>" +
+                '<button type="button" class="absolute top-1 right-1 h-7 w-7 inline-flex items-center justify-center rounded-md bg-white/90 border border-slate-200 text-slate-600 hover:bg-white transition opacity-0 group-hover:opacity-100" data-asset-delete="1" data-asset-key="' +
+                escapeHtml(key) +
+                '" data-asset-name="' +
+                escapeHtml(name) +
+                '" aria-label="Delete image" title="Delete image">' +
+                '<i class="fas fa-trash text-[12px]"></i>' +
+                "</button>" +
+                "</div>";
+            }
+            html += "</div></div>";
+          });
+          assetsGallery.innerHTML = html;
+        }
+
+        async function deleteAsset(key, name) {
+          var k = String(key || "");
+          if (!k) return;
+          var ok = window.confirm(
+            "Delete this image?\\n" + (name ? String(name) : k),
+          );
+          if (!ok) return;
+          setStatus("Deleting...", "");
+          try {
+            var res = await fetch("/markdown-editor/assets/delete", {
+              method: "POST",
+              headers: (function () {
+                var h = { "Content-Type": "application/json" };
+                if (csrfHeader && csrfToken) h[csrfHeader] = csrfToken;
+                return h;
+              })(),
+              body: JSON.stringify({
+                courseId: ctx.courseId,
+                chapterId: ctx.chapterId,
+                key: k,
+              }),
+            });
+            var data = await res.json().catch(function () {
+              return null;
+            });
+            if (!res.ok || !data || !data.ok) {
+              throw new Error((data && data.message) || "Delete failed.");
+            }
+            setStatus("Deleted.", "");
+            closeAssetPreview();
+            fetchAssets();
+          } catch (e) {
+            setStatus(e && e.message ? e.message : "Delete failed.", "error");
+          }
+        }
+
+        async function save() {
+          setStatus("Saving...", "");
+          try {
+            var res = await fetch("/markdown-editor/save", {
+              method: "POST",
+              headers: (function () {
+                var h = { "Content-Type": "application/json" };
+                if (csrfHeader && csrfToken) h[csrfHeader] = csrfToken;
+                return h;
+              })(),
+              body: JSON.stringify({
+                courseId: ctx.courseId,
+                chapterId: ctx.chapterId,
+                kind: ctx.kind,
+                subchapterId: ctx.subchapterId,
+                questionId: ctx.questionId,
+                markdown: editor ? editor.value : "",
+              }),
+            });
+            var data = await res.json().catch(function () {
+              return null;
+            });
+            if (!res.ok || !data || !data.ok) {
+              throw new Error((data && data.message) || "Save failed.");
+            }
+            setStatus("Saved.", "");
+          } catch (e) {
+            setStatus(e && e.message ? e.message : "Save failed.", "error");
+          }
+        }
+
+        async function uploadImage(file) {
+          setStatus("Uploading...", "");
+          try {
+            var fd = new FormData();
+            fd.append("courseId", ctx.courseId);
+            fd.append("chapterId", ctx.chapterId);
+            fd.append("kind", ctx.kind);
+            if (ctx.subchapterId) fd.append("subchapterId", ctx.subchapterId);
+            if (ctx.questionId) fd.append("questionId", ctx.questionId);
+            fd.append("file", file);
+
+            var headers = {};
+            if (csrfHeader && csrfToken) headers[csrfHeader] = csrfToken;
+
+            var res = await fetch("/markdown-editor/image/upload", {
+              method: "POST",
+              headers: headers,
+              body: fd,
+            });
+            var data = await res.json().catch(function () {
+              return null;
+            });
+            if (!res.ok || !data || !data.ok) {
+              throw new Error(
+                (data && data.message) ||
+                  "Upload failed (" + String(res.status || "") + ").",
+              );
+            }
+            lastUrl = data.url || "";
+            fetchAssets();
+            setStatus("Uploaded.", "");
+          } catch (e) {
+            setStatus(e && e.message ? e.message : "Upload failed.", "error");
+          }
+        }
+
+        function insertAtCursor(text) {
+          if (!editor) return;
+          var start = editor.selectionStart || 0;
+          var end = editor.selectionEnd || 0;
+          var value = editor.value || "";
+          editor.value = value.slice(0, start) + text + value.slice(end);
+          var pos = start + text.length;
+          editor.setSelectionRange(pos, pos);
+          editor.focus();
+        }
+
+        function replaceSelection(newText, selectStart, selectEnd) {
+          if (!editor) return;
+          var start = editor.selectionStart || 0;
+          var end = editor.selectionEnd || 0;
+          var value = editor.value || "";
+          editor.value = value.slice(0, start) + newText + value.slice(end);
+          var a = typeof selectStart === "number" ? selectStart : start;
+          var b =
+            typeof selectEnd === "number" ? selectEnd : start + newText.length;
+          editor.setSelectionRange(a, b);
+          editor.focus();
+        }
+
+        function getSelectedText() {
+          if (!editor) return "";
+          var start = editor.selectionStart || 0;
+          var end = editor.selectionEnd || 0;
+          if (end <= start) return "";
+          return (editor.value || "").slice(start, end);
+        }
+
+        function wrapSelection(prefix, suffix, placeholder) {
+          if (!editor) return;
+          var start = editor.selectionStart || 0;
+          var end = editor.selectionEnd || 0;
+          var value = editor.value || "";
+          var selected = value.slice(start, end);
+          var inner = selected || placeholder || "";
+          var out = prefix + inner + suffix;
+          editor.value = value.slice(0, start) + out + value.slice(end);
+          var newStart = start + prefix.length;
+          var newEnd = newStart + inner.length;
+          editor.setSelectionRange(newStart, newEnd);
+          editor.focus();
+        }
+
+        function lineStartIndex(value, pos) {
+          var i = pos;
+          while (i > 0 && value.charAt(i - 1) !== "\n") i--;
+          return i;
+        }
+
+        function applyLinePrefix(prefix) {
+          if (!editor) return;
+          var value = editor.value || "";
+          var start = editor.selectionStart || 0;
+          var lineStart = lineStartIndex(value, start);
+          editor.value =
+            value.slice(0, lineStart) + prefix + value.slice(lineStart);
+          var shift = prefix.length;
+          editor.setSelectionRange(
+            start + shift,
+            (editor.selectionEnd || 0) + shift,
+          );
+          editor.focus();
+        }
+
+        function insertHeading(level) {
+          var n = Number(level);
+          if (!Number.isFinite(n) || n < 1 || n > 6) return;
+          applyLinePrefix(Array(n + 1).join("#") + " ");
+        }
+
+        function insertList(marker) {
+          if (!editor) return;
+          var value = editor.value || "";
+          var start = editor.selectionStart || 0;
+          var end = editor.selectionEnd || 0;
+
+          if (end <= start) {
+            applyLinePrefix(marker);
+            return;
+          }
+
+          var lineStart = lineStartIndex(value, start);
+          var lastPos = Math.max(0, end - 1);
+          var lineEnd = lastPos;
+          while (lineEnd < value.length && value.charAt(lineEnd) !== "\n")
+            lineEnd++;
+
+          var block = value.slice(lineStart, lineEnd);
+          var startRel = start - lineStart;
+          var endRel = end - lineStart;
+
+          var lines = block.split("\n");
+          var outLines = [];
+          var addedBeforeStart = 0;
+          var addedBeforeEnd = 0;
+          var offset = 0;
+          var isOrdered = marker === "1. ";
+          var orderNum = 1;
+
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            var prefix = "";
+            if ((line || "").trim() !== "") {
+              if (isOrdered) {
+                prefix = String(orderNum) + ". ";
+                orderNum++;
+              } else {
+                prefix = marker;
+              }
+            }
+
+            if (prefix) {
+              if (offset <= startRel) addedBeforeStart += prefix.length;
+              if (offset < endRel) addedBeforeEnd += prefix.length;
+              outLines.push(prefix + line);
+            } else {
+              outLines.push(line);
+            }
+
+            offset += line.length + 1;
+          }
+
+          var newBlock = outLines.join("\n");
+          editor.value =
+            value.slice(0, lineStart) + newBlock + value.slice(lineEnd);
+          editor.setSelectionRange(
+            start + addedBeforeStart,
+            end + addedBeforeEnd,
+          );
+          editor.focus();
+        }
+
+        function insertCodeBlock() {
+          if (!editor) return;
+          var selected = getSelectedText();
+          var value = editor.value || "";
+          var start = editor.selectionStart || 0;
+          var end = editor.selectionEnd || 0;
+          var inner = selected || "";
+          var before = value.slice(0, start);
+          var after = value.slice(end);
+          var nlBefore =
+            before.endsWith("\n") || before.length === 0 ? "" : "\n";
+          var nlAfter =
+            after.startsWith("\n") || after.length === 0 ? "" : "\n";
+          var block = nlBefore + "```" + "\n" + inner + "\n```" + nlAfter;
+          editor.value = before + block + after;
+          var caret = before.length + nlBefore.length + 4;
+          editor.setSelectionRange(caret, caret + inner.length);
+          editor.focus();
+        }
+
+        function insertHr() {
+          if (!editor) return;
+          var value = editor.value || "";
+          var start = editor.selectionStart || 0;
+          var before = value.slice(0, start);
+          var after = value.slice(start);
+          var nlBefore =
+            before.endsWith("\n") || before.length === 0 ? "" : "\n";
+          var nlAfter =
+            after.startsWith("\n") || after.length === 0 ? "" : "\n";
+          var out = nlBefore + "---" + nlAfter;
+          editor.value = before + out + after;
+          var pos = before.length + out.length;
+          editor.setSelectionRange(pos, pos);
+          editor.focus();
+        }
+
+        function openModal(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.classList.remove("hidden");
+          el.setAttribute("aria-hidden", "false");
+          var first = el.querySelector("input,textarea,button");
+          first && first.focus && first.focus();
+        }
+
+        function closeModal(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.classList.add("hidden");
+          el.setAttribute("aria-hidden", "true");
+        }
+
+        function escapeHtml(s) {
+          return String(s || "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+        }
+
+        function slugify(text) {
+          var t = String(text || "")
+            .trim()
+            .toLowerCase()
+            .replace(/<\/?[^>]+>/g, "")
+            .replace(
+              /[^a-z0-9\u00C0-\u024F\u0370-\u03FF\u0400-\u04FF\u1000-\u109F\s-]/g,
+              "",
+            )
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-");
+          return t || "section";
+        }
+
+        var md = (function () {
+          if (!window.markdownit) return null;
+          var used = {};
+          var instance = window.markdownit({
+            html: true,
+            linkify: true,
+            breaks: false,
+            typographer: true,
+            highlight: function (str, lang) {
+              try {
+                if (window.hljs) {
+                  if (lang && hljs.getLanguage(lang)) {
+                    return hljs.highlight(str, { language: lang }).value;
+                  }
+                  return hljs.highlightAuto(str).value;
+                }
+              } catch (e) {}
+              return "";
+            },
+          });
+
+          try {
+            if (window.markdownitTaskLists) {
+              instance.use(window.markdownitTaskLists, {
+                enabled: true,
+                label: true,
+                labelAfter: true,
+              });
+            }
+          } catch (e) {}
+
+          try {
+            if (window.markdownitFootnote)
+              instance.use(window.markdownitFootnote);
+          } catch (e) {}
+
+          try {
+            if (window.markdownitEmoji) {
+              var emojiPlugin =
+                window.markdownitEmoji.full || window.markdownitEmoji;
+              instance.use(emojiPlugin);
+            }
+          } catch (e) {}
+
+          return instance.use(function (mdIt) {
+            var original =
+              mdIt.renderer.rules.heading_open ||
+              function (tokens, idx, options, env, self) {
+                return self.renderToken(tokens, idx, options);
+              };
+            mdIt.renderer.rules.heading_open = function (
+              tokens,
+              idx,
+              options,
+              env,
+              self,
+            ) {
+              var title = "";
+              for (var i = idx + 1; i < tokens.length; i++) {
+                var t = tokens[i];
+                if (t.type === "heading_close") break;
+                if (t.type === "inline") {
+                  title = t.content || "";
+                  break;
+                }
+              }
+              var base = slugify(title);
+              var key = base;
+              var n = 1;
+              while (used[key]) {
+                n++;
+                key = base + "-" + n;
+              }
+              used[key] = true;
+              tokens[idx].attrSet("id", key);
+              return original(tokens, idx, options, env, self);
+            };
+          });
+        })();
+
+        window.__markdownEditorUsePlugin = function (plugin, options) {
+          if (!md || !plugin) return;
+          try {
+            md.use(plugin, options || {});
+          } catch (e) {
+            return;
+          }
+          try {
+            renderPreview(editor ? editor.value : "");
+          } catch (e) {}
+        };
+
+        var mermaidReady = false;
+
+        function renderMermaid(container) {
+          if (!container) return;
+          var blocks = container.querySelectorAll(
+            'pre code.language-mermaid, pre code.lang-mermaid, pre code.mermaid, pre code[class*="language-mermaid"]',
+          );
+          if (!blocks || !blocks.length) return;
+          blocks.forEach(function (code) {
+            var pre = code.parentElement;
+            if (!pre) return;
+            var src = code.textContent || "";
+            var wrapper = document.createElement("div");
+            wrapper.className = "mermaid";
+            wrapper.textContent = src;
+            pre.replaceWith(wrapper);
+          });
+
+          if (!window.mermaid) return;
+          if (!mermaidReady) {
+            try {
+              window.mermaid.initialize({
+                startOnLoad: false,
+                theme: "default",
+                securityLevel: "loose",
+              });
+              mermaidReady = true;
+            } catch (e) {}
+          }
+          try {
+            window.mermaid.run({
+              nodes: Array.from(container.querySelectorAll(".mermaid")),
+            });
+          } catch (e) {}
+        }
+
+        function renderMath(container) {
+          if (!container) return;
+          if (!window.MathJax || !window.MathJax.typesetPromise) return;
+          try {
+            window.MathJax.typesetClear &&
+              window.MathJax.typesetClear([container]);
+          } catch (e) {}
+          try {
+            window.MathJax.typesetPromise([container]);
+          } catch (e) {}
+        }
+
+        var outlineItems = [];
+        var outlineById = {};
+
+        function buildOutline(value) {
+          var v = String(value || "");
+          var lines = v.split("\n");
+          var items = [];
+          var offset = 0;
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            var m = line.match(/^(#{1,6})\s+(.+?)\s*$/);
+            if (m) {
+              var level = m[1].length;
+              var text = m[2].trim();
+              if (text)
+                items.push({ level: level, text: text, line: i, pos: offset });
+            }
+            offset += line.length + 1;
+          }
+          return items;
+        }
+
+        function renderOutline(items) {
+          if (!outlineMenuList) return;
+          outlineMenuList.innerHTML = "";
+          if (!items || !items.length) {
+            outlineMenuList.innerHTML =
+              '<div class="px-3 py-2 text-sm text-slate-500">No headings yet.</div>';
+            return;
+          }
+          var html = "";
+          for (var i = 0; i < items.length; i++) {
+            var it = items[i];
+            var id = it.id || "";
+            var pad = Math.max(0, Math.min(5, Number(it.level || 1) - 1));
+            html +=
+              '<button type="button" data-outline-id="' +
+              escapeHtml(id) +
+              '" data-outline-idx="' +
+              String(i) +
+              '" class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700" style="padding-left:' +
+              String(12 + pad * 14) +
+              'px">' +
+              escapeHtml(it.text) +
+              "</button>";
+          }
+          outlineMenuList.innerHTML = html;
+        }
+
+        function renderPreview(markdownText) {
+          if (!previewEl) return;
+          if (!md) {
+            previewEl.textContent = markdownText || "";
+            return;
+          }
+          outlineById = {};
+          outlineItems = buildOutline(markdownText || "");
+          md.renderer.rules.heading_open && (function () {})();
+          previewEl.innerHTML = md.render(markdownText || "");
+          try {
+            if (window.hljs) {
+              previewEl.querySelectorAll("pre code").forEach(function (block) {
+                try {
+                  hljs.highlightElement(block);
+                } catch (e) {}
+              });
+            }
+          } catch (e) {}
+
+          renderMermaid(previewEl);
+          renderMath(previewEl);
+
+          var used = {};
+          var headings = Array.from(
+            previewEl.querySelectorAll("h1,h2,h3,h4,h5,h6"),
+          );
+          for (var i = 0; i < headings.length && i < outlineItems.length; i++) {
+            var h = headings[i];
+            var text = h.textContent || "";
+            var base = slugify(text);
+            var key = base;
+            var n = 1;
+            while (used[key]) {
+              n++;
+              key = base + "-" + n;
+            }
+            used[key] = true;
+            h.id = key;
+            outlineItems[i].id = key;
+          }
+          renderOutline(outlineItems);
+        }
+
+        function debounce(fn, wait) {
+          var t = 0;
+          return function () {
+            var args = arguments;
+            window.clearTimeout(t);
+            t = window.setTimeout(function () {
+              fn.apply(null, args);
+            }, wait);
+          };
+        }
+
+        var syncScroll = true;
+        if (previewScrollSyncBtn) {
+          previewScrollSyncBtn.addEventListener("click", function () {
+            syncScroll = !syncScroll;
+            previewScrollSyncBtn.setAttribute(
+              "aria-pressed",
+              syncScroll ? "true" : "false",
+            );
+          });
+        }
+
+        var scrollSyncing = false;
+
+        function syncPreviewScroll() {
+          if (!syncScroll) return;
+          if (!editor || !previewEl) return;
+          if (scrollSyncing) return;
+          scrollSyncing = true;
+          var e = editor;
+          var p = previewEl;
+          var eMax = Math.max(1, e.scrollHeight - e.clientHeight);
+          var pMax = Math.max(1, p.scrollHeight - p.clientHeight);
+          var ratio = e.scrollTop / eMax;
+          p.scrollTop = ratio * pMax;
+          window.requestAnimationFrame(function () {
+            scrollSyncing = false;
+          });
+        }
+
+        function syncEditorScroll() {
+          if (!syncScroll) return;
+          if (!editor || !previewEl) return;
+          if (scrollSyncing) return;
+          scrollSyncing = true;
+          var e = editor;
+          var p = previewEl;
+          var eMax = Math.max(1, e.scrollHeight - e.clientHeight);
+          var pMax = Math.max(1, p.scrollHeight - p.clientHeight);
+          var ratio = p.scrollTop / pMax;
+          e.scrollTop = ratio * eMax;
+          window.requestAnimationFrame(function () {
+            scrollSyncing = false;
+          });
+        }
+
+        function moveCursorToOutlineIndex(idx) {
+          if (!editor) return;
+          var it = outlineItems && outlineItems[idx] ? outlineItems[idx] : null;
+          if (!it || typeof it.pos !== "number") return;
+          var pos = Math.max(0, Math.min(editor.value.length, it.pos));
+          editor.setSelectionRange(pos, pos);
+          var lh =
+            parseFloat(window.getComputedStyle(editor).lineHeight || "") || 24;
+          var top =
+            (Number(it.line || 0) + 1) * lh - editor.clientHeight * 0.35;
+          editor.scrollTop = Math.max(0, top);
+          editor.focus();
+        }
+
+        var linkModal = document.getElementById("linkModal");
+        var linkText = document.getElementById("linkText");
+        var linkUrl = document.getElementById("linkUrl");
+        var linkInsertBtn = document.getElementById("linkInsertBtn");
+        var imageModal = document.getElementById("imageModal");
+        var imageAlt = document.getElementById("imageAlt");
+        var imageUrl = document.getElementById("imageUrl");
+        var imageInsertBtn = document.getElementById("imageInsertBtn");
+
+        function openLinkModal() {
+          var selected = getSelectedText();
+          if (linkText && !linkText.value) linkText.value = selected || "";
+          if (linkUrl && !linkUrl.value) linkUrl.value = "";
+          openModal("linkModal");
+        }
+
+        function openImageModal() {
+          if (imageUrl && !imageUrl.value && lastUrl) imageUrl.value = lastUrl;
+          openModal("imageModal");
+        }
+
+        function insertLinkFromModal() {
+          var text = (linkText && linkText.value ? linkText.value : "").trim();
+          var url = (linkUrl && linkUrl.value ? linkUrl.value : "").trim();
+          if (!url) {
+            setStatus("URL is required.", "error");
+            return;
+          }
+          var selected = getSelectedText();
+          var label = text || selected || url;
+          var out = "[" + label + "](" + url + ")";
+          if (selected) replaceSelection(out);
+          else insertAtCursor(out);
+          closeModal("linkModal");
+          if (linkText) linkText.value = "";
+          if (linkUrl) linkUrl.value = "";
+          renderPreview(editor ? editor.value : "");
+        }
+
+        function insertImageFromModal() {
+          var alt = (imageAlt && imageAlt.value ? imageAlt.value : "").trim();
+          var url = (imageUrl && imageUrl.value ? imageUrl.value : "").trim();
+          if (!url && lastUrl) url = lastUrl;
+          if (!url) {
+            setStatus("Image URL is required.", "error");
+            return;
+          }
+          var out = "![" + alt + "](" + url + ")";
+          insertAtCursor(out);
+          closeModal("imageModal");
+          if (imageAlt) imageAlt.value = "";
+          if (imageUrl) imageUrl.value = "";
+          renderPreview(editor ? editor.value : "");
+        }
+
+        document.addEventListener("click", function (e) {
+          var closeBtn =
+            e && e.target && e.target.closest
+              ? e.target.closest("[data-modal-close]")
+              : null;
+          if (closeBtn) {
+            closeModal(closeBtn.getAttribute("data-modal-close") || "");
+            return;
+          }
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (!e || e.key !== "Escape") return;
+          closeModal("linkModal");
+          closeModal("imageModal");
+          closeAssetPreview();
+          closeHeadingMenu();
+          closeOutlineMenu();
+        });
+
+        function isHeadingMenuOpen() {
+          return headingMenu && !headingMenu.classList.contains("hidden");
+        }
+
+        function openHeadingMenu() {
+          if (!headingMenu || !headingMenuBtn) return;
+          closeOutlineMenu();
+          headingMenu.classList.remove("hidden");
+          headingMenuBtn.setAttribute("aria-expanded", "true");
+        }
+
+        function closeHeadingMenu() {
+          if (!headingMenu || !headingMenuBtn) return;
+          headingMenu.classList.add("hidden");
+          headingMenuBtn.setAttribute("aria-expanded", "false");
+        }
+
+        if (headingMenuBtn)
+          headingMenuBtn.addEventListener("click", function (e) {
+            e && e.preventDefault && e.preventDefault();
+            if (isHeadingMenuOpen()) closeHeadingMenu();
+            else openHeadingMenu();
+          });
+
+        document.addEventListener("click", function (e) {
+          if (!headingMenu || !headingMenuBtn) return;
+          if (headingMenu.classList.contains("hidden")) return;
+          var t = e && e.target ? e.target : null;
+          if (!t) return;
+          if (
+            (t.closest && t.closest("#headingMenu")) ||
+            (t.closest && t.closest("#headingMenuBtn"))
+          ) {
+            return;
+          }
+          closeHeadingMenu();
+        });
+
+        function isOutlineMenuOpen() {
+          return outlineMenu && !outlineMenu.classList.contains("hidden");
+        }
+
+        function openOutlineMenu() {
+          if (!outlineMenu || !outlineMenuBtn) return;
+          closeHeadingMenu();
+          outlineMenu.classList.remove("hidden");
+          outlineMenuBtn.setAttribute("aria-expanded", "true");
+        }
+
+        function closeOutlineMenu() {
+          if (!outlineMenu || !outlineMenuBtn) return;
+          outlineMenu.classList.add("hidden");
+          outlineMenuBtn.setAttribute("aria-expanded", "false");
+        }
+
+        if (outlineMenuBtn)
+          outlineMenuBtn.addEventListener("click", function (e) {
+            e && e.preventDefault && e.preventDefault();
+            if (isOutlineMenuOpen()) closeOutlineMenu();
+            else openOutlineMenu();
+          });
+
+        document.addEventListener("click", function (e) {
+          if (!outlineMenu || !outlineMenuBtn) return;
+          if (outlineMenu.classList.contains("hidden")) return;
+          var t = e && e.target ? e.target : null;
+          if (!t) return;
+          if (
+            (t.closest && t.closest("#outlineMenu")) ||
+            (t.closest && t.closest("#outlineMenuBtn"))
+          ) {
+            return;
+          }
+          closeOutlineMenu();
+        });
+
+        if (saveBtn) saveBtn.addEventListener("click", save);
+
+        if (imageInput)
+          imageInput.addEventListener("change", function () {
+            var file = imageInput.files && imageInput.files[0];
+            if (!file) return;
+            uploadImage(file);
+            imageInput.value = "";
+          });
+
+        if (outlineMenuList)
+          outlineMenuList.addEventListener("click", function (e) {
+            var btn =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-outline-id]")
+                : null;
+            if (!btn) return;
+            var idx = Number(btn.getAttribute("data-outline-idx") || "");
+            if (Number.isFinite(idx)) moveCursorToOutlineIndex(idx);
+            var id = btn.getAttribute("data-outline-id") || "";
+            if (id && previewEl) {
+              var target = previewEl.querySelector("#" + CSS.escape(id));
+              if (target && target.scrollIntoView) {
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }
+            closeOutlineMenu();
+          });
+
+        if (headingMenu)
+          headingMenu.addEventListener("click", function (e) {
+            var btn =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-md-action]")
+                : null;
+            if (!btn) return;
+            closeHeadingMenu();
+          });
+
+        if (toolbar)
+          toolbar.addEventListener("click", function (e) {
+            var b =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-md-action]")
+                : null;
+            if (!b) return;
+            var action = b.getAttribute("data-md-action") || "";
+            if (!action) return;
+            if (action === "bold") wrapSelection("**", "**", "bold");
+            else if (action === "italic") wrapSelection("*", "*", "italic");
+            else if (action === "underline")
+              wrapSelection("<u>", "</u>", "underline");
+            else if (action === "strike") wrapSelection("~~", "~~", "strike");
+            else if (action === "code") wrapSelection("`", "`", "code");
+            else if (action === "codeblock") insertCodeBlock();
+            else if (action === "quote") applyLinePrefix("> ");
+            else if (action === "ul") insertList("- ");
+            else if (action === "ol") insertList("1. ");
+            else if (action === "hr") insertHr();
+            else if (action === "h1") insertHeading(1);
+            else if (action === "h2") insertHeading(2);
+            else if (action === "h3") insertHeading(3);
+            else if (action === "h4") insertHeading(4);
+            else if (action === "h5") insertHeading(5);
+            else if (action === "h6") insertHeading(6);
+            else if (action === "link") openLinkModal();
+            else if (action === "image") openImageModal();
+            renderPreview(editor ? editor.value : "");
+            syncPreviewScroll();
+          });
+
+        if (editor) {
+          var onEdit = debounce(function () {
+            renderPreview(editor.value);
+          }, 120);
+          editor.addEventListener("input", onEdit);
+          editor.addEventListener("scroll", debounce(syncPreviewScroll, 16));
+        }
+
+        if (previewEl) {
+          previewEl.addEventListener("scroll", debounce(syncEditorScroll, 16));
+        }
+
+        if (linkInsertBtn)
+          linkInsertBtn.addEventListener("click", insertLinkFromModal);
+        if (imageInsertBtn)
+          imageInsertBtn.addEventListener("click", insertImageFromModal);
+
+        if (assetsRefreshBtn)
+          assetsRefreshBtn.addEventListener("click", function () {
+            fetchAssets();
+            setStatus("Assets refreshed.", "");
+          });
+
+        if (assetsGallery)
+          assetsGallery.addEventListener("click", function (e) {
+            var del =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-asset-delete]")
+                : null;
+            if (del) {
+              deleteAsset(
+                del.getAttribute("data-asset-key") || "",
+                del.getAttribute("data-asset-name") || "",
+              );
+              return;
+            }
+            var preview =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-asset-preview]")
+                : null;
+            if (preview) {
+              openAssetPreview(
+                preview.getAttribute("data-asset-url") || "",
+                preview.getAttribute("data-asset-key") || "",
+                preview.getAttribute("data-asset-name") || "",
+              );
+              return;
+            }
+
+            var insert =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-asset-insert]")
+                : null;
+            if (!insert) return;
+            insertAssetIntoEditor(
+              insert.getAttribute("data-asset-url") || "",
+              insert.getAttribute("data-asset-name") || "",
+            );
+          });
+
+        if (assetPreviewDeleteBtn)
+          assetPreviewDeleteBtn.addEventListener("click", function () {
+            deleteAsset(
+              assetPreviewDeleteBtn.getAttribute("data-asset-key") || "",
+              assetPreviewName ? assetPreviewName.textContent : "",
+            );
+          });
+
+        if (assetPreviewModal)
+          assetPreviewModal.addEventListener("click", function (e) {
+            var closeBtn =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-asset-preview-close]")
+                : null;
+            if (closeBtn) {
+              closeAssetPreview();
+            }
+          });
+
+        renderPreview(editor ? editor.value : "");
+        fetchAssets();
+      })();
+    </script>
+
+    <div id="linkModal" class="hidden fixed inset-0 z-50" aria-hidden="true">
+      <div
+        class="absolute inset-0 bg-slate-900/40"
+        data-modal-close="linkModal"
+      ></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div
+          class="w-full max-w-lg rounded-2xl bg-white border border-slate-200 shadow-xl"
+        >
+          <div
+            class="px-5 py-4 border-b border-slate-200 flex items-center justify-between"
+          >
+            <div class="font-bold text-slate-900">Insert Link</div>
+            <button
+              type="button"
+              data-modal-close="linkModal"
+              class="h-9 w-9 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition"
+              aria-label="Close"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+          <div class="p-5 space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1"
+                >Text</label
+              >
+              <input
+                id="linkText"
+                type="text"
+                class="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1"
+                >URL</label
+              >
+              <input
+                id="linkUrl"
+                type="url"
+                placeholder="https://example.com"
+                class="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+              />
+            </div>
+          </div>
+          <div
+            class="px-5 py-4 border-t border-slate-200 flex items-center justify-end gap-2"
+          >
+            <button
+              type="button"
+              data-modal-close="linkModal"
+              class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 h-10 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+            >
+              Cancel
+            </button>
+            <button
+              id="linkInsertBtn"
+              type="button"
+              class="inline-flex items-center justify-center rounded-lg bg-slate-900 px-3 h-10 text-sm font-semibold text-white hover:bg-slate-800 transition"
+            >
+              Insert
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="imageModal" class="hidden fixed inset-0 z-50" aria-hidden="true">
+      <div
+        class="absolute inset-0 bg-slate-900/40"
+        data-modal-close="imageModal"
+      ></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div
+          class="w-full max-w-lg rounded-2xl bg-white border border-slate-200 shadow-xl"
+        >
+          <div
+            class="px-5 py-4 border-b border-slate-200 flex items-center justify-between"
+          >
+            <div class="font-bold text-slate-900">Insert Image</div>
+            <button
+              type="button"
+              data-modal-close="imageModal"
+              class="h-9 w-9 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition"
+              aria-label="Close"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+          <div class="p-5 space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1"
+                >Alt text</label
+              >
+              <input
+                id="imageAlt"
+                type="text"
+                class="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1"
+                >Image URL</label
+              >
+              <input
+                id="imageUrl"
+                type="url"
+                placeholder="https://..."
+                class="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+              />
+            </div>
+            <div class="text-xs text-slate-500">
+              Upload button ကိုသုံးပြီး URL ရလာရင် အဲ့ဒီ URL
+              ကိုကူးထည့်နိုင်ပါတယ်။
+            </div>
+          </div>
+          <div
+            class="px-5 py-4 border-t border-slate-200 flex items-center justify-end gap-2"
+          >
+            <button
+              type="button"
+              data-modal-close="imageModal"
+              class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 h-10 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+            >
+              Cancel
+            </button>
+            <button
+              id="imageInsertBtn"
+              type="button"
+              class="inline-flex items-center justify-center rounded-lg bg-slate-900 px-3 h-10 text-sm font-semibold text-white hover:bg-slate-800 transition"
+            >
+              Insert
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="assetPreviewModal"
+      class="hidden fixed inset-0 z-50"
+      aria-hidden="true"
+    >
+      <div
+        class="absolute inset-0 bg-slate-900/60"
+        data-asset-preview-close="1"
+      ></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div
+          class="w-full max-w-5xl rounded-2xl bg-white border border-slate-200 shadow-xl overflow-hidden"
+        >
+          <div
+            class="px-5 py-4 border-b border-slate-200 flex items-center justify-between gap-3"
+          >
+            <div class="min-w-0">
+              <div
+                id="assetPreviewName"
+                class="font-bold text-slate-900 truncate"
+              ></div>
+              <a
+                id="assetPreviewLink"
+                href="#"
+                target="_blank"
+                rel="noopener"
+                class="text-xs text-blue-600 underline break-all"
+                >Open in new tab</a
+              >
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                id="assetPreviewDeleteBtn"
+                type="button"
+                class="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3 h-10 text-sm font-semibold text-rose-700 hover:bg-rose-100 transition"
+              >
+                <i class="fas fa-trash text-[12px]"></i>
+                <span>Delete</span>
+              </button>
+              <button
+                type="button"
+                data-asset-preview-close="1"
+                class="h-10 w-10 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition"
+                aria-label="Close"
+              >
+                <i class="fas fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+          <div class="p-4 bg-slate-50">
+            <div
+              class="rounded-xl border border-slate-200 bg-white overflow-hidden"
+            >
+              <img
+                id="assetPreviewImg"
+                alt=""
+                class="w-full max-h-[70vh] object-contain bg-white"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

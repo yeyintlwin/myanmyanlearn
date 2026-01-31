@@ -3,6 +3,7 @@ package com.barlarlar.myanmyanlearn.controller;
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.entity.Role;
 import com.barlarlar.myanmyanlearn.repository.AssessmentScoreRecordRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseRepository;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
 import com.barlarlar.myanmyanlearn.repository.OtpVerificationRepository;
 import com.barlarlar.myanmyanlearn.repository.PasswordResetTokenRepository;
@@ -14,6 +15,7 @@ import com.barlarlar.myanmyanlearn.service.CourseService;
 import com.barlarlar.myanmyanlearn.service.LoginAttemptService;
 import com.barlarlar.myanmyanlearn.service.RegistrationSettingsService;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,14 +25,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,16 +72,16 @@ public class HomeController {
     private LoginAttemptService loginAttemptService;
 
     @Autowired
-    private UserDetailsManager userDetailsManager;
+    private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
 
     @Autowired
     private RegistrationSettingsService registrationSettingsService;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private CourseRepository courseRepository;
 
-    private volatile boolean memberStudentMetaInitialized;
-    private volatile boolean memberStudentMetaAvailable;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private static final Set<String> ALLOWED_USER_ROLES = Set.of("ADMIN", "TEACHER", "STUDENT");
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -125,8 +125,7 @@ public class HomeController {
             System.out.println("User not authenticated or is anonymous");
         }
 
-        // Add courses from JSON data model
-        List<Course> courses = courseService.getAllCourses();
+        List<Course> courses = courseService.getAllCoursesFromDatabase();
         model.addAttribute("courses", courses);
 
         Map<String, Integer> courseProgress = new HashMap<>();
@@ -215,8 +214,6 @@ public class HomeController {
                 return aId.compareToIgnoreCase(bId);
             });
 
-            Map<String, StudentMeta> studentMetaByUser = loadStudentMetaByUserId(userIds);
-
             List<AdminUserRow> rows = new ArrayList<>();
             for (Member m : members) {
                 if (m == null) {
@@ -236,7 +233,6 @@ public class HomeController {
                 List<String> rs = rolesByUser.get(m.getUserId());
                 String rolesDisplay = (rs == null || rs.isEmpty()) ? "-" : String.join(", ", rs);
                 String primaryRoleKey = resolvePrimaryRoleKey(rs);
-                StudentMeta meta = studentMetaByUser.get(m.getUserId());
                 rows.add(new AdminUserRow(
                         m.getUserId(),
                         m.getFirstName(),
@@ -247,8 +243,8 @@ public class HomeController {
                         rolesDisplay,
                         primaryRoleKey,
                         m.getProfileImage(),
-                        meta != null ? meta.currentClass : null,
-                        meta != null ? meta.schoolYear : null));
+                        m.getCurrentClass(),
+                        m.getSchoolYear()));
             }
             model.addAttribute("adminUsers", rows);
         }
@@ -257,6 +253,30 @@ public class HomeController {
             RegistrationSettingsService.SettingsView settings = registrationSettingsService.getSettings();
             model.addAttribute("registrationDomainEnforced", settings.isEnforceDomain());
             model.addAttribute("registrationDomainDisplay", registrationSettingsService.getDisplayDomain());
+        }
+
+        if ("courses".equals(effectiveSection)) {
+            List<Map<String, Object>> rows = new ArrayList<>();
+            var entities = courseRepository.findAll(Sort.by(Sort.Direction.DESC, "updatedAt", "createdAt"));
+            for (var c : entities) {
+                if (c == null || c.getCourseId() == null) {
+                    continue;
+                }
+                Map<String, Object> m = new HashMap<>();
+                m.put("id", c.getCourseId());
+                m.put("title", c.getTitle());
+                m.put("description", c.getDescription());
+                m.put("language", c.getLanguage());
+                m.put("published", c.getPublished() != null && c.getPublished());
+                m.put("coverImageDataUrl", c.getCoverImageUrl());
+                m.put("targetStudents", c.getTargetStudentsJson());
+                rows.add(m);
+            }
+            try {
+                model.addAttribute("adminCoursesJson", objectMapper.writeValueAsString(rows));
+            } catch (Exception e) {
+                model.addAttribute("adminCoursesJson", "[]");
+            }
         }
 
         model.addAttribute("section", effectiveSection);
@@ -508,10 +528,10 @@ public class HomeController {
             return redirectAdminUsers(q, field, roleFilter);
         }
 
-        ensureMemberStudentMetaColumns();
-        if (!memberStudentMetaAvailable) {
+        Optional<Member> memberOpt = memberRepository.findById(targetUserId);
+        if (memberOpt.isEmpty()) {
             if (isAjax(request)) {
-                return org.springframework.http.ResponseEntity.status(500).build();
+                return org.springframework.http.ResponseEntity.notFound().build();
             }
             return redirectAdminUsers(q, field, roleFilter);
         }
@@ -523,27 +543,20 @@ public class HomeController {
                 && request.getParameterMap() != null
                 && request.getParameterMap().containsKey("schoolYear");
 
+        Member member = memberOpt.get();
         if (hasCurrentClassParam && hasSchoolYearParam) {
             String cls = normalizeNullable(currentClass, 100);
             String year = normalizeNullable(schoolYear, 20);
-            jdbcTemplate.update(
-                    "UPDATE members SET current_class = ?, school_year = ? WHERE user_id = ?",
-                    cls,
-                    year,
-                    targetUserId);
+            member.setCurrentClass(cls);
+            member.setSchoolYear(year);
         } else if (hasCurrentClassParam) {
             String cls = normalizeNullable(currentClass, 100);
-            jdbcTemplate.update(
-                    "UPDATE members SET current_class = ? WHERE user_id = ?",
-                    cls,
-                    targetUserId);
+            member.setCurrentClass(cls);
         } else if (hasSchoolYearParam) {
             String year = normalizeNullable(schoolYear, 20);
-            jdbcTemplate.update(
-                    "UPDATE members SET school_year = ? WHERE user_id = ?",
-                    year,
-                    targetUserId);
+            member.setSchoolYear(year);
         }
+        memberRepository.save(member);
 
         if (isAjax(request)) {
             return org.springframework.http.ResponseEntity.noContent().build();
@@ -642,7 +655,7 @@ public class HomeController {
             return;
         }
         try {
-            UserDetails userDetails = userDetailsManager.loadUserByUsername(userId);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
             UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     currentAuth.getCredentials(),
@@ -710,79 +723,6 @@ public class HomeController {
             return java.net.URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8);
         } catch (Exception e) {
             return "";
-        }
-    }
-
-    private void ensureMemberStudentMetaColumns() {
-        if (memberStudentMetaInitialized) {
-            return;
-        }
-        synchronized (this) {
-            if (memberStudentMetaInitialized) {
-                return;
-            }
-
-            boolean available = false;
-            try {
-                if (!hasColumn("members", "current_class")) {
-                    jdbcTemplate.execute("ALTER TABLE members ADD COLUMN current_class VARCHAR(100) NULL");
-                }
-                if (!hasColumn("members", "school_year")) {
-                    jdbcTemplate.execute("ALTER TABLE members ADD COLUMN school_year VARCHAR(20) NULL");
-                }
-                available = hasColumn("members", "current_class") && hasColumn("members", "school_year");
-            } catch (Exception ignored) {
-                available = false;
-            }
-
-            memberStudentMetaAvailable = available;
-            memberStudentMetaInitialized = true;
-        }
-    }
-
-    private boolean hasColumn(String tableName, String columnName) {
-        Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?",
-                Integer.class,
-                tableName,
-                columnName);
-        return count != null && count > 0;
-    }
-
-    private Map<String, StudentMeta> loadStudentMetaByUserId(List<String> userIds) {
-        ensureMemberStudentMetaColumns();
-        if (!memberStudentMetaAvailable || userIds == null || userIds.isEmpty()) {
-            return Map.of();
-        }
-
-        try {
-            String placeholders = userIds.stream().map(x -> "?").collect(Collectors.joining(","));
-            String sql = "SELECT user_id, current_class, school_year FROM members WHERE user_id IN (" + placeholders
-                    + ")";
-            Object[] args = userIds.toArray();
-            Map<String, StudentMeta> out = new HashMap<>();
-            jdbcTemplate.query(sql, (rs, rowNum) -> {
-                String userId = rs.getString("user_id");
-                if (userId != null) {
-                    out.put(userId, new StudentMeta(
-                            rs.getString("current_class"),
-                            rs.getString("school_year")));
-                }
-                return 1;
-            }, args);
-            return out;
-        } catch (Exception ignored) {
-            return Map.of();
-        }
-    }
-
-    private static class StudentMeta {
-        private final String currentClass;
-        private final String schoolYear;
-
-        private StudentMeta(String currentClass, String schoolYear) {
-            this.currentClass = currentClass;
-            this.schoolYear = schoolYear;
         }
     }
 

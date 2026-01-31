@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @RestController
 @RequestMapping("/api/assessment-scores")
 public class AssessmentScoreRecordApiController {
+    private static final Logger log = LoggerFactory.getLogger(AssessmentScoreRecordApiController.class);
     private final AssessmentScoreRecordService service;
     private final ObjectMapper objectMapper;
 
@@ -45,8 +49,23 @@ public class AssessmentScoreRecordApiController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> create(@RequestBody JsonNode payload) throws Exception {
-        AssessmentScoreRecord saved = service.upsertMergedForCurrentUser(payload);
-        return ResponseEntity.ok(toSummary(saved));
+        String userId = null;
+        try {
+            userId = service.currentUserId();
+            AssessmentScoreRecord saved = service.upsertMergedForCurrentUser(payload);
+            log.info("Saved assessment score record id={} userId={} courseId={}", saved.getId(), userId,
+                    saved.getCourseId());
+            return ResponseEntity.ok(toSummary(saved));
+        } catch (IllegalStateException e) {
+            log.warn("Unauthorized assessment score save userId={}", userId);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "UNAUTHORIZED"));
+        } catch (IllegalArgumentException e) {
+            log.warn("Bad assessment score payload userId={}", userId);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "BAD_REQUEST"));
+        } catch (Exception e) {
+            log.warn("Failed assessment score save userId={}", userId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "SAVE_FAILED"));
+        }
     }
 
     @GetMapping("/{id}")

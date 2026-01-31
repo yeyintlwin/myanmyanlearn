@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,35 +52,146 @@ public class ReaderController {
             @RequestParam(name = "courseId") String courseId,
             @RequestParam(name = "ch") Integer chapterOrder,
             @RequestParam(name = "sc") Integer subOrder) {
-        Course course = courseService.findById(courseId);
-        if (course == null) {
-            model.addAttribute("error", "Course not found");
+        ReaderPageData data = buildReaderPageData(courseId, chapterOrder, subOrder);
+        if (data.course == null) {
+            model.addAttribute("error", data.errorMessage == null ? "Course not found" : data.errorMessage);
             return "reader";
         }
-        Optional<Content> contentOpt = course.getContents().stream()
+        model.addAttribute("course", data.course);
+        if (data.content != null) {
+            model.addAttribute("content", data.content);
+        }
+        if (data.sub != null) {
+            model.addAttribute("sub", data.sub);
+        }
+        if (data.errorMessage != null) {
+            model.addAttribute("error", data.errorMessage);
+        }
+        model.addAttribute("markdownPath",
+                "/reader/md?courseId=" + courseId + "&ch=" + chapterOrder + "&sc=" + subOrder);
+        model.addAttribute("hasPrev", data.prevCh != null && data.prevSc != null);
+        model.addAttribute("prevCh", data.prevCh);
+        model.addAttribute("prevSc", data.prevSc);
+        model.addAttribute("hasNext", data.nextCh != null && data.nextSc != null);
+        model.addAttribute("nextCh", data.nextCh);
+        model.addAttribute("nextSc", data.nextSc);
+        return "reader";
+    }
+
+    @GetMapping(value = "/reader/page", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReaderPageResponse> readerPage(
+            @RequestParam(name = "courseId") String courseId,
+            @RequestParam(name = "ch") Integer chapterOrder,
+            @RequestParam(name = "sc") Integer subOrder) {
+        ReaderPageData data = buildReaderPageData(courseId, chapterOrder, subOrder);
+        ReaderPageResponse resp = new ReaderPageResponse();
+        resp.courseId = courseId;
+        resp.ch = chapterOrder;
+        resp.sc = subOrder;
+        resp.markdownPath = "/reader/md?courseId=" + courseId + "&ch=" + chapterOrder + "&sc=" + subOrder;
+
+        if (data.course == null) {
+            resp.error = data.errorMessage == null ? "Course not found" : data.errorMessage;
+            return ResponseEntity.status(404).body(resp);
+        }
+        resp.courseTitle = data.course.getTitle();
+        resp.courseLanguage = data.course.getLanguage();
+        if (data.content == null) {
+            resp.error = data.errorMessage == null ? "Chapter not found" : data.errorMessage;
+            return ResponseEntity.status(404).body(resp);
+        }
+        resp.chapterTitle = data.content.getTitle();
+        resp.chapterLabel = "Chapter " + data.content.getOrder();
+        if (data.sub == null) {
+            resp.error = data.errorMessage == null ? "Section not found" : data.errorMessage;
+            return ResponseEntity.status(404).body(resp);
+        }
+        resp.subTitle = data.sub.getTitle();
+        resp.hasPrev = data.prevCh != null && data.prevSc != null;
+        resp.prevCh = data.prevCh;
+        resp.prevSc = data.prevSc;
+        resp.hasNext = data.nextCh != null && data.nextSc != null;
+        resp.nextCh = data.nextCh;
+        resp.nextSc = data.nextSc;
+        CourseService.SubchapterMarkdownInfo mdInfo = courseService.findSubchapterMarkdownInfoFromDatabase(courseId,
+                chapterOrder, subOrder);
+        resp.markdown = mdInfo == null ? null : mdInfo.markdown;
+        resp.updatedAt = mdInfo == null || mdInfo.updatedAt == null ? null : mdInfo.updatedAt.toString();
+        if (resp.markdown == null) {
+            resp.error = "Markdown not found";
+            return ResponseEntity.status(404).body(resp);
+        }
+        return ResponseEntity.ok(resp);
+    }
+
+    @PostMapping(value = "/reader/translate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE
+            + ";charset=UTF-8")
+    public ResponseEntity<String> translate(@RequestBody TranslateRequest req) {
+        if (req == null || req.text == null) {
+            return ResponseEntity.badRequest().body("Missing text.");
+        }
+        String apiKey = googleStudioApiKey == null ? "" : googleStudioApiKey.trim();
+        if (apiKey.isEmpty()) {
+            return ResponseEntity.status(503).body("Translation API key is not configured.");
+        }
+        String sourceLang = normalizeLang(req.sourceLang);
+        String targetLang = normalizeLang(req.targetLang);
+        if (targetLang == null || (sourceLang != null && sourceLang.equals(targetLang))) {
+            return ResponseEntity.ok(req.text);
+        }
+        try {
+            String translated = translateMarkdown(apiKey, sourceLang, targetLang, req.text);
+            return ResponseEntity.ok(translated);
+        } catch (Exception e) {
+            String msg = e.getMessage() == null ? "Translation failed." : e.getMessage();
+            return ResponseEntity.status(502).body(msg);
+        }
+    }
+
+    @GetMapping(value = "/reader/md", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
+    public ResponseEntity<String> markdown(
+            @RequestParam(name = "courseId") String courseId,
+            @RequestParam(name = "ch") Integer chapterOrder,
+            @RequestParam(name = "sc") Integer subOrder) {
+        String markdown = courseService.findMarkdownFromDatabase(courseId, chapterOrder, subOrder);
+        if (markdown == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(markdown);
+    }
+
+    private ReaderPageData buildReaderPageData(String courseId, Integer chapterOrder, Integer subOrder) {
+        ReaderPageData data = new ReaderPageData();
+        if (courseId == null || courseId.isBlank() || chapterOrder == null || subOrder == null) {
+            data.errorMessage = "Missing parameters";
+            return data;
+        }
+        Course course = courseService.findByIdFromDatabase(courseId);
+        if (course == null) {
+            data.errorMessage = "Course not found";
+            return data;
+        }
+        data.course = course;
+        Optional<Content> contentOpt = Optional.ofNullable(course.getContents()).orElse(List.of()).stream()
+                .filter(Objects::nonNull)
                 .filter(c -> c.getOrder() == chapterOrder)
                 .findFirst();
         if (contentOpt.isEmpty()) {
-            model.addAttribute("course", course);
-            model.addAttribute("error", "Chapter not found");
-            return "reader";
+            data.errorMessage = "Chapter not found";
+            return data;
         }
         Content content = contentOpt.get();
-        Optional<Subcontent> subOpt = content.getSubcontents().stream()
+        data.content = content;
+        Optional<Subcontent> subOpt = Optional.ofNullable(content.getSubcontents()).orElse(List.of()).stream()
+                .filter(Objects::nonNull)
                 .filter(s -> s.getOrder() == subOrder)
                 .findFirst();
         if (subOpt.isEmpty()) {
-            model.addAttribute("course", course);
-            model.addAttribute("content", content);
-            model.addAttribute("error", "Section not found");
-            return "reader";
+            data.errorMessage = "Section not found";
+            return data;
         }
         Subcontent sub = subOpt.get();
-
-        Integer prevCh = null;
-        Integer prevSc = null;
-        Integer nextCh = null;
-        Integer nextSc = null;
+        data.sub = sub;
 
         List<Content> orderedContents = Optional.ofNullable(course.getContents()).orElse(List.of()).stream()
                 .filter(Objects::nonNull)
@@ -114,6 +224,11 @@ public class ReaderController {
             }
         }
 
+        Integer prevCh = null;
+        Integer prevSc = null;
+        Integer nextCh = null;
+        Integer nextSc = null;
+
         if (prevSub != null) {
             prevCh = chapterOrder;
             prevSc = prevSub.getOrder();
@@ -144,74 +259,43 @@ public class ReaderController {
             }
         }
 
-        model.addAttribute("course", course);
-        model.addAttribute("content", content);
-        model.addAttribute("sub", sub);
-        model.addAttribute("markdownPath", sub.getMarkdownPath());
-        model.addAttribute("hasPrev", prevCh != null && prevSc != null);
-        model.addAttribute("prevCh", prevCh);
-        model.addAttribute("prevSc", prevSc);
-        model.addAttribute("hasNext", nextCh != null && nextSc != null);
-        model.addAttribute("nextCh", nextCh);
-        model.addAttribute("nextSc", nextSc);
-        return "reader";
+        data.prevCh = prevCh;
+        data.prevSc = prevSc;
+        data.nextCh = nextCh;
+        data.nextSc = nextSc;
+        return data;
     }
 
-    @PostMapping(value = "/reader/translate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE
-            + ";charset=UTF-8")
-    public ResponseEntity<String> translate(@RequestBody TranslateRequest req) {
-        if (req == null || req.text == null) {
-            return ResponseEntity.badRequest().body("Missing text.");
-        }
-        String apiKey = googleStudioApiKey == null ? "" : googleStudioApiKey.trim();
-        if (apiKey.isEmpty()) {
-            return ResponseEntity.status(503).body("Translation API key is not configured.");
-        }
-        String sourceLang = normalizeLang(req.sourceLang);
-        String targetLang = normalizeLang(req.targetLang);
-        if (targetLang == null || (sourceLang != null && sourceLang.equals(targetLang))) {
-            return ResponseEntity.ok(req.text);
-        }
-        try {
-            String translated = translateMarkdown(apiKey, sourceLang, targetLang, req.text);
-            return ResponseEntity.ok(translated);
-        } catch (Exception e) {
-            String msg = e.getMessage() == null ? "Translation failed." : e.getMessage();
-            return ResponseEntity.status(502).body(msg);
-        }
+    private static class ReaderPageData {
+        public Course course;
+        public Content content;
+        public Subcontent sub;
+        public Integer prevCh;
+        public Integer prevSc;
+        public Integer nextCh;
+        public Integer nextSc;
+        public String errorMessage;
     }
 
-    @GetMapping(value = "/reader/md", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
-    public ResponseEntity<String> markdown(
-            @RequestParam(name = "courseId") String courseId,
-            @RequestParam(name = "ch") Integer chapterOrder,
-            @RequestParam(name = "sc") Integer subOrder) {
-        Course course = courseService.findById(courseId);
-        if (course == null) {
-            return ResponseEntity.notFound().build();
-        }
-        Optional<Content> contentOpt = course.getContents().stream()
-                .filter(c -> c.getOrder() == chapterOrder)
-                .findFirst();
-        if (contentOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        Content content = contentOpt.get();
-        Optional<Subcontent> subOpt = content.getSubcontents().stream()
-                .filter(s -> s.getOrder() == subOrder)
-                .findFirst();
-        if (subOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        String path = subOpt.get().getMarkdownPath();
-        try {
-            ClassPathResource res = new ClassPathResource(
-                    Objects.requireNonNull(path.startsWith("/") ? path.substring(1) : path));
-            byte[] bytes = res.getInputStream().readAllBytes();
-            return ResponseEntity.ok(new String(bytes, StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public static class ReaderPageResponse {
+        public String courseId;
+        public Integer ch;
+        public Integer sc;
+        public String courseTitle;
+        public String courseLanguage;
+        public String chapterLabel;
+        public String chapterTitle;
+        public String subTitle;
+        public boolean hasPrev;
+        public Integer prevCh;
+        public Integer prevSc;
+        public boolean hasNext;
+        public Integer nextCh;
+        public Integer nextSc;
+        public String markdown;
+        public String updatedAt;
+        public String markdownPath;
+        public String error;
     }
 
     private String normalizeLang(String value) {

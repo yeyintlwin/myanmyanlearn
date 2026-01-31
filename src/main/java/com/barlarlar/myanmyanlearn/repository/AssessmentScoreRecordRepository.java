@@ -18,5 +18,7 @@ public interface AssessmentScoreRecordRepository extends JpaRepository<Assessmen
 
     Optional<AssessmentScoreRecord> findTopByUserIdOrderByIdDesc(String userId);
 
+    Optional<AssessmentScoreRecord> findTopByUserIdAndCourseIdOrderByIdDesc(String userId, String courseId);
+
     void deleteByUserId(String userId);
 }

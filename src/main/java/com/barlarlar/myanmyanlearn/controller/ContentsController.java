@@ -37,10 +37,10 @@ public class ContentsController {
 
         Course course = null;
         if (courseId != null && !courseId.isBlank()) {
-            course = courseService.findById(courseId);
+            course = courseService.findByIdFromDatabase(courseId);
         }
         if (course == null && selected != null && !selected.isBlank()) {
-            course = courseService.findByTitle(selected);
+            course = courseService.findByTitleFromDatabase(selected);
         }
 
         // Prefer the title from the resolved course for display

@@ -11,9 +11,12 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "assessment_scores")
+@Table(name = "assessment_scores", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_assessment_scores_user_course_id", columnNames = { "user_id", "course_id" })
+})
 public class AssessmentScoreRecord {
 
     @Id

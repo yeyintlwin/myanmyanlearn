@@ -116,32 +116,59 @@
   }
 
   function fetchCoursesFromServer() {
-    return apiFetch("/api/admin/courses", {
-      method: "GET",
-      headers: { Accept: "application/json" },
-    }).then(function (res) {
-      if (!res || !res.ok) throw new Error("Failed to load courses");
-      return res.json();
-    });
+    return Promise.resolve([]);
   }
 
   function saveCourseMetaToServer(course) {
     if (!course || !course.id) return Promise.reject(new Error("Missing id"));
-    return apiFetch("/api/admin/courses/" + encodeURIComponent(course.id) + "/meta", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        id: course.id,
-        title: course.title || "Untitled course",
-        description: course.description || "",
-        language: course.language || "",
-        published: !!course.published,
-        targetStudents: course.targetStudents || { schoolYears: [], classes: [] },
-        coverImageDataUrl: course.coverImageDataUrl || null,
-      }),
-    }).then(function (res) {
+    return apiFetch(
+      "/api/admin/courses/" + encodeURIComponent(course.id) + "/meta",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          id: course.id,
+          title: course.title || "Untitled course",
+          description: course.description || "",
+          language: course.language || "",
+          published: !!course.published,
+          targetStudents: course.targetStudents || {
+            schoolYears: [],
+            classes: [],
+          },
+          coverImageDataUrl: course.coverImageDataUrl || null,
+        }),
+      },
+    ).then(function (res) {
       if (!res || !res.ok) throw new Error("Failed to save course");
     });
+  }
+
+  function uploadCourseCoverToServer(courseId, file) {
+    if (!courseId) return Promise.reject(new Error("Missing course id"));
+    if (!file) return Promise.reject(new Error("Missing file"));
+    var form = new FormData();
+    form.append("file", file);
+    return apiFetch(
+      "/api/admin/courses/" + encodeURIComponent(courseId) + "/cover-image",
+      {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: form,
+      },
+    )
+      .then(function (res) {
+        if (!res || !res.ok) throw new Error("Failed to upload cover image");
+        return res.json();
+      })
+      .then(function (data) {
+        if (!data || !data.ok || !data.url)
+          throw new Error("Invalid upload response");
+        return String(data.url);
+      });
   }
 
   function deleteCourseOnServer(courseId) {
@@ -315,10 +342,13 @@
   }
 
   function normalizeTargetStudents(targetStudents) {
-    var ts =
-      targetStudents && typeof targetStudents === "object"
-        ? targetStudents
-        : {};
+    var ts = {};
+    if (targetStudents && typeof targetStudents === "object") {
+      ts = targetStudents;
+    } else if (typeof targetStudents === "string" && targetStudents.trim()) {
+      var parsed = safeJsonParse(targetStudents);
+      if (parsed && typeof parsed === "object") ts = parsed;
+    }
     var years = normalizeStringArray(ts.schoolYears);
     var classes = normalizeStringArray(ts.classes);
     years.sort(function (a, b) {
@@ -680,18 +710,15 @@
         ? courseCoverInput.files[0]
         : null;
 
-    var finalize = function (coverDataUrl) {
-      updateCourseFromForm(course, coverDataUrl);
-      var optimistic = !existing;
-      if (optimistic) state.courses.push(course);
-      normalizeState();
-      renderList();
+    var optimistic = !existing;
+    updateCourseFromForm(course, null);
+    if (optimistic) state.courses.push(course);
+    normalizeState();
+    renderList();
+
+    if (!file) {
       saveCourseMetaToServer(course)
         .then(function () {
-          return fetchCoursesFromServer();
-        })
-        .then(function (courses) {
-          state.courses = courses;
           normalizeState();
           saveState();
           renderList();
@@ -705,10 +732,6 @@
           if (optimistic) deleteCourseById(course.id);
           showFlash("error", "Failed to save course to database.");
         });
-    };
-
-    if (!file) {
-      finalize(null);
       return;
     }
     if (!file.type || file.type.indexOf("image/") !== 0) {
@@ -716,15 +739,29 @@
       if (courseCoverInput) courseCoverInput.value = "";
       return;
     }
-    var reader = new FileReader();
-    reader.onload = function () {
-      removeCourseCover = false;
-      finalize(String(reader.result || ""));
-    };
-    reader.onerror = function () {
-      setError(addCourseError, "Failed to read cover image.");
-    };
-    reader.readAsDataURL(file);
+    removeCourseCover = false;
+
+    saveCourseMetaToServer(course)
+      .then(function () {
+        return uploadCourseCoverToServer(course.id, file);
+      })
+      .then(function (url) {
+        course.coverImageDataUrl = url;
+        normalizeState();
+        renderList();
+        return saveCourseMetaToServer(course);
+      })
+      .then(function () {
+        normalizeState();
+        saveState();
+        renderList();
+        closeAddCourse();
+        showFlash("success", existing ? "Course updated." : "Course created.");
+      })
+      .catch(function () {
+        if (optimistic) deleteCourseById(course.id);
+        showFlash("error", "Failed to save course to database.");
+      });
   }
 
   function exportCourses(coursesToExport, filenamePrefix) {
@@ -805,10 +842,6 @@
 
       chain
         .then(function () {
-          return fetchCoursesFromServer();
-        })
-        .then(function (fresh) {
-          state.courses = fresh;
           normalizeState();
           saveState();
           renderList();
@@ -1043,20 +1076,37 @@
     });
   }
 
+  var serverCourses = [];
+  try {
+    var initialRaw = root.getAttribute("data-initial-courses") || "";
+    var parsed = safeJsonParse(initialRaw);
+    if (Array.isArray(parsed)) serverCourses = parsed;
+  } catch (e) {}
+
+  loadState();
+  var localCourses = Array.isArray(state.courses) ? state.courses.slice() : [];
+
+  if (serverCourses.length) {
+    var localById = {};
+    for (var i = 0; i < localCourses.length; i++) {
+      var lc = localCourses[i];
+      if (lc && lc.id) localById[lc.id] = lc;
+    }
+    var merged = [];
+    for (var j = 0; j < serverCourses.length; j++) {
+      var sc = ensureCourseShape(serverCourses[j]);
+      var prev = sc && sc.id ? localById[sc.id] : null;
+      if (prev && prev.coverImageDataUrl && !sc.coverImageDataUrl) {
+        sc.coverImageDataUrl = prev.coverImageDataUrl;
+      }
+      merged.push(sc);
+    }
+    state.courses = merged;
+  }
+
+  normalizeState();
+  saveState();
   renderTargetPickers();
   attachEvents();
-  fetchCoursesFromServer()
-    .then(function (courses) {
-      state.courses = courses;
-      normalizeState();
-      saveState();
-      renderList();
-    })
-    .catch(function () {
-      loadState();
-      normalizeState();
-      saveState();
-      renderList();
-      showFlash("error", "Failed to load courses from database.");
-    });
+  renderList();
 })();

@@ -3,14 +3,16 @@ package com.barlarlar.myanmyanlearn.service;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import com.barlarlar.myanmyanlearn.entity.RegistrationSettingsEntity;
+import com.barlarlar.myanmyanlearn.repository.RegistrationSettingsRepository;
 
 @Service
 public class RegistrationSettingsService {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private RegistrationSettingsRepository registrationSettingsRepository;
 
     private volatile boolean initialized;
 
@@ -22,18 +24,13 @@ public class RegistrationSettingsService {
             if (initialized) {
                 return;
             }
-            jdbcTemplate.execute(
-                    "CREATE TABLE IF NOT EXISTS registration_settings (" +
-                            "id TINYINT NOT NULL PRIMARY KEY," +
-                            "allowed_domain VARCHAR(255)," +
-                            "enforce_domain TINYINT(1) NOT NULL DEFAULT 0" +
-                            ")");
-            Integer count = jdbcTemplate.queryForObject(
-                    "SELECT COUNT(*) FROM registration_settings WHERE id = 1",
-                    Integer.class);
-            if (count == null || count == 0) {
-                jdbcTemplate.update(
-                        "INSERT INTO registration_settings (id, allowed_domain, enforce_domain) VALUES (1, NULL, 0)");
+            Byte id = 1;
+            if (!registrationSettingsRepository.existsById(id)) {
+                RegistrationSettingsEntity e = new RegistrationSettingsEntity();
+                e.setId(id);
+                e.setAllowedDomain(null);
+                e.setEnforceDomain(false);
+                registrationSettingsRepository.save(e);
             }
             initialized = true;
         }
@@ -41,29 +38,24 @@ public class RegistrationSettingsService {
 
     public SettingsView getSettings() {
         ensureInitialized();
-        return jdbcTemplate.query(
-                "SELECT allowed_domain, enforce_domain FROM registration_settings WHERE id = 1",
-                rs -> {
-                    if (!rs.next()) {
-                        SettingsView v = new SettingsView();
-                        v.setAllowedDomain(null);
-                        v.setEnforceDomain(false);
-                        return v;
-                    }
-                    SettingsView v = new SettingsView();
-                    v.setAllowedDomain(rs.getString("allowed_domain"));
-                    v.setEnforceDomain(rs.getInt("enforce_domain") != 0);
-                    return v;
-                });
+        RegistrationSettingsEntity e = registrationSettingsRepository.findById((byte) 1).orElse(null);
+        SettingsView v = new SettingsView();
+        v.setAllowedDomain(e != null ? e.getAllowedDomain() : null);
+        v.setEnforceDomain(e != null && e.getEnforceDomain() != null && e.getEnforceDomain());
+        return v;
     }
 
     public void updateSettings(String allowedDomain, boolean enforceDomain) {
         ensureInitialized();
         String normalizedDomain = normalizeDomain(allowedDomain);
-        jdbcTemplate.update(
-                "UPDATE registration_settings SET allowed_domain = ?, enforce_domain = ? WHERE id = 1",
-                normalizedDomain,
-                enforceDomain ? 1 : 0);
+        RegistrationSettingsEntity e = registrationSettingsRepository.findById((byte) 1).orElseGet(() -> {
+            RegistrationSettingsEntity created = new RegistrationSettingsEntity();
+            created.setId((byte) 1);
+            return created;
+        });
+        e.setAllowedDomain(normalizedDomain);
+        e.setEnforceDomain(enforceDomain);
+        registrationSettingsRepository.save(e);
     }
 
     public boolean isRegistrationEmailAllowed(String email) {

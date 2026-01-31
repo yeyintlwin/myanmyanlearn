@@ -2,19 +2,18 @@ package com.barlarlar.myanmyanlearn.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import com.barlarlar.myanmyanlearn.entity.LoginAttemptEntity;
+import com.barlarlar.myanmyanlearn.repository.LoginAttemptRepository;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-@Component
 public class LoginAttemptService {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private LoginAttemptRepository loginAttemptRepository;
 
     // In-memory cache for login attempts (for rate limiting)
     private final ConcurrentHashMap<String, AtomicInteger> attemptCounts = new ConcurrentHashMap<>();
@@ -140,9 +139,18 @@ public class LoginAttemptService {
      */
     private void recordUserFailedAttempt(String username) {
         try {
-            String sql = "INSERT INTO login_attempts (username, attempt_time, success) VALUES (?, ?, 0) " +
-                    "ON DUPLICATE KEY UPDATE attempt_count = attempt_count + 1, last_attempt = ?";
-            jdbcTemplate.update(sql, username, LocalDateTime.now(), LocalDateTime.now());
+            LocalDateTime now = LocalDateTime.now();
+            LoginAttemptEntity entity = loginAttemptRepository.findById(username).orElseGet(() -> {
+                LoginAttemptEntity e = new LoginAttemptEntity();
+                e.setUsername(username);
+                e.setAttemptCount(0);
+                return e;
+            });
+            int nextCount = (entity.getAttemptCount() != null ? entity.getAttemptCount() : 0) + 1;
+            entity.setAttemptCount(nextCount);
+            entity.setLastAttempt(now);
+            entity.setSuccess(false);
+            loginAttemptRepository.save(entity);
         } catch (Exception e) {
             System.err.println("Error recording failed attempt for user " + username + ": " + e.getMessage());
         }
@@ -153,10 +161,11 @@ public class LoginAttemptService {
      */
     private int getUserFailedAttempts(String username) {
         try {
-            String sql = "SELECT COUNT(*) FROM login_attempts WHERE username = ? AND success = 0 " +
-                    "AND attempt_time > DATE_SUB(NOW(), INTERVAL ? MINUTE)";
-            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, username, TIME_WINDOW_MINUTES);
-            return count != null ? count : 0;
+            return loginAttemptRepository.findById(username)
+                    .filter(a -> a.getLastAttempt() != null
+                            && !a.getLastAttempt().isBefore(LocalDateTime.now().minusMinutes(TIME_WINDOW_MINUTES)))
+                    .map(a -> a.getAttemptCount() != null ? a.getAttemptCount() : 0)
+                    .orElse(0);
         } catch (Exception e) {
             System.err.println("Error getting failed attempts for user " + username + ": " + e.getMessage());
             return 0;
@@ -168,8 +177,7 @@ public class LoginAttemptService {
      */
     private void resetUserFailedAttempts(String username) {
         try {
-            String sql = "DELETE FROM login_attempts WHERE username = ?";
-            jdbcTemplate.update(sql, username);
+            loginAttemptRepository.deleteById(username);
         } catch (Exception e) {
             System.err.println("Error resetting failed attempts for user " + username + ": " + e.getMessage());
         }

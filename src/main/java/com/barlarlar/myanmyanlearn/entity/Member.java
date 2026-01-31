@@ -33,6 +33,12 @@ public class Member {
     @Column(name = "email_verified")
     private Boolean emailVerified = false;
 
+    @Column(name = "current_class", length = 100)
+    private String currentClass;
+
+    @Column(name = "school_year", length = 20)
+    private String schoolYear;
+
     @Column(name = "otp_code", length = 6)
     private String otpCode;
 
@@ -118,6 +124,22 @@ public class Member {
 
     public void setEmailVerified(Boolean emailVerified) {
         this.emailVerified = emailVerified;
+    }
+
+    public String getCurrentClass() {
+        return currentClass;
+    }
+
+    public void setCurrentClass(String currentClass) {
+        this.currentClass = currentClass;
+    }
+
+    public String getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(String schoolYear) {
+        this.schoolYear = schoolYear;
     }
 
     public String getOtpCode() {

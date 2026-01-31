@@ -95,6 +95,10 @@
         <section
           class="mb-6 bg-white/10 border border-white/10 rounded-xl p-4 sm:p-5"
         >
+          <div
+            id="saveStatus"
+            class="hidden mb-3 text-sm rounded-lg px-3 py-2 border"
+          ></div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div class="bg-white/10 border border-white/10 rounded-lg p-3">
               <div
@@ -204,7 +208,7 @@
                 </div>
                 <article
                   class="prose max-w-none text-slate-800"
-                  th:attr="data-md-src=${'/courses/' + sq.q.courseId + '/questions/chapter-' + sq.q.chapterId + '-e' + sq.q.questionNumber + '.md'}"
+                  th:attr="data-md-src=${'/assessment/explain?courseId=' + sq.q.courseId + '&ch=' + sq.q.chapterId + '&q=' + sq.q.questionNumber}"
                 ></article>
               </div>
             </div>
@@ -307,9 +311,36 @@
           var token = tokenMeta ? tokenMeta.getAttribute("content") : "";
           var headerName = headerMeta ? headerMeta.getAttribute("content") : "";
 
-          var headers = { "Content-Type": "application/json" };
+          var headers = {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          };
           if (token && headerName) {
             headers[headerName] = token;
+          }
+
+          function setStatus(kind, text) {
+            var el = document.getElementById("saveStatus");
+            if (!el) return;
+            el.textContent = text;
+            el.classList.remove("hidden");
+            el.classList.remove(
+              "bg-green-500/10",
+              "border-green-500/30",
+              "text-green-200",
+              "bg-red-500/10",
+              "border-red-500/30",
+              "text-red-200",
+            );
+            if (kind === "ok") {
+              el.classList.add(
+                "bg-green-500/10",
+                "border-green-500/30",
+                "text-green-200",
+              );
+            } else {
+              el.classList.add("bg-red-500/10", "border-red-500/30", "text-red-200");
+            }
           }
 
           try {
@@ -319,11 +350,30 @@
               credentials: "same-origin",
               body: raw,
             });
-            if (resp && resp.ok) {
-              try {
-                sessionStorage.setItem("assessmentScoreSavedHash", hash);
-              } catch (_) {}
+            if (!resp) {
+              setStatus("err", "Score save failed (no response).");
+              return;
             }
+            if (resp.redirected || (resp.url && resp.url.indexOf("/login") >= 0)) {
+              setStatus("err", "Score save failed (login required).");
+              return;
+            }
+            if (!resp.ok) {
+              setStatus("err", "Score save failed (HTTP " + resp.status + ").");
+              return;
+            }
+            var data = null;
+            try {
+              data = await resp.json();
+            } catch (_) {}
+            if (!data || typeof data.id === "undefined") {
+              setStatus("err", "Score save failed (invalid server response).");
+              return;
+            }
+            try {
+              sessionStorage.setItem("assessmentScoreSavedHash", hash);
+            } catch (_) {}
+            setStatus("ok", "Score saved.");
           } catch (_) {}
         }
 

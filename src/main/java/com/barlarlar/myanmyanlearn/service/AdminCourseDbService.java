@@ -1,33 +1,70 @@
 package com.barlarlar.myanmyanlearn.service;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.barlarlar.myanmyanlearn.entity.CourseEntity;
+import com.barlarlar.myanmyanlearn.entity.CourseChapterEntity;
+import com.barlarlar.myanmyanlearn.entity.CourseQuestionEntity;
+import com.barlarlar.myanmyanlearn.entity.CourseQuestionOptionEntity;
+import com.barlarlar.myanmyanlearn.entity.CourseQuestionSlotEntity;
+import com.barlarlar.myanmyanlearn.entity.CourseQuestionSlotOptionEntity;
+import com.barlarlar.myanmyanlearn.entity.CourseSubchapterEntity;
+import com.barlarlar.myanmyanlearn.repository.CourseChapterRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseQuestionOptionRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseQuestionRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseQuestionSlotOptionRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseQuestionSlotRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseSubchapterRepository;
+import com.barlarlar.myanmyanlearn.service.storage.StorageService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AdminCourseDbService {
-    private final JdbcTemplate jdbcTemplate;
     private final ObjectMapper objectMapper;
+    private final CourseRepository courseRepository;
+    private final CourseChapterRepository courseChapterRepository;
+    private final CourseSubchapterRepository courseSubchapterRepository;
+    private final CourseQuestionRepository courseQuestionRepository;
+    private final CourseQuestionSlotRepository courseQuestionSlotRepository;
+    private final CourseQuestionSlotOptionRepository courseQuestionSlotOptionRepository;
+    private final CourseQuestionOptionRepository courseQuestionOptionRepository;
+    private final EntityManager entityManager;
+    private final StorageService storageService;
 
-    public AdminCourseDbService(JdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
-        this.jdbcTemplate = jdbcTemplate;
+    public AdminCourseDbService(
+            ObjectMapper objectMapper,
+            CourseRepository courseRepository,
+            CourseChapterRepository courseChapterRepository,
+            CourseSubchapterRepository courseSubchapterRepository,
+            CourseQuestionRepository courseQuestionRepository,
+            CourseQuestionSlotRepository courseQuestionSlotRepository,
+            CourseQuestionSlotOptionRepository courseQuestionSlotOptionRepository,
+            CourseQuestionOptionRepository courseQuestionOptionRepository,
+            EntityManager entityManager,
+            StorageService storageService) {
         this.objectMapper = objectMapper;
+        this.courseRepository = courseRepository;
+        this.courseChapterRepository = courseChapterRepository;
+        this.courseSubchapterRepository = courseSubchapterRepository;
+        this.courseQuestionRepository = courseQuestionRepository;
+        this.courseQuestionSlotRepository = courseQuestionSlotRepository;
+        this.courseQuestionSlotOptionRepository = courseQuestionSlotOptionRepository;
+        this.courseQuestionOptionRepository = courseQuestionOptionRepository;
+        this.entityManager = entityManager;
+        this.storageService = storageService;
     }
 
     public record TargetStudents(List<String> schoolYears, List<String> classes) {
@@ -76,155 +113,86 @@ public class AdminCourseDbService {
             List<EditorChapter> chapters) {
     }
 
-    public List<CourseSummary> listCourses() {
-        String sql = """
-                SELECT
-                  course_id,
-                  title,
-                  description,
-                  language,
-                  cover_image_url,
-                  target_students_json,
-                  published
-                FROM courses
-                ORDER BY updated_at DESC, created_at DESC
-                """;
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            String id = rs.getString("course_id");
-            String title = rs.getString("title");
-            String description = rs.getString("description");
-            String language = rs.getString("language");
-            String cover = rs.getString("cover_image_url");
-            String targetStudentsJson = rs.getString("target_students_json");
-            boolean published = rs.getInt("published") == 1;
-            TargetStudents targetStudents = parseTargetStudents(targetStudentsJson);
-            return new CourseSummary(id, title, description, language, published, targetStudents, cover);
-        });
-    }
-
     public CourseEditor loadCourseEditor(String courseId) {
         if (courseId == null || courseId.isBlank()) {
             return null;
         }
-
-        String courseSql = """
-                SELECT
-                  course_id,
-                  title,
-                  description,
-                  language,
-                  cover_image_url,
-                  target_students_json,
-                  published
-                FROM courses
-                WHERE course_id = ?
-                """;
-
-        List<CourseEditor> courseRows = jdbcTemplate.query(courseSql, (rs, rowNum) -> {
-            String id = rs.getString("course_id");
-            String title = rs.getString("title");
-            String description = rs.getString("description");
-            String language = rs.getString("language");
-            String cover = rs.getString("cover_image_url");
-            String targetStudentsJson = rs.getString("target_students_json");
-            boolean published = rs.getInt("published") == 1;
-            TargetStudents targetStudents = parseTargetStudents(targetStudentsJson);
-            return new CourseEditor(id, title, description, language, published, targetStudents, cover, List.of());
-        }, courseId);
-
-        if (courseRows.isEmpty()) {
+        CourseEntity course = courseRepository.findById(courseId).orElse(null);
+        if (course == null) {
             return null;
         }
 
-        CourseEditor base = courseRows.get(0);
+        TargetStudents targetStudents = parseTargetStudents(course.getTargetStudentsJson());
+        boolean published = course.getPublished() != null && course.getPublished();
 
-        String chapterSql = """
-                SELECT id, chapter_uid, chapter_number, name
-                FROM course_chapters
-                WHERE course_id = ?
-                ORDER BY chapter_number ASC, id ASC
-                """;
-        List<Map<String, Object>> chapters = jdbcTemplate.queryForList(chapterSql, courseId);
-        List<Long> chapterIds = chapters.stream()
-                .map(r -> ((Number) r.get("id")).longValue())
-                .collect(Collectors.toList());
-
-        Map<Long, List<EditorSubchapter>> subchaptersByChapterId = new HashMap<>();
-        if (!chapterIds.isEmpty()) {
-            String in = chapterIds.stream().map(x -> "?").collect(Collectors.joining(","));
-            String subSql = "SELECT chapter_id, subchapter_uid, subchapter_number, name, markdown "
-                    + "FROM course_subchapters "
-                    + "WHERE chapter_id IN (" + in + ") "
-                    + "ORDER BY chapter_id ASC, subchapter_number ASC, id ASC";
-            List<Map<String, Object>> subs = jdbcTemplate.queryForList(subSql, chapterIds.toArray());
-            for (Map<String, Object> row : subs) {
-                Long chapterId = ((Number) row.get("chapter_id")).longValue();
-                String uid = Objects.toString(row.get("subchapter_uid"), null);
-                int number = ((Number) row.get("subchapter_number")).intValue();
-                String name = Objects.toString(row.get("name"), "");
-                String markdown = Objects.toString(row.get("markdown"), "");
-                subchaptersByChapterId.computeIfAbsent(chapterId, k -> new ArrayList<>())
-                        .add(new EditorSubchapter(uid, number, name, markdown));
-            }
-        }
-
-        Map<Long, List<Long>> questionIdsByChapterId = new HashMap<>();
-        Map<Long, EditorQuestion> questionById = new HashMap<>();
-        if (!chapterIds.isEmpty()) {
-            String in = chapterIds.stream().map(x -> "?").collect(Collectors.joining(","));
-            String qSql = "SELECT id, chapter_id, question_uid, question_number, question_markdown, explanation_markdown "
-                    + "FROM course_questions "
-                    + "WHERE chapter_id IN (" + in + ") "
-                    + "ORDER BY chapter_id ASC, question_number ASC, id ASC";
-            List<Map<String, Object>> qs = jdbcTemplate.queryForList(qSql, chapterIds.toArray());
-            for (Map<String, Object> row : qs) {
-                Long qId = ((Number) row.get("id")).longValue();
-                Long chapterId = ((Number) row.get("chapter_id")).longValue();
-                String uid = Objects.toString(row.get("question_uid"), null);
-                int number = ((Number) row.get("question_number")).intValue();
-                String qMd = Objects.toString(row.get("question_markdown"), "");
-                String eMd = Objects.toString(row.get("explanation_markdown"), "");
-                questionIdsByChapterId.computeIfAbsent(chapterId, k -> new ArrayList<>()).add(qId);
-                questionById.put(qId, new EditorQuestion(uid, number, qMd, eMd, List.of()));
-            }
-        }
-
-        Map<Long, List<List<SlotOption>>> slotOptionsByQuestionId;
-        try {
-            slotOptionsByQuestionId = loadSlotOptionsByQuestionIds(questionById.keySet());
-        } catch (DataAccessException e) {
-            slotOptionsByQuestionId = loadLegacyQuestionOptionsByQuestionIds(questionById.keySet());
-        }
-
+        List<CourseChapterEntity> chapters = courseChapterRepository.findByCourseIdOrderByChapterNumberAsc(courseId);
         List<EditorChapter> editorChapters = new ArrayList<>();
-        for (Map<String, Object> ch : chapters) {
-            Long chapterId = ((Number) ch.get("id")).longValue();
-            String uid = Objects.toString(ch.get("chapter_uid"), null);
-            int number = ((Number) ch.get("chapter_number")).intValue();
-            String name = Objects.toString(ch.get("name"), "");
-            List<EditorSubchapter> subs = subchaptersByChapterId.getOrDefault(chapterId, List.of());
-            List<Long> qIds = questionIdsByChapterId.getOrDefault(chapterId, List.of());
-            List<EditorQuestion> qs = new ArrayList<>(qIds.size());
-            for (Long qId : qIds) {
-                EditorQuestion q = questionById.get(qId);
-                if (q == null) {
+        for (CourseChapterEntity ch : chapters) {
+            if (ch == null || ch.getId() == null) {
+                continue;
+            }
+            long chapterId = ch.getId();
+            String chapterUid = normalizeUid(ch.getChapterUid(), "chapter", chapterId);
+            if (ch.getChapterUid() == null || ch.getChapterUid().isBlank()) {
+                ch.setChapterUid(chapterUid);
+                courseChapterRepository.save(ch);
+            }
+
+            List<CourseSubchapterEntity> subs = courseSubchapterRepository.findByChapterIdOrderBySubchapterNumberAsc(
+                    chapterId);
+            List<EditorSubchapter> editorSubs = new ArrayList<>();
+            for (CourseSubchapterEntity sc : subs) {
+                if (sc == null || sc.getId() == null) {
                     continue;
                 }
-                List<List<SlotOption>> slots = slotOptionsByQuestionId.getOrDefault(qId, List.of());
-                qs.add(new EditorQuestion(q.id(), q.questionNumber(), q.questionMarkdown(), q.explanationMarkdown(),
-                        slots));
+                String subUid = normalizeUid(sc.getSubchapterUid(), "subchapter", sc.getId());
+                if (sc.getSubchapterUid() == null || sc.getSubchapterUid().isBlank()) {
+                    sc.setSubchapterUid(subUid);
+                    courseSubchapterRepository.save(sc);
+                }
+                editorSubs.add(new EditorSubchapter(
+                        subUid,
+                        sc.getSubchapterNumber() != null ? sc.getSubchapterNumber() : 1,
+                        sc.getName() != null ? sc.getName() : "",
+                        sc.getMarkdown() != null ? sc.getMarkdown() : ""));
             }
-            editorChapters.add(new EditorChapter(uid, number, name, subs, qs));
+
+            List<CourseQuestionEntity> qs = courseQuestionRepository.findByChapterIdOrderByQuestionNumberAsc(chapterId);
+            List<EditorQuestion> editorQuestions = new ArrayList<>();
+            for (CourseQuestionEntity q : qs) {
+                if (q == null || q.getId() == null) {
+                    continue;
+                }
+                String qUid = normalizeUid(q.getQuestionUid(), "question", q.getId());
+                if (q.getQuestionUid() == null || q.getQuestionUid().isBlank()) {
+                    q.setQuestionUid(qUid);
+                    courseQuestionRepository.save(q);
+                }
+                List<List<SlotOption>> slotOptions = loadSlotOptionsForQuestion(q.getId());
+                editorQuestions.add(new EditorQuestion(
+                        qUid,
+                        q.getQuestionNumber() != null ? q.getQuestionNumber() : 1,
+                        q.getQuestionMarkdown() != null ? q.getQuestionMarkdown() : "",
+                        q.getExplanationMarkdown() != null ? q.getExplanationMarkdown() : "",
+                        slotOptions));
+            }
+
+            editorChapters.add(new EditorChapter(
+                    chapterUid,
+                    ch.getChapterNumber() != null ? ch.getChapterNumber() : 1,
+                    ch.getName() != null ? ch.getName() : "",
+                    editorSubs,
+                    editorQuestions));
         }
 
         return new CourseEditor(
-                base.id(),
-                base.title(),
-                base.description(),
-                base.language(),
-                base.published(),
-                base.targetStudents(),
-                base.coverImageDataUrl(),
+                course.getCourseId(),
+                course.getTitle(),
+                course.getDescription(),
+                course.getLanguage(),
+                published,
+                targetStudents,
+                course.getCoverImageUrl(),
                 editorChapters);
     }
 
@@ -235,31 +203,60 @@ public class AdminCourseDbService {
         }
         String targetStudentsJson = writeTargetStudents(meta.targetStudents());
         String coverUrl = normalizeCoverUrl(meta.coverImageDataUrl());
-        jdbcTemplate.update("""
-                INSERT INTO courses (
-                  course_id, title, description, language, cover_image_url, target_students_json, published
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON DUPLICATE KEY UPDATE
-                  title = VALUES(title),
-                  description = VALUES(description),
-                  language = VALUES(language),
-                  cover_image_url = VALUES(cover_image_url),
-                  target_students_json = VALUES(target_students_json),
-                  published = VALUES(published)
-                """,
-                meta.id(),
-                meta.title(),
-                meta.description(),
-                meta.language(),
-                coverUrl,
-                targetStudentsJson,
-                meta.published() ? 1 : 0);
+
+        CourseEntity entity = courseRepository.findById(meta.id()).orElseGet(() -> {
+            CourseEntity created = new CourseEntity();
+            created.setCourseId(meta.id());
+            return created;
+        });
+        entity.setTitle(meta.title() != null ? meta.title() : "Untitled course");
+        entity.setDescription(meta.description());
+        entity.setLanguage(meta.language());
+        entity.setCoverImageUrl(coverUrl);
+        entity.setTargetStudentsJson(targetStudentsJson);
+        entity.setPublished(meta.published());
+        courseRepository.save(entity);
     }
 
     @Transactional
     public void deleteCourse(String courseId) {
-        jdbcTemplate.update("DELETE FROM courses WHERE course_id = ?", courseId);
+        if (courseId == null || courseId.isBlank()) {
+            return;
+        }
+        deleteCourseChildren(courseId);
+        courseRepository.deleteById(courseId);
+    }
+
+    @Transactional
+    public String uploadCourseCoverImage(String courseId, MultipartFile file) throws IOException {
+        if (courseId == null || courseId.isBlank()) {
+            throw new IllegalArgumentException("course id is required");
+        }
+        CourseEntity course = courseRepository.findById(courseId).orElse(null);
+        if (course == null) {
+            throw new IllegalArgumentException("Course not found.");
+        }
+
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("No file uploaded.");
+        }
+        if (file.getSize() > 5L * 1024L * 1024L) {
+            throw new IllegalArgumentException("Image must be 5MB or smaller.");
+        }
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.toLowerCase().startsWith("image/")) {
+            throw new IllegalArgumentException("Only image files are allowed.");
+        }
+
+        String ext = extensionFromContentTypeOrName(contentType, file.getOriginalFilename());
+        String filename = UUID.randomUUID().toString().replace("-", "") + ext;
+        String key = "courses/" + sanitizePathSegment(courseId) + "/cover/" + filename;
+
+        StorageService.StoredObject stored = storageService.put(key, file);
+        String url = stored != null ? stored.url() : null;
+        course.setCoverImageUrl(normalizeCoverUrl(url));
+        courseRepository.save(course);
+        return course.getCoverImageUrl();
     }
 
     @Transactional
@@ -277,246 +274,181 @@ public class AdminCourseDbService {
                 editor.targetStudents(),
                 editor.coverImageDataUrl());
         upsertCourseMeta(meta);
-
-        jdbcTemplate.update("DELETE FROM course_chapters WHERE course_id = ?", editor.id());
+        courseRepository.findByCourseIdForUpdate(editor.id());
+        deleteCourseChildren(editor.id());
+        entityManager.flush();
+        entityManager.clear();
 
         List<EditorChapter> chapters = editor.chapters() != null ? editor.chapters() : List.of();
         for (EditorChapter ch : chapters) {
-            long chapterId = insertChapter(editor.id(), ch);
-            List<EditorSubchapter> subs = ch.subchapters() != null ? ch.subchapters() : List.of();
+            CourseChapterEntity chEntity = new CourseChapterEntity();
+            chEntity.setCourseId(editor.id());
+            chEntity.setChapterUid(ch != null ? ch.id() : null);
+            chEntity.setChapterNumber(ch != null ? ch.number() : 1);
+            chEntity.setName(ch != null && ch.name() != null ? ch.name() : "");
+            CourseChapterEntity savedChapter = courseChapterRepository.save(chEntity);
+            long chapterId = savedChapter.getId();
+
+            List<EditorSubchapter> subs = ch != null && ch.subchapters() != null ? ch.subchapters() : List.of();
             for (EditorSubchapter sc : subs) {
-                insertSubchapter(chapterId, sc);
+                CourseSubchapterEntity scEntity = new CourseSubchapterEntity();
+                scEntity.setChapterId(chapterId);
+                scEntity.setSubchapterUid(sc != null ? sc.id() : null);
+                scEntity.setSubchapterNumber(sc != null ? sc.number() : 1);
+                scEntity.setName(sc != null && sc.name() != null ? sc.name() : "");
+                scEntity.setMarkdown(sc != null && sc.markdown() != null ? sc.markdown() : "");
+                courseSubchapterRepository.save(scEntity);
             }
 
-            List<EditorQuestion> qs = ch.questions() != null ? ch.questions() : List.of();
+            List<EditorQuestion> qs = ch != null && ch.questions() != null ? ch.questions() : List.of();
             for (EditorQuestion q : qs) {
-                long questionId = insertQuestion(chapterId, q);
-                List<List<SlotOption>> slots = q.slotOptions() != null ? q.slotOptions() : List.of();
-                boolean savedSlots = false;
-                if (questionId > 0 && !slots.isEmpty()) {
-                    try {
-                        for (int slotIndex = 0; slotIndex < slots.size(); slotIndex++) {
-                            long slotId = insertSlot(questionId, slotIndex);
-                            List<SlotOption> options = slots.get(slotIndex) != null ? slots.get(slotIndex) : List.of();
-                            for (SlotOption opt : options) {
-                                insertSlotOption(slotId, opt);
-                            }
+                CourseQuestionEntity qEntity = new CourseQuestionEntity();
+                qEntity.setChapterId(chapterId);
+                qEntity.setQuestionUid(q != null ? q.id() : null);
+                qEntity.setQuestionNumber(q != null ? q.questionNumber() : 1);
+                qEntity.setQuestionMarkdown(q != null && q.questionMarkdown() != null ? q.questionMarkdown() : "");
+                qEntity.setExplanationMarkdown(
+                        q != null && q.explanationMarkdown() != null ? q.explanationMarkdown() : "");
+                CourseQuestionEntity savedQuestion = courseQuestionRepository.save(qEntity);
+                long questionId = savedQuestion.getId();
+
+                List<List<SlotOption>> slots = q != null && q.slotOptions() != null ? q.slotOptions() : List.of();
+                for (int slotIndex = 0; slotIndex < slots.size(); slotIndex++) {
+                    CourseQuestionSlotEntity slotEntity = new CourseQuestionSlotEntity();
+                    slotEntity.setQuestionId(questionId);
+                    slotEntity.setSlotIndex(slotIndex);
+                    CourseQuestionSlotEntity savedSlot = courseQuestionSlotRepository.save(slotEntity);
+
+                    List<SlotOption> options = slots.get(slotIndex) != null ? slots.get(slotIndex) : List.of();
+                    for (SlotOption opt : options) {
+                        if (opt == null) {
+                            continue;
                         }
-                        savedSlots = true;
-                    } catch (DataAccessException e) {
-                        savedSlots = false;
-                    }
-                }
-
-                if (!savedSlots && questionId > 0 && !slots.isEmpty()) {
-                    List<SlotOption> legacyOptions = slots.get(0) != null ? slots.get(0) : List.of();
-                    for (SlotOption opt : legacyOptions) {
-                        insertLegacyQuestionOption(questionId, opt);
+                        CourseQuestionSlotOptionEntity optEntity = new CourseQuestionSlotOptionEntity();
+                        optEntity.setQuestionSlotId(savedSlot.getId());
+                        optEntity.setOptionIndex(opt.optionIndex());
+                        optEntity.setOptionContent(opt.optionContent() != null ? opt.optionContent() : "");
+                        optEntity.setCorrect(opt.isCorrect());
+                        courseQuestionSlotOptionRepository.save(optEntity);
                     }
                 }
             }
         }
     }
 
-    private long insertChapter(String courseId, EditorChapter ch) {
-        String uid = ch != null ? ch.id() : null;
-        int number = ch != null ? ch.number() : 1;
-        String name = ch != null ? ch.name() : "";
-
-        KeyHolder kh = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO course_chapters (course_id, chapter_uid, chapter_number, name) VALUES (?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, courseId);
-            ps.setString(2, uid);
-            ps.setInt(3, number);
-            ps.setString(4, name);
-            return ps;
-        }, kh);
-        Number key = kh.getKey();
-        return key != null ? key.longValue() : fetchChapterId(courseId, number);
-    }
-
-    private long fetchChapterId(String courseId, int chapterNumber) {
-        Long v = jdbcTemplate.queryForObject(
-                "SELECT id FROM course_chapters WHERE course_id = ? AND chapter_number = ?",
-                Long.class,
-                courseId,
-                chapterNumber);
-        return v != null ? v : 0L;
-    }
-
-    private void insertSubchapter(long chapterId, EditorSubchapter sc) {
-        jdbcTemplate.update("""
-                INSERT INTO course_subchapters (
-                  chapter_id, subchapter_uid, subchapter_number, name, markdown
-                ) VALUES (?, ?, ?, ?, ?)
-                """,
-                chapterId,
-                sc.id(),
-                sc.number(),
-                sc.name(),
-                sc.markdown());
-    }
-
-    private long insertQuestion(long chapterId, EditorQuestion q) {
-        KeyHolder kh = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(
-                    """
-                            INSERT INTO course_questions (
-                              chapter_id, question_uid, question_number, question_markdown, explanation_markdown
-                            ) VALUES (?, ?, ?, ?, ?)
-                            """,
-                    Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1, chapterId);
-            ps.setString(2, q.id());
-            ps.setInt(3, q.questionNumber());
-            ps.setString(4, q.questionMarkdown());
-            ps.setString(5, q.explanationMarkdown());
-            return ps;
-        }, kh);
-        Number key = kh.getKey();
-        return key != null ? key.longValue() : 0L;
-    }
-
-    private long insertSlot(long questionId, int slotIndex) {
-        KeyHolder kh = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO course_question_slots (question_id, slot_index) VALUES (?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1, questionId);
-            ps.setInt(2, slotIndex);
-            return ps;
-        }, kh);
-        Number key = kh.getKey();
-        return key != null ? key.longValue() : 0L;
-    }
-
-    private void insertSlotOption(long slotId, SlotOption opt) {
-        jdbcTemplate.update("""
-                INSERT INTO course_question_slot_options (
-                  question_slot_id, option_index, option_content, is_correct
-                ) VALUES (?, ?, ?, ?)
-                """,
-                slotId,
-                opt.optionIndex(),
-                opt.optionContent(),
-                opt.isCorrect() ? 1 : 0);
-    }
-
-    private void insertLegacyQuestionOption(long questionId, SlotOption opt) {
-        jdbcTemplate.update("""
-                INSERT INTO course_question_options (
-                  question_id, option_index, option_content, is_correct
-                ) VALUES (?, ?, ?, ?)
-                """,
-                questionId,
-                opt.optionIndex(),
-                opt.optionContent(),
-                opt.isCorrect() ? 1 : 0);
-    }
-
-    private Map<Long, List<List<SlotOption>>> loadSlotOptionsByQuestionIds(java.util.Set<Long> questionIds) {
-        if (questionIds == null || questionIds.isEmpty()) {
-            return Map.of();
+    private void deleteCourseChildren(String courseId) {
+        if (courseId == null || courseId.isBlank()) {
+            return;
         }
-
-        List<Long> qIds = new ArrayList<>(questionIds);
-        String in = qIds.stream().map(x -> "?").collect(Collectors.joining(","));
-
-        String slotsSql = "SELECT id, question_id, slot_index "
-                + "FROM course_question_slots "
-                + "WHERE question_id IN (" + in + ") "
-                + "ORDER BY question_id ASC, slot_index ASC, id ASC";
-        List<Map<String, Object>> slots = jdbcTemplate.queryForList(slotsSql, qIds.toArray());
-
-        Map<Long, List<Long>> slotIdsByQuestion = new LinkedHashMap<>();
-        Map<Long, Integer> slotIndexBySlotId = new HashMap<>();
-        for (Map<String, Object> row : slots) {
-            Long slotId = ((Number) row.get("id")).longValue();
-            Long qId = ((Number) row.get("question_id")).longValue();
-            int slotIndex = ((Number) row.get("slot_index")).intValue();
-            slotIndexBySlotId.put(slotId, slotIndex);
-            slotIdsByQuestion.computeIfAbsent(qId, k -> new ArrayList<>()).add(slotId);
-        }
-
-        List<Long> slotIds = slots.stream().map(r -> ((Number) r.get("id")).longValue()).collect(Collectors.toList());
-        Map<Long, List<SlotOption>> optionsBySlotId = new HashMap<>();
-        if (!slotIds.isEmpty()) {
-            String sin = slotIds.stream().map(x -> "?").collect(Collectors.joining(","));
-            String optSql = "SELECT question_slot_id, option_index, option_content, is_correct "
-                    + "FROM course_question_slot_options "
-                    + "WHERE question_slot_id IN (" + sin + ") "
-                    + "ORDER BY question_slot_id ASC, option_index ASC";
-            List<Map<String, Object>> opts = jdbcTemplate.queryForList(optSql, slotIds.toArray());
-            for (Map<String, Object> row : opts) {
-                Long slotId = ((Number) row.get("question_slot_id")).longValue();
-                int optionIndex = ((Number) row.get("option_index")).intValue();
-                String content = Objects.toString(row.get("option_content"), "");
-                boolean correct = ((Number) row.get("is_correct")).intValue() == 1;
-                optionsBySlotId.computeIfAbsent(slotId, k -> new ArrayList<>())
-                        .add(new SlotOption(optionIndex, content, correct));
+        List<CourseChapterEntity> chapters = courseChapterRepository.findByCourseIdOrderByChapterNumberAsc(courseId);
+        for (CourseChapterEntity ch : chapters) {
+            if (ch == null || ch.getId() == null) {
+                continue;
             }
-        }
+            Long chapterId = ch.getId();
 
-        Map<Long, List<List<SlotOption>>> out = new HashMap<>();
-        for (Map.Entry<Long, List<Long>> e : slotIdsByQuestion.entrySet()) {
-            Long qId = e.getKey();
-            List<Long> ids = e.getValue();
-            int maxIndex = -1;
-            for (Long sid : ids) {
-                Integer idx = slotIndexBySlotId.get(sid);
-                if (idx != null) {
-                    maxIndex = Math.max(maxIndex, idx);
-                }
-            }
-            List<List<SlotOption>> slotsForQuestion = new ArrayList<>();
-            for (int i = 0; i <= maxIndex; i++) {
-                slotsForQuestion.add(new ArrayList<>());
-            }
-            for (Long sid : ids) {
-                Integer idx = slotIndexBySlotId.get(sid);
-                if (idx == null) {
+            List<CourseQuestionEntity> questions = courseQuestionRepository.findByChapterIdOrderByQuestionNumberAsc(
+                    chapterId);
+            for (CourseQuestionEntity q : questions) {
+                if (q == null || q.getId() == null) {
                     continue;
                 }
-                List<SlotOption> opts = optionsBySlotId.getOrDefault(sid, List.of());
-                slotsForQuestion.set(idx, new ArrayList<>(opts));
-            }
-            out.put(qId, slotsForQuestion);
-        }
+                Long qId = q.getId();
 
-        return out;
+                List<CourseQuestionSlotEntity> slots = courseQuestionSlotRepository.findByQuestionIdOrderBySlotIndexAsc(
+                        qId);
+                for (CourseQuestionSlotEntity s : slots) {
+                    if (s == null || s.getId() == null) {
+                        continue;
+                    }
+                    List<CourseQuestionSlotOptionEntity> slotOpts = courseQuestionSlotOptionRepository
+                            .findByQuestionSlotIdOrderByOptionIndexAsc(s.getId());
+                    if (!slotOpts.isEmpty()) {
+                        courseQuestionSlotOptionRepository.deleteAll(slotOpts);
+                    }
+                }
+                if (!slots.isEmpty()) {
+                    courseQuestionSlotRepository.deleteAll(slots);
+                }
+
+                List<CourseQuestionOptionEntity> legacy = courseQuestionOptionRepository
+                        .findByQuestionIdOrderByOptionIndexAsc(qId);
+                if (!legacy.isEmpty()) {
+                    courseQuestionOptionRepository.deleteAll(legacy);
+                }
+            }
+            if (!questions.isEmpty()) {
+                courseQuestionRepository.deleteAll(questions);
+            }
+
+            List<CourseSubchapterEntity> subs = courseSubchapterRepository.findByChapterIdOrderBySubchapterNumberAsc(
+                    chapterId);
+            if (!subs.isEmpty()) {
+                courseSubchapterRepository.deleteAll(subs);
+            }
+        }
+        if (!chapters.isEmpty()) {
+            courseChapterRepository.deleteAll(chapters);
+        }
     }
 
-    private Map<Long, List<List<SlotOption>>> loadLegacyQuestionOptionsByQuestionIds(java.util.Set<Long> questionIds) {
-        if (questionIds == null || questionIds.isEmpty()) {
-            return Map.of();
+    private List<List<SlotOption>> loadSlotOptionsForQuestion(Long questionId) {
+        if (questionId == null) {
+            return List.of();
+        }
+        List<CourseQuestionSlotEntity> slots = courseQuestionSlotRepository.findByQuestionIdOrderBySlotIndexAsc(
+                questionId);
+        if (!slots.isEmpty()) {
+            List<List<SlotOption>> out = new ArrayList<>();
+            for (CourseQuestionSlotEntity s : slots) {
+                if (s == null || s.getId() == null) {
+                    continue;
+                }
+                int idx = s.getSlotIndex() != null ? s.getSlotIndex() : 0;
+                while (out.size() <= idx) {
+                    out.add(new ArrayList<>());
+                }
+                List<CourseQuestionSlotOptionEntity> opts = courseQuestionSlotOptionRepository
+                        .findByQuestionSlotIdOrderByOptionIndexAsc(s.getId());
+                List<SlotOption> mapped = new ArrayList<>();
+                for (CourseQuestionSlotOptionEntity o : opts) {
+                    if (o == null) {
+                        continue;
+                    }
+                    mapped.add(new SlotOption(
+                            o.getOptionIndex() != null ? o.getOptionIndex() : 0,
+                            o.getOptionContent() != null ? o.getOptionContent() : "",
+                            o.getCorrect() != null && o.getCorrect()));
+                }
+                out.set(idx, mapped);
+            }
+            return out;
         }
 
-        List<Long> qIds = new ArrayList<>(questionIds);
-        String in = qIds.stream().map(x -> "?").collect(Collectors.joining(","));
-
-        String optSql = "SELECT question_id, option_index, option_content, is_correct "
-                + "FROM course_question_options "
-                + "WHERE question_id IN (" + in + ") "
-                + "ORDER BY question_id ASC, option_index ASC, id ASC";
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(optSql, qIds.toArray());
-
-        Map<Long, List<List<SlotOption>>> out = new HashMap<>();
-        for (Map<String, Object> row : rows) {
-            Long qId = ((Number) row.get("question_id")).longValue();
-            int optionIndex = ((Number) row.get("option_index")).intValue();
-            String content = Objects.toString(row.get("option_content"), "");
-            boolean correct = ((Number) row.get("is_correct")).intValue() == 1;
-            out.computeIfAbsent(qId, k -> new ArrayList<>(List.of(new ArrayList<>())))
-                    .get(0)
-                    .add(new SlotOption(optionIndex, content, correct));
+        List<CourseQuestionOptionEntity> legacy = courseQuestionOptionRepository
+                .findByQuestionIdOrderByOptionIndexAsc(questionId);
+        if (legacy.isEmpty()) {
+            return List.of();
         }
+        List<SlotOption> mapped = new ArrayList<>();
+        for (CourseQuestionOptionEntity o : legacy) {
+            if (o == null) {
+                continue;
+            }
+            mapped.add(new SlotOption(
+                    o.getOptionIndex() != null ? o.getOptionIndex() : 0,
+                    o.getOptionContent() != null ? o.getOptionContent() : "",
+                    o.getCorrect() != null && o.getCorrect()));
+        }
+        return List.of(mapped);
+    }
 
-        return out;
+    private String normalizeUid(String uid, String prefix, Object fallbackId) {
+        if (uid != null && !uid.isBlank()) {
+            return uid;
+        }
+        String p = prefix != null && !prefix.isBlank() ? prefix : "id";
+        return p + "_" + Objects.toString(fallbackId, "0");
     }
 
     private TargetStudents parseTargetStudents(String json) {
@@ -579,6 +511,52 @@ public class AdminCourseDbService {
         if (v.startsWith("http://") || v.startsWith("https://")) {
             return v;
         }
+        if (v.startsWith("/")) {
+            return v;
+        }
         return null;
+    }
+
+    private static String sanitizePathSegment(String value) {
+        String v = (value == null ? "" : value).trim();
+        if (v.isBlank()) {
+            return "";
+        }
+        v = v.replaceAll("[^A-Za-z0-9_-]", "_");
+        if (v.length() > 120) {
+            v = v.substring(v.length() - 120);
+        }
+        return v;
+    }
+
+    private static String extensionFromContentTypeOrName(String contentType, String originalName) {
+        String name = originalName != null ? originalName.toLowerCase() : "";
+        int dot = name.lastIndexOf('.');
+        if (dot >= 0 && dot < name.length() - 1) {
+            String ext = name.substring(dot);
+            if (ext.matches("\\.[a-z0-9]{1,8}")) {
+                if (ext.equals(".png") || ext.equals(".jpg") || ext.equals(".jpeg") || ext.equals(".gif")
+                        || ext.equals(".webp") || ext.equals(".svg")) {
+                    return ext;
+                }
+            }
+        }
+        String ct = contentType != null ? contentType.toLowerCase() : "";
+        if (ct.contains("png")) {
+            return ".png";
+        }
+        if (ct.contains("jpeg") || ct.contains("jpg")) {
+            return ".jpg";
+        }
+        if (ct.contains("gif")) {
+            return ".gif";
+        }
+        if (ct.contains("webp")) {
+            return ".webp";
+        }
+        if (ct.contains("svg")) {
+            return ".svg";
+        }
+        return ".png";
     }
 }

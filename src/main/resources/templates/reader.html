@@ -420,6 +420,7 @@
                 >
                   <span class="truncate max-w-[8rem] sm:max-w-[14rem]">
                     <span
+                      id="readerCourseTitle"
                       class="px-2 py-0.5 rounded-full bg-white/15 text-white font-semibold"
                       th:text="${course.title}"
                     >
@@ -438,8 +439,9 @@
                   class="flex items-center gap-1 min-w-0"
                 >
                   <span
+                    id="readerChapterLabel"
                     class="truncate max-w-[8rem] sm:max-w-[11rem] font-medium"
-                    th:text="${content.chapter != null ? content.chapter : 'Chapter ' + content.order}"
+                    th:text="${content.title != null ? content.title : 'Chapter ' + content.order}"
                     >Chapter 1</span
                   >
                 </li>
@@ -454,6 +456,7 @@
                   class="flex items-center gap-1 min-w-0"
                 >
                   <span
+                    id="readerSubTitle"
                     class="truncate max-w-[11rem] sm:max-w-[16rem] font-medium"
                     th:text="${sub.title}"
                     >Subchapter Title</span
@@ -592,18 +595,21 @@
                 <div class="flex items-start justify-between gap-3">
                   <div class="min-w-0">
                     <div
+                      id="drawerChapterLabel"
                       class="text-[11px] uppercase tracking-wide text-slate-500"
-                      th:text="${content != null ? (content.chapter != null ? content.chapter : 'Chapter ' + content.order) : ''}"
+                      th:text="${content != null ? ('Chapter ' + content.order) : ''}"
                     >
                       Chapter
                     </div>
                     <div
+                      id="drawerChapterTitle"
                       class="text-sm sm:text-base font-semibold text-slate-900 truncate"
                       th:text="${content != null ? content.title : ''}"
                     >
                       Chapter Title
                     </div>
                     <div
+                      id="drawerSubTitle"
                       class="text-xs sm:text-[13px] text-slate-600 truncate"
                       th:text="${sub != null ? sub.title : ''}"
                     >
@@ -657,6 +663,7 @@
                       <a
                         th:each="s : ${c.subcontents}"
                         th:href="@{/reader(courseId=${course.id}, ch=${c.order}, sc=${s.order})}"
+                        th:attr="data-ch=${c.order}, data-sc=${s.order}"
                         class="flex items-center gap-2 no-underline px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 min-w-0"
                         th:classappend="${c.order == content.order && s.order == sub.order} ? ' bg-secondary-50/60 text-secondary-600 ring-1 ring-inset ring-secondary-200/70' : ''"
                       >
@@ -686,12 +693,13 @@
 
     <script th:inline="javascript">
       (function () {
-        const mdPath = /*[[${markdownPath}]]*/ null;
-        const courseId = /*[[${course != null ? course.id : null}]]*/ null;
-        const ch = /*[[${content != null ? content.order : null}]]*/ null;
-        const sc = /*[[${sub != null ? sub.order : null}]]*/ null;
-        const courseLanguage =
+        let currentMdPath = /*[[${markdownPath}]]*/ null;
+        let currentCourseId = /*[[${course != null ? course.id : null}]]*/ null;
+        let currentCh = /*[[${content != null ? content.order : null}]]*/ null;
+        let currentSc = /*[[${sub != null ? sub.order : null}]]*/ null;
+        let currentCourseLanguage =
           /*[[${course != null ? course.language : null}]]*/ null;
+        let currentServerUpdatedAt = null;
         const userLanguage = /*[[${#locale.language}]]*/ "en";
 
         const i18n = {
@@ -855,7 +863,7 @@
           });
 
           try {
-            const rawMdPath = mdPath || "";
+            const rawMdPath = currentMdPath || "";
             const normalized = rawMdPath.startsWith("/")
               ? rawMdPath.substring(1)
               : rawMdPath;
@@ -912,7 +920,7 @@
         };
 
         const translateWithGoogleStudio = async (text) => {
-          const sourceLang = normalizeLang(courseLanguage);
+          const sourceLang = normalizeLang(currentCourseLanguage);
           const targetLang = normalizeLang(userLanguage);
           if (!targetLang || (sourceLang && sourceLang === targetLang)) {
             return text;
@@ -959,6 +967,41 @@
           return trimmed;
         };
 
+        const TRANSLATION_CACHE_PREFIX = "readerTranslationCache:v1:";
+        const getTranslationCacheKey = (
+          courseId,
+          ch,
+          sc,
+          sourceLang,
+          targetLang,
+        ) => {
+          const parts = [
+            courseId == null ? "" : String(courseId),
+            ch == null ? "" : String(ch),
+            sc == null ? "" : String(sc),
+            sourceLang == null ? "" : String(sourceLang),
+            targetLang == null ? "" : String(targetLang),
+          ].map((v) => encodeURIComponent(v));
+          return TRANSLATION_CACHE_PREFIX + parts.join("|");
+        };
+        const loadTranslationCache = (key) => {
+          try {
+            const raw = localStorage.getItem(key);
+            if (!raw) return null;
+            const parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== "object") return null;
+            if (typeof parsed.translatedMarkdown !== "string") return null;
+            return parsed;
+          } catch (_) {
+            return null;
+          }
+        };
+        const saveTranslationCache = (key, value) => {
+          try {
+            localStorage.setItem(key, JSON.stringify(value));
+          } catch (_) {}
+        };
+
         if (mdTranslateBtn) {
           mdTranslateBtn.setAttribute("aria-label", i18n.translate);
           mdTranslateBtn.setAttribute("title", i18n.translate);
@@ -967,18 +1010,45 @@
           mdTranslateBtn.addEventListener("click", async () => {
             if (!rawMarkdownText) return;
             if (err) err.classList.add("hidden");
-            if (translatedMarkdownText) {
-              if (showingTranslated) {
-                renderMarkdown(rawMarkdownText);
-                showingTranslated = false;
-                syncTranslateBtnState();
-              } else {
-                renderMarkdown(translatedMarkdownText);
-                showingTranslated = true;
-                syncTranslateBtnState();
-              }
+            if (showingTranslated) {
+              renderMarkdown(rawMarkdownText);
+              showingTranslated = false;
+              syncTranslateBtnState();
               return;
             }
+            if (translatedMarkdownText) {
+              renderMarkdown(translatedMarkdownText);
+              showingTranslated = true;
+              syncTranslateBtnState();
+              return;
+            }
+
+            const sourceLang = normalizeLang(currentCourseLanguage);
+            const targetLang = normalizeLang(userLanguage);
+            const cacheKey = getTranslationCacheKey(
+              currentCourseId,
+              currentCh,
+              currentSc,
+              sourceLang,
+              targetLang,
+            );
+            const cached = loadTranslationCache(cacheKey);
+            if (
+              cached &&
+              cached.courseId === currentCourseId &&
+              cached.ch === currentCh &&
+              cached.sc === currentSc &&
+              cached.sourceLang === sourceLang &&
+              cached.targetLang === targetLang &&
+              cached.serverUpdatedAt === currentServerUpdatedAt
+            ) {
+              translatedMarkdownText = cached.translatedMarkdown;
+              renderMarkdown(translatedMarkdownText);
+              showingTranslated = true;
+              syncTranslateBtnState();
+              return;
+            }
+
             mdTranslateBtn.disabled = true;
             translateLoading = true;
             syncTranslateBtnState();
@@ -986,6 +1056,16 @@
               const translated =
                 await translateWithGoogleStudio(rawMarkdownText);
               translatedMarkdownText = translated;
+              saveTranslationCache(cacheKey, {
+                courseId: currentCourseId,
+                ch: currentCh,
+                sc: currentSc,
+                sourceLang,
+                targetLang,
+                serverUpdatedAt: currentServerUpdatedAt,
+                translatedMarkdown: translatedMarkdownText,
+                savedAt: Date.now(),
+              });
               renderMarkdown(translatedMarkdownText);
               showingTranslated = true;
               syncTranslateBtnState();
@@ -1005,28 +1085,6 @@
             }
           });
           syncTranslateBtnState();
-        }
-
-        // Prefer controller endpoint to avoid static resource 404s during dev
-        const apiUrl =
-          courseId && ch && sc
-            ? `/reader/md?courseId=${encodeURIComponent(
-                courseId,
-              )}&ch=${encodeURIComponent(ch)}&sc=${encodeURIComponent(sc)}`
-            : null;
-
-        // Fallback to static path if apiUrl not available
-        const staticUrl = mdPath
-          ? mdPath.startsWith("/")
-            ? mdPath
-            : "/" + mdPath
-          : null;
-        const url = apiUrl || staticUrl;
-
-        if (!url) {
-          err.textContent = i18n.errorNoMarkdownPath;
-          err.classList.remove("hidden");
-          return;
         }
 
         // Prepare markdown-it renderer with sub/sup and math (KaTeX)
@@ -1072,149 +1130,365 @@
           } catch (_) {}
         }
 
-        fetch(url, { cache: "no-cache" })
-          .then((r) => {
-            if (!r.ok) {
-              const e = new Error("MD_LOAD_FAILED");
-              e.status = r.status;
-              throw e;
+        const NAV_ENABLED_CLASSES = ["border-slate-200", "hover:bg-white"];
+        const NAV_DISABLED_CLASSES = [
+          "border-slate-100",
+          "text-slate-300",
+          "bg-white/60",
+          "cursor-not-allowed",
+          "pointer-events-none",
+          "opacity-60",
+        ];
+        const CH_ACTIVE_CLASSES = [
+          "bg-primary-100",
+          "text-primary-900",
+          "ring-1",
+          "ring-primary-300",
+        ];
+        const SC_ACTIVE_CLASSES = [
+          "bg-secondary-50/60",
+          "text-secondary-600",
+          "ring-1",
+          "ring-inset",
+          "ring-secondary-200/70",
+        ];
+
+        const setText = (id, text) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.textContent = text == null ? "" : String(text);
+        };
+
+        const setNavLinkState = (el, enabled, href) => {
+          if (!el) return;
+          NAV_ENABLED_CLASSES.forEach((c) => el.classList.toggle(c, !!enabled));
+          NAV_DISABLED_CLASSES.forEach((c) => el.classList.toggle(c, !enabled));
+          el.setAttribute("aria-disabled", enabled ? "false" : "true");
+          if (enabled && href) {
+            el.setAttribute("href", href);
+          } else {
+            el.removeAttribute("href");
+          }
+        };
+
+        let drawerInitialized = false;
+        let drawerSetHidden = null;
+        let drawerChapterButtons = [];
+        let drawerPanels = [];
+        let drawerSyncIcons = null;
+
+        const initDrawerOnce = () => {
+          if (drawerInitialized) return;
+          drawerInitialized = true;
+
+          const drawer = document.getElementById("subDrawer");
+          const backdrop = document.getElementById("drawerBackdrop");
+          const openBtn = document.getElementById("openDrawerBtn");
+          const closeBtn = document.getElementById("closeDrawerBtn");
+          const STORAGE_KEY = "readerDrawerHidden";
+
+          const scrollLock = { locked: false, y: 0 };
+          const lockScroll = () => {
+            if (scrollLock.locked) return;
+            scrollLock.locked = true;
+            scrollLock.y = window.scrollY || 0;
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
+            document.body.style.position = "fixed";
+            document.body.style.top = `-${scrollLock.y}px`;
+            document.body.style.left = "0";
+            document.body.style.right = "0";
+            document.body.style.width = "100%";
+          };
+          const unlockScroll = () => {
+            if (!scrollLock.locked) return;
+            scrollLock.locked = false;
+            document.documentElement.style.overflow = "";
+            document.body.style.overflow = "";
+            document.body.style.position = "";
+            document.body.style.top = "";
+            document.body.style.left = "";
+            document.body.style.right = "";
+            document.body.style.width = "";
+            window.scrollTo(0, scrollLock.y || 0);
+          };
+
+          const setHidden = (hidden) => {
+            if (!drawer) return;
+            if (hidden) {
+              drawer.classList.add("-translate-x-full");
+              if (backdrop) {
+                backdrop.classList.add("pointer-events-none");
+                backdrop.classList.remove("opacity-100");
+                backdrop.classList.add("opacity-0");
+              }
+              unlockScroll();
+              if (openBtn)
+                openBtn.querySelector("span") &&
+                  (openBtn.querySelector("span").textContent = i18n.drawerShow);
+            } else {
+              drawer.classList.remove("-translate-x-full");
+              if (backdrop) {
+                backdrop.classList.remove("pointer-events-none");
+                backdrop.classList.remove("opacity-0");
+                backdrop.classList.add("opacity-100");
+              }
+              lockScroll();
+              if (openBtn)
+                openBtn.querySelector("span") &&
+                  (openBtn.querySelector("span").textContent = i18n.drawerHide);
             }
-            return r.text();
-          })
-          .then((text) => {
-            rawMarkdownText = text;
+            try {
+              localStorage.setItem(STORAGE_KEY, hidden ? "1" : "0");
+            } catch (_) {}
+          };
+          drawerSetHidden = setHidden;
+
+          let hidden = true;
+          setHidden(true);
+
+          const toggleDrawer = () => {
+            hidden = !hidden;
+            setHidden(hidden);
+          };
+          openBtn && openBtn.addEventListener("click", toggleDrawer);
+          closeBtn && closeBtn.addEventListener("click", () => setHidden(true));
+          backdrop && backdrop.addEventListener("click", () => setHidden(true));
+          window.addEventListener("beforeunload", unlockScroll);
+
+          drawerChapterButtons = Array.from(
+            document.querySelectorAll("#subDrawer .chapter-toggle"),
+          );
+          drawerPanels = Array.from(
+            document.querySelectorAll("#subDrawer .drawer-acc"),
+          );
+
+          const syncIcons = () => {
+            drawerChapterButtons.forEach((btn, idx) => {
+              const icon = btn.querySelector(".acc-icon");
+              const isOpen = drawerPanels[idx]?.classList.contains("open");
+              btn.setAttribute("aria-expanded", String(!!isOpen));
+              if (icon)
+                icon.style.transform = isOpen
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)";
+            });
+          };
+          drawerSyncIcons = syncIcons;
+
+          const closeAll = () => {
+            drawerPanels.forEach((p) => p.classList.remove("open"));
+          };
+          drawerChapterButtons.forEach((btn, idx) => {
+            btn.addEventListener("click", () => {
+              const panel = drawerPanels[idx];
+              const willOpen = !panel.classList.contains("open");
+              closeAll();
+              if (willOpen) panel.classList.add("open");
+              syncIcons();
+            });
+          });
+          syncIcons();
+        };
+
+        const setActiveInDrawer = (ch, sc) => {
+          initDrawerOnce();
+          const targetCh = Number(ch);
+          const targetSc = Number(sc);
+
+          drawerChapterButtons.forEach((btn, idx) => {
+            const btnCh = Number(btn.getAttribute("data-ch"));
+            const active = Number.isFinite(btnCh) && btnCh === targetCh;
+            CH_ACTIVE_CLASSES.forEach((c) => btn.classList.toggle(c, active));
+            if (drawerPanels[idx]) {
+              drawerPanels[idx].classList.toggle("open", active);
+            }
+          });
+
+          Array.from(
+            document.querySelectorAll("#subDrawer a[data-ch][data-sc]"),
+          ).forEach((a) => {
+            const aCh = Number(a.getAttribute("data-ch"));
+            const aSc = Number(a.getAttribute("data-sc"));
+            const active =
+              Number.isFinite(aCh) &&
+              Number.isFinite(aSc) &&
+              aCh === targetCh &&
+              aSc === targetSc;
+            SC_ACTIVE_CLASSES.forEach((c) => a.classList.toggle(c, active));
+          });
+
+          if (drawerSyncIcons) drawerSyncIcons();
+        };
+
+        const parseReaderParamsFromHref = (href) => {
+          try {
+            const u = new URL(href, window.location.origin);
+            if (u.pathname !== "/reader") return null;
+            const courseId = u.searchParams.get("courseId");
+            const ch = Number(u.searchParams.get("ch"));
+            const sc = Number(u.searchParams.get("sc"));
+            if (!courseId || !Number.isFinite(ch) || !Number.isFinite(sc))
+              return null;
+            return { courseId, ch, sc };
+          } catch (_) {
+            return null;
+          }
+        };
+
+        const fetchReaderPage = async (courseId, ch, sc) => {
+          const url = `/reader/page?courseId=${encodeURIComponent(
+            courseId,
+          )}&ch=${encodeURIComponent(ch)}&sc=${encodeURIComponent(sc)}`;
+          const r = await fetch(url, {
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: { Accept: "application/json" },
+          });
+          const body = await r.json().catch(() => null);
+          if (!r.ok) {
+            const msg =
+              body && typeof body.error === "string" && body.error.trim()
+                ? body.error
+                : `HTTP ${r.status}`;
+            const e = new Error(msg);
+            e.status = r.status;
+            throw e;
+          }
+          if (body && typeof body.error === "string" && body.error.trim()) {
+            throw new Error(body.error);
+          }
+          return body;
+        };
+
+        let navToken = 0;
+        const navigateReader = async (courseId, ch, sc, opts) => {
+          const token = ++navToken;
+          const push = !opts || opts.push !== false;
+          const scrollTop = !opts || opts.scrollTop !== false;
+
+          initDrawerOnce();
+          if (drawerSetHidden) drawerSetHidden(true);
+          if (err) err.classList.add("hidden");
+
+          try {
+            const state = await fetchReaderPage(courseId, ch, sc);
+            if (token !== navToken) return;
+
+            currentCourseId = state.courseId;
+            currentCh = state.ch;
+            currentSc = state.sc;
+            currentMdPath = state.markdownPath || currentMdPath;
+            currentCourseLanguage =
+              state.courseLanguage || currentCourseLanguage;
+
+            setText("readerCourseTitle", state.courseTitle);
+            setText(
+              "readerChapterLabel",
+              state.chapterTitle || state.chapterLabel,
+            );
+            setText("readerSubTitle", state.subTitle);
+            setText("drawerChapterLabel", state.chapterLabel);
+            setText("drawerChapterTitle", state.chapterTitle);
+            setText("drawerSubTitle", state.subTitle);
+            if (state.subTitle) document.title = state.subTitle;
+
+            const prevEl = document.getElementById("readerPrevPage");
+            const nextEl = document.getElementById("readerNextPage");
+            const prevHref =
+              state.hasPrev && state.prevCh != null && state.prevSc != null
+                ? `/reader?courseId=${encodeURIComponent(
+                    state.courseId,
+                  )}&ch=${encodeURIComponent(state.prevCh)}&sc=${encodeURIComponent(
+                    state.prevSc,
+                  )}`
+                : null;
+            const nextHref =
+              state.hasNext && state.nextCh != null && state.nextSc != null
+                ? `/reader?courseId=${encodeURIComponent(
+                    state.courseId,
+                  )}&ch=${encodeURIComponent(state.nextCh)}&sc=${encodeURIComponent(
+                    state.nextSc,
+                  )}`
+                : null;
+            setNavLinkState(prevEl, !!prevHref, prevHref);
+            setNavLinkState(nextEl, !!nextHref, nextHref);
+
+            rawMarkdownText = state.markdown;
             translatedMarkdownText = null;
             showingTranslated = false;
             translateLoading = false;
             syncTranslateBtnState();
-            renderMarkdown(text);
+            renderMarkdown(state.markdown || "");
 
-            // No subchapter tab scrolling (tabs removed)
+            currentServerUpdatedAt =
+              typeof state.updatedAt === "string" ? state.updatedAt : null;
 
-            // Persistent drawer: visible by default, user can hide it
-            const drawer = document.getElementById("subDrawer");
-            const backdrop = document.getElementById("drawerBackdrop");
-            const openBtn = document.getElementById("openDrawerBtn");
-            const closeBtn = document.getElementById("closeDrawerBtn");
-            const STORAGE_KEY = "readerDrawerHidden";
+            setActiveInDrawer(state.ch, state.sc);
 
-            const scrollLock = { locked: false, y: 0 };
-            const lockScroll = () => {
-              if (scrollLock.locked) return;
-              scrollLock.locked = true;
-              scrollLock.y = window.scrollY || 0;
-              document.documentElement.style.overflow = "hidden";
-              document.body.style.overflow = "hidden";
-              document.body.style.position = "fixed";
-              document.body.style.top = `-${scrollLock.y}px`;
-              document.body.style.left = "0";
-              document.body.style.right = "0";
-              document.body.style.width = "100%";
-            };
-            const unlockScroll = () => {
-              if (!scrollLock.locked) return;
-              scrollLock.locked = false;
-              document.documentElement.style.overflow = "";
-              document.body.style.overflow = "";
-              document.body.style.position = "";
-              document.body.style.top = "";
-              document.body.style.left = "";
-              document.body.style.right = "";
-              document.body.style.width = "";
-              window.scrollTo(0, scrollLock.y || 0);
-            };
-
-            const setHidden = (hidden) => {
-              if (!drawer) return;
-              if (hidden) {
-                drawer.classList.add("-translate-x-full");
-                if (backdrop) {
-                  backdrop.classList.add("pointer-events-none");
-                  backdrop.classList.remove("opacity-100");
-                  backdrop.classList.add("opacity-0");
-                }
-                unlockScroll();
-                if (openBtn)
-                  openBtn.querySelector("span") &&
-                    (openBtn.querySelector("span").textContent =
-                      i18n.drawerShow);
-              } else {
-                drawer.classList.remove("-translate-x-full");
-                if (backdrop) {
-                  backdrop.classList.remove("pointer-events-none");
-                  backdrop.classList.remove("opacity-0");
-                  backdrop.classList.add("opacity-100");
-                }
-                lockScroll();
-                if (openBtn)
-                  openBtn.querySelector("span") &&
-                    (openBtn.querySelector("span").textContent =
-                      i18n.drawerHide);
-              }
-              try {
-                localStorage.setItem(STORAGE_KEY, hidden ? "1" : "0");
-              } catch (_) {}
-            };
-
-            // Initialize state (default hidden)
-            let hidden = true;
-            setHidden(true);
-
-            const toggleDrawer = () => {
-              hidden = !hidden;
-              setHidden(hidden);
-            };
-            openBtn && openBtn.addEventListener("click", toggleDrawer);
-            closeBtn &&
-              closeBtn.addEventListener("click", () => setHidden(true));
-            backdrop &&
-              backdrop.addEventListener("click", () => setHidden(true));
-            window.addEventListener("beforeunload", unlockScroll);
-
-            // Drawer accordion: only one chapter open at a time
-            const chapterButtons = Array.from(
-              document.querySelectorAll("#subDrawer .chapter-toggle"),
-            );
-            const panels = Array.from(
-              document.querySelectorAll("#subDrawer .drawer-acc"),
-            );
-            const syncIcons = () => {
-              chapterButtons.forEach((btn, idx) => {
-                const icon = btn.querySelector(".acc-icon");
-                const isOpen = panels[idx]?.classList.contains("open");
-                btn.setAttribute("aria-expanded", String(!!isOpen));
-                if (icon)
-                  icon.style.transform = isOpen
-                    ? "rotate(180deg)"
-                    : "rotate(0deg)";
-              });
-            };
-            const closeAll = () => {
-              panels.forEach((p) => p.classList.remove("open"));
-            };
-            chapterButtons.forEach((btn, idx) => {
-              btn.addEventListener("click", () => {
-                const panel = panels[idx];
-                const willOpen = !panel.classList.contains("open");
-                closeAll();
-                if (willOpen) panel.classList.add("open");
-                syncIcons();
-              });
-            });
-            // Initial sync for server-rendered open chapter
-            syncIcons();
-          })
-          .catch((e) => {
-            if (e && e.message === "MD_LOAD_FAILED") {
-              const status =
-                typeof e.status === "number" ? String(e.status) : "";
-              err.textContent = i18n.errorLoadFailedPrefix + status;
-            } else {
-              err.textContent =
-                e && typeof e.message === "string" ? e.message : String(e);
+            if (push) {
+              const newUrl = `/reader?courseId=${encodeURIComponent(
+                state.courseId,
+              )}&ch=${encodeURIComponent(state.ch)}&sc=${encodeURIComponent(
+                state.sc,
+              )}`;
+              history.pushState(
+                { courseId: state.courseId, ch: state.ch, sc: state.sc },
+                "",
+                newUrl,
+              );
             }
+            if (scrollTop) window.scrollTo(0, 0);
+          } catch (e) {
+            const msg =
+              e && typeof e.message === "string"
+                ? e.message
+                : String(e || "Error");
+            err.textContent = i18n.errorLoadFailedPrefix + msg;
             err.classList.remove("hidden");
+          }
+        };
+
+        if (!currentCourseId || currentCh == null || currentSc == null) {
+          err.textContent = i18n.errorNoMarkdownPath;
+          err.classList.remove("hidden");
+          initDrawerOnce();
+        } else {
+          navigateReader(currentCourseId, currentCh, currentSc, {
+            push: false,
+            scrollTop: false,
           });
+        }
+
+        document.addEventListener("click", (e) => {
+          if (!e || e.defaultPrevented) return;
+          if (e.button !== 0) return;
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          const a = e.target && e.target.closest ? e.target.closest("a") : null;
+          if (!a) return;
+          if (a.target && a.target.toLowerCase() === "_blank") return;
+          const href = a.getAttribute("href");
+          if (!href) return;
+          if (
+            (a.getAttribute("aria-disabled") || "").toLowerCase() === "true"
+          ) {
+            e.preventDefault();
+            return;
+          }
+          const parsed = parseReaderParamsFromHref(href);
+          if (!parsed) return;
+          e.preventDefault();
+          navigateReader(parsed.courseId, parsed.ch, parsed.sc, { push: true });
+        });
+
+        window.addEventListener("popstate", () => {
+          const parsed = parseReaderParamsFromHref(window.location.href);
+          if (!parsed) return;
+          navigateReader(parsed.courseId, parsed.ch, parsed.sc, {
+            push: false,
+            scrollTop: false,
+          });
+        });
 
         const isTypingTarget = (t) => {
           if (!t) return false;
@@ -1231,7 +1505,12 @@
             return false;
           const href = el.getAttribute("href");
           if (!href) return false;
-          window.location.assign(href);
+          const parsed = parseReaderParamsFromHref(href);
+          if (!parsed) {
+            window.location.assign(href);
+            return true;
+          }
+          navigateReader(parsed.courseId, parsed.ch, parsed.sc, { push: true });
           return true;
         };
 

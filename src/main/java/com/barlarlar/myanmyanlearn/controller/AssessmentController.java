@@ -6,13 +6,19 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.barlarlar.myanmyanlearn.model.Course;
+import com.barlarlar.myanmyanlearn.service.AssessmentScoreRecordService;
 import com.barlarlar.myanmyanlearn.service.CourseService;
 
 @Controller
@@ -28,24 +35,29 @@ public class AssessmentController {
     private static final Logger log = LoggerFactory.getLogger(AssessmentController.class);
     private final CourseService courseService;
     private final ObjectMapper objectMapper;
+    private final AssessmentScoreRecordService scoreRecordService;
 
     @Value("${app.assessment.seconds-per-slot:15}")
     private int secondsPerSlot;
 
     public AssessmentController(
             CourseService courseService,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            AssessmentScoreRecordService scoreRecordService) {
         this.courseService = courseService;
         this.objectMapper = objectMapper;
+        this.scoreRecordService = scoreRecordService;
     }
 
     @GetMapping("/assessment")
     public String assessmentPage(
             Model model,
+            HttpServletRequest request,
             HttpServletResponse response,
             @RequestParam(name = "chapters", required = false) String chapters,
             @RequestParam(name = "courseId", required = false) String courseId) {
         setNoStoreHeaders(response);
+        courseId = resolveCourseId(courseId, request);
 
         List<String> chapterList;
         if (chapters == null || chapters.isBlank()) {
@@ -66,26 +78,15 @@ public class AssessmentController {
         // Resolve exam title from courseId if available
         String examTitle = null;
         if (courseId != null && !courseId.isBlank()) {
-            Course course = courseService.findById(courseId);
+            Course course = courseService.findByIdFromDatabase(courseId);
             if (course != null) {
                 examTitle = course.getTitle();
             }
         }
         model.addAttribute("examTitle", examTitle != null ? examTitle : "Assessment");
-        List<com.barlarlar.myanmyanlearn.model.Question> questions = com.barlarlar.myanmyanlearn.datasource.QuestionDataSource
-                .getSampleQuestions();
-
-        if (courseId != null && !courseId.isBlank()) {
-            questions = questions.stream()
-                    .filter(q -> courseId.equals(q.getCourseId()))
-                    .collect(Collectors.toList());
-        }
-
-        if (!chapterList.isEmpty()) {
-            questions = questions.stream()
-                    .filter(q -> chapterList.contains(q.getChapterId()))
-                    .collect(Collectors.toList());
-        }
+        List<com.barlarlar.myanmyanlearn.model.Question> questions = (courseId != null && !courseId.isBlank())
+                ? courseService.getAssessmentQuestionsFromDatabase(courseId, chapterList)
+                : Collections.emptyList();
 
         Comparator<com.barlarlar.myanmyanlearn.model.Question> comparator = Comparator.<com.barlarlar.myanmyanlearn.model.Question>comparingInt(
                 q -> parseChapterOrder(q.getChapterId()))
@@ -106,11 +107,13 @@ public class AssessmentController {
     @PostMapping("/assessment/score")
     public String assessmentScorePage(
             Model model,
+            HttpServletRequest request,
             HttpServletResponse response,
             @RequestParam(name = "chapters", required = false) String chapters,
             @RequestParam(name = "courseId", required = false) String courseId,
             @RequestParam Map<String, String> allParams) {
         setNoStoreHeaders(response);
+        courseId = resolveCourseId(courseId, request);
         List<String> chapterList;
         if (chapters == null || chapters.isBlank()) {
             chapterList = Collections.emptyList();
@@ -129,27 +132,16 @@ public class AssessmentController {
 
         String examTitle = null;
         if (courseId != null && !courseId.isBlank()) {
-            Course course = courseService.findById(courseId);
+            Course course = courseService.findByIdFromDatabase(courseId);
             if (course != null) {
                 examTitle = course.getTitle();
             }
         }
         model.addAttribute("examTitle", examTitle != null ? examTitle : "Assessment");
 
-        List<com.barlarlar.myanmyanlearn.model.Question> questions = com.barlarlar.myanmyanlearn.datasource.QuestionDataSource
-                .getSampleQuestions();
-
-        if (courseId != null && !courseId.isBlank()) {
-            questions = questions.stream()
-                    .filter(q -> courseId.equals(q.getCourseId()))
-                    .collect(Collectors.toList());
-        }
-
-        if (!chapterList.isEmpty()) {
-            questions = questions.stream()
-                    .filter(q -> chapterList.contains(q.getChapterId()))
-                    .collect(Collectors.toList());
-        }
+        List<com.barlarlar.myanmyanlearn.model.Question> questions = (courseId != null && !courseId.isBlank())
+                ? courseService.getAssessmentQuestionsFromDatabase(courseId, chapterList)
+                : Collections.emptyList();
 
         Comparator<com.barlarlar.myanmyanlearn.model.Question> comparator = Comparator.<com.barlarlar.myanmyanlearn.model.Question>comparingInt(
                 q -> parseChapterOrder(q.getChapterId()))
@@ -250,7 +242,7 @@ public class AssessmentController {
 
         try {
             var root = objectMapper.createObjectNode();
-            if (courseId != null) {
+            if (courseId != null && !courseId.isBlank()) {
                 root.put("courseId", courseId);
             } else {
                 root.putNull("courseId");
@@ -313,12 +305,46 @@ public class AssessmentController {
 
             String scoreJson = objectMapper.writeValueAsString(root);
             model.addAttribute("scoreJson", scoreJson);
+            try {
+                scoreRecordService.upsertMergedForCurrentUser(root);
+            } catch (IllegalStateException e) {
+                log.warn("Failed to save assessment score json", e);
+            } catch (IllegalArgumentException e) {
+                log.warn("Failed to save assessment score json", e);
+            } catch (Exception e) {
+                log.warn("Failed to save assessment score json", e);
+            }
         } catch (Exception e) {
             log.warn("Failed to build assessment score json", e);
             model.addAttribute("scoreJson", "{}");
         }
 
         return "assessment-score";
+    }
+
+    @GetMapping(value = "/assessment/md", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
+    public ResponseEntity<String> assessmentQuestionMarkdown(
+            @RequestParam(name = "courseId") String courseId,
+            @RequestParam(name = "ch") Integer chapterOrder,
+            @RequestParam(name = "q") Integer questionNo) {
+        String markdown = courseService.findAssessmentQuestionMarkdownFromDatabase(courseId, chapterOrder, questionNo);
+        if (markdown == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(markdown);
+    }
+
+    @GetMapping(value = "/assessment/explain", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
+    public ResponseEntity<String> assessmentExplanationMarkdown(
+            @RequestParam(name = "courseId") String courseId,
+            @RequestParam(name = "ch") Integer chapterOrder,
+            @RequestParam(name = "q") Integer questionNo) {
+        String markdown = courseService.findAssessmentExplanationMarkdownFromDatabase(courseId, chapterOrder,
+                questionNo);
+        if (markdown == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(markdown);
     }
 
     private int parseChapterOrder(String chapterId) {
@@ -337,5 +363,46 @@ public class AssessmentController {
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
+    }
+
+    private String resolveCourseId(String courseId, HttpServletRequest request) {
+        if (courseId != null && !courseId.isBlank()) {
+            return courseId;
+        }
+        if (request == null) {
+            return null;
+        }
+        String referer = request.getHeader("Referer");
+        if (referer == null || referer.isBlank()) {
+            return null;
+        }
+        try {
+            URI uri = URI.create(referer);
+            String query = uri.getQuery();
+            if (query == null || query.isBlank()) {
+                return null;
+            }
+            for (String part : query.split("&")) {
+                if (part == null || part.isBlank()) {
+                    continue;
+                }
+                int idx = part.indexOf('=');
+                if (idx <= 0) {
+                    continue;
+                }
+                String key = part.substring(0, idx);
+                if (!"courseId".equals(key)) {
+                    continue;
+                }
+                String raw = part.substring(idx + 1);
+                String decoded = URLDecoder.decode(raw, StandardCharsets.UTF_8);
+                if (decoded != null && !decoded.isBlank()) {
+                    return decoded;
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
     }
 }

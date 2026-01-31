@@ -117,7 +117,7 @@
                 <div class="flex-1">
                   <div
                     class="text-white font-medium"
-                    th:text="${content.chapter + ': ' + content.title}"
+                    th:text="${'Chapter ' + content.order + ': ' + content.title}"
                   ></div>
                 </div>
               </label>
@@ -127,6 +127,7 @@
           <div class="mt-6 pt-4 border-t border-white/10">
             <button
               id="takeTestBtn"
+              th:attr="data-course-id=${course != null ? course.id : ''}"
               class="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled
             >
@@ -149,7 +150,7 @@
             >
               <span
                 class="text-xs text-white/70"
-                th:text="${content.chapter != null ? content.chapter : 'Chapter ' + content.order}"
+                th:text="${'Chapter ' + content.order}"
               ></span>
               <span
                 class="font-medium truncate"
@@ -200,7 +201,7 @@
                 <div class="flex flex-col gap-0.5 leading-tight">
                   <span
                     class="text-xs sm:text-sm text-white/70"
-                    th:text="${content.chapter != null ? content.chapter : 'Chapter ' + content.order}"
+                    th:text="${'Chapter ' + content.order}"
                     >Chapter</span
                   >
                   <span
@@ -1087,7 +1088,9 @@
             const currentUrlParams = new URLSearchParams(
               window.location.search,
             );
-            const courseId = currentUrlParams.get("courseId");
+            const courseId =
+              currentUrlParams.get("courseId") ||
+              (document.getElementById("takeTestBtn")?.dataset?.courseId ?? "");
             if (courseId) {
               params.set("courseId", courseId);
             }

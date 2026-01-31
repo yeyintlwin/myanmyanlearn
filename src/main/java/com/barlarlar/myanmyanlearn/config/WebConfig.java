@@ -9,23 +9,38 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.lang.NonNull;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.unit.DataSize;
 
+import jakarta.servlet.MultipartConfigElement;
 import java.time.Duration;
 import java.util.Locale;
 import java.util.Objects;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    private final String storageType;
+    private final String localBaseDir;
+
+    public WebConfig(
+            @Value("${app.storage.type:local}") String storageType,
+            @Value("${app.storage.local.base-dir:${user.dir}/.myanmyanlearn/uploads}") String localBaseDir) {
+        this.storageType = storageType != null ? storageType.trim() : "local";
+        this.localBaseDir = localBaseDir != null ? localBaseDir.trim() : "";
+    }
+
     @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-        // Serve course assets directly from classpath:/courses/**
-        registry.addResourceHandler("/courses/**")
-                .addResourceLocations("classpath:/courses/");
-        String home = System.getProperty("user.home");
-        String base = (home != null ? home : "") + "/.myanmyanlearn/uploads/";
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + base);
-        // Also ensure standard static resources continue to work (usually auto-configured)
+        if (!"local".equalsIgnoreCase(storageType)) {
+            return;
+        }
+        String base = localBaseDir.isBlank() ? (System.getProperty("user.dir", ".") + "/.myanmyanlearn/uploads")
+                : localBaseDir;
+        if (!base.endsWith("/")) {
+            base = base + "/";
+        }
+        registry.addResourceHandler("/uploads/**").addResourceLocations("file:" + base);
     }
 
     @Bean
@@ -44,5 +59,13 @@ public class WebConfig implements WebMvcConfigurer {
         // 365 days
         clr.setCookieMaxAge(Objects.requireNonNull(Duration.ofSeconds(31536000)));
         return clr;
+    }
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxFileSize(DataSize.ofMegabytes(25));
+        factory.setMaxRequestSize(DataSize.ofMegabytes(25));
+        return factory.createMultipartConfig();
     }
 }

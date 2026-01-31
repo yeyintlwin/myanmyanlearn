@@ -7,6 +7,8 @@
     id="coursesManagementRoot"
     class="space-y-4"
     data-storage-key="adminCoursesDraft_v1"
+    data-initial-courses="[]"
+    th:attr="data-initial-courses=${adminCoursesJson}?:'[]'"
   >
     <div
       class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3"
@@ -15,9 +17,7 @@
         <h2 class="text-white text-2xl font-bold">
           <span th:text="#{adminPanel.courses}">Courses Management</span>
         </h2>
-        <p class="text-white/70 text-sm mt-1">
-          UI-only for now. Detailed course content will be managed elsewhere.
-        </p>
+        <p class="text-white/70 text-sm mt-1">Courses list from database.</p>
       </div>
       <div class="flex items-center justify-end gap-2 flex-wrap">
         <input
