@@ -2,6 +2,8 @@ package com.barlarlar.myanmyanlearn.controller;
 
 import java.util.Map;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.barlarlar.myanmyanlearn.service.AdminCourseDbService;
 import java.io.IOException;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 @RestController
 @RequestMapping("/api/admin/courses")
@@ -102,5 +105,41 @@ public class AdminCoursesApiController {
     public ResponseEntity<Void> deleteCourse(@PathVariable String courseId) {
         db.deleteCourse(courseId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/{courseId}/export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<StreamingResponseBody> exportCourse(@PathVariable String courseId) {
+        String id = courseId != null ? courseId.trim() : "";
+        if (id.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        StreamingResponseBody body = outputStream -> db.writeCourseBllArchive(id, outputStream);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDisposition(ContentDisposition.attachment().filename(id + ".bll").build());
+        return ResponseEntity.ok().headers(headers).body(body);
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> importCourse(@RequestParam(name = "file") MultipartFile file) {
+        try {
+            String courseId = db.importCourseBllArchive(file);
+            return ResponseEntity.ok(Map.of(
+                    "ok", true,
+                    "courseId", courseId));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "ok", false,
+                    "message", e.getMessage() != null ? e.getMessage() : "Invalid request."));
+        } catch (IOException e) {
+            String msg = e.getMessage() != null ? e.getMessage().trim() : "";
+            return ResponseEntity.badRequest().body(Map.of(
+                    "ok", false,
+                    "message", msg.isBlank() ? "Failed to import archive." : msg));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "ok", false,
+                    "message", "Server error."));
+        }
     }
 }

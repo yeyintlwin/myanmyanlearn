@@ -85,6 +85,23 @@ public class LocalStorageService implements StorageService {
     }
 
     @Override
+    public byte[] getBytes(String key) throws IOException {
+        String k = key != null ? key.trim() : "";
+        if (k.isBlank()) {
+            throw new IOException("Invalid storage key.");
+        }
+        k = trimLeadingSlash(k);
+        Path targetPath = baseDir.resolve(k).normalize();
+        if (!targetPath.startsWith(baseDir)) {
+            throw new IOException("Invalid read path.");
+        }
+        if (!Files.exists(targetPath) || Files.isDirectory(targetPath)) {
+            throw new IOException("File not found.");
+        }
+        return Files.readAllBytes(targetPath);
+    }
+
+    @Override
     public void delete(String key) throws IOException {
         String k = key != null ? key.trim() : "";
         if (k.isBlank()) {

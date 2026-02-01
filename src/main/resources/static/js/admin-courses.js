@@ -947,7 +947,45 @@
       showFlash("error", i18n.toastCourseNotFound);
       return;
     }
-    exportCourses([course], "course_export");
+    downloadCourseBll(courseId);
+  }
+
+  function downloadCourseBll(courseId) {
+    var id = String(courseId || "").trim();
+    if (!id) return;
+    apiFetch("/api/admin/courses/" + encodeURIComponent(id) + "/export", {
+      method: "GET",
+      headers: { Accept: "application/octet-stream" },
+    })
+      .then(function (res) {
+        if (!res || !res.ok) {
+          throw new Error(i18n.toastCourseNotFound);
+        }
+        return res.blob();
+      })
+      .then(function (blob) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        var ts = new Date()
+          .toISOString()
+          .replace(/[:.]/g, "-")
+          .replace("T", "_")
+          .slice(0, 19);
+        var safeId = id.replace(/[^a-z0-9_-]+/gi, "_").replace(/^_+|_+$/g, "");
+        a.download = (safeId || "course") + "_" + ts + ".bll";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showFlash("success", i18n.toastCourseExported);
+      })
+      .catch(function (err) {
+        showFlash(
+          "error",
+          err && err.message ? String(err.message) : i18n.toastCourseNotFound,
+        );
+      });
   }
 
   function parseImportedCourses(parsed) {
@@ -957,8 +995,115 @@
     return null;
   }
 
+  function importCourseBllFromFile(file) {
+    if (!file) return;
+    var form = new FormData();
+    form.append("file", file);
+    apiFetch("/api/admin/courses/import", {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: form,
+    })
+      .then(function (res) {
+        if (!res) throw new Error(i18n.toastInvalidImportFormat);
+        var ct = String(
+          res.headers && res.headers.get
+            ? res.headers.get("content-type") || ""
+            : "",
+        ).toLowerCase();
+        var isJson = ct.indexOf("application/json") >= 0;
+        if (!res.ok) {
+          if (isJson) {
+            return res
+              .json()
+              .catch(function () {
+                return null;
+              })
+              .then(function (json) {
+                var msg = json && json.message ? String(json.message) : null;
+                throw new Error(msg || i18n.toastImportDbFailed);
+              });
+          }
+          return res
+            .text()
+            .catch(function () {
+              return "";
+            })
+            .then(function () {
+              throw new Error(i18n.toastImportDbFailed);
+            });
+        }
+        if (!isJson) throw new Error(i18n.toastImportDbFailed);
+        return res.json().catch(function () {
+          return null;
+        });
+      })
+      .then(function (json) {
+        if (!json || !json.ok || !json.courseId) {
+          var msg = json && json.message ? String(json.message) : null;
+          throw new Error(msg || i18n.toastInvalidImportFormat);
+        }
+        return apiFetch(
+          "/api/admin/courses/" + encodeURIComponent(json.courseId) + "/editor",
+          { method: "GET", headers: { Accept: "application/json" } },
+        ).then(function (res) {
+          if (!res || !res.ok) return null;
+          return res.json().catch(function () {
+            return null;
+          });
+        });
+      })
+      .then(function (editor) {
+        if (editor && editor.id) {
+          var meta = ensureCourseShape({
+            id: editor.id,
+            title: editor.title || i18n.itemUntitled,
+            description: editor.description || "",
+            language: editor.language || "",
+            published: !!editor.published,
+            targetStudents: editor.targetStudents || {
+              schoolYears: [],
+              classes: [],
+            },
+            coverImageDataUrl: editor.coverImageDataUrl || null,
+          });
+          var existing = findCourseById(meta.id);
+          if (existing) {
+            for (var k in meta) existing[k] = meta[k];
+          } else {
+            state.courses.push(meta);
+          }
+          normalizeState();
+          saveState();
+          renderList();
+        } else {
+          window.location.reload();
+          return;
+        }
+        showFlash("success", i18n.toastCoursesImported);
+      })
+      .catch(function (err) {
+        showFlash(
+          "error",
+          err && err.message ? String(err.message) : i18n.toastImportDbFailed,
+        );
+      });
+  }
+
   function importCoursesFromFile(file) {
     if (!file) return;
+    var name = String(file.name || "")
+      .toLowerCase()
+      .trim();
+    var type = String(file.type || "").toLowerCase();
+    if (
+      name.endsWith(".bll") ||
+      name.endsWith(".zip") ||
+      type.indexOf("zip") >= 0
+    ) {
+      importCourseBllFromFile(file);
+      return;
+    }
     var reader = new FileReader();
     reader.onload = function () {
       var parsed = safeJsonParse(String(reader.result || ""));

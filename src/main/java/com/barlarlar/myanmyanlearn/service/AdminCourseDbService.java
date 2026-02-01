@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.LinkedHashMap;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,14 @@ import com.barlarlar.myanmyanlearn.repository.CourseSubchapterRepository;
 import com.barlarlar.myanmyanlearn.service.storage.StorageService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -111,6 +118,15 @@ public class AdminCourseDbService {
             TargetStudents targetStudents,
             String coverImageDataUrl,
             List<EditorChapter> chapters) {
+    }
+
+    public record BllMeta(
+            String format,
+            int version,
+            String exportedAt,
+            String courseId,
+            String coverImageKey,
+            int assetCount) {
     }
 
     public CourseEditor loadCourseEditor(String courseId) {
@@ -223,6 +239,24 @@ public class AdminCourseDbService {
         if (courseId == null || courseId.isBlank()) {
             return;
         }
+        String prefix = "courses/" + sanitizePathSegment(courseId) + "/";
+        try {
+            List<StorageService.StoredObject> objects = storageService.list(prefix);
+            for (StorageService.StoredObject obj : objects) {
+                if (obj == null || obj.key() == null) {
+                    continue;
+                }
+                String key = obj.key().trim();
+                if (key.isBlank()) {
+                    continue;
+                }
+                try {
+                    storageService.delete(key);
+                } catch (IOException e) {
+                }
+            }
+        } catch (IOException e) {
+        }
         deleteCourseChildren(courseId);
         courseRepository.deleteById(courseId);
     }
@@ -334,6 +368,135 @@ public class AdminCourseDbService {
                 }
             }
         }
+    }
+
+    public void writeCourseBllArchive(String courseId, OutputStream out) throws IOException {
+        if (courseId == null || courseId.isBlank()) {
+            throw new IOException("course id is required");
+        }
+        if (out == null) {
+            throw new IOException("output stream is required");
+        }
+        CourseEditor editor = loadCourseEditor(courseId);
+        if (editor == null) {
+            throw new IOException("Course not found.");
+        }
+
+        String courseFolder = sanitizePathSegment(courseId);
+        String prefix = "courses/" + courseFolder + "/";
+        List<StorageService.StoredObject> objects = storageService.list(prefix);
+        List<String> keys = new ArrayList<>();
+        for (StorageService.StoredObject obj : objects) {
+            if (obj == null || obj.key() == null) {
+                continue;
+            }
+            String k = obj.key().trim();
+            if (!k.isBlank()) {
+                keys.add(k);
+            }
+        }
+        String coverImageKey = resolveCoverImageKey(editor.coverImageDataUrl(), keys);
+
+        BllMeta meta = new BllMeta(
+                "bll-course-archive",
+                1,
+                java.time.Instant.now().toString(),
+                courseId,
+                coverImageKey,
+                keys.size());
+
+        try (ZipOutputStream zip = new ZipOutputStream(out)) {
+            putZipJson(zip, "meta.json", meta);
+            putZipJson(zip, "course.json", editor);
+            for (String key : keys) {
+                String safeKey = normalizeZipKey(key);
+                if (safeKey == null) {
+                    continue;
+                }
+                byte[] bytes = storageService.getBytes(key);
+                ZipEntry entry = new ZipEntry("assets/" + safeKey);
+                zip.putNextEntry(entry);
+                zip.write(bytes);
+                zip.closeEntry();
+            }
+            zip.finish();
+        }
+    }
+
+    @Transactional
+    public String importCourseBllArchive(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IOException("No file uploaded.");
+        }
+        CourseEditor editor = null;
+        BllMeta meta = null;
+        Map<String, byte[]> assets = new LinkedHashMap<>();
+
+        try (ZipInputStream zip = new ZipInputStream(file.getInputStream())) {
+            ZipEntry entry;
+            while ((entry = zip.getNextEntry()) != null) {
+                String name = entry.getName() != null ? entry.getName().trim() : "";
+                if (name.isBlank() || entry.isDirectory()) {
+                    zip.closeEntry();
+                    continue;
+                }
+                if ("course.json".equals(name)) {
+                    byte[] bytes = readAllBytes(zip, 25L * 1024L * 1024L);
+                    editor = objectMapper.readValue(bytes, CourseEditor.class);
+                    zip.closeEntry();
+                    continue;
+                }
+                if ("meta.json".equals(name)) {
+                    byte[] bytes = readAllBytes(zip, 2L * 1024L * 1024L);
+                    meta = objectMapper.readValue(bytes, BllMeta.class);
+                    zip.closeEntry();
+                    continue;
+                }
+                if (name.startsWith("assets/")) {
+                    String keyPart = name.substring("assets/".length());
+                    String normalizedKey = normalizeImportedAssetKey(keyPart);
+                    if (normalizedKey != null) {
+                        byte[] bytes = readAllBytes(zip, 25L * 1024L * 1024L);
+                        assets.put(normalizedKey, bytes);
+                    }
+                    zip.closeEntry();
+                    continue;
+                }
+                zip.closeEntry();
+            }
+        }
+
+        if (editor == null || editor.id() == null || editor.id().isBlank()) {
+            throw new IOException("Invalid archive (missing course.json).");
+        }
+
+        saveCourseEditor(editor);
+
+        Map<String, String> uploadedUrlsByKey = new HashMap<>();
+        for (Map.Entry<String, byte[]> e : assets.entrySet()) {
+            String key = e.getKey();
+            byte[] bytes = e.getValue() != null ? e.getValue() : new byte[0];
+            String filename = lastPathSegment(key);
+            String contentType = contentTypeFromFilename(filename);
+            StorageService.StoredObject stored = storageService.putBytes(key, filename, contentType, bytes);
+            if (stored != null && stored.key() != null && stored.url() != null) {
+                uploadedUrlsByKey.put(stored.key(), stored.url());
+            }
+        }
+
+        String coverKey = meta != null && meta.coverImageKey() != null ? meta.coverImageKey().trim() : "";
+        if (coverKey.isBlank()) {
+            coverKey = resolveCoverImageKey(editor.coverImageDataUrl(), new ArrayList<>(uploadedUrlsByKey.keySet()));
+        }
+        if (!coverKey.isBlank() && uploadedUrlsByKey.containsKey(coverKey)) {
+            CourseEntity course = courseRepository.findById(editor.id()).orElse(null);
+            if (course != null) {
+                course.setCoverImageUrl(normalizeCoverUrl(uploadedUrlsByKey.get(coverKey)));
+                courseRepository.save(course);
+            }
+        }
+
+        return editor.id();
     }
 
     private void deleteCourseChildren(String courseId) {
@@ -558,5 +721,101 @@ public class AdminCourseDbService {
             return ".svg";
         }
         return ".png";
+    }
+
+    private void putZipJson(ZipOutputStream zip, String entryName, Object value) throws IOException {
+        ZipEntry entry = new ZipEntry(entryName);
+        zip.putNextEntry(entry);
+        zip.write(objectMapper.writeValueAsBytes(value));
+        zip.closeEntry();
+    }
+
+    private static byte[] readAllBytes(InputStream in, long maxBytes) throws IOException {
+        long limit = Math.max(0L, maxBytes);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buf = new byte[8192];
+        long total = 0L;
+        int read;
+        while ((read = in.read(buf)) >= 0) {
+            total += read;
+            if (limit > 0 && total > limit) {
+                throw new IOException("Archive entry too large.");
+            }
+            baos.write(buf, 0, read);
+        }
+        return baos.toByteArray();
+    }
+
+    private static String normalizeZipKey(String key) {
+        String k = key != null ? key.trim() : "";
+        if (k.isBlank()) {
+            return null;
+        }
+        k = k.replace('\\', '/');
+        while (k.startsWith("/")) {
+            k = k.substring(1);
+        }
+        if (k.isBlank() || k.contains("..")) {
+            return null;
+        }
+        return k;
+    }
+
+    private static String normalizeImportedAssetKey(String key) {
+        return normalizeZipKey(key);
+    }
+
+    private static String lastPathSegment(String path) {
+        String p = path != null ? path.trim() : "";
+        p = p.replace('\\', '/');
+        int idx = p.lastIndexOf('/');
+        if (idx >= 0 && idx < p.length() - 1) {
+            return p.substring(idx + 1);
+        }
+        return p;
+    }
+
+    private static String contentTypeFromFilename(String filename) {
+        String name = filename != null ? filename.toLowerCase() : "";
+        if (name.endsWith(".png")) {
+            return "image/png";
+        }
+        if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+            return "image/jpeg";
+        }
+        if (name.endsWith(".gif")) {
+            return "image/gif";
+        }
+        if (name.endsWith(".webp")) {
+            return "image/webp";
+        }
+        if (name.endsWith(".svg")) {
+            return "image/svg+xml";
+        }
+        return "application/octet-stream";
+    }
+
+    private static String resolveCoverImageKey(String coverUrl, List<String> assetKeys) {
+        String url = coverUrl != null ? coverUrl.trim() : "";
+        if (url.isBlank() || assetKeys == null || assetKeys.isEmpty()) {
+            return "";
+        }
+        String filename = lastPathSegment(url);
+        if (filename.isBlank()) {
+            return "";
+        }
+        for (String k : assetKeys) {
+            if (k == null) {
+                continue;
+            }
+            String key = k.trim();
+            if (key.isBlank()) {
+                continue;
+            }
+            if (key.contains("/cover/") && lastPathSegment(key).equals(filename)) {
+                return key;
+            }
+        }
+        return "";
     }
 }

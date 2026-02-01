@@ -1,6 +1,7 @@
 package com.barlarlar.myanmyanlearn.service.storage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,35 @@ public class S3StorageService implements StorageService {
             }
         }
         return out;
+    }
+
+    @Override
+    public byte[] getBytes(String key) throws IOException {
+        String k = key != null ? key.trim() : "";
+        if (k.isBlank()) {
+            throw new IOException("Invalid storage key.");
+        }
+        String logicalKey = normalizeObjectKey(trimLeadingSlash(k));
+        String objectKey = normalizeObjectKey(keyPrefix + logicalKey);
+        try {
+            Object reqBuilder = invokeStatic(
+                    "software.amazon.awssdk.services.s3.model.GetObjectRequest",
+                    "builder");
+            invoke(reqBuilder, "bucket", new Class<?>[] { String.class }, new Object[] { bucket });
+            invoke(reqBuilder, "key", new Class<?>[] { String.class }, new Object[] { objectKey });
+            Object req = invoke(reqBuilder, "build");
+            Object resp = invoke(s3, "getObject", new Class<?>[] { req.getClass() }, new Object[] { req });
+            if (resp instanceof InputStream in) {
+                try (InputStream ignored = in) {
+                    return in.readAllBytes();
+                }
+            }
+            throw new IOException("Unsupported getObject response type.");
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     @Override
