@@ -1,5 +1,7 @@
 package com.barlarlar.myanmyanlearn.controller;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,6 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.barlarlar.myanmyanlearn.service.LoginAttemptService;
 import com.barlarlar.myanmyanlearn.service.RegistrationService;
@@ -22,13 +23,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@Slf4j
+@RequiredArgsConstructor
 public class LoginController {
 
-    @Autowired
-    private LoginAttemptService loginAttemptService;
-
-    @Autowired
-    private RegistrationService registrationService;
+    private final LoginAttemptService loginAttemptService;
+    private final RegistrationService registrationService;
 
     @GetMapping("/login")
     public String showMyLoginPage(@RequestParam(value = "error", required = false) String error,
@@ -132,8 +132,7 @@ public class LoginController {
                     loginAttemptService.recordSuccessfulAttempt(ipAddress, username);
                 } catch (Exception e) {
                     // If we can't check email verification, allow login but log the issue
-                    System.err.println(
-                            "Could not check email verification for user: " + username + " - " + e.getMessage());
+                    log.warn("Could not check email verification for user: {}", username, e);
                     loginAttemptService.recordSuccessfulAttempt(ipAddress, username);
                 }
             }
@@ -166,7 +165,7 @@ public class LoginController {
         try {
             return registrationService.getUserByUsername(username).getEmail();
         } catch (Exception e) {
-            System.err.println("Could not get email for user: " + username + " - " + e.getMessage());
+            log.warn("Could not get email for user: {}", username, e);
             return username; // Fallback to username
         }
     }

@@ -2,17 +2,19 @@ package com.barlarlar.myanmyanlearn.service;
 
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import com.barlarlar.myanmyanlearn.entity.RegistrationSettingsEntity;
 import com.barlarlar.myanmyanlearn.repository.RegistrationSettingsRepository;
 
 @Service
+@RequiredArgsConstructor
 public class RegistrationSettingsService {
 
-    @Autowired
-    private RegistrationSettingsRepository registrationSettingsRepository;
+    private final RegistrationSettingsRepository registrationSettingsRepository;
 
     private volatile boolean initialized;
 
@@ -96,24 +98,10 @@ public class RegistrationSettingsService {
         return trimmed;
     }
 
+    @Getter
+    @Setter
     public static class SettingsView {
         private String allowedDomain;
         private boolean enforceDomain;
-
-        public String getAllowedDomain() {
-            return allowedDomain;
-        }
-
-        public void setAllowedDomain(String allowedDomain) {
-            this.allowedDomain = allowedDomain;
-        }
-
-        public boolean isEnforceDomain() {
-            return enforceDomain;
-        }
-
-        public void setEnforceDomain(boolean enforceDomain) {
-            this.enforceDomain = enforceDomain;
-        }
     }
 }

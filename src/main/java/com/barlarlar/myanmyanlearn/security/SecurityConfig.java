@@ -3,6 +3,7 @@ package com.barlarlar.myanmyanlearn.security;
 import com.barlarlar.myanmyanlearn.entity.Role;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
 import com.barlarlar.myanmyanlearn.repository.RoleRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,23 +16,22 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-        @Autowired
-        private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+        private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
         // add support for JDBC ... no more hardcoded users :-)
 
@@ -75,6 +75,16 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService)
                         throws Exception {
+
+                RequestMatcher apiRequestMatcher = request -> {
+                        String uri = request.getRequestURI();
+                        if (uri == null) {
+                                return false;
+                        }
+                        String contextPath = request.getContextPath();
+                        String prefix = (contextPath == null ? "" : contextPath) + "/api/";
+                        return uri.startsWith(prefix);
+                };
 
                 http.authorizeHttpRequests(configurer -> configurer
                                 .requestMatchers("/", "/login", "/register", "/register-test",
@@ -130,13 +140,13 @@ public class SecurityConfig {
                                 .exceptionHandling(ex -> ex
                                                 .defaultAuthenticationEntryPointFor(
                                                                 new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                                                                new AntPathRequestMatcher("/api/**"))
+                                                                apiRequestMatcher)
                                                 .defaultAccessDeniedHandlerFor(
                                                                 (request, response, accessDeniedException) -> response
                                                                                 .sendError(
                                                                                                 HttpStatus.FORBIDDEN
                                                                                                                 .value()),
-                                                                new AntPathRequestMatcher("/api/**")))
+                                                                apiRequestMatcher))
                                 .headers(headers -> headers
                                                 .cacheControl(Customizer.withDefaults()));
 

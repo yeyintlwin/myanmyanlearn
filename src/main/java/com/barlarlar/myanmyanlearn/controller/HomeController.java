@@ -24,7 +24,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,43 +46,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
+@Slf4j
+@RequiredArgsConstructor
 public class HomeController {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private CourseService courseService;
-
-    @Autowired
-    private AssessmentScoreRecordService scoreRecordService;
-
-    @Autowired
-    private AssessmentScoreRecordRepository assessmentScoreRecordRepository;
-
-    @Autowired
-    private OtpVerificationRepository otpVerificationRepository;
-
-    @Autowired
-    private PasswordResetTokenRepository passwordResetTokenRepository;
-
-    @Autowired
-    private LoginAttemptService loginAttemptService;
-
-    @Autowired
-    private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
-
-    @Autowired
-    private RegistrationSettingsService registrationSettingsService;
-
-    @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
+    private final CourseService courseService;
+    private final AssessmentScoreRecordService scoreRecordService;
+    private final AssessmentScoreRecordRepository assessmentScoreRecordRepository;
+    private final OtpVerificationRepository otpVerificationRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final LoginAttemptService loginAttemptService;
+    private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
+    private final RegistrationSettingsService registrationSettingsService;
+    private final CourseRepository courseRepository;
+    private final ObjectMapper objectMapper;
 
     private static final Set<String> ALLOWED_USER_ROLES = Set.of("ADMIN", "TEACHER", "STUDENT");
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -89,40 +69,38 @@ public class HomeController {
 
     @GetMapping("/home")
     public String homePage(Model model) {
-        System.out.println("=== HomeController.homePage() called ===");
+        log.info("HomeController.homePage() called");
 
         // Get authenticated user information
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Authentication: " + (authentication != null ? authentication.getName() : "null"));
-        System.out.println("Is authenticated: " + (authentication != null && authentication.isAuthenticated()));
-        System.out.println(
-                "Is anonymous: " + (authentication != null && authentication.getName().equals("anonymousUser")));
+        log.debug("Authentication: {}", authentication != null ? authentication.getName() : "null");
+        log.debug("Is authenticated: {}", authentication != null && authentication.isAuthenticated());
+        log.debug("Is anonymous: {}", authentication != null && "anonymousUser".equals(authentication.getName()));
 
         if (authentication != null && authentication.isAuthenticated()
                 && !authentication.getName().equals("anonymousUser")) {
 
             String username = authentication.getName();
-            System.out.println("Username: " + username);
+            log.debug("Username: {}", username);
             model.addAttribute("username", username);
             model.addAttribute("userInitials", getInitials(username));
 
             // Fetch user's full data from database
             Optional<Member> memberOpt = memberRepository.findById(Objects.requireNonNull(username));
-            System.out.println("Fetching user data for: " + username);
+            log.debug("Fetching user data for: {}", username);
             if (memberOpt.isPresent()) {
                 Member member = memberOpt.get();
-                System.out.println("User found: " + member.getFirstName() + " " + member.getLastName() + " - "
-                        + member.getEmail());
+                log.debug("User found: {} {} - {}", member.getFirstName(), member.getLastName(), member.getEmail());
                 model.addAttribute("userFirstName", member.getFirstName());
                 model.addAttribute("userLastName", member.getLastName());
                 model.addAttribute("userEmail", member.getEmail());
                 model.addAttribute("userFullName", getFullName(member.getFirstName(), member.getLastName()));
                 model.addAttribute("userInitials", getInitialsFromName(member.getFirstName(), member.getLastName()));
             } else {
-                System.out.println("User not found in database: " + username);
+                log.debug("User not found in database: {}", username);
             }
         } else {
-            System.out.println("User not authenticated or is anonymous");
+            log.debug("User not authenticated or is anonymous");
         }
 
         List<Course> courses = courseService.getAllCoursesFromDatabase();

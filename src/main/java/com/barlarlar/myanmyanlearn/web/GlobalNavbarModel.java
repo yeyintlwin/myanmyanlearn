@@ -2,6 +2,7 @@ package com.barlarlar.myanmyanlearn.web;
 
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
@@ -10,18 +11,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalNavbarModel {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private MessageSource messageSource;
+    private final MemberRepository memberRepository;
+    private final MessageSource messageSource;
 
     @ModelAttribute
     public void addGlobalUser(Model model) {

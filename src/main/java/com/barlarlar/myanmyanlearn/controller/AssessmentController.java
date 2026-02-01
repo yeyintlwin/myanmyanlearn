@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,23 +31,15 @@ import com.barlarlar.myanmyanlearn.service.AssessmentScoreRecordService;
 import com.barlarlar.myanmyanlearn.service.CourseService;
 
 @Controller
+@Slf4j
+@RequiredArgsConstructor
 public class AssessmentController {
-    private static final Logger log = LoggerFactory.getLogger(AssessmentController.class);
     private final CourseService courseService;
     private final ObjectMapper objectMapper;
     private final AssessmentScoreRecordService scoreRecordService;
 
     @Value("${app.assessment.seconds-per-slot:15}")
     private int secondsPerSlot;
-
-    public AssessmentController(
-            CourseService courseService,
-            ObjectMapper objectMapper,
-            AssessmentScoreRecordService scoreRecordService) {
-        this.courseService = courseService;
-        this.objectMapper = objectMapper;
-        this.scoreRecordService = scoreRecordService;
-    }
 
     @GetMapping("/assessment")
     public String assessmentPage(

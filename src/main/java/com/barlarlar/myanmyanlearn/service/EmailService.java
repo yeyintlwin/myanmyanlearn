@@ -1,15 +1,17 @@
 package com.barlarlar.myanmyanlearn.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     public void sendOtpEmail(String to, String otpCode) {
         try {
@@ -19,10 +21,9 @@ public class EmailService {
             message.setText(buildOtpEmailContent(otpCode));
 
             mailSender.send(message);
-            System.out.println("OTP email sent successfully to: " + to);
+            log.info("OTP email sent successfully to: {}", to);
         } catch (Exception e) {
-            System.err.println("Failed to send OTP email: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Failed to send OTP email to: {}", to, e);
         }
     }
 
@@ -60,10 +61,9 @@ public class EmailService {
                     """);
 
             mailSender.send(message);
-            System.out.println("Test email sent successfully to: " + to);
+            log.info("Test email sent successfully to: {}", to);
         } catch (Exception e) {
-            System.err.println("Failed to send test email: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Failed to send test email to: {}", to, e);
         }
     }
 
@@ -75,10 +75,9 @@ public class EmailService {
             message.setText(buildPasswordResetEmailContent(resetLink, username, fullName));
 
             mailSender.send(message);
-            System.out.println("Password reset email sent successfully to: " + to);
+            log.info("Password reset email sent successfully to: {}", to);
         } catch (Exception e) {
-            System.err.println("Failed to send password reset email: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Failed to send password reset email to: {}", to, e);
         }
     }
 

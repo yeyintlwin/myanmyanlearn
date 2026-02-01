@@ -2,17 +2,19 @@ package com.barlarlar.myanmyanlearn.controller;
 
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.service.RegistrationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@Slf4j
+@RequiredArgsConstructor
 public class SignUpController {
 
-    @Autowired
-    private RegistrationService registrationService;
+    private final RegistrationService registrationService;
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -22,10 +24,11 @@ public class SignUpController {
         model.addAttribute("lastName", "");
         model.addAttribute("email", "");
 
-        System.out.println("GET /register - Model attributes: username=" + model.getAttribute("username") +
-                ", firstName=" + model.getAttribute("firstName") +
-                ", lastName=" + model.getAttribute("lastName") +
-                ", email=" + model.getAttribute("email"));
+        log.debug("GET /register - Model attributes: username={}, firstName={}, lastName={}, email={}",
+                model.getAttribute("username"),
+                model.getAttribute("firstName"),
+                model.getAttribute("lastName"),
+                model.getAttribute("email"));
         return "register";
     }
 
@@ -37,10 +40,11 @@ public class SignUpController {
         model.addAttribute("lastName", "User");
         model.addAttribute("email", "test@example.com");
 
-        System.out.println("GET /register-test - Model attributes: username=" + model.getAttribute("username") +
-                ", firstName=" + model.getAttribute("firstName") +
-                ", lastName=" + model.getAttribute("lastName") +
-                ", email=" + model.getAttribute("email"));
+        log.debug("GET /register-test - Model attributes: username={}, firstName={}, lastName={}, email={}",
+                model.getAttribute("username"),
+                model.getAttribute("firstName"),
+                model.getAttribute("lastName"),
+                model.getAttribute("email"));
         return "register";
     }
 
@@ -54,12 +58,12 @@ public class SignUpController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
-        System.out.println("Registration attempt for user: " + username + ", email: " + email);
+        log.info("Registration attempt for user: {}, email: {}", username, email);
 
         try {
             // Register the user
             Member member = registrationService.registerUser(username, password, firstName, lastName, email);
-            System.out.println("User registered successfully: " + member.getUserId());
+            log.info("User registered successfully: {}", member.getUserId());
 
             // Redirect to email verification with user info
             redirectAttributes.addFlashAttribute("email", email);
@@ -70,8 +74,7 @@ public class SignUpController {
             return "redirect:/email-verification";
 
         } catch (Exception e) {
-            System.err.println("Registration failed: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Registration failed for user: {}", username, e);
 
             // Add error message to model
             model.addAttribute("error", e.getMessage());
@@ -82,8 +85,8 @@ public class SignUpController {
             model.addAttribute("lastName", lastName);
             model.addAttribute("email", email);
 
-            System.out.println("Model attributes set - username: " + username + ", firstName: " + firstName
-                    + ", lastName: " + lastName + ", email: " + email);
+            log.debug("Model attributes set - username={}, firstName={}, lastName={}, email={}",
+                    username, firstName, lastName, email);
             return "register";
         }
     }
@@ -112,26 +115,26 @@ public class SignUpController {
             @RequestParam("otpCode") String otpCode,
             RedirectAttributes redirectAttributes) {
 
-        System.out.println("Email verification attempt - Email: " + email + ", OTP: " + otpCode);
+        log.info("Email verification attempt - Email: {}", email);
 
         try {
             // Verify the OTP
             boolean verified = registrationService.verifyEmail(email, otpCode);
-            System.out.println("OTP verification result: " + verified);
+            log.info("OTP verification result: {}", verified);
 
             if (verified) {
                 redirectAttributes.addFlashAttribute("success", "Email verified successfully! You can now login.");
-                System.out.println("Redirecting to verification-success");
+                log.info("Redirecting to verification-success");
                 return "redirect:/verification-success";
             } else {
                 redirectAttributes.addFlashAttribute("error", "Invalid or expired OTP code. Please try again.");
                 redirectAttributes.addFlashAttribute("email", email); // Preserve email for retry
-                System.out.println("Invalid OTP, staying on email-verification");
+                log.info("Invalid OTP, staying on email-verification");
                 return "redirect:/email-verification";
             }
 
         } catch (Exception e) {
-            System.err.println("Error during OTP verification: " + e.getMessage());
+            log.error("Error during OTP verification for email: {}", email, e);
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             redirectAttributes.addFlashAttribute("email", email); // Preserve email for retry
             return "redirect:/email-verification";

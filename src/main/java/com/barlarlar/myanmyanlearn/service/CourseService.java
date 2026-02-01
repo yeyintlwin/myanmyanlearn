@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.barlarlar.myanmyanlearn.entity.CourseChapterEntity;
@@ -21,30 +22,17 @@ import com.barlarlar.myanmyanlearn.repository.CourseQuestionRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseQuestionSlotOptionRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseQuestionSlotRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseSubchapterRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
+@RequiredArgsConstructor
 public class CourseService {
-    @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private CourseChapterRepository courseChapterRepository;
-
-    @Autowired
-    private CourseSubchapterRepository courseSubchapterRepository;
-
-    @Autowired
-    private CourseQuestionRepository courseQuestionRepository;
-
-    @Autowired
-    private CourseQuestionOptionRepository courseQuestionOptionRepository;
-
-    @Autowired
-    private CourseQuestionSlotRepository courseQuestionSlotRepository;
-
-    @Autowired
-    private CourseQuestionSlotOptionRepository courseQuestionSlotOptionRepository;
+    private final CourseRepository courseRepository;
+    private final CourseChapterRepository courseChapterRepository;
+    private final CourseSubchapterRepository courseSubchapterRepository;
+    private final CourseQuestionRepository courseQuestionRepository;
+    private final CourseQuestionOptionRepository courseQuestionOptionRepository;
+    private final CourseQuestionSlotRepository courseQuestionSlotRepository;
+    private final CourseQuestionSlotOptionRepository courseQuestionSlotOptionRepository;
 
     public List<Course> getAllCoursesFromDatabase() {
         List<CourseEntity> entities = courseRepository.findAll();

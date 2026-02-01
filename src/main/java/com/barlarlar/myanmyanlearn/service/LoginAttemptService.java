@@ -1,7 +1,8 @@
 package com.barlarlar.myanmyanlearn.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.barlarlar.myanmyanlearn.entity.LoginAttemptEntity;
 import com.barlarlar.myanmyanlearn.repository.LoginAttemptRepository;
 
@@ -10,10 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class LoginAttemptService {
 
-    @Autowired
-    private LoginAttemptRepository loginAttemptRepository;
+    private final LoginAttemptRepository loginAttemptRepository;
 
     // In-memory cache for login attempts (for rate limiting)
     private final ConcurrentHashMap<String, AtomicInteger> attemptCounts = new ConcurrentHashMap<>();
@@ -81,7 +83,7 @@ public class LoginAttemptService {
         int userAttempts = getUserFailedAttempts(username);
         if (userAttempts >= MAX_ATTEMPTS_BEFORE_LOCKOUT) {
             lockoutTimes.put(username, now);
-            System.out.println("User " + username + " has been locked due to too many failed attempts");
+            log.warn("User {} has been locked due to too many failed attempts", username);
         }
     }
 
@@ -152,7 +154,7 @@ public class LoginAttemptService {
             entity.setSuccess(false);
             loginAttemptRepository.save(entity);
         } catch (Exception e) {
-            System.err.println("Error recording failed attempt for user " + username + ": " + e.getMessage());
+            log.error("Error recording failed attempt for user {}", username, e);
         }
     }
 
@@ -167,7 +169,7 @@ public class LoginAttemptService {
                     .map(a -> a.getAttemptCount() != null ? a.getAttemptCount() : 0)
                     .orElse(0);
         } catch (Exception e) {
-            System.err.println("Error getting failed attempts for user " + username + ": " + e.getMessage());
+            log.error("Error getting failed attempts for user {}", username, e);
             return 0;
         }
     }
@@ -179,7 +181,7 @@ public class LoginAttemptService {
         try {
             loginAttemptRepository.deleteById(username);
         } catch (Exception e) {
-            System.err.println("Error resetting failed attempts for user " + username + ": " + e.getMessage());
+            log.error("Error resetting failed attempts for user {}", username, e);
         }
     }
 

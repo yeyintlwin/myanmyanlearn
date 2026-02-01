@@ -2,7 +2,7 @@ package com.barlarlar.myanmyanlearn.service;
 
 import com.barlarlar.myanmyanlearn.entity.OtpVerification;
 import com.barlarlar.myanmyanlearn.repository.OtpVerificationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +14,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class OtpService {
 
-    @Autowired
-    private OtpVerificationRepository otpVerificationRepository;
+    private final OtpVerificationRepository otpVerificationRepository;
 
     private static final SecureRandom random = new SecureRandom();
     private static final int OTP_EXPIRY_MINUTES = 10;

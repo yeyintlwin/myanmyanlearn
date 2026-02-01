@@ -1,7 +1,7 @@
 package com.barlarlar.myanmyanlearn.controller;
 
 import com.barlarlar.myanmyanlearn.service.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Random;
 
 @Controller
+@RequiredArgsConstructor
 public class EmailTestController {
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
     @GetMapping("/test-email")
     @ResponseBody

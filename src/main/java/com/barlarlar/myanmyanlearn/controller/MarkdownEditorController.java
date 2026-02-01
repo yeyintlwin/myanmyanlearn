@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,26 +30,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@Slf4j
+@RequiredArgsConstructor
 public class MarkdownEditorController {
-    private static final Logger log = LoggerFactory.getLogger(MarkdownEditorController.class);
     private final CourseRepository courseRepository;
     private final CourseChapterRepository courseChapterRepository;
     private final CourseSubchapterRepository courseSubchapterRepository;
     private final CourseQuestionRepository courseQuestionRepository;
     private final StorageService storageService;
-
-    public MarkdownEditorController(
-            CourseRepository courseRepository,
-            CourseChapterRepository courseChapterRepository,
-            CourseSubchapterRepository courseSubchapterRepository,
-            CourseQuestionRepository courseQuestionRepository,
-            StorageService storageService) {
-        this.courseRepository = courseRepository;
-        this.courseChapterRepository = courseChapterRepository;
-        this.courseSubchapterRepository = courseSubchapterRepository;
-        this.courseQuestionRepository = courseQuestionRepository;
-        this.storageService = storageService;
-    }
 
     @GetMapping("/markdown-editor")
     public String editor(

@@ -1,5 +1,6 @@
 package com.barlarlar.myanmyanlearn.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,19 +12,19 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
+@Slf4j
 public class AppIntroController {
 
     @GetMapping("/intro")
     public String appIntroPage(Model model) {
-        System.out.println("=== AppIntroController.appIntroPage() called ===");
+        log.info("AppIntroController.appIntroPage() called");
         return "app-intro";
     }
 
     @PostMapping("/intro")
     @ResponseBody
     public String handleIntroCompletion(@RequestParam String action, HttpServletResponse response) {
-        System.out.println("=== AppIntroController.handleIntroCompletion() called ===");
-        System.out.println("Intro action: " + action);
+        log.info("AppIntroController.handleIntroCompletion() called. action={}", action);
 
         // Set intro completion status in cookie
         Cookie introCookie = new Cookie("introCompleted", action);

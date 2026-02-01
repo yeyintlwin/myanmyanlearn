@@ -4,7 +4,8 @@ import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
 import com.barlarlar.myanmyanlearn.service.EmailService;
 import com.barlarlar.myanmyanlearn.service.OtpService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -17,16 +18,13 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private OtpService otpService;
+    private final MemberRepository memberRepository;
+    private final EmailService emailService;
+    private final OtpService otpService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -34,23 +32,23 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             Authentication authentication) throws IOException, ServletException {
 
         String username = authentication.getName();
-        System.out.println("Login attempt for user: " + username);
+        log.info("Login attempt for user: {}", username);
 
         // Get user from database
         Member member = memberRepository.findById(Objects.requireNonNull(username)).orElse(null);
 
         if (member != null) {
-            System.out.println("User found: " + username + ", Email verified: " + member.getEmailVerified());
+            log.debug("User found: {}, Email verified: {}", username, member.getEmailVerified());
 
             // Check if email is verified
             if (!member.getEmailVerified()) {
-                System.out.println("User email not verified, clearing session and redirecting to email verification");
+                log.info("User email not verified, redirecting to email verification");
 
                 // Clear any existing session for unverified users - NO SESSION STORAGE
                 request.getSession().invalidate();
 
                 try {
-                    System.out.println("Attempting to send OTP to: " + member.getEmail());
+                    log.info("Attempting to send OTP to: {}", member.getEmail());
 
                     // Generate new OTP
                     String otpCode = otpService.generateOtp();
@@ -64,10 +62,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                     // Send OTP email
                     emailService.sendOtpEmail(member.getEmail(), otpCode);
 
-                    System.out.println("New OTP sent to: " + member.getEmail());
+                    log.info("New OTP sent to: {}", member.getEmail());
                 } catch (Exception e) {
-                    System.err.println("Failed to send OTP to " + member.getEmail() + ": " + e.getMessage());
-                    e.printStackTrace();
+                    log.error("Failed to send OTP to {}", member.getEmail(), e);
                     // Continue with redirect even if OTP sending fails
                 }
 
@@ -88,7 +85,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             rememberMeCookie.setMaxAge(0);
             response.addCookie(rememberMeCookie);
         }
-        System.out.println("User email verified, redirecting to home");
+        log.info("User email verified, redirecting to home");
         response.sendRedirect("/home");
     }
 }

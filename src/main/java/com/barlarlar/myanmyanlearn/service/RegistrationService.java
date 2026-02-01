@@ -4,7 +4,8 @@ import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.entity.Role;
 import com.barlarlar.myanmyanlearn.repository.MemberRepository;
 import com.barlarlar.myanmyanlearn.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,8 @@ import java.time.LocalDateTime;
 
 @Service
 @Transactional
+@Slf4j
+@RequiredArgsConstructor
 public class RegistrationService {
 
     private static final Object REGISTRATION_LOCK = new Object();
@@ -22,23 +25,12 @@ public class RegistrationService {
     private static final String ROLE_STUDENT = "ROLE_STUDENT";
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9._]{3,50}$");
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private OtpService otpService;
-
-    @Autowired
-    private RegistrationSettingsService registrationSettingsService;
+    private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final OtpService otpService;
+    private final RegistrationSettingsService registrationSettingsService;
 
     /**
      * Register a new user with email verification
@@ -193,7 +185,7 @@ public class RegistrationService {
             Member member = getUserByUsername(username);
             return member.getEmailVerified();
         } catch (Exception e) {
-            System.err.println("Error checking email verification for user: " + username + " - " + e.getMessage());
+            log.error("Error checking email verification for user: {}", username, e);
             return false; // Default to not verified if we can't check
         }
     }

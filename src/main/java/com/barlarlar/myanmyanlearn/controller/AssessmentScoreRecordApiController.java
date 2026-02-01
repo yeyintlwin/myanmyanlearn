@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,15 +29,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @RestController
 @RequestMapping("/api/assessment-scores")
+@Slf4j
+@RequiredArgsConstructor
 public class AssessmentScoreRecordApiController {
-    private static final Logger log = LoggerFactory.getLogger(AssessmentScoreRecordApiController.class);
     private final AssessmentScoreRecordService service;
     private final ObjectMapper objectMapper;
-
-    public AssessmentScoreRecordApiController(AssessmentScoreRecordService service, ObjectMapper objectMapper) {
-        this.service = service;
-        this.objectMapper = objectMapper;
-    }
 
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> list(

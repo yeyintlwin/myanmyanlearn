@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,13 +32,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Controller
+@RequiredArgsConstructor
 public class ReaderController {
 
-    @Autowired
-    private CourseService courseService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final CourseService courseService;
+    private final ObjectMapper objectMapper;
 
     @Value("${google.studio.api-key:}")
     private String googleStudioApiKey;

@@ -7,7 +7,8 @@ import com.barlarlar.myanmyanlearn.repository.OtpVerificationRepository;
 import com.barlarlar.myanmyanlearn.repository.PasswordResetTokenRepository;
 import com.barlarlar.myanmyanlearn.repository.RoleRepository;
 import com.barlarlar.myanmyanlearn.service.LoginAttemptService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
@@ -34,31 +35,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Controller
+@Slf4j
+@RequiredArgsConstructor
 public class ProfileController {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private OtpVerificationRepository otpVerificationRepository;
-
-    @Autowired
-    private PasswordResetTokenRepository passwordResetTokenRepository;
-
-    @Autowired
-    private AssessmentScoreRecordRepository assessmentScoreRecordRepository;
-
-    @Autowired
-    private LoginAttemptService loginAttemptService;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final MessageSource messageSource;
+    private final RoleRepository roleRepository;
+    private final OtpVerificationRepository otpVerificationRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final AssessmentScoreRecordRepository assessmentScoreRecordRepository;
+    private final LoginAttemptService loginAttemptService;
 
     private static final int NAME_MIN_LENGTH = 2;
     private static final int NAME_MAX_LENGTH = 50;
@@ -66,30 +54,28 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profilePage(Model model) {
-        System.out.println("=== ProfileController.profilePage() called ===");
+        log.info("ProfileController.profilePage() called");
 
         // Get authenticated user information
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Authentication: " + (authentication != null ? authentication.getName() : "null"));
-        System.out.println("Is authenticated: " + (authentication != null && authentication.isAuthenticated()));
-        System.out.println(
-                "Is anonymous: " + (authentication != null && authentication.getName().equals("anonymousUser")));
+        log.debug("Authentication: {}", authentication != null ? authentication.getName() : "null");
+        log.debug("Is authenticated: {}", authentication != null && authentication.isAuthenticated());
+        log.debug("Is anonymous: {}", authentication != null && "anonymousUser".equals(authentication.getName()));
 
         if (authentication != null && authentication.isAuthenticated()
                 && !authentication.getName().equals("anonymousUser")) {
 
             String username = authentication.getName();
-            System.out.println("Username: " + username);
+            log.debug("Username: {}", username);
             model.addAttribute("username", username);
             model.addAttribute("userInitials", getInitials(username));
 
             // Fetch user's full data from database
             Optional<Member> memberOpt = memberRepository.findById(Objects.requireNonNull(username));
-            System.out.println("Fetching user data for: " + username);
+            log.debug("Fetching user data for: {}", username);
             if (memberOpt.isPresent()) {
                 Member member = memberOpt.get();
-                System.out.println("User found: " + member.getFirstName() + " " + member.getLastName() + " - "
-                        + member.getEmail());
+                log.debug("User found: {} {} - {}", member.getFirstName(), member.getLastName(), member.getEmail());
                 model.addAttribute("userFirstName", member.getFirstName());
                 model.addAttribute("userLastName", member.getLastName());
                 model.addAttribute("userEmail", member.getEmail());
@@ -99,10 +85,10 @@ public class ProfileController {
                 model.addAttribute("userEmailVerified", member.getEmailVerified());
                 model.addAttribute("userActive", member.getActive());
             } else {
-                System.out.println("User not found in database: " + username);
+                log.debug("User not found in database: {}", username);
             }
         } else {
-            System.out.println("User not authenticated or is anonymous");
+            log.debug("User not authenticated or is anonymous");
         }
 
         return "profile";
@@ -148,7 +134,7 @@ public class ProfileController {
     @ResponseBody
     @Transactional
     public ResponseEntity<Map<String, Object>> deleteAccount(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("=== ProfileController.deleteAccount() called ===");
+        log.info("ProfileController.deleteAccount() called");
 
         Map<String, Object> body = new HashMap<>();
 
@@ -163,13 +149,13 @@ public class ProfileController {
             }
 
             String username = authentication.getName();
-            System.out.println("Deleting account for user: " + username);
+            log.info("Deleting account for user: {}", username);
 
             // Find the user in database
             Optional<Member> memberOpt = memberRepository.findById(Objects.requireNonNull(username));
             if (memberOpt.isPresent()) {
                 Member member = memberOpt.get();
-                System.out.println("Found user: " + member.getFirstName() + " " + member.getLastName());
+                log.debug("Found user: {} {}", member.getFirstName(), member.getLastName());
 
                 String email = member.getEmail();
 
@@ -183,7 +169,7 @@ public class ProfileController {
                 loginAttemptService.deleteAttemptsForUser(username);
 
                 memberRepository.delete(member);
-                System.out.println("User account deleted successfully");
+                log.info("User account deleted successfully");
 
                 // Logout the user
                 new SecurityContextLogoutHandler().logout(request, response, authentication);
@@ -192,14 +178,13 @@ public class ProfileController {
                 body.put("message", msg("profile.deleteAccount.msg.success"));
                 return ResponseEntity.ok(body);
             } else {
-                System.out.println("User not found: " + username);
+                log.info("User not found: {}", username);
                 body.put("success", false);
                 body.put("message", msg("profile.deleteAccount.msg.notFound"));
                 return ResponseEntity.status(404).body(body);
             }
         } catch (Exception e) {
-            System.err.println("Error deleting account: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error deleting account", e);
             body.put("success", false);
             body.put("message", msg("profile.deleteAccount.msg.error"));
             return ResponseEntity.status(500).body(body);
@@ -212,7 +197,7 @@ public class ProfileController {
     @PostMapping("/profile/change-name")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> changeName(@RequestBody Map<String, String> request) {
-        System.out.println("=== ProfileController.changeName() called ===");
+        log.info("ProfileController.changeName() called");
 
         Map<String, Object> response = new HashMap<>();
 
@@ -266,16 +251,14 @@ public class ProfileController {
             member.setLastName(lastName);
             memberRepository.save(member);
 
-            System.out
-                    .println("Name changed successfully for user: " + username + " to: " + firstName + " " + lastName);
+            log.info("Name changed successfully for user: {} to: {} {}", username, firstName, lastName);
 
             response.put("success", true);
             response.put("message", msg("profile.changeName.msg.success"));
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            System.err.println("Error changing name: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error changing name", e);
 
             response.put("success", false);
             String rootMessage = rootMessage(e);
@@ -294,7 +277,7 @@ public class ProfileController {
     @PostMapping("/profile/change-password")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> changePassword(@RequestBody Map<String, String> request) {
-        System.out.println("=== ProfileController.changePassword() called ===");
+        log.info("ProfileController.changePassword() called");
 
         Map<String, Object> response = new HashMap<>();
 
@@ -356,15 +339,14 @@ public class ProfileController {
             member.setPassword(encodedNewPassword);
             memberRepository.save(member);
 
-            System.out.println("Password changed successfully for user: " + username);
+            log.info("Password changed successfully for user: {}", username);
 
             response.put("success", true);
             response.put("message", msg("profile.changePassword.msg.success"));
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            System.err.println("Error changing password: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error changing password", e);
 
             response.put("success", false);
             response.put("message", msg("profile.changePassword.msg.error"));
