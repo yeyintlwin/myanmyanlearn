@@ -19,6 +19,7 @@
           name="q"
           th:value="${userQ}"
           type="text"
+          th:attr="placeholder=#{adminUsers.search.placeholder}"
           placeholder="Search users..."
           class="bg-white/10 text-white text-sm rounded-lg pl-9 pr-3 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 w-full"
         />
@@ -42,13 +43,22 @@
           <option
             value="name"
             th:selected="${userField == null || userField == 'name'}"
+            th:text="#{adminUsers.search.field.name}"
           >
             Name
           </option>
-          <option value="username" th:selected="${userField == 'username'}">
+          <option
+            value="username"
+            th:selected="${userField == 'username'}"
+            th:text="#{adminUsers.search.field.username}"
+          >
             Username
           </option>
-          <option value="email" th:selected="${userField == 'email'}">
+          <option
+            value="email"
+            th:selected="${userField == 'email'}"
+            th:text="#{adminUsers.search.field.email}"
+          >
             Email
           </option>
         </select>
@@ -72,16 +82,29 @@
           <option
             value=""
             th:selected="${userRole == null || userRole.isBlank()}"
+            th:text="#{adminUsers.search.role.any}"
           >
             Any
           </option>
-          <option value="ADMIN" th:selected="${userRole == 'ADMIN'}">
+          <option
+            value="ADMIN"
+            th:selected="${userRole == 'ADMIN'}"
+            th:text="#{adminUsers.search.role.admin}"
+          >
             Admin
           </option>
-          <option value="TEACHER" th:selected="${userRole == 'TEACHER'}">
+          <option
+            value="TEACHER"
+            th:selected="${userRole == 'TEACHER'}"
+            th:text="#{adminUsers.search.role.teacher}"
+          >
             Teacher
           </option>
-          <option value="STUDENT" th:selected="${userRole == 'STUDENT'}">
+          <option
+            value="STUDENT"
+            th:selected="${userRole == 'STUDENT'}"
+            th:text="#{adminUsers.search.role.student}"
+          >
             Student
           </option>
         </select>
@@ -92,7 +115,7 @@
         class="bg-white/15 hover:bg-white/20 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition w-full sm:w-auto inline-flex items-center justify-center gap-2 flex-shrink-0"
       >
         <i class="fas fa-magnifying-glass text-xs"></i>
-        <span>Search</span>
+        <span th:text="#{adminUsers.action.search}">Search</span>
       </button>
 
       <a
@@ -101,20 +124,23 @@
         class="bg-white/10 hover:bg-white/15 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition no-underline inline-flex items-center justify-center gap-2 w-full sm:w-auto flex-shrink-0"
       >
         <i class="fas fa-rotate-left text-xs"></i>
-        <span>Clear</span>
+        <span th:text="#{adminUsers.action.clear}">Clear</span>
       </a>
     </div>
   </form>
 
   <div
     class="text-white/70 text-sm"
-    th:text="${adminUsers != null ? (adminUsers.size() + ' users') : '0 users'}"
+    th:with="userCount=${adminUsers != null ? adminUsers.size() : 0}"
+    th:text="#{adminUsers.count(${userCount})}"
   >
     0 users
   </div>
 
   <div th:if="${adminUsers == null || adminUsers.isEmpty()}">
-    <p class="text-white/70 text-sm">No users found.</p>
+    <p class="text-white/70 text-sm" th:text="#{adminUsers.empty}">
+      No users found.
+    </p>
   </div>
 
   <div
@@ -124,17 +150,60 @@
     <table class="min-w-max text-left text-sm">
       <thead class="bg-white/10 text-white/80">
         <tr>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">User ID</th>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">Name</th>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">Email</th>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">Roles</th>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">Class</th>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">School Year</th>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">Active</th>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.userId}"
+          >
+            User ID
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.name}"
+          >
+            Name
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.email}"
+          >
+            Email
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.roles}"
+          >
+            Roles
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.class}"
+          >
+            Class
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.schoolYear}"
+          >
+            School Year
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.active}"
+          >
+            Active
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.emailVerified}"
+          >
             Email Verified
           </th>
-          <th class="px-4 py-3 font-semibold whitespace-nowrap">Actions</th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.actions}"
+          >
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody class="divide-y divide-white/10 text-white/80">
@@ -147,12 +216,17 @@
           </td>
           <td class="px-4 py-3 whitespace-nowrap">
             <span
-              th:text="${(u.firstName ?: '') + (u.lastName != null ? (' ' + u.lastName) : '')}"
+              th:with="firstName=${u.firstName != null ? u.firstName : ''},lastName=${u.lastName != null ? u.lastName : ''},fullName=${(firstName + ' ' + lastName).trim()}"
+              th:text="${fullName}"
             >
               Name
             </span>
           </td>
-          <td class="px-4 py-3 whitespace-nowrap" th:text="${u.email ?: '-'}">
+          <td
+            class="px-4 py-3 whitespace-nowrap"
+            th:with="emailValue=${u.email != null ? #strings.trim(u.email) : null}"
+            th:text="${emailValue} ?: '-'"
+          >
             email
           </td>
           <td class="px-4 py-3 whitespace-nowrap">
@@ -361,7 +435,7 @@
               <span
                 class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold"
                 th:classappend="${u.active != null && u.active} ? ' bg-emerald-500/20 text-emerald-200' : ' bg-rose-500/20 text-rose-200'"
-                th:text="${u.active != null && u.active} ? 'Active' : 'Inactive'"
+                th:text="${u.active != null && u.active} ? #{adminUsers.status.active} : #{adminUsers.status.inactive}"
               >
                 Active
               </span>
@@ -393,6 +467,7 @@
                     type="checkbox"
                     class="sr-only peer"
                     th:checked="${u.active != null && u.active}"
+                    th:attr="data-label-active=#{adminUsers.status.active},data-label-inactive=#{adminUsers.status.inactive}"
                     onchange="
                       var h = this.form.querySelector(
                         'input[type=hidden][name=active]',
@@ -400,13 +475,17 @@
                       if (h) {
                         h.value = this.checked ? 'true' : 'false';
                       }
+                      var activeLabel =
+                        this.getAttribute('data-label-active') || 'Active';
+                      var inactiveLabel =
+                        this.getAttribute('data-label-inactive') || 'Inactive';
                       var badge = this.form.parentElement
                         ? this.form.parentElement.querySelector('span')
                         : null;
                       if (badge) {
                         badge.textContent = this.checked
-                          ? 'Active'
-                          : 'Inactive';
+                          ? activeLabel
+                          : inactiveLabel;
                         badge.classList.remove(
                           'bg-emerald-500/20',
                           'text-emerald-200',
@@ -434,7 +513,7 @@
             <span
               class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold"
               th:classappend="${u.emailVerified != null && u.emailVerified} ? ' bg-emerald-500/20 text-emerald-200' : ' bg-amber-500/20 text-amber-200'"
-              th:text="${u.emailVerified != null && u.emailVerified} ? 'Verified' : 'Unverified'"
+              th:text="${u.emailVerified != null && u.emailVerified} ? #{adminUsers.emailStatus.verified} : #{adminUsers.emailStatus.unverified}"
             >
               Verified
             </span>
@@ -468,18 +547,24 @@
                     name="role"
                     class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-2 pr-7 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 cursor-pointer"
                   >
-                    <option value="ADMIN" th:selected="${u.roleKey == 'ADMIN'}">
+                    <option
+                      value="ADMIN"
+                      th:selected="${u.roleKey == 'ADMIN'}"
+                      th:text="#{adminUsers.search.role.admin}"
+                    >
                       Admin
                     </option>
                     <option
                       value="TEACHER"
                       th:selected="${u.roleKey == 'TEACHER'}"
+                      th:text="#{adminUsers.search.role.teacher}"
                     >
                       Teacher
                     </option>
                     <option
                       value="STUDENT"
                       th:selected="${u.roleKey == 'STUDENT' || u.roleKey == null || u.roleKey.isBlank()}"
+                      th:text="#{adminUsers.search.role.student}"
                     >
                       Student
                     </option>
@@ -489,7 +574,7 @@
                   type="submit"
                   class="bg-white/15 hover:bg-white/20 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition inline-flex items-center justify-center gap-2 flex-shrink-0"
                 >
-                  Update
+                  <span th:text="#{adminUsers.action.update}">Update</span>
                 </button>
               </form>
 
@@ -498,7 +583,12 @@
                 action="/admin/users/delete"
                 th:action="@{/admin/users/delete}"
                 th:if="${currentUserId == null || u.userId != currentUserId}"
-                onsubmit="return confirm('Delete this user?');"
+                th:attr="data-confirm=#{adminUsers.delete.confirm}"
+                onsubmit="
+                  return confirm(
+                    this.getAttribute('data-confirm') || 'Delete this user?',
+                  );
+                "
                 class="flex-shrink-0"
               >
                 <input
@@ -514,7 +604,7 @@
                   type="submit"
                   class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 text-xs px-3 h-9 rounded-lg border border-rose-500/30 transition inline-flex items-center justify-center flex-shrink-0"
                 >
-                  Delete
+                  <span th:text="#{adminUsers.action.delete}">Delete</span>
                 </button>
               </form>
               <span
@@ -553,11 +643,14 @@
               <h3
                 id="assignAdminTitle"
                 class="text-white text-lg sm:text-xl font-bold"
+                th:text="#{adminUsers.assignAdmin.title}"
               >
                 Assign Admin role?
               </h3>
               <p class="text-white/80 text-sm mt-2">
-                You are about to assign the Admin role to
+                <span th:text="#{adminUsers.assignAdmin.bodyPrefix}"
+                  >You are about to assign the Admin role to</span
+                >
                 <span
                   id="assignAdminTargetUserId"
                   class="font-semibold text-white"
@@ -567,11 +660,17 @@
               <div
                 class="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4"
               >
-                <div class="text-amber-200 font-semibold text-sm">
+                <div
+                  class="text-amber-200 font-semibold text-sm"
+                  th:text="#{adminUsers.assignAdmin.warningTitle}"
+                >
                   Your role will be changed to Teacher and you will be logged
                   out.
                 </div>
-                <div class="text-white/75 text-sm mt-1">
+                <div
+                  class="text-white/75 text-sm mt-1"
+                  th:text="#{adminUsers.assignAdmin.warningBody}"
+                >
                   This is required to ensure there is always at least one Admin.
                 </div>
               </div>
@@ -582,6 +681,7 @@
               id="assignAdminCancel"
               type="button"
               class="bg-white/10 hover:bg-white/15 text-white text-sm px-4 h-10 rounded-lg border border-white/10 transition inline-flex items-center justify-center"
+              th:text="#{adminUsers.assignAdmin.cancel}"
             >
               Cancel
             </button>
@@ -589,6 +689,7 @@
               id="assignAdminConfirm"
               type="button"
               class="bg-rose-500/30 hover:bg-rose-500/40 text-rose-100 text-sm px-4 h-10 rounded-lg border border-rose-500/40 transition inline-flex items-center justify-center"
+              th:text="#{adminUsers.assignAdmin.confirm}"
             >
               Assign Admin &amp; Log out
             </button>
@@ -602,6 +703,8 @@
     id="adminAsyncToast"
     class="fixed bottom-4 right-4 z-[60] hidden items-center gap-2 rounded-xl border border-white/15 bg-slate-950/90 px-4 py-3 text-sm text-white shadow-2xl backdrop-blur"
   >
-    <span id="adminAsyncToastText">Saved</span>
+    <span id="adminAsyncToastText" th:text="#{adminUsers.toast.saved}"
+      >Saved</span
+    >
   </div>
 </div>

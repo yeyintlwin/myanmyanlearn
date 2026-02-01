@@ -3,13 +3,19 @@ package com.barlarlar.myanmyanlearn.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.barlarlar.myanmyanlearn.entity.CourseChapterEntity;
 import com.barlarlar.myanmyanlearn.entity.CourseEntity;
 import com.barlarlar.myanmyanlearn.entity.CourseSubchapterEntity;
+import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.model.Course;
 import com.barlarlar.myanmyanlearn.model.Content;
 import com.barlarlar.myanmyanlearn.model.Question;
@@ -22,10 +28,14 @@ import com.barlarlar.myanmyanlearn.repository.CourseQuestionRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseQuestionSlotOptionRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseQuestionSlotRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseSubchapterRepository;
+import com.barlarlar.myanmyanlearn.repository.MemberRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @RequiredArgsConstructor
 public class CourseService {
+    private final ObjectMapper objectMapper;
     private final CourseRepository courseRepository;
     private final CourseChapterRepository courseChapterRepository;
     private final CourseSubchapterRepository courseSubchapterRepository;
@@ -33,46 +43,90 @@ public class CourseService {
     private final CourseQuestionOptionRepository courseQuestionOptionRepository;
     private final CourseQuestionSlotRepository courseQuestionSlotRepository;
     private final CourseQuestionSlotOptionRepository courseQuestionSlotOptionRepository;
+    private final MemberRepository memberRepository;
+
+    public record TargetStudents(List<String> schoolYears, List<String> classes) {
+    }
+
+    public List<Course> getCoursesForAuthentication(Authentication auth) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt", "createdAt");
+        boolean canSeeAll = canSeeUnpublished(auth);
+        List<CourseEntity> entities = canSeeAll ? courseRepository.findAll(sort)
+                : courseRepository.findByPublishedTrue(sort);
+        if (!canSeeAll) {
+            Member member = resolveCurrentMember(auth);
+            List<CourseEntity> filtered = new ArrayList<>();
+            for (CourseEntity e : entities) {
+                if (e == null) {
+                    continue;
+                }
+                if (canMemberAccessTargets(e, member)) {
+                    filtered.add(e);
+                }
+            }
+            entities = filtered;
+        }
+        return mapCourseEntitiesToCourseSummaries(entities);
+    }
 
     public List<Course> getAllCoursesFromDatabase() {
         List<CourseEntity> entities = courseRepository.findAll();
-        if (entities == null || entities.isEmpty()) {
-            return Collections.emptyList();
+        return mapCourseEntitiesToCourseSummaries(entities);
+    }
+
+    public Course findAccessibleByIdFromDatabase(String id, Authentication auth) {
+        if (id == null || id.isBlank()) {
+            return null;
         }
-
-        List<Course> out = new ArrayList<>();
-        for (CourseEntity entity : entities) {
-            if (entity == null || entity.getCourseId() == null || entity.getCourseId().isBlank()) {
-                continue;
-            }
-
-            Course course = new Course();
-            course.setId(entity.getCourseId());
-            course.setTitle(entity.getTitle());
-            course.setDescription(entity.getDescription());
-            course.setLanguage(entity.getLanguage());
-            course.setLogo(entity.getCoverImageUrl());
-
-            List<CourseChapterEntity> chapters = courseChapterRepository
-                    .findByCourseIdOrderByChapterNumberAsc(entity.getCourseId());
-            if (chapters != null && !chapters.isEmpty()) {
-                List<Content> contents = new ArrayList<>();
-                for (CourseChapterEntity chapter : chapters) {
-                    if (chapter == null || chapter.getChapterNumber() == null) {
-                        continue;
-                    }
-                    Content content = new Content();
-                    content.setOrder(chapter.getChapterNumber());
-                    content.setChapter(chapter.getChapterUid());
-                    content.setTitle(chapter.getName());
-                    contents.add(content);
-                }
-                course.setContents(contents);
-            }
-
-            out.add(course);
+        String courseId = id.trim();
+        boolean canSeeAll = canSeeUnpublished(auth);
+        CourseEntity entity = (canSeeAll ? courseRepository.findById(courseId)
+                : courseRepository.findByCourseIdAndPublishedTrue(courseId)).orElse(null);
+        if (entity == null) {
+            return null;
         }
-        return out;
+        if (!canSeeAll) {
+            Member member = resolveCurrentMember(auth);
+            if (!canMemberAccessTargets(entity, member)) {
+                return null;
+            }
+        }
+        return mapCourseEntityToCourseWithContents(entity);
+    }
+
+    public Course findAccessibleByTitleFromDatabase(String title, Authentication auth) {
+        if (title == null || title.isBlank()) {
+            return null;
+        }
+        String t = title.trim();
+        boolean canSeeAll = canSeeUnpublished(auth);
+        CourseEntity entity = (canSeeAll ? courseRepository.findByTitleIgnoreCase(t)
+                : courseRepository.findByTitleIgnoreCaseAndPublishedTrue(t)).orElse(null);
+        if (entity == null) {
+            return null;
+        }
+        if (!canSeeAll) {
+            Member member = resolveCurrentMember(auth);
+            if (!canMemberAccessTargets(entity, member)) {
+                return null;
+            }
+        }
+        return mapCourseEntityToCourseWithContents(entity);
+    }
+
+    public boolean canAccessCourse(String courseId, Authentication auth) {
+        if (courseId == null || courseId.isBlank()) {
+            return false;
+        }
+        if (canSeeUnpublished(auth)) {
+            return true;
+        }
+        CourseEntity entity = courseRepository.findByCourseIdAndPublishedTrue(courseId.trim()).orElse(null);
+        if (entity == null) {
+            return false;
+        }
+        Member member = resolveCurrentMember(auth);
+        return canMemberAccessTargets(entity, member);
     }
 
     public Course findByIdFromDatabase(String id) {
@@ -91,6 +145,177 @@ public class CourseService {
         return courseRepository.findByTitleIgnoreCase(title.trim())
                 .map(this::mapCourseEntityToCourseWithContents)
                 .orElse(null);
+    }
+
+    private boolean canSeeUnpublished(Authentication auth) {
+        if (auth == null || auth.getAuthorities() == null) {
+            return false;
+        }
+        for (GrantedAuthority a : auth.getAuthorities()) {
+            String r = a != null ? a.getAuthority() : null;
+            if ("ROLE_ADMIN".equals(r) || "ROLE_TEACHER".equals(r)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Member resolveCurrentMember(Authentication auth) {
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
+        String userId = auth.getName();
+        if (userId == null || userId.isBlank()) {
+            return null;
+        }
+        try {
+            return memberRepository.findById(userId).orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private boolean canMemberAccessTargets(CourseEntity entity, Member member) {
+        TargetStudents ts = parseTargetStudents(entity != null ? entity.getTargetStudentsJson() : null);
+        List<String> allowedYears = ts != null && ts.schoolYears() != null ? ts.schoolYears() : List.of();
+        List<String> allowedClasses = ts != null && ts.classes() != null ? ts.classes() : List.of();
+
+        boolean restrictYear = allowedYears != null && !allowedYears.isEmpty();
+        boolean restrictClass = allowedClasses != null && !allowedClasses.isEmpty();
+        if (!restrictYear && !restrictClass) {
+            return true;
+        }
+
+        String memberYear = member != null ? normalizeMemberValue(member.getSchoolYear()) : null;
+        String memberClass = member != null ? normalizeMemberValue(member.getCurrentClass()) : null;
+
+        if (restrictYear) {
+            if (memberYear == null) {
+                return false;
+            }
+            boolean ok = false;
+            for (String y : allowedYears) {
+                if (y != null && !y.isBlank() && y.trim().equalsIgnoreCase(memberYear)) {
+                    ok = true;
+                    break;
+                }
+            }
+            if (!ok) {
+                return false;
+            }
+        }
+
+        if (restrictClass) {
+            if (memberClass == null) {
+                return false;
+            }
+            boolean ok = false;
+            for (String c : allowedClasses) {
+                if (c != null && !c.isBlank() && c.trim().equalsIgnoreCase(memberClass)) {
+                    ok = true;
+                    break;
+                }
+            }
+            if (!ok) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private String normalizeMemberValue(String value) {
+        String v = value != null ? value.trim() : "";
+        return v.isBlank() ? null : v;
+    }
+
+    private TargetStudents parseTargetStudents(String json) {
+        if (json == null || json.isBlank()) {
+            return new TargetStudents(List.of(), List.of());
+        }
+        String raw = json.trim();
+        if (raw.equalsIgnoreCase("null")) {
+            return new TargetStudents(List.of(), List.of());
+        }
+        try {
+            Map<String, Object> map = objectMapper.readValue(raw, new TypeReference<Map<String, Object>>() {
+            });
+            List<String> years = normalizeStringList(map.get("schoolYears"));
+            List<String> classes = normalizeStringList(map.get("classes"));
+            return new TargetStudents(years, classes);
+        } catch (Exception e) {
+            return new TargetStudents(List.of(), List.of());
+        }
+    }
+
+    private List<String> normalizeStringList(Object value) {
+        if (value == null) {
+            return List.of();
+        }
+        if (value instanceof List<?> list) {
+            List<String> out = new ArrayList<>();
+            for (Object o : list) {
+                if (o == null) {
+                    continue;
+                }
+                String s = o instanceof String str ? str.trim() : Objects.toString(o, "").trim();
+                if (!s.isBlank()) {
+                    out.add(s);
+                }
+            }
+            return out;
+        }
+        if (value instanceof String s && !s.isBlank()) {
+            return List.of(s.trim());
+        }
+        return List.of();
+    }
+
+    private List<Course> mapCourseEntitiesToCourseSummaries(List<CourseEntity> entities) {
+        if (entities == null || entities.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Course> out = new ArrayList<>();
+        for (CourseEntity entity : entities) {
+            Course mapped = mapCourseEntityToCourseSummary(entity);
+            if (mapped != null) {
+                out.add(mapped);
+            }
+        }
+        return out;
+    }
+
+    private Course mapCourseEntityToCourseSummary(CourseEntity entity) {
+        if (entity == null || entity.getCourseId() == null || entity.getCourseId().isBlank()) {
+            return null;
+        }
+
+        Course course = new Course();
+        course.setId(entity.getCourseId());
+        course.setTitle(entity.getTitle());
+        course.setDescription(entity.getDescription());
+        course.setLanguage(entity.getLanguage());
+        course.setLogo(entity.getCoverImageUrl());
+
+        List<CourseChapterEntity> chapters = courseChapterRepository
+                .findByCourseIdOrderByChapterNumberAsc(entity.getCourseId());
+        if (chapters != null && !chapters.isEmpty()) {
+            List<Content> contents = new ArrayList<>();
+            for (CourseChapterEntity chapter : chapters) {
+                if (chapter == null || chapter.getChapterNumber() == null) {
+                    continue;
+                }
+                Content content = new Content();
+                content.setOrder(chapter.getChapterNumber());
+                content.setChapter(chapter.getChapterUid());
+                content.setTitle(chapter.getName());
+                contents.add(content);
+            }
+            course.setContents(contents);
+        }
+
+        return course;
     }
 
     public String findMarkdownFromDatabase(String courseId, Integer chapterOrder, Integer subOrder) {
@@ -143,7 +368,8 @@ public class CourseService {
                 } catch (NumberFormatException e) {
                     continue;
                 }
-                CourseChapterEntity chapter = courseChapterRepository.findByCourseIdAndChapterNumber(courseId, chapterNo);
+                CourseChapterEntity chapter = courseChapterRepository.findByCourseIdAndChapterNumber(courseId,
+                        chapterNo);
                 if (chapter != null) {
                     chapters.add(chapter);
                 }
@@ -253,7 +479,8 @@ public class CourseService {
         return out;
     }
 
-    public String findAssessmentQuestionMarkdownFromDatabase(String courseId, Integer chapterOrder, Integer questionNo) {
+    public String findAssessmentQuestionMarkdownFromDatabase(String courseId, Integer chapterOrder,
+            Integer questionNo) {
         if (courseId == null || courseId.isBlank() || chapterOrder == null || questionNo == null) {
             return null;
         }
@@ -274,7 +501,8 @@ public class CourseService {
         return null;
     }
 
-    public String findAssessmentExplanationMarkdownFromDatabase(String courseId, Integer chapterOrder, Integer questionNo) {
+    public String findAssessmentExplanationMarkdownFromDatabase(String courseId, Integer chapterOrder,
+            Integer questionNo) {
         if (courseId == null || courseId.isBlank() || chapterOrder == null || questionNo == null) {
             return null;
         }
@@ -335,8 +563,9 @@ public class CourseService {
                     Subcontent s = new Subcontent();
                     s.setOrder(sub.getSubchapterNumber());
                     s.setTitle(sub.getName());
-                    s.setMarkdownPath("/reader/md?courseId=" + entity.getCourseId() + "&ch=" + chapter.getChapterNumber()
-                            + "&sc=" + sub.getSubchapterNumber());
+                    s.setMarkdownPath(
+                            "/reader/md?courseId=" + entity.getCourseId() + "&ch=" + chapter.getChapterNumber()
+                                    + "&sc=" + sub.getSubchapterNumber());
                     subs.add(s);
                 }
                 content.setSubcontents(subs);

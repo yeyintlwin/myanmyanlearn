@@ -54,7 +54,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public LocaleResolver localeResolver() {
-        CookieLocaleResolver clr = new CookieLocaleResolver("selectedLanguage");
+        CookieLocaleResolver clr = new CookieLocaleResolver("selectedLanguage") {
+            @Override
+            protected Locale parseLocaleValue(String localeValue) {
+                if (localeValue != null && localeValue.trim().equalsIgnoreCase("bd")) {
+                    localeValue = "bn";
+                }
+                return super.parseLocaleValue(localeValue);
+            }
+        };
         clr.setDefaultLocale(Locale.ENGLISH);
         // 365 days
         clr.setCookieMaxAge(Objects.requireNonNull(Duration.ofSeconds(31536000)));

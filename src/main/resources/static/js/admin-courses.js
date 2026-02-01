@@ -6,19 +6,115 @@
     root.getAttribute("data-storage-key") || "adminCoursesDraft_v1";
   var state = { version: 2, order: "oldest-first", courses: [] };
 
+  var i18n = {
+    itemUntitled:
+      root.getAttribute("data-i18n-item-untitled") || "Untitled course",
+    itemNoDescription:
+      root.getAttribute("data-i18n-item-no-description") ||
+      "No description available.",
+    itemNa: root.getAttribute("data-i18n-item-na") || "N/A",
+    itemTargetsAllStudents:
+      root.getAttribute("data-i18n-item-targets-all-students") ||
+      "All students",
+    itemTargetsYearsPrefix:
+      root.getAttribute("data-i18n-item-targets-years-prefix") || "Years: ",
+    itemTargetsClassesPrefix:
+      root.getAttribute("data-i18n-item-targets-classes-prefix") || "Classes: ",
+    itemStatusPublished:
+      root.getAttribute("data-i18n-item-status-published") || "Published",
+    itemStatusPrivate:
+      root.getAttribute("data-i18n-item-status-private") || "Private",
+    itemActionEdit: root.getAttribute("data-i18n-item-action-edit") || "Edit",
+    itemActionDelete:
+      root.getAttribute("data-i18n-item-action-delete") || "Delete",
+    itemActionExport:
+      root.getAttribute("data-i18n-item-action-export") || "Export",
+    itemCoverAlt:
+      root.getAttribute("data-i18n-item-cover-alt") || "Course cover",
+    modalEditTitle:
+      root.getAttribute("data-i18n-modal-edit-title") || "Edit course",
+    actionSaveChanges:
+      root.getAttribute("data-i18n-action-save-changes") || "Save changes",
+    errorTitleRequired:
+      root.getAttribute("data-i18n-error-title-required") ||
+      "Course title is required.",
+    errorInvalidImageFile:
+      root.getAttribute("data-i18n-error-invalid-image-file") ||
+      "Please select a valid image file.",
+    toastDeleted:
+      root.getAttribute("data-i18n-toast-deleted") || "Course deleted.",
+    toastDeleteFailed:
+      root.getAttribute("data-i18n-toast-delete-failed") ||
+      "Failed to delete course from database.",
+    toastCreated:
+      root.getAttribute("data-i18n-toast-created") || "Course created.",
+    toastUpdated:
+      root.getAttribute("data-i18n-toast-updated") || "Course updated.",
+    toastSaveFailed:
+      root.getAttribute("data-i18n-toast-save-failed") ||
+      "Failed to save course to database.",
+    toastPublished:
+      root.getAttribute("data-i18n-toast-published") || "Course published.",
+    toastPrivate:
+      root.getAttribute("data-i18n-toast-private") || "Course set to private.",
+    toastPublishUpdateFailed:
+      root.getAttribute("data-i18n-toast-publish-update-failed") ||
+      "Failed to update publish state in database.",
+    toastNoCoursesToExport:
+      root.getAttribute("data-i18n-toast-no-courses-to-export") ||
+      "No courses to export.",
+    toastCourseExported:
+      root.getAttribute("data-i18n-toast-course-exported") ||
+      "Course exported.",
+    toastCoursesExported:
+      root.getAttribute("data-i18n-toast-courses-exported") ||
+      "Courses exported.",
+    toastCourseNotFound:
+      root.getAttribute("data-i18n-toast-course-not-found") ||
+      "Course not found.",
+    toastInvalidImportFormat:
+      root.getAttribute("data-i18n-toast-invalid-import-format") ||
+      "Invalid import file format.",
+    toastCoursesImported:
+      root.getAttribute("data-i18n-toast-courses-imported") ||
+      "Courses imported.",
+    toastImportDbFailed:
+      root.getAttribute("data-i18n-toast-import-db-failed") ||
+      "Import saved locally, but DB save failed.",
+    toastImportReadFailed:
+      root.getAttribute("data-i18n-toast-import-read-failed") ||
+      "Failed to read import file.",
+  };
+
+  var csrfHeaderName = null;
+  var csrfToken = null;
+  var csrfLoaded = false;
+
   function csrfHeaders() {
-    try {
-      var tokenMeta = document.querySelector('meta[name="_csrf"]');
-      var headerMeta = document.querySelector('meta[name="_csrf_header"]');
-      var token = tokenMeta ? tokenMeta.getAttribute("content") : null;
-      var headerName = headerMeta ? headerMeta.getAttribute("content") : null;
-      if (!token || !headerName) return {};
-      var headers = {};
-      headers[headerName] = token;
-      return headers;
-    } catch (e) {
-      return {};
+    if (!csrfLoaded) {
+      csrfLoaded = true;
+      try {
+        var tokenMeta = document.querySelector('meta[name="_csrf"]');
+        var headerMeta = document.querySelector('meta[name="_csrf_header"]');
+        csrfToken = tokenMeta ? tokenMeta.getAttribute("content") : null;
+        csrfHeaderName = headerMeta ? headerMeta.getAttribute("content") : null;
+        if (!csrfToken) {
+          var tokenInput = document.querySelector('input[name="_csrf"]');
+          csrfToken = tokenInput ? tokenInput.getAttribute("value") : null;
+        }
+        if (!csrfHeaderName) {
+          csrfHeaderName = "X-CSRF-TOKEN";
+        }
+      } catch (e) {
+        csrfToken = null;
+        csrfHeaderName = null;
+      }
     }
+
+    if (!csrfToken || !csrfHeaderName) return {};
+    var headers = {};
+    headers[csrfHeaderName] = csrfToken;
+    return headers;
   }
 
   function apiFetch(url, opts) {
@@ -29,8 +125,22 @@
     for (var i = 0; i < keys.length; i++) {
       options.headers[keys[i]] = csrf[keys[i]];
     }
-    options.credentials = "same-origin";
+    options.credentials = "include";
     return fetch(url, options);
+  }
+
+  function storageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function storageSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {}
   }
 
   function uid(prefix) {
@@ -54,7 +164,7 @@
   function loadState() {
     try {
       if (!storageKey) return;
-      var raw = localStorage.getItem(storageKey);
+      var raw = storageGet(storageKey);
       if (!raw) return;
       var loaded = safeJsonParse(raw);
       if (!loaded) return;
@@ -91,7 +201,7 @@
   function saveState() {
     try {
       if (!storageKey) return;
-      localStorage.setItem(storageKey, JSON.stringify(state));
+      storageSet(storageKey, JSON.stringify(state));
     } catch (e) {}
   }
 
@@ -131,7 +241,7 @@
         },
         body: JSON.stringify({
           id: course.id,
-          title: course.title || "Untitled course",
+          title: course.title || i18n.itemUntitled,
           description: course.description || "",
           language: course.language || "",
           published: !!course.published,
@@ -143,7 +253,13 @@
         }),
       },
     ).then(function (res) {
-      if (!res || !res.ok) throw new Error("Failed to save course");
+      if (!res) throw new Error("Failed to save course (no response)");
+      if (res.ok) return;
+      return res.text().then(function (t) {
+        var body = String(t || "").trim();
+        var suffix = body ? ": " + body : "";
+        throw new Error("Failed to save course (" + res.status + ")" + suffix);
+      });
     });
   }
 
@@ -224,6 +340,13 @@
     ? String(confirmDeleteConfirm.className || "")
     : "";
 
+  var modalAddCourseTitle = addCourseTitleEl
+    ? String(addCourseTitleEl.textContent || "").trim() || "Add course"
+    : "Add course";
+  var modalAddCourseSubmitLabel = addCourseSubmitBtn
+    ? String(addCourseSubmitBtn.textContent || "").trim() || "Create course"
+    : "Create course";
+
   var SCHOOL_YEAR_OPTIONS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
   var CLASS_OPTIONS = (function () {
     var arr = [];
@@ -303,14 +426,14 @@
     onConfirm,
   ) {
     if (!confirmDeleteModal) return;
-    if (confirmDeleteTitle) confirmDeleteTitle.textContent = title || "Confirm";
-    if (confirmDeleteMessage)
-      confirmDeleteMessage.textContent = message || "Are you sure?";
-    if (confirmDeleteConfirm) {
-      confirmDeleteConfirm.textContent = confirmLabel || confirmDefaultText;
-      confirmDeleteConfirm.className =
-        confirmClassName || confirmDefaultClassName;
-    }
+    if (confirmDeleteTitle && title != null)
+      confirmDeleteTitle.textContent = title;
+    if (confirmDeleteMessage && message != null)
+      confirmDeleteMessage.textContent = message;
+    if (confirmDeleteConfirm && confirmLabel != null)
+      confirmDeleteConfirm.textContent = confirmLabel;
+    if (confirmDeleteConfirm && confirmClassName != null)
+      confirmDeleteConfirm.className = confirmClassName;
     pendingConfirmAction = typeof onConfirm === "function" ? onConfirm : null;
     openModal(confirmDeleteModal);
   }
@@ -361,7 +484,7 @@
   function ensureCourseShape(course) {
     if (!course || typeof course !== "object") return null;
     if (!course.id) course.id = uid("course");
-    if (!course.title) course.title = "Untitled course";
+    if (!course.title) course.title = i18n.itemUntitled;
     if (typeof course.language !== "string") course.language = "";
     if (typeof course.published !== "boolean") course.published = true;
     course.targetStudents = normalizeTargetStudents(course.targetStudents);
@@ -396,13 +519,14 @@
   }
 
   function describeTargets(course) {
-    if (!course) return "All students";
+    if (!course) return i18n.itemTargetsAllStudents;
     var ts = normalizeTargetStudents(course.targetStudents);
     var parts = [];
     if (ts.schoolYears.length)
-      parts.push("Years: " + ts.schoolYears.join(", "));
-    if (ts.classes.length) parts.push("Classes: " + ts.classes.join(", "));
-    return parts.length ? parts.join(" · ") : "All students";
+      parts.push(i18n.itemTargetsYearsPrefix + ts.schoolYears.join(", "));
+    if (ts.classes.length)
+      parts.push(i18n.itemTargetsClassesPrefix + ts.classes.join(", "));
+    return parts.length ? parts.join(" · ") : i18n.itemTargetsAllStudents;
   }
 
   function clearElement(el) {
@@ -453,7 +577,7 @@
         var img = document.createElement("img");
         img.src = course.coverImageDataUrl;
         img.className = "w-full h-full object-cover object-top block";
-        img.alt = course.title || "Course cover";
+        img.alt = course.title || i18n.itemCoverAlt;
         cover.appendChild(img);
       } else {
         cover.className += " bg-white/10";
@@ -465,12 +589,11 @@
 
       var title = document.createElement("div");
       title.className = "text-white font-semibold leading-tight break-words";
-      title.textContent = course.title || "Untitled course";
+      title.textContent = course.title || i18n.itemUntitled;
 
       var description = document.createElement("div");
       description.className = "mt-1 text-white/70 text-sm break-words";
-      description.textContent =
-        course.description || "No description available.";
+      description.textContent = course.description || i18n.itemNoDescription;
 
       var meta = document.createElement("div");
       meta.className = "mt-2 flex items-center gap-2 flex-wrap";
@@ -478,7 +601,7 @@
       var lang = document.createElement("span");
       lang.className =
         "inline-flex items-center rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 h-7 text-[11px] font-semibold text-sky-100";
-      lang.textContent = languageShort(course.language) || "N/A";
+      lang.textContent = languageShort(course.language) || i18n.itemNa;
 
       var targets = document.createElement("span");
       targets.className =
@@ -505,8 +628,12 @@
           ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-50 hover:bg-emerald-500/15"
           : "border-amber-500/30 bg-amber-500/10 text-amber-50 hover:bg-amber-500/15");
       publishBtn.innerHTML = course.published
-        ? '<i class="fas fa-eye text-[10px]"></i><span>Published</span>'
-        : '<i class="fas fa-eye-slash text-[10px]"></i><span>Private</span>';
+        ? '<i class="fas fa-eye text-[10px]"></i><span>' +
+          escapeHtml(i18n.itemStatusPublished) +
+          "</span>"
+        : '<i class="fas fa-eye-slash text-[10px]"></i><span>' +
+          escapeHtml(i18n.itemStatusPrivate) +
+          "</span>";
 
       var dropdown = document.createElement("div");
       dropdown.className = "relative flex-shrink-0";
@@ -528,13 +655,19 @@
       dropdownMenu.innerHTML =
         '<button type="button" data-course-action="edit" data-course-id="' +
         escapeHtml(course.id) +
-        '" class="block w-full text-left px-4 py-2 text-sm text-white/90 hover:bg-white/10 transition">Edit</button>' +
+        '" class="block w-full text-left px-4 py-2 text-sm text-white/90 hover:bg-white/10 transition">' +
+        escapeHtml(i18n.itemActionEdit) +
+        "</button>" +
         '<button type="button" data-course-action="delete" data-course-id="' +
         escapeHtml(course.id) +
-        '" class="block w-full text-left px-4 py-2 text-sm text-rose-100 hover:bg-rose-500/10 transition">Delete</button>' +
+        '" class="block w-full text-left px-4 py-2 text-sm text-rose-100 hover:bg-rose-500/10 transition">' +
+        escapeHtml(i18n.itemActionDelete) +
+        "</button>" +
         '<button type="button" data-course-action="export" data-course-id="' +
         escapeHtml(course.id) +
-        '" class="block w-full text-left px-4 py-2 text-sm text-white/90 hover:bg-white/10 transition">Export</button>';
+        '" class="block w-full text-left px-4 py-2 text-sm text-white/90 hover:bg-white/10 transition">' +
+        escapeHtml(i18n.itemActionExport) +
+        "</button>";
 
       dropdown.appendChild(dropdownBtn);
       dropdown.appendChild(dropdownMenu);
@@ -612,8 +745,9 @@
     removeCourseCover = false;
     resetTargetSelections();
     renderTargetPickers();
-    if (addCourseTitleEl) addCourseTitleEl.textContent = "Add course";
-    if (addCourseSubmitBtn) addCourseSubmitBtn.textContent = "Create course";
+    if (addCourseTitleEl) addCourseTitleEl.textContent = modalAddCourseTitle;
+    if (addCourseSubmitBtn)
+      addCourseSubmitBtn.textContent = modalAddCourseSubmitLabel;
     if (addCourseForm) addCourseForm.reset();
     if (courseCoverPreview) {
       courseCoverPreview.classList.add("hidden");
@@ -633,8 +767,9 @@
     removeCourseCover = false;
     setTargetSelections(course.targetStudents);
     renderTargetPickers();
-    if (addCourseTitleEl) addCourseTitleEl.textContent = "Edit course";
-    if (addCourseSubmitBtn) addCourseSubmitBtn.textContent = "Save changes";
+    if (addCourseTitleEl) addCourseTitleEl.textContent = i18n.modalEditTitle;
+    if (addCourseSubmitBtn)
+      addCourseSubmitBtn.textContent = i18n.actionSaveChanges;
     if (courseTitleInput) courseTitleInput.value = course.title || "";
     if (courseLanguageSelect)
       courseLanguageSelect.value = course.language || "";
@@ -678,7 +813,7 @@
     var title = courseTitleInput
       ? String(courseTitleInput.value || "").trim()
       : "";
-    course.title = title || "Untitled course";
+    course.title = title || i18n.itemUntitled;
     course.language = courseLanguageSelect
       ? String(courseLanguageSelect.value || "")
       : "";
@@ -697,7 +832,7 @@
       ? String(courseTitleInput.value || "").trim()
       : "";
     if (!title) {
-      setError(addCourseError, "Course title is required.");
+      setError(addCourseError, i18n.errorTitleRequired);
       return;
     }
 
@@ -725,17 +860,20 @@
           closeAddCourse();
           showFlash(
             "success",
-            existing ? "Course updated." : "Course created.",
+            existing ? i18n.toastUpdated : i18n.toastCreated,
           );
         })
-        .catch(function () {
+        .catch(function (err) {
           if (optimistic) deleteCourseById(course.id);
-          showFlash("error", "Failed to save course to database.");
+          showFlash(
+            "error",
+            err && err.message ? String(err.message) : i18n.toastSaveFailed,
+          );
         });
       return;
     }
     if (!file.type || file.type.indexOf("image/") !== 0) {
-      setError(addCourseError, "Please select a valid image file.");
+      setError(addCourseError, i18n.errorInvalidImageFile);
       if (courseCoverInput) courseCoverInput.value = "";
       return;
     }
@@ -756,18 +894,21 @@
         saveState();
         renderList();
         closeAddCourse();
-        showFlash("success", existing ? "Course updated." : "Course created.");
+        showFlash("success", existing ? i18n.toastUpdated : i18n.toastCreated);
       })
-      .catch(function () {
+      .catch(function (err) {
         if (optimistic) deleteCourseById(course.id);
-        showFlash("error", "Failed to save course to database.");
+        showFlash(
+          "error",
+          err && err.message ? String(err.message) : i18n.toastSaveFailed,
+        );
       });
   }
 
   function exportCourses(coursesToExport, filenamePrefix) {
     var list = Array.isArray(coursesToExport) ? coursesToExport : state.courses;
     if (!list.length) {
-      showFlash("info", "No courses to export.");
+      showFlash("info", i18n.toastNoCoursesToExport);
       return;
     }
     var payload = {
@@ -796,14 +937,14 @@
     URL.revokeObjectURL(url);
     showFlash(
       "success",
-      list.length === 1 ? "Course exported." : "Courses exported.",
+      list.length === 1 ? i18n.toastCourseExported : i18n.toastCoursesExported,
     );
   }
 
   function exportCourseById(courseId) {
     var course = findCourseById(courseId);
     if (!course) {
-      showFlash("error", "Course not found.");
+      showFlash("error", i18n.toastCourseNotFound);
       return;
     }
     exportCourses([course], "course_export");
@@ -823,7 +964,7 @@
       var parsed = safeJsonParse(String(reader.result || ""));
       var courses = parseImportedCourses(parsed);
       if (!courses) {
-        showFlash("error", "Invalid import file format.");
+        showFlash("error", i18n.toastInvalidImportFormat);
         return;
       }
       state.courses = courses;
@@ -845,15 +986,15 @@
           normalizeState();
           saveState();
           renderList();
-          showFlash("success", "Courses imported.");
+          showFlash("success", i18n.toastCoursesImported);
         })
         .catch(function () {
-          showFlash("error", "Import saved locally, but DB save failed.");
+          showFlash("error", i18n.toastImportDbFailed);
           saveState();
         });
     };
     reader.onerror = function () {
-      showFlash("error", "Failed to read import file.");
+      showFlash("error", i18n.toastImportReadFailed);
     };
     reader.readAsText(file);
   }
@@ -898,14 +1039,14 @@
               saveState();
               showFlash(
                 "success",
-                next ? "Course published." : "Course set to private.",
+                next ? i18n.toastPublished : i18n.toastPrivate,
               );
             })
             .catch(function () {
               course.published = !next;
               normalizeState();
               renderList();
-              showFlash("error", "Failed to update publish state in database.");
+              showFlash("error", i18n.toastPublishUpdateFailed);
             });
           return;
         }
@@ -936,25 +1077,16 @@
           return;
         }
         if (action === "delete") {
-          var course = findCourseById(courseId);
-          configureConfirm(
-            "Delete course",
-            'Delete "' +
-              (course && course.title ? course.title : "this course") +
-              '"?',
-            "Delete",
-            confirmDefaultClassName,
-            function () {
-              deleteCourseOnServer(courseId)
-                .then(function () {
-                  deleteCourseById(courseId);
-                  showFlash("success", "Course deleted.");
-                })
-                .catch(function () {
-                  showFlash("error", "Failed to delete course from database.");
-                });
-            },
-          );
+          configureConfirm(null, null, null, null, function () {
+            deleteCourseOnServer(courseId)
+              .then(function () {
+                deleteCourseById(courseId);
+                showFlash("success", i18n.toastDeleted);
+              })
+              .catch(function () {
+                showFlash("error", i18n.toastDeleteFailed);
+              });
+          });
           return;
         }
         if (action === "export") {
@@ -999,7 +1131,7 @@
           return;
         }
         if (!file.type || file.type.indexOf("image/") !== 0) {
-          setError(addCourseError, "Please select a valid image file.");
+          setError(addCourseError, i18n.errorInvalidImageFile);
           this.value = "";
           courseCoverPreview.classList.add("hidden");
           courseCoverPreview.removeAttribute("src");

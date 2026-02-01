@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Loading</title>
+    <title th:text="#{splash.pageTitle}">MYAN MYAN LEARN - Loading</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -32,11 +32,13 @@
     <div class="w-full max-w-4xl px-8 flex flex-col items-center text-center">
       <img
         th:src="@{/images/logo.svg}"
+        th:alt="#{splash.logoAlt}"
         alt="Myan Myan Learn"
         class="w-48 h-auto mb-8 drop-shadow-lg"
       />
       <div
         class="text-4xl font-black text-white mb-8 tracking-wider brand-font"
+        th:text="#{app.brand}"
       >
         Myan Myan Learn
       </div>

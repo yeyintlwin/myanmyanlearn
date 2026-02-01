@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -151,6 +153,12 @@ public class ReaderController {
             @RequestParam(name = "courseId") String courseId,
             @RequestParam(name = "ch") Integer chapterOrder,
             @RequestParam(name = "sc") Integer subOrder) {
+        Authentication auth = SecurityContextHolder.getContext() != null
+                ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
+        if (!courseService.canAccessCourse(courseId, auth)) {
+            return ResponseEntity.notFound().build();
+        }
         String markdown = courseService.findMarkdownFromDatabase(courseId, chapterOrder, subOrder);
         if (markdown == null) {
             return ResponseEntity.notFound().build();
@@ -164,7 +172,10 @@ public class ReaderController {
             data.errorMessage = "Missing parameters";
             return data;
         }
-        Course course = courseService.findByIdFromDatabase(courseId);
+        Authentication auth = SecurityContextHolder.getContext() != null
+                ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
+        Course course = courseService.findAccessibleByIdFromDatabase(courseId, auth);
         if (course == null) {
             data.errorMessage = "Course not found";
             return data;

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Course Editor</title>
+    <title th:text="#{adminCourseEditor.pageTitle}">Course Editor</title>
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,7 +15,7 @@
   </head>
 
   <body class="min-h-screen font-sans app-bg app-bg-gradient text-white">
-    <nav th:replace="fragments/navbar :: appNavbar('Admin')"></nav>
+    <nav th:replace="fragments/navbar :: appNavbar(#{nav.admin})"></nav>
 
     <main class="pt-24 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div
@@ -28,10 +28,17 @@
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
         >
           <div class="min-w-0 flex-1">
-            <div id="courseEditorTitle" class="text-white font-bold truncate">
+            <div
+              id="courseEditorTitle"
+              class="text-white font-bold truncate"
+              th:text="#{adminCourseEditor.title}"
+            >
               Course Editor
             </div>
-            <div class="text-white/70 text-sm mt-1">
+            <div
+              class="text-white/70 text-sm mt-1"
+              th:text="#{adminCourseEditor.subtitle}"
+            >
               Manage chapters, subchapters, learning content, and questions.
             </div>
           </div>
@@ -43,14 +50,14 @@
               class="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/15 px-4 h-10 text-sm font-semibold text-emerald-50 hover:bg-emerald-500/20 transition w-fit"
             >
               <i class="fas fa-floppy-disk text-xs"></i>
-              <span>Save</span>
+              <span th:text="#{adminCourseEditor.action.save}">Save</span>
             </button>
             <a
               href="/admin?section=courses"
               class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-4 h-10 text-sm font-semibold text-white hover:bg-white/15 transition w-fit no-underline"
             >
               <i class="fas fa-arrow-left text-xs"></i>
-              <span>Back</span>
+              <span th:text="#{adminCourseEditor.action.back}">Back</span>
             </a>
           </div>
         </div>
@@ -80,7 +87,9 @@
                   -
                 </div>
                 <div class="text-white/50 text-xs mt-2">
-                  Course ID:
+                  <span th:text="#{adminCourseEditor.courseIdLabel}"
+                    >Course ID:</span
+                  >
                   <span id="courseIdText" class="text-white/70 font-semibold"
                     >-</span
                   >
@@ -94,17 +103,26 @@
           >
             <div class="p-5 sm:p-6">
               <div class="flex items-center justify-between gap-3">
-                <div class="text-white font-semibold">Chapters</div>
+                <div
+                  class="text-white font-semibold"
+                  th:text="#{adminCourseEditor.section.chapters}"
+                >
+                  Chapters
+                </div>
                 <button
                   id="addChapterBtn"
                   type="button"
                   class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition"
                 >
                   <i class="fas fa-plus text-[10px]"></i>
-                  <span>Add</span>
+                  <span th:text="#{adminCourseEditor.action.add}">Add</span>
                 </button>
               </div>
-              <div id="chaptersEmpty" class="mt-3 text-sm text-white/60">
+              <div
+                id="chaptersEmpty"
+                class="mt-3 text-sm text-white/60"
+                th:text="#{adminCourseEditor.chapters.empty}"
+              >
                 No chapters yet.
               </div>
               <div
@@ -115,11 +133,19 @@
 
             <div class="p-5 sm:p-6">
               <div class="flex items-center justify-between gap-3">
-                <div id="chapterDetailTitle" class="text-white font-semibold">
+                <div
+                  id="chapterDetailTitle"
+                  class="text-white font-semibold"
+                  th:text="#{adminCourseEditor.chapterDetail.title}"
+                >
                   Chapter
                 </div>
               </div>
-              <div id="chapterDetailEmpty" class="mt-3 text-sm text-white/60">
+              <div
+                id="chapterDetailEmpty"
+                class="mt-3 text-sm text-white/60"
+                th:text="#{adminCourseEditor.chapterDetail.empty}"
+              >
                 Select a chapter to edit.
               </div>
               <div id="chapterDetail" class="mt-3"></div>
@@ -130,10 +156,117 @@
     </main>
 
     <script src="/js/navbar.js"></script>
-    <script>
+    <script th:inline="javascript">
       (function () {
         var root = document.getElementById("courseEditorRoot");
         if (!root) return;
+
+        var i18n = {
+          courseUntitled:
+            /*[[#{adminCourseEditor.course.untitled}]]*/ "Untitled course",
+          courseNoDescription:
+            /*[[#{adminCourseEditor.course.noDescription}]]*/ "No description available.",
+          courseFallbackName:
+            /*[[#{adminCourseEditor.course.fallbackName}]]*/ "Course",
+          editorLabel: /*[[#{adminCourseEditor.editorLabel}]]*/ "Editor",
+          coverAlt: /*[[#{adminCourseEditor.course.coverAlt}]]*/ "Course cover",
+          chapterTitle:
+            /*[[#{adminCourseEditor.chapterDetail.title}]]*/ "Chapter",
+          chapterLabelPrefix:
+            /*[[#{adminCourseEditor.chapter.labelPrefix}]]*/ "Chapter",
+          chapterUntitled:
+            /*[[#{adminCourseEditor.chapter.untitled}]]*/ "Untitled",
+          chapterMetaSubchapters:
+            /*[[#{adminCourseEditor.chapter.metaSubchapters}]]*/ "subchapters",
+          chapterMetaQuestions:
+            /*[[#{adminCourseEditor.chapter.metaQuestions}]]*/ "questions",
+          fieldName: /*[[#{adminCourseEditor.field.name}]]*/ "Name",
+          placeholderChapterName:
+            /*[[#{adminCourseEditor.placeholder.chapterName}]]*/ "Chapter name",
+          placeholderSubchapterName:
+            /*[[#{adminCourseEditor.placeholder.subchapterName}]]*/ "Subchapter name",
+          tabLearningContent:
+            /*[[#{adminCourseEditor.tab.learningContent}]]*/ "Learning content",
+          tabQuestions: /*[[#{adminCourseEditor.tab.questions}]]*/ "Questions",
+          sectionSubchapters:
+            /*[[#{adminCourseEditor.section.subchapters}]]*/ "Subchapters",
+          sectionQuestions:
+            /*[[#{adminCourseEditor.section.questions}]]*/ "Questions",
+          actionAddSubchapter:
+            /*[[#{adminCourseEditor.action.addSubchapter}]]*/ "Add subchapter",
+          actionAddQuestion:
+            /*[[#{adminCourseEditor.action.addQuestion}]]*/ "Add question",
+          actionOpenEditor:
+            /*[[#{adminCourseEditor.action.openEditor}]]*/ "Open editor",
+          actionQuestion:
+            /*[[#{adminCourseEditor.action.question}]]*/ "Question",
+          actionExplanation:
+            /*[[#{adminCourseEditor.action.explanation}]]*/ "Explanation",
+          actionDelete: /*[[#{adminCourseEditor.action.delete}]]*/ "Delete",
+          actionDeleteChapter:
+            /*[[#{adminCourseEditor.action.deleteChapter}]]*/ "Delete chapter",
+          emptySubchapters:
+            /*[[#{adminCourseEditor.empty.subchapters}]]*/ "No subchapters yet.",
+          emptyQuestions:
+            /*[[#{adminCourseEditor.empty.questions}]]*/ "No questions yet.",
+          emptySelectQuestion:
+            /*[[#{adminCourseEditor.empty.selectQuestion}]]*/ "Select a question to edit.",
+          questionLabelPrefix:
+            /*[[#{adminCourseEditor.question.labelPrefix}]]*/ "Question",
+          questionMetaSlots:
+            /*[[#{adminCourseEditor.question.metaSlots}]]*/ "slots",
+          sectionSlotOptions:
+            /*[[#{adminCourseEditor.section.slotOptions}]]*/ "Slot options",
+          actionAddSlot: /*[[#{adminCourseEditor.action.addSlot}]]*/ "Add slot",
+          actionAddOption:
+            /*[[#{adminCourseEditor.action.addOption}]]*/ "Add option",
+          emptySlots: /*[[#{adminCourseEditor.empty.slots}]]*/ "No slots yet.",
+          emptySelectSlot:
+            /*[[#{adminCourseEditor.empty.selectSlot}]]*/ "Select a slot.",
+          slotLabelPrefix: /*[[#{adminCourseEditor.slot.labelPrefix}]]*/ "Slot",
+          actionRemoveSlot:
+            /*[[#{adminCourseEditor.action.removeSlot}]]*/ "Remove slot",
+          placeholderOptionContent:
+            /*[[#{adminCourseEditor.placeholder.optionContent}]]*/ "Option content",
+          flashSaved:
+            /*[[#{adminCourseEditor.flash.saved}]]*/ "Saved to database.",
+          flashOpenEditorFailed:
+            /*[[#{adminCourseEditor.flash.openEditorFailed}]]*/ "Open editor failed. Please click Save and try again.",
+          flashLoadFailed:
+            /*[[#{adminCourseEditor.flash.loadFailed}]]*/ "Failed to load course from database.",
+          flashNotFound:
+            /*[[#{adminCourseEditor.flash.notFound}]]*/ "Course not found in database. Created a new draft.",
+          flashChapterAdded:
+            /*[[#{adminCourseEditor.flash.chapterAdded}]]*/ "Chapter added.",
+          flashSubchapterAdded:
+            /*[[#{adminCourseEditor.flash.subchapterAdded}]]*/ "Subchapter added.",
+          flashQuestionAdded:
+            /*[[#{adminCourseEditor.flash.questionAdded}]]*/ "Question added.",
+          flashChapterDeleted:
+            /*[[#{adminCourseEditor.flash.chapterDeleted}]]*/ "Chapter deleted.",
+          flashSubchapterDeleted:
+            /*[[#{adminCourseEditor.flash.subchapterDeleted}]]*/ "Subchapter deleted.",
+          flashQuestionDeleted:
+            /*[[#{adminCourseEditor.flash.questionDeleted}]]*/ "Question deleted.",
+          confirmDeleteChapter:
+            /*[[#{adminCourseEditor.confirm.deleteChapter}]]*/ "Delete this chapter? This will also remove its subchapters and questions.",
+          confirmDeleteSubchapter:
+            /*[[#{adminCourseEditor.confirm.deleteSubchapter}]]*/ "Delete this subchapter?",
+          confirmDeleteQuestion:
+            /*[[#{adminCourseEditor.confirm.deleteQuestion}]]*/ "Delete this question?",
+          confirmRemoveSlot:
+            /*[[#{adminCourseEditor.confirm.removeSlot}]]*/ "Remove this slot?",
+          errorSaveFailedPrefix:
+            /*[[#{adminCourseEditor.error.saveFailedPrefix}]]*/ "Save failed",
+          errorFailedToSave:
+            /*[[#{adminCourseEditor.error.failedToSave}]]*/ "Failed to save",
+          errorFailedToSaveToDatabase:
+            /*[[#{adminCourseEditor.error.failedToSaveToDatabase}]]*/ "Failed to save to database.",
+          defaultNewChapterName:
+            /*[[#{adminCourseEditor.default.newChapterName}]]*/ "New chapter",
+          defaultNewSubchapterName:
+            /*[[#{adminCourseEditor.default.newSubchapterName}]]*/ "New subchapter",
+        };
 
         var courseId = root.getAttribute("data-course-id") || "";
         var uiStorageKey = "adminCourseEditorUi_v1:" + courseId;
@@ -473,22 +606,26 @@
           courseIdText.textContent = courseId || "-";
           if (courseTitleText)
             courseTitleText.textContent =
-              course && course.title ? course.title : "Untitled course";
+              course && course.title ? course.title : i18n.courseUntitled;
           if (courseDescriptionText)
             courseDescriptionText.textContent =
               course && course.description
                 ? course.description
-                : "No description available.";
+                : i18n.courseNoDescription;
           if (courseEditorTitle)
             courseEditorTitle.textContent =
-              (course && course.title ? course.title : "Course") + " · Editor";
+              (course && course.title
+                ? course.title
+                : i18n.courseFallbackName) +
+              " · " +
+              i18n.editorLabel;
 
           if (courseCoverBox) {
             clearElement(courseCoverBox);
             if (course && course.coverImageDataUrl) {
               var img = document.createElement("img");
               img.src = course.coverImageDataUrl;
-              img.alt = course.title || "Course cover";
+              img.alt = course.title || i18n.coverAlt;
               img.className = "w-full h-full object-cover object-top block";
               courseCoverBox.appendChild(img);
             } else {
@@ -503,7 +640,8 @@
           if (!chaptersList || !chapterDetail) return;
           clearElement(chaptersList);
           clearElement(chapterDetail);
-          if (chapterDetailTitle) chapterDetailTitle.textContent = "Chapter";
+          if (chapterDetailTitle)
+            chapterDetailTitle.textContent = i18n.chapterTitle;
           if (chapterDetailEmpty) chapterDetailEmpty.classList.remove("hidden");
           var chapters =
             course && Array.isArray(course.chapters)
@@ -548,18 +686,22 @@
             var title = document.createElement("div");
             title.className = "text-white font-semibold truncate";
             title.textContent =
-              "Chapter " +
+              i18n.chapterLabelPrefix +
+              " " +
               String(ch.number || "") +
               " · " +
-              (ch.name || "Untitled");
+              (ch.name || i18n.chapterUntitled);
 
             var meta = document.createElement("div");
             meta.className = "text-white/60 text-xs mt-1";
             meta.textContent =
               String((ch.subchapters && ch.subchapters.length) || 0) +
-              " subchapters · " +
+              " " +
+              i18n.chapterMetaSubchapters +
+              " · " +
               String((ch.questions && ch.questions.length) || 0) +
-              " questions";
+              " " +
+              i18n.chapterMetaQuestions;
 
             left.appendChild(title);
             left.appendChild(meta);
@@ -584,10 +726,11 @@
 
           if (chapterDetailTitle)
             chapterDetailTitle.textContent =
-              "Chapter " +
+              i18n.chapterLabelPrefix +
+              " " +
               String(selectedChapter.number || "") +
               " · " +
-              (selectedChapter.name || "Untitled");
+              (selectedChapter.name || i18n.chapterUntitled);
           if (chapterDetailEmpty) chapterDetailEmpty.classList.add("hidden");
 
           var ch = selectedChapter;
@@ -606,13 +749,13 @@
           nameBox.className = "min-w-0 flex-1 sm:max-w-lg";
           var nameLabel = document.createElement("div");
           nameLabel.className = "text-white/60 text-xs mb-1";
-          nameLabel.textContent = "Name";
+          nameLabel.textContent = i18n.fieldName;
           var nameInput = document.createElement("input");
           nameInput.type = "text";
           nameInput.value = ch.name || "";
           nameInput.className =
             "bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40";
-          nameInput.placeholder = "Chapter name";
+          nameInput.placeholder = i18n.placeholderChapterName;
           nameInput.setAttribute("data-action", "edit-chapter-name");
           nameInput.setAttribute("data-chapter-id", ch.id);
           nameBox.appendChild(nameLabel);
@@ -630,7 +773,9 @@
           del.setAttribute("data-action", "delete-chapter");
           del.setAttribute("data-chapter-id", ch.id);
           del.innerHTML =
-            '<i class="fas fa-trash text-[10px]"></i><span>Delete chapter</span>';
+            '<i class="fas fa-trash text-[10px]"></i><span>' +
+            i18n.actionDeleteChapter +
+            "</span>";
 
           dangerRow.appendChild(del);
           fields.appendChild(dangerRow);
@@ -664,7 +809,7 @@
           var contentIcon = document.createElement("i");
           contentIcon.className = "fas fa-book-open text-xs";
           var contentLabel = document.createElement("span");
-          contentLabel.textContent = "Learning content";
+          contentLabel.textContent = i18n.tabLearningContent;
           var contentBadge = document.createElement("span");
           contentBadge.className =
             "inline-flex items-center justify-center min-w-6 h-5 px-2 rounded-full border border-white/15 bg-white/5 text-xs font-semibold text-white/80";
@@ -678,7 +823,7 @@
           var qIcon = document.createElement("i");
           qIcon.className = "fas fa-circle-question text-xs";
           var qLabel = document.createElement("span");
-          qLabel.textContent = "Questions";
+          qLabel.textContent = i18n.tabQuestions;
           var qBadge = document.createElement("span");
           qBadge.className =
             "inline-flex items-center justify-center min-w-6 h-5 px-2 rounded-full border border-white/15 bg-white/5 text-xs font-semibold text-white/80";
@@ -700,7 +845,7 @@
           contentTop.className = "flex items-center justify-between gap-3";
           var contentTitle = document.createElement("div");
           contentTitle.className = "text-white font-semibold";
-          contentTitle.textContent = "Subchapters";
+          contentTitle.textContent = i18n.sectionSubchapters;
           var addSub = document.createElement("button");
           addSub.type = "button";
           addSub.className =
@@ -708,13 +853,15 @@
           addSub.setAttribute("data-action", "add-subchapter");
           addSub.setAttribute("data-chapter-id", ch.id);
           addSub.innerHTML =
-            '<i class="fas fa-plus text-[10px]"></i><span>Add subchapter</span>';
+            '<i class="fas fa-plus text-[10px]"></i><span>' +
+            i18n.actionAddSubchapter +
+            "</span>";
           contentTop.appendChild(contentTitle);
           contentTop.appendChild(addSub);
 
           var subEmpty = document.createElement("div");
           subEmpty.className = "text-sm text-white/60";
-          subEmpty.textContent = "No subchapters yet.";
+          subEmpty.textContent = i18n.emptySubchapters;
           var subList = document.createElement("div");
           subList.className = "space-y-2";
 
@@ -730,7 +877,7 @@
           questionsTop.className = "flex items-center justify-between gap-3";
           var questionsTitle = document.createElement("div");
           questionsTitle.className = "text-white font-semibold";
-          questionsTitle.textContent = "Questions";
+          questionsTitle.textContent = i18n.sectionQuestions;
           var addQ = document.createElement("button");
           addQ.type = "button";
           addQ.className =
@@ -738,20 +885,22 @@
           addQ.setAttribute("data-action", "add-question");
           addQ.setAttribute("data-chapter-id", ch.id);
           addQ.innerHTML =
-            '<i class="fas fa-plus text-[10px]"></i><span>Add question</span>';
+            '<i class="fas fa-plus text-[10px]"></i><span>' +
+            i18n.actionAddQuestion +
+            "</span>";
           questionsTop.appendChild(questionsTitle);
           questionsTop.appendChild(addQ);
 
           var qEmpty = document.createElement("div");
           qEmpty.className = "text-sm text-white/60";
-          qEmpty.textContent = "No questions yet.";
+          qEmpty.textContent = i18n.emptyQuestions;
           var qList = document.createElement("div");
           qList.className =
             "mt-2 border border-white/10 rounded-xl overflow-hidden divide-y divide-white/10";
 
           var qDetailEmpty = document.createElement("div");
           qDetailEmpty.className = "text-sm text-white/60";
-          qDetailEmpty.textContent = "Select a question to edit.";
+          qDetailEmpty.textContent = i18n.emptySelectQuestion;
 
           var qDetail = document.createElement("div");
 
@@ -842,13 +991,13 @@
             nameBox.className = "min-w-0 flex-1 sm:max-w-lg";
             var nameLabel = document.createElement("div");
             nameLabel.className = "text-white/60 text-xs mb-1";
-            nameLabel.textContent = "Name";
+            nameLabel.textContent = i18n.fieldName;
             var nameInput = document.createElement("input");
             nameInput.type = "text";
             nameInput.value = sc.name || "";
             nameInput.className =
               "bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40";
-            nameInput.placeholder = "Subchapter name";
+            nameInput.placeholder = i18n.placeholderSubchapterName;
             nameInput.setAttribute("data-action", "edit-subchapter-name");
             nameInput.setAttribute("data-chapter-id", chapter.id);
             nameInput.setAttribute("data-subchapter-id", sc.id);
@@ -876,7 +1025,9 @@
             open.className =
               "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition no-underline";
             open.innerHTML =
-              '<i class="fas fa-pen-to-square text-[10px]"></i><span>Open editor</span>';
+              '<i class="fas fa-pen-to-square text-[10px]"></i><span>' +
+              i18n.actionOpenEditor +
+              "</span>";
 
             var del = document.createElement("button");
             del.type = "button";
@@ -886,7 +1037,9 @@
             del.setAttribute("data-chapter-id", chapter.id);
             del.setAttribute("data-subchapter-id", sc.id);
             del.innerHTML =
-              '<i class="fas fa-trash text-[10px]"></i><span>Delete</span>';
+              '<i class="fas fa-trash text-[10px]"></i><span>' +
+              i18n.actionDelete +
+              "</span>";
 
             actions.appendChild(open);
             actions.appendChild(del);
@@ -952,12 +1105,15 @@
 
             var t = document.createElement("div");
             t.className = "text-white font-semibold text-sm leading-5";
-            t.textContent = "Question " + String(q.questionNumber || "");
+            t.textContent =
+              i18n.questionLabelPrefix + " " + String(q.questionNumber || "");
 
             var meta = document.createElement("div");
             meta.className = "text-white/50 text-[11px] mt-0.5 leading-4";
             meta.textContent =
-              String((q.slotOptions && q.slotOptions.length) || 0) + " slots";
+              String((q.slotOptions && q.slotOptions.length) || 0) +
+              " " +
+              i18n.questionMetaSlots;
 
             left.appendChild(t);
             left.appendChild(meta);
@@ -983,13 +1139,16 @@
           var headerTitle = document.createElement("div");
           headerTitle.className = "text-white font-semibold";
           headerTitle.textContent =
-            "Question " + String(activeQ.questionNumber || "");
+            i18n.questionLabelPrefix +
+            " " +
+            String(activeQ.questionNumber || "");
 
           var headerMeta = document.createElement("div");
           headerMeta.className = "text-white/60 text-xs mt-1";
           headerMeta.textContent =
             String((activeQ.slotOptions && activeQ.slotOptions.length) || 0) +
-            " slots";
+            " " +
+            i18n.questionMetaSlots;
 
           headerLeft.appendChild(headerTitle);
           headerLeft.appendChild(headerMeta);
@@ -1005,7 +1164,7 @@
 
           var slotsLabel = document.createElement("div");
           slotsLabel.className = "text-white font-semibold text-sm";
-          slotsLabel.textContent = "Slot options";
+          slotsLabel.textContent = i18n.sectionSlotOptions;
 
           var addSlot = document.createElement("button");
           addSlot.type = "button";
@@ -1015,14 +1174,16 @@
           addSlot.setAttribute("data-chapter-id", chapter.id);
           addSlot.setAttribute("data-question-id", activeQ.id);
           addSlot.innerHTML =
-            '<i class="fas fa-plus text-[10px]"></i><span>Add slot</span>';
+            '<i class="fas fa-plus text-[10px]"></i><span>' +
+            i18n.actionAddSlot +
+            "</span>";
 
           slotsTop.appendChild(slotsLabel);
           slotsTop.appendChild(addSlot);
 
           var slotsEmptyLocal = document.createElement("div");
           slotsEmptyLocal.className = "text-sm text-white/60";
-          slotsEmptyLocal.textContent = "No slots yet.";
+          slotsEmptyLocal.textContent = i18n.emptySlots;
 
           var slotsListLocal = document.createElement("div");
           slotsListLocal.className =
@@ -1030,7 +1191,7 @@
 
           var slotDetailEmpty = document.createElement("div");
           slotDetailEmpty.className = "text-sm text-white/60";
-          slotDetailEmpty.textContent = "Select a slot.";
+          slotDetailEmpty.textContent = i18n.emptySelectSlot;
 
           var slotDetail = document.createElement("div");
 
@@ -1061,7 +1222,9 @@
           del.setAttribute("data-chapter-id", chapter.id);
           del.setAttribute("data-question-id", activeQ.id);
           del.innerHTML =
-            '<i class="fas fa-trash text-[10px]"></i><span>Delete</span>';
+            '<i class="fas fa-trash text-[10px]"></i><span>' +
+            i18n.actionDelete +
+            "</span>";
 
           var openQ = document.createElement("a");
           openQ.href =
@@ -1079,7 +1242,9 @@
           openQ.className =
             "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition no-underline";
           openQ.innerHTML =
-            '<i class="fas fa-pen-to-square text-[10px]"></i><span>Question</span>';
+            '<i class="fas fa-pen-to-square text-[10px]"></i><span>' +
+            i18n.actionQuestion +
+            "</span>";
 
           var openEx = document.createElement("a");
           openEx.href =
@@ -1097,7 +1262,9 @@
           openEx.className =
             "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 h-9 text-xs font-semibold text-white hover:bg-white/15 transition no-underline";
           openEx.innerHTML =
-            '<i class="fas fa-pen-to-square text-[10px]"></i><span>Explanation</span>';
+            '<i class="fas fa-pen-to-square text-[10px]"></i><span>' +
+            i18n.actionExplanation +
+            "</span>";
 
           var headerRight = document.createElement("div");
           headerRight.className =
@@ -1138,7 +1305,7 @@
           if (!slots.length) {
             if (slotsListLocal) slotsListLocal.classList.add("hidden");
             if (slotDetailEmpty) {
-              slotDetailEmpty.textContent = "No slots yet.";
+              slotDetailEmpty.textContent = i18n.emptySlots;
               slotDetailEmpty.classList.remove("hidden");
             }
             if (slotDetail) slotDetail.classList.add("hidden");
@@ -1181,7 +1348,7 @@
             var itemTitle = document.createElement("div");
             itemTitle.className =
               "text-white/90 font-semibold text-sm leading-5";
-            itemTitle.textContent = "Slot " + String(s + 1);
+            itemTitle.textContent = i18n.slotLabelPrefix + " " + String(s + 1);
 
             var itemMeta = document.createElement("div");
             itemMeta.className = "text-white/50 text-[11px] mt-0.5 leading-4";
@@ -1217,7 +1384,8 @@
 
           var label = document.createElement("div");
           label.className = "text-white font-semibold text-sm";
-          label.textContent = "Slot " + String(activeSlotIndex + 1);
+          label.textContent =
+            i18n.slotLabelPrefix + " " + String(activeSlotIndex + 1);
 
           var removeSlot = document.createElement("button");
           removeSlot.type = "button";
@@ -1227,7 +1395,7 @@
           removeSlot.setAttribute("data-chapter-id", chapterId);
           removeSlot.setAttribute("data-question-id", q.id);
           removeSlot.setAttribute("data-slot-index", String(activeSlotIndex));
-          removeSlot.textContent = "Remove slot";
+          removeSlot.textContent = i18n.actionRemoveSlot;
 
           top.appendChild(label);
           top.appendChild(removeSlot);
@@ -1254,7 +1422,7 @@
             input.value = opt.optionContent || "";
             input.className =
               "bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40";
-            input.placeholder = "Option content";
+            input.placeholder = i18n.placeholderOptionContent;
             input.setAttribute("data-action", "edit-option");
             input.setAttribute("data-chapter-id", chapterId);
             input.setAttribute("data-question-id", q.id);
@@ -1287,7 +1455,9 @@
           addOpt.setAttribute("data-question-id", q.id);
           addOpt.setAttribute("data-slot-index", String(activeSlotIndex));
           addOpt.innerHTML =
-            '<i class="fas fa-plus text-[10px]"></i><span>Add option</span>';
+            '<i class="fas fa-plus text-[10px]"></i><span>' +
+            i18n.actionAddOption +
+            "</span>";
 
           slotBox.appendChild(addOpt);
           slotDetail.appendChild(slotBox);
@@ -1340,7 +1510,7 @@
 
           return {
             id: c.id,
-            title: c.title || "Untitled course",
+            title: c.title || i18n.courseUntitled,
             description: c.description || "",
             language: c.language || "",
             published: !!c.published,
@@ -1401,9 +1571,13 @@
                     else if (j && j.error) msg = String(j.error);
                     else if (j && j.status) msg = "HTTP " + String(j.status);
                   } catch (e) {}
-                  if (!msg) msg = "Failed to save";
+                  if (!msg) msg = i18n.errorFailedToSave;
                   throw new Error(
-                    "Save failed (" + String(status) + "): " + msg,
+                    i18n.errorSaveFailedPrefix +
+                      " (" +
+                      String(status) +
+                      "): " +
+                      msg,
                   );
                 });
               }
@@ -1460,7 +1634,7 @@
           course.chapters.push(
             ensureChapterShape({
               number: n,
-              name: "New chapter",
+              name: i18n.defaultNewChapterName,
               subchapters: [],
               questions: [],
             }),
@@ -1469,7 +1643,7 @@
           setExclusiveChapterExpanded(created.id, true);
           chapterTabByChapterId[created.id] = "content";
           persistAndRerender();
-          showFlash("success", "Chapter added.");
+          showFlash("success", i18n.flashChapterAdded);
         }
 
         function addSubchapter(course, chapter) {
@@ -1477,14 +1651,14 @@
           chapter.subchapters.push(
             ensureSubchapterShape({
               number: n,
-              name: "New subchapter",
+              name: i18n.defaultNewSubchapterName,
               markdown: "",
             }),
           );
           activeSubchapterByChapter[chapter.id] =
             chapter.subchapters[chapter.subchapters.length - 1].id;
           persistAndRerender();
-          showFlash("success", "Subchapter added.");
+          showFlash("success", i18n.flashSubchapterAdded);
         }
 
         function addQuestion(course, chapter) {
@@ -1502,7 +1676,7 @@
           setExclusiveChapterExpanded(chapter.id, true);
           chapterTabByChapterId[chapter.id] = "questions";
           persistAndRerender();
-          showFlash("success", "Question added.");
+          showFlash("success", i18n.flashQuestionAdded);
         }
 
         function addSlotToQuestion(chapter, q) {
@@ -1586,7 +1760,7 @@
           delete activeSubchapterByChapter[chapterId];
           delete activeQuestionByChapter[chapterId];
           persistAndRerender();
-          showFlash("success", "Chapter deleted.");
+          showFlash("success", i18n.flashChapterDeleted);
         }
 
         function deleteSubchapter(chapter, subchapterId) {
@@ -1596,7 +1770,7 @@
           if (activeSubchapterByChapter[chapter.id] === subchapterId)
             activeSubchapterByChapter[chapter.id] = null;
           persistAndRerender();
-          showFlash("success", "Subchapter deleted.");
+          showFlash("success", i18n.flashSubchapterDeleted);
         }
 
         function deleteQuestion(chapter, questionId) {
@@ -1608,7 +1782,7 @@
           if (questionId && activeSlotByQuestion)
             delete activeSlotByQuestion[questionId];
           persistAndRerender();
-          showFlash("success", "Question deleted.");
+          showFlash("success", i18n.flashQuestionDeleted);
         }
 
         function getActiveCourse() {
@@ -1623,13 +1797,13 @@
               saveUiState();
               saveCourseToServer(course)
                 .then(function () {
-                  showFlash("success", "Saved to database.");
+                  showFlash("success", i18n.flashSaved);
                 })
                 .catch(function (e) {
                   var msg =
                     e && e.message
                       ? String(e.message)
-                      : "Failed to save to database.";
+                      : i18n.errorFailedToSaveToDatabase;
                   showFlash("error", msg);
                 });
             });
@@ -1744,10 +1918,7 @@
                 })
                 .catch(function () {
                   if (popup && !popup.closed) popup.close();
-                  showFlash(
-                    "error",
-                    "Open editor failed. Please click Save and try again.",
-                  );
+                  showFlash("error", i18n.flashOpenEditorFailed);
                 });
               return;
             }
@@ -1792,9 +1963,7 @@
 
             if (action === "delete-chapter") {
               if (!chapterId) return;
-              var ok = window.confirm(
-                "Delete this chapter? This will also remove its subchapters and questions.",
-              );
+              var ok = window.confirm(i18n.confirmDeleteChapter);
               if (!ok) return;
               deleteChapter(course, chapterId);
               return;
@@ -1828,7 +1997,7 @@
 
             if (action === "delete-subchapter") {
               if (!subId) return;
-              var ok = window.confirm("Delete this subchapter?");
+              var ok = window.confirm(i18n.confirmDeleteSubchapter);
               if (!ok) return;
               deleteSubchapter(chapter, subId);
               return;
@@ -1858,7 +2027,7 @@
             if (!q) return;
 
             if (action === "delete-question") {
-              var ok = window.confirm("Delete this question?");
+              var ok = window.confirm(i18n.confirmDeleteQuestion);
               if (!ok) return;
               deleteQuestion(chapter, q.id);
               return;
@@ -1879,7 +2048,7 @@
               return;
             }
             if (action === "remove-slot") {
-              var ok = window.confirm("Remove this slot?");
+              var ok = window.confirm(i18n.confirmRemoveSlot);
               if (!ok) return;
               removeSlot(q, slotIndex);
               return;
@@ -2077,12 +2246,9 @@
           normalizeState();
           var fallback = findCourseById(courseId);
           if (result && result.error) {
-            showFlash("error", "Failed to load course from database.");
+            showFlash("error", i18n.flashLoadFailed);
           } else {
-            showFlash(
-              "info",
-              "Course not found in database. Created a new draft.",
-            );
+            showFlash("info", i18n.flashNotFound);
           }
           renderCourseHeader(fallback);
           renderChapters(fallback);

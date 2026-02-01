@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.barlarlar.myanmyanlearn.model.Course;
 import com.barlarlar.myanmyanlearn.model.Content;
@@ -32,15 +34,23 @@ public class ContentsController {
             @RequestParam(name = "courseId", required = false) String courseId,
             @RequestParam(name = "courseTitle", required = false) String courseTitle,
             @RequestParam(name = "title", required = false) String title) {
+        Authentication auth = SecurityContextHolder.getContext() != null
+                ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
         String selected = (courseTitle != null && !courseTitle.isBlank()) ? courseTitle
                 : (title != null ? title : null);
 
         Course course = null;
         if (courseId != null && !courseId.isBlank()) {
-            course = courseService.findByIdFromDatabase(courseId);
+            course = courseService.findAccessibleByIdFromDatabase(courseId, auth);
         }
         if (course == null && selected != null && !selected.isBlank()) {
-            course = courseService.findByTitleFromDatabase(selected);
+            course = courseService.findAccessibleByTitleFromDatabase(selected, auth);
+        }
+
+        boolean requested = (courseId != null && !courseId.isBlank()) || (selected != null && !selected.isBlank());
+        if (requested && course == null) {
+            return "redirect:/home";
         }
 
         // Prefer the title from the resolved course for display

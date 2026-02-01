@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +52,12 @@ public class AssessmentController {
             @RequestParam(name = "courseId", required = false) String courseId) {
         setNoStoreHeaders(response);
         courseId = resolveCourseId(courseId, request);
+        Authentication auth = SecurityContextHolder.getContext() != null
+                ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
+        if (courseId != null && !courseId.isBlank() && !courseService.canAccessCourse(courseId, auth)) {
+            return "redirect:/home";
+        }
 
         List<String> chapterList;
         if (chapters == null || chapters.isBlank()) {
@@ -70,7 +78,7 @@ public class AssessmentController {
         // Resolve exam title from courseId if available
         String examTitle = null;
         if (courseId != null && !courseId.isBlank()) {
-            Course course = courseService.findByIdFromDatabase(courseId);
+            Course course = courseService.findAccessibleByIdFromDatabase(courseId, auth);
             if (course != null) {
                 examTitle = course.getTitle();
             }
@@ -106,6 +114,12 @@ public class AssessmentController {
             @RequestParam Map<String, String> allParams) {
         setNoStoreHeaders(response);
         courseId = resolveCourseId(courseId, request);
+        Authentication auth = SecurityContextHolder.getContext() != null
+                ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
+        if (courseId != null && !courseId.isBlank() && !courseService.canAccessCourse(courseId, auth)) {
+            return "redirect:/home";
+        }
         List<String> chapterList;
         if (chapters == null || chapters.isBlank()) {
             chapterList = Collections.emptyList();
@@ -124,7 +138,7 @@ public class AssessmentController {
 
         String examTitle = null;
         if (courseId != null && !courseId.isBlank()) {
-            Course course = courseService.findByIdFromDatabase(courseId);
+            Course course = courseService.findAccessibleByIdFromDatabase(courseId, auth);
             if (course != null) {
                 examTitle = course.getTitle();
             }
@@ -319,6 +333,12 @@ public class AssessmentController {
             @RequestParam(name = "courseId") String courseId,
             @RequestParam(name = "ch") Integer chapterOrder,
             @RequestParam(name = "q") Integer questionNo) {
+        Authentication auth = SecurityContextHolder.getContext() != null
+                ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
+        if (!courseService.canAccessCourse(courseId, auth)) {
+            return ResponseEntity.notFound().build();
+        }
         String markdown = courseService.findAssessmentQuestionMarkdownFromDatabase(courseId, chapterOrder, questionNo);
         if (markdown == null) {
             return ResponseEntity.notFound().build();
@@ -331,6 +351,12 @@ public class AssessmentController {
             @RequestParam(name = "courseId") String courseId,
             @RequestParam(name = "ch") Integer chapterOrder,
             @RequestParam(name = "q") Integer questionNo) {
+        Authentication auth = SecurityContextHolder.getContext() != null
+                ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
+        if (!courseService.canAccessCourse(courseId, auth)) {
+            return ResponseEntity.notFound().build();
+        }
         String markdown = courseService.findAssessmentExplanationMarkdownFromDatabase(courseId, chapterOrder,
                 questionNo);
         if (markdown == null) {

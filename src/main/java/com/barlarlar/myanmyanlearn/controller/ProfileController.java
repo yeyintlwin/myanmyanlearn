@@ -7,10 +7,12 @@ import com.barlarlar.myanmyanlearn.repository.OtpVerificationRepository;
 import com.barlarlar.myanmyanlearn.repository.PasswordResetTokenRepository;
 import com.barlarlar.myanmyanlearn.repository.RoleRepository;
 import com.barlarlar.myanmyanlearn.service.LoginAttemptService;
+import com.barlarlar.myanmyanlearn.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -29,10 +32,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @Slf4j
@@ -47,10 +52,13 @@ public class ProfileController {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final AssessmentScoreRecordRepository assessmentScoreRecordRepository;
     private final LoginAttemptService loginAttemptService;
+    private final StorageService storageService;
 
     private static final int NAME_MIN_LENGTH = 2;
     private static final int NAME_MAX_LENGTH = 50;
     private static final Pattern NAME_PATTERN = Pattern.compile("^[\\p{L}\\p{M}][\\p{L}\\p{M} '\\-]*[\\p{L}\\p{M}]$");
+    private static final long PROFILE_IMAGE_MAX_BYTES = 5L * 1024L * 1024L;
+    private static final Pattern SAFE_KEY_PART = Pattern.compile("[^a-zA-Z0-9._-]+");
 
     @GetMapping("/profile")
     public String profilePage(Model model) {
@@ -64,6 +72,8 @@ public class ProfileController {
 
         if (authentication != null && authentication.isAuthenticated()
                 && !authentication.getName().equals("anonymousUser")) {
+
+            model.addAttribute("isStudent", isStudent(authentication));
 
             String username = authentication.getName();
             log.debug("Username: {}", username);
@@ -84,6 +94,8 @@ public class ProfileController {
                 model.addAttribute("userProfileImage", member.getProfileImage());
                 model.addAttribute("userEmailVerified", member.getEmailVerified());
                 model.addAttribute("userActive", member.getActive());
+                model.addAttribute("userCurrentClass", member.getCurrentClass());
+                model.addAttribute("userSchoolYear", member.getSchoolYear());
             } else {
                 log.debug("User not found in database: {}", username);
             }
@@ -92,6 +104,87 @@ public class ProfileController {
         }
 
         return "profile";
+    }
+
+    @PostMapping(path = "/profile/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Transactional
+    public String uploadProfileImage(@RequestParam("image") MultipartFile image) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getName())) {
+            return "redirect:/login";
+        }
+
+        if (image == null || image.isEmpty()) {
+            return "redirect:/profile";
+        }
+        if (image.getSize() > PROFILE_IMAGE_MAX_BYTES) {
+            return "redirect:/profile";
+        }
+
+        String ext = extensionForContentType(image.getContentType());
+        if (ext == null) {
+            return "redirect:/profile";
+        }
+
+        String username = authentication.getName();
+        Optional<Member> memberOpt = memberRepository.findById(username);
+        if (memberOpt.isEmpty()) {
+            return "redirect:/profile";
+        }
+
+        Member member = memberOpt.get();
+        String safeUserId = safeKeyPart(username);
+        String key = "profiles/" + safeUserId + "/avatar." + ext;
+
+        String previousKey = storageKeyFromMemberProfileImage(member.getProfileImage());
+        if (previousKey != null && !previousKey.equals(key)
+                && previousKey.startsWith("profiles/" + safeUserId + "/")) {
+            try {
+                storageService.delete(previousKey);
+            } catch (Exception ignored) {
+            }
+        }
+
+        try {
+            StorageService.StoredObject stored = storageService.put(key, image);
+            member.setProfileImage(stored.url() + "?v=" + System.currentTimeMillis());
+            memberRepository.save(member);
+        } catch (Exception e) {
+            log.warn("Failed to upload profile image for user {}", username, e);
+        }
+
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/image/delete")
+    @Transactional
+    public String deleteProfileImage() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getName())) {
+            return "redirect:/login";
+        }
+
+        String username = authentication.getName();
+        Optional<Member> memberOpt = memberRepository.findById(username);
+        if (memberOpt.isEmpty()) {
+            return "redirect:/profile";
+        }
+
+        Member member = memberOpt.get();
+        String key = storageKeyFromMemberProfileImage(member.getProfileImage());
+        String safeUserId = safeKeyPart(username);
+        if (key != null && key.startsWith("profiles/" + safeUserId + "/")) {
+            try {
+                storageService.delete(key);
+            } catch (Exception ignored) {
+            }
+        }
+
+        member.setProfileImage(null);
+        memberRepository.save(member);
+        return "redirect:/profile";
     }
 
     /**
@@ -128,6 +221,73 @@ public class ProfileController {
             return firstName;
         }
         return firstName + " " + lastName;
+    }
+
+    private boolean isStudent(Authentication authentication) {
+        if (authentication == null || authentication.getAuthorities() == null) {
+            return false;
+        }
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a != null && "ROLE_STUDENT".equals(a.getAuthority()));
+    }
+
+    private static String safeKeyPart(String input) {
+        String s = input == null ? "" : input.trim();
+        if (s.isBlank()) {
+            return "user";
+        }
+        Matcher m = SAFE_KEY_PART.matcher(s);
+        s = m.replaceAll("_");
+        while (s.startsWith("_")) {
+            s = s.substring(1);
+        }
+        while (s.endsWith("_")) {
+            s = s.substring(0, s.length() - 1);
+        }
+        return s.isBlank() ? "user" : s;
+    }
+
+    private static String extensionForContentType(String contentType) {
+        String ct = contentType != null ? contentType.trim().toLowerCase() : "";
+        if ("image/jpeg".equals(ct) || "image/jpg".equals(ct)) {
+            return "jpg";
+        }
+        if ("image/png".equals(ct)) {
+            return "png";
+        }
+        if ("image/webp".equals(ct)) {
+            return "webp";
+        }
+        if ("image/gif".equals(ct)) {
+            return "gif";
+        }
+        return null;
+    }
+
+    private static String storageKeyFromMemberProfileImage(String profileImageUrl) {
+        if (profileImageUrl == null || profileImageUrl.isBlank()) {
+            return null;
+        }
+        String u = profileImageUrl.trim();
+        int q = u.indexOf('?');
+        if (q >= 0) {
+            u = u.substring(0, q);
+        }
+        int uploadsIdx = u.indexOf("/uploads/");
+        if (uploadsIdx >= 0) {
+            u = u.substring(uploadsIdx);
+        }
+        if (u.startsWith("/uploads/")) {
+            return u.substring("/uploads/".length());
+        }
+        if (u.startsWith("/uploads")) {
+            String k = u.substring("/uploads".length());
+            if (k.startsWith("/")) {
+                k = k.substring(1);
+            }
+            return k.isBlank() ? null : k;
+        }
+        return null;
     }
 
     @DeleteMapping("/profile/delete")

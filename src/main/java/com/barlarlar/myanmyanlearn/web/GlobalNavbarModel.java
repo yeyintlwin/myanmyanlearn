@@ -26,7 +26,7 @@ public class GlobalNavbarModel {
         if (model.containsAttribute("userFullName") && model.containsAttribute("username")
                 && model.containsAttribute("userInitials") && model.containsAttribute("userEmail")
                 && model.containsAttribute("userRoleLabel") && model.containsAttribute("canSeeAdminPanel")
-                && model.containsAttribute("isAdmin")) {
+                && model.containsAttribute("isAdmin") && model.containsAttribute("userProfileImage")) {
             return;
         }
 
@@ -78,6 +78,9 @@ public class GlobalNavbarModel {
                     }
                     if (!model.containsAttribute("userInitials") && nameInitials != null) {
                         model.addAttribute("userInitials", nameInitials);
+                    }
+                    if (!model.containsAttribute("userProfileImage") && m.getProfileImage() != null) {
+                        model.addAttribute("userProfileImage", m.getProfileImage());
                     }
                     // Prefer display name from member if not set
                     if (displayName == null)

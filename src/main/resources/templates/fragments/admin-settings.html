@@ -23,16 +23,23 @@
       <div class="flex items-center justify-between gap-3">
         <div class="min-w-0">
           <div class="flex items-center gap-2">
-            <span class="text-white font-semibold text-sm">
+            <span
+              class="text-white font-semibold text-sm"
+              th:text="#{adminSettings.registrationDomain.title}"
+            >
               Limit registration by email domain
             </span>
             <span
               class="inline-flex items-center rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white/70"
+              th:text="#{adminSettings.registrationDomain.badge}"
             >
               Admin only
             </span>
           </div>
-          <p class="text-white/70 text-xs mt-1">
+          <p
+            class="text-white/70 text-xs mt-1"
+            th:text="#{adminSettings.registrationDomain.description}"
+          >
             When enabled, only email addresses ending with the specified domain
             can register.
           </p>
@@ -57,6 +64,7 @@
         <label
           for="allowedDomain"
           class="block text-xs font-medium text-white/80"
+          th:text="#{adminSettings.allowedDomain.label}"
         >
           Allowed email domain
         </label>
@@ -73,16 +81,16 @@
               type="text"
               inputmode="email"
               autocomplete="off"
+              th:attr="placeholder=#{adminSettings.allowedDomain.placeholder}"
               placeholder="school.edu"
               th:value="${registrationDomainDisplay}"
               class="bg-white/10 text-white text-sm rounded-lg pl-7 pr-3 h-9 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40"
             />
           </div>
         </div>
-        <p class="text-[11px] text-white/60">
-          Enter a domain like <span class="font-mono">school.edu</span>. Users
-          will only be able to register with emails ending in this domain when
-          the toggle is on.
+        <p class="text-[11px] text-white/60" th:text="#{adminSettings.allowedDomain.hint}">
+          Enter a domain like school.edu. Users will only be able to register
+          with emails ending in this domain when the toggle is on.
         </p>
       </div>
     </div>
@@ -93,7 +101,7 @@
         class="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/25 px-4 h-9 text-sm font-medium text-emerald-50 hover:bg-emerald-500/35 transition"
       >
         <i class="fas fa-save text-xs"></i>
-        <span>Save settings</span>
+        <span th:text="#{adminSettings.action.save}">Save settings</span>
       </button>
 
       <div
@@ -102,9 +110,9 @@
       >
         <i class="fas fa-circle-info text-xs"></i>
         <span>
-          Registration limited to @<span
-            class="font-mono"
-            th:text="${registrationDomainDisplay}"
+          <span th:text="#{adminSettings.registrationLimitedPrefix}"
+            >Registration limited to @</span
+          ><span class="font-mono" th:text="${registrationDomainDisplay}"
             >domain.com</span
           >
         </span>
@@ -116,8 +124,13 @@
     th:if="${!isAdmin}"
     class="mt-4 max-w-xl rounded-2xl border border-white/15 bg-white/5 p-4 text-sm text-white/75"
   >
-    <div class="font-semibold text-white">Registration email domain</div>
-    <p class="mt-1 text-xs text-white/70">
+    <div
+      class="font-semibold text-white"
+      th:text="#{adminSettings.nonAdmin.title}"
+    >
+      Registration email domain
+    </div>
+    <p class="mt-1 text-xs text-white/70" th:text="#{adminSettings.nonAdmin.body}">
       Only Admin users can change registration domain settings. Please contact
       an Admin if you need to update this policy.
     </p>

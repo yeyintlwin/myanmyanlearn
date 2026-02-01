@@ -1,4 +1,7 @@
 (function () {
+  var MML = window.MML || (window.MML = {});
+  if (!MML.adminUsers) MML.adminUsers = {};
+
   var modal = document.getElementById("assignAdminModal");
   var targetEl = document.getElementById("assignAdminTargetUserId");
   var cancelBtn = document.getElementById("assignAdminCancel");
@@ -25,7 +28,7 @@
     if (pendingForm) pendingForm.submit();
   });
 
-  window.confirmAdminAssign = function (form) {
+  function confirmAdminAssign(form) {
     try {
       var select = form.querySelector('select[name="role"]');
       if (!select || select.value !== "ADMIN") return true;
@@ -38,10 +41,16 @@
     } catch (e) {
       return true;
     }
-  };
+  }
+
+  MML.adminUsers.confirmAdminAssign = confirmAdminAssign;
+  window.confirmAdminAssign = confirmAdminAssign;
 })();
 
 (function () {
+  var MML = window.MML || (window.MML = {});
+  if (!MML.adminUsers) MML.adminUsers = {};
+
   var toast = document.getElementById("adminAsyncToast");
   var toastText = document.getElementById("adminAsyncToastText");
   var toastTimer = null;
@@ -63,7 +72,7 @@
     );
   }
 
-  window.submitAsyncForm = function (form) {
+  function submitAsyncForm(form) {
     try {
       if (!form) return;
       if (!form.hasAttribute("data-async")) {
@@ -104,5 +113,8 @@
         form.submit();
       } catch (e2) {}
     }
-  };
+  }
+
+  MML.adminUsers.submitAsyncForm = submitAsyncForm;
+  window.submitAsyncForm = submitAsyncForm;
 })();

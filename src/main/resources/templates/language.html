@@ -1,9 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Select Language</title>
+    <title th:text="#{language.pageTitle}">
+      MYAN MYAN LEARN - Select Language
+    </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -30,6 +32,7 @@
               >
                 <img
                   th:src="@{/images/logo.svg}"
+                  th:alt="#{app.brand}"
                   alt="Myan Myan Learn"
                   class="w-12 h-12 drop-shadow-lg"
                 />
@@ -38,11 +41,13 @@
             <div class="flex flex-col">
               <div
                 class="text-white font-bold text-xl brand-font tracking-wide"
+                th:text="#{app.brand}"
               >
                 Myan Myan Learn
               </div>
               <div
                 class="text-white/70 text-xs font-medium tracking-wider uppercase"
+                th:text="#{nav.subtitle}"
               >
                 Learning Platform
               </div>
@@ -63,11 +68,15 @@
         >
           <i class="fas fa-globe text-white text-3xl"></i>
         </div>
-        <h1 class="text-5xl font-black text-white mb-4 tracking-wide">
+        <h1
+          class="text-5xl font-black text-white mb-4 tracking-wide"
+          th:text="#{language.hero.title}"
+        >
           Choose Your Language
         </h1>
         <p
           class="text-lg text-white/90 font-light tracking-wide max-w-2xl mx-auto"
+          th:text="#{language.hero.subtitle}"
         >
           Select your preferred language to continue your learning journey
         </p>
@@ -104,7 +113,12 @@
             >
               English
             </div>
-            <div class="text-sm text-white/80 font-medium">United States</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.en}"
+            >
+              United States
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -142,7 +156,12 @@
             >
               မြန်မာ
             </div>
-            <div class="text-sm text-white/80 font-medium">Myanmar</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.my}"
+            >
+              Myanmar
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -180,7 +199,12 @@
             >
               中文
             </div>
-            <div class="text-sm text-white/80 font-medium">Chinese</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.zh}"
+            >
+              Chinese
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -218,7 +242,12 @@
             >
               नेपाली
             </div>
-            <div class="text-sm text-white/80 font-medium">Nepalese</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.ne}"
+            >
+              Nepalese
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -256,7 +285,12 @@
             >
               Tiếng Việt
             </div>
-            <div class="text-sm text-white/80 font-medium">Vietnamese</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.vi}"
+            >
+              Vietnamese
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -294,7 +328,12 @@
             >
               O'zbek
             </div>
-            <div class="text-sm text-white/80 font-medium">Uzbek</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.uz}"
+            >
+              Uzbek
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -332,7 +371,12 @@
             >
               සිංහල
             </div>
-            <div class="text-sm text-white/80 font-medium">Sinhala</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.si}"
+            >
+              Sinhala
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -370,7 +414,12 @@
             >
               हिन्दी
             </div>
-            <div class="text-sm text-white/80 font-medium">Hindi</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.hi}"
+            >
+              Hindi
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -408,7 +457,12 @@
             >
               日本語
             </div>
-            <div class="text-sm text-white/80 font-medium">Japanese</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.ja}"
+            >
+              Japanese
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -422,7 +476,7 @@
         <a
           href="#"
           class="language-option group relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-out text-white flex flex-col items-center relative overflow-hidden min-h-[140px] justify-center hover:bg-white/20 hover:border-white/40 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
-          data-lang="bd"
+          data-lang="bn"
         >
           <!-- Background Gradient -->
           <div
@@ -446,7 +500,12 @@
             >
               বাংলা
             </div>
-            <div class="text-sm text-white/80 font-medium">Bangladeshi</div>
+            <div
+              class="text-sm text-white/80 font-medium"
+              th:text="#{language.region.bd}"
+            >
+              Bangladeshi
+            </div>
           </div>
 
           <!-- Selection Indicator -->
@@ -473,7 +532,7 @@
           <!-- Button Content -->
           <div class="relative flex items-center justify-center gap-3">
             <i class="fas fa-arrow-right text-lg"></i>
-            <span>Continue</span>
+            <span th:text="#{language.action.continue}">Continue</span>
           </div>
         </button>
       </div>
@@ -530,7 +589,7 @@
             // Set cookie with 30 days expiration
             const expirationDate = new Date();
             expirationDate.setTime(
-              expirationDate.getTime() + 30 * 24 * 60 * 60 * 1000
+              expirationDate.getTime() + 30 * 24 * 60 * 60 * 1000,
             );
             document.cookie = `selectedLanguage=${selectedLanguage}; expires=${expirationDate.toUTCString()}; path=/`;
 

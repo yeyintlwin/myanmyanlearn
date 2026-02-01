@@ -103,7 +103,7 @@ public class HomeController {
             log.debug("User not authenticated or is anonymous");
         }
 
-        List<Course> courses = courseService.getAllCoursesFromDatabase();
+        List<Course> courses = courseService.getCoursesForAuthentication(authentication);
         model.addAttribute("courses", courses);
 
         Map<String, Integer> courseProgress = new HashMap<>();

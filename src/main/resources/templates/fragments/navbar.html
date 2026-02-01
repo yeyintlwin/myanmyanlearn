@@ -49,9 +49,20 @@
             >
               <div class="relative flex items-center gap-2">
                 <div
-                  class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg"
+                  class="w-8 h-8 rounded-lg shadow-lg overflow-hidden"
                 >
-                  <span th:text="${userInitials ?: 'U'}">U</span>
+                  <img
+                    th:if="${userProfileImage != null and !#strings.isEmpty(userProfileImage)}"
+                    th:src="${userProfileImage}"
+                    class="w-full h-full object-cover"
+                    alt="Profile photo"
+                  />
+                  <div
+                    th:if="${userProfileImage == null or #strings.isEmpty(userProfileImage)}"
+                    class="w-full h-full bg-gradient-to-br from-primary-500 to-secondary-600 flex items-center justify-center text-white font-semibold text-sm"
+                  >
+                    <span th:text="${userInitials ?: 'U'}">U</span>
+                  </div>
                 </div>
                 <div class="flex flex-col">
                   <span
@@ -76,9 +87,20 @@
                   >
                     <div class="flex items-center gap-3">
                       <div
-                        class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center text-white font-bold text-lg shadow-lg"
+                        class="w-12 h-12 rounded-lg bg-white/20 shadow-lg overflow-hidden"
                       >
-                        <span th:text="${userInitials ?: 'U'}">U</span>
+                        <img
+                          th:if="${userProfileImage != null and !#strings.isEmpty(userProfileImage)}"
+                          th:src="${userProfileImage}"
+                          class="w-full h-full object-cover"
+                          alt="Profile photo"
+                        />
+                        <div
+                          th:if="${userProfileImage == null or #strings.isEmpty(userProfileImage)}"
+                          class="w-full h-full flex items-center justify-center text-white font-bold text-lg"
+                        >
+                          <span th:text="${userInitials ?: 'U'}">U</span>
+                        </div>
                       </div>
                       <div>
                         <h3

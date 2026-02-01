@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - Assessment</title>
+    <title th:text="#{assessment.pageTitle}">MYAN MYAN LEARN - Assessment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -241,6 +241,7 @@
           <i class="fas fa-clock text-yellow-400"></i>
           <span
             class="text-sm font-medium text-slate-300 uppercase tracking-wide"
+            th:text="#{assessment.timeLeft}"
             >Time Left</span
           >
           <span
@@ -267,7 +268,7 @@
             >
               <i class="fas fa-clipboard-check text-white"></i>
             </span>
-            <span>Assessment</span>
+            <span th:text="#{assessment.title}">Assessment</span>
           </h1>
           <a
             th:href="@{/contents(courseId=${courseId})}"
@@ -275,7 +276,7 @@
             class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0"
           >
             <i class="fas fa-arrow-left text-xs"></i>
-            <span>Back to Contents</span>
+            <span th:text="#{assessment.backToContents}">Back to Contents</span>
           </a>
         </div>
 
@@ -292,12 +293,14 @@
               >
                 <i class="fas fa-file-alt"></i>
               </span>
-              <span>Exam Summary</span>
+              <span th:text="#{assessment.examSummary}">Exam Summary</span>
             </h2>
           </div>
           <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div class="text-white/70 text-xs">Exam Title</div>
+              <div class="text-white/70 text-xs" th:text="#{assessment.examTitle}">
+                Exam Title
+              </div>
               <div
                 class="text-white font-medium"
                 id="examTitleVal"
@@ -307,13 +310,17 @@
               </div>
             </div>
             <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div class="text-white/70 text-xs">Total Score</div>
+              <div class="text-white/70 text-xs" th:text="#{assessment.totalScore}">
+                Total Score
+              </div>
               <div class="text-white font-medium">
                 <span id="totalScoreVal">0</span>
               </div>
             </div>
             <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div class="text-white/70 text-xs">Chapters</div>
+              <div class="text-white/70 text-xs" th:text="#{assessment.chapters}">
+                Chapters
+              </div>
               <div
                 class="text-white font-medium break-words"
                 id="chaptersVal"
@@ -338,7 +345,12 @@
               <h2
                 class="text-white text-lg font-semibold flex items-center gap-3 min-w-0"
               >
-                <span class="truncate">Question [[${iStat.count}]]</span>
+                <span
+                  class="truncate"
+                  th:text="${#messages.msg('assessment.question')} + ' ' + iStat.count"
+                >
+                  Question
+                </span>
               </h2>
               <div class="flex items-center gap-3">
                 <span
@@ -386,6 +398,7 @@
                     <span
                       class="block text-left whitespace-normal break-words leading-snug"
                       data-answer-label
+                      th:text="#{assessment.select}"
                       >Select</span
                     >
                     <i
@@ -400,6 +413,7 @@
                       type="button"
                       class="w-full text-left px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
                       data-value=""
+                      th:text="#{assessment.select}"
                     >
                       Select
                     </button>
@@ -424,7 +438,7 @@
               class="w-full sm:w-auto px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
             >
               <i class="fas fa-paper-plane"></i>
-              <span>Submit</span>
+              <span th:text="#{assessment.submit}">Submit</span>
             </button>
             <div
               id="submitMessage"
@@ -445,8 +459,21 @@
       </div>
     </main>
 
-    <script>
+    <script th:inline="javascript">
       (function () {
+        const I18N = {
+          validationMissingPrefix:
+            /*[[#{assessment.validation.missingPrefix}]]*/ "Please select options for question(s): ",
+          validationMissingItem:
+            /*[[#{assessment.validation.missingItem}]]*/ "{q} ({count} missing)",
+          alertTimeUpAutoSubmit:
+            /*[[#{assessment.alert.timeUpAutoSubmit}]]*/ "Time is up! Submitting your assessment.",
+          title: /*[[#{assessment.title}]]*/ "Assessment",
+          select: /*[[#{assessment.select}]]*/ "Select",
+          markSingular: /*[[#{assessment.mark.singular}]]*/ "mark",
+          markPlural: /*[[#{assessment.mark.plural}]]*/ "marks",
+        };
+
         function redirectIfBackBlocked() {
           try {
             if (sessionStorage.getItem("blockAssessmentBack") !== "1") {
@@ -628,7 +655,7 @@
             input.value = v;
             label.textContent = btn.textContent
               ? btn.textContent.trim()
-              : "Select";
+              : I18N.select;
             menu.classList.add("hidden");
           });
         });
@@ -663,11 +690,14 @@
             if (missing.length) {
               var msgEl = document.getElementById("submitMessage");
               if (msgEl) {
+                var itemTemplate = I18N.validationMissingItem;
                 var text =
-                  "Please select options for question(s): " +
+                  I18N.validationMissingPrefix +
                   missing
                     .map(function (m) {
-                      return m.q + " (" + m.missingCount + " missing)";
+                      return itemTemplate
+                        .replace("{q}", String(m.q))
+                        .replace("{count}", String(m.missingCount));
                     })
                     .join(", ");
                 msgEl.textContent = text;
@@ -681,7 +711,7 @@
               var examTitle =
                 examTitleEl && examTitleEl.textContent
                   ? examTitleEl.textContent.trim()
-                  : "Assessment";
+                  : I18N.title;
               var totalScoreEl = document.getElementById("totalScoreVal");
               var totalScore = 0;
               if (totalScoreEl && totalScoreEl.textContent) {
@@ -771,7 +801,7 @@
 
             if (remainingSeconds <= 0) {
               clearInterval(timerInterval);
-              alert("Time is up! Submitting your assessment.");
+              alert(I18N.alertTimeUpAutoSubmit);
 
               // Force submit without validation
               const submitBtn = document.getElementById("submitAssessment");
@@ -874,7 +904,9 @@
           const mark = parseFloat(el.dataset.mark);
           const val = isNaN(mark) ? 0 : mark;
           if (label)
-            label.textContent = `${val} ${val === 1 ? "mark" : "marks"}`;
+            label.textContent = `${val} ${
+              val === 1 ? I18N.markSingular : I18N.markPlural
+            }`;
         });
 
         // Populate chapters from URL if server-side missing

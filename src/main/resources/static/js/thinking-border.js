@@ -4,7 +4,8 @@
     el.classList.toggle('thinking-border', !!loading);
   }
 
-  window.thinkingBorder = {
-    setLoading,
-  };
+  var MML = window.MML || (window.MML = {});
+  MML.ui = MML.ui || {};
+  MML.ui.thinkingBorder = { setLoading: setLoading };
+  window.thinkingBorder = MML.ui.thinkingBorder;
 })();

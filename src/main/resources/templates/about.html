@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MYAN MYAN LEARN - About</title>
+    <title th:text="#{about.pageTitle}">MYAN MYAN LEARN - About</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -26,10 +26,13 @@
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between mb-6 gap-4">
           <div class="min-w-0">
-            <h1 class="text-white text-3xl sm:text-4xl font-extrabold">
+            <h1
+              class="text-white text-3xl sm:text-4xl font-extrabold"
+              th:text="#{about.title}"
+            >
               About Myan Myan Learn
             </h1>
-            <p class="text-white/80 mt-3 max-w-3xl">
+            <p class="text-white/80 mt-3 max-w-3xl" th:text="#{about.lead}">
               Myan Myan Learn helps international students in Japan study school
               subjects in their own language. It focuses on clarity, structure,
               and a smooth learning experience.
@@ -41,7 +44,7 @@
             class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0"
           >
             <i class="fas fa-arrow-left text-xs"></i>
-            <span>Back</span>
+            <span th:text="#{about.back}">Back</span>
           </a>
         </div>
 
@@ -53,14 +56,19 @@
               >
                 <i class="fas fa-bullseye text-white"></i>
               </div>
-              <h2 class="text-white text-xl font-bold">What this is</h2>
+              <h2
+                class="text-white text-xl font-bold"
+                th:text="#{about.section.what}"
+              >
+                What this is
+              </h2>
             </div>
             <div class="mt-4 space-y-3 text-white/80 text-sm leading-relaxed">
-              <p>
+              <p th:text="#{about.section.what.p1}">
                 This is a learning platform designed so multiple subjects can be
                 added over time.
               </p>
-              <p>
+              <p th:text="#{about.section.what.p2}">
                 The goal is to make lessons easier to follow for students who
                 are studying in Japan and want explanations in their own
                 language.
@@ -75,7 +83,12 @@
               >
                 <i class="fas fa-people-group text-white"></i>
               </div>
-              <h2 class="text-white text-xl font-bold">Team</h2>
+              <h2
+                class="text-white text-xl font-bold"
+                th:text="#{about.section.team}"
+              >
+                Team
+              </h2>
             </div>
 
             <ul class="mt-4 divide-y divide-white/10">
@@ -91,10 +104,10 @@
                       Ye Yint Lwin
                     </div>
                     <div class="text-white/60 text-xs flex-shrink-0">
-                      Creator
+                      <span th:text="#{about.team.role.creator}">Creator</span>
                     </div>
                   </div>
-                  <div class="text-white/75 text-sm mt-1">
+                  <div class="text-white/75 text-sm mt-1" th:text="#{about.team.bio.yy}">
                     Built the app and the learning experience end-to-end.
                   </div>
                 </div>
@@ -112,10 +125,12 @@
                       Shine Win Paing
                     </div>
                     <div class="text-white/60 text-xs flex-shrink-0">
-                      Assistant Developer, Tester
+                      <span th:text="#{about.team.role.assistantDeveloperTester}">
+                        Assistant Developer, Tester
+                      </span>
                     </div>
                   </div>
-                  <div class="text-white/75 text-sm mt-1">
+                  <div class="text-white/75 text-sm mt-1" th:text="#{about.team.bio.sw}">
                     Assisted development, tested features, and helped collect
                     data.
                   </div>
@@ -134,10 +149,10 @@
                       Aye Chan Moe
                     </div>
                     <div class="text-white/60 text-xs flex-shrink-0">
-                      Team Leader
+                      <span th:text="#{about.team.role.teamLeader}">Team Leader</span>
                     </div>
                   </div>
-                  <div class="text-white/75 text-sm mt-1">
+                  <div class="text-white/75 text-sm mt-1" th:text="#{about.team.bio.ac}">
                     Led the team, helped shape ideas, and helped collect data.
                   </div>
                 </div>
@@ -155,10 +170,10 @@
                       Shwe Yamin Aye
                     </div>
                     <div class="text-white/60 text-xs flex-shrink-0">
-                      Contributor
+                      <span th:text="#{about.team.role.contributor}">Contributor</span>
                     </div>
                   </div>
-                  <div class="text-white/75 text-sm mt-1">
+                  <div class="text-white/75 text-sm mt-1" th:text="#{about.team.bio.sy}">
                     Supported the project with discussion, advice, and data
                     collection.
                   </div>

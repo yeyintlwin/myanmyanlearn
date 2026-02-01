@@ -11,7 +11,8 @@
     btn.setAttribute("aria-pressed", pressed ? "true" : "false");
   }
 
-  window.aiTranslateBtn = {
-    setState,
-  };
+  const MML = window.MML || (window.MML = {});
+  MML.ui = MML.ui || {};
+  MML.ui.aiTranslateBtn = { setState };
+  window.aiTranslateBtn = MML.ui.aiTranslateBtn;
 })();
