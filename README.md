@@ -20,10 +20,20 @@ A Spring Boot learning platform for international students in Japan, designed to
 
 ### 1) Configure the database
 
-- The schema SQL is in [scripts/backups](scripts/backups) (schema-only dump).
+- Create the database:
 
 ```bash
 mysql -u root -p -e "CREATE DATABASE user_directory DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_0900_ai_ci;"
+```
+
+- First run schema bootstrap:
+  - If the database has no tables and `spring.jpa.hibernate.ddl-auto` is `validate` (default), the app will automatically create the tables on startup.
+  - After the tables exist, it will keep using `validate`.
+
+- Optional (restore schema-only dump):
+  - The schema SQL is in [scripts/backups](scripts/backups).
+
+```bash
 mysql -u root -p user_directory < scripts/backups/user_directory_20260109_195828.sql
 ```
 
@@ -71,6 +81,27 @@ Run the test suite:
 
 ```bash
 ./gradlew test
+```
+
+## Course export/import (.bll)
+
+- Export (Admin): open the Courses admin page and choose Export on a course to download a `.bll` archive.
+- Import (Admin): use Import on the Courses admin page and upload a `.bll` archive to restore a course.
+- What’s inside: course editor JSON + uploaded assets under `courses/<courseId>/` (cover image included).
+- Limits: max upload size is 25MB.
+- Delete behavior: deleting a course also deletes its stored assets under `courses/<courseId>/`.
+
+## Storage
+
+- Default (local): stored at `${user.dir}/.myanmyanlearn/uploads` and served from `/uploads/**`.
+- S3: set `app.storage.type=s3` and configure:
+
+```properties
+app.storage.s3.bucket=<bucket>
+app.storage.s3.region=<region>
+app.storage.s3.key-prefix=<optional_prefix>
+app.storage.s3.public-url-prefix=<optional_public_url_prefix>
+app.storage.s3.public-read=true
 ```
 
 ## Contributing
