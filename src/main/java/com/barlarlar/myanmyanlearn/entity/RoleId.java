@@ -2,35 +2,20 @@ package com.barlarlar.myanmyanlearn.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class RoleId implements Serializable {
 
     private String userId;
     private String role;
 
-    // Constructors
-    public RoleId() {
-    }
-
     public RoleId(String userId, String role) {
         this.userId = userId;
-        this.role = role;
-    }
-
-    // Getters and Setters
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
         this.role = role;
     }
 

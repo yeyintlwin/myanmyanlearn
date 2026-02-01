@@ -12,9 +12,15 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "course_question_options")
+@Getter
+@Setter
+@NoArgsConstructor
 public class CourseQuestionOptionEntity {
 
     @Id
@@ -43,9 +49,6 @@ public class CourseQuestionOptionEntity {
     @JoinColumn(name = "question_id", insertable = false, updatable = false)
     private CourseQuestionEntity question;
 
-    public CourseQuestionOptionEntity() {
-    }
-
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -59,69 +62,5 @@ public class CourseQuestionOptionEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
-    }
-
-    public Integer getOptionIndex() {
-        return optionIndex;
-    }
-
-    public void setOptionIndex(Integer optionIndex) {
-        this.optionIndex = optionIndex;
-    }
-
-    public String getOptionContent() {
-        return optionContent;
-    }
-
-    public void setOptionContent(String optionContent) {
-        this.optionContent = optionContent;
-    }
-
-    public Boolean getCorrect() {
-        return correct;
-    }
-
-    public void setCorrect(Boolean correct) {
-        this.correct = correct;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public CourseQuestionEntity getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(CourseQuestionEntity question) {
-        this.question = question;
     }
 }

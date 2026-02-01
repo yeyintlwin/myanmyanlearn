@@ -14,9 +14,15 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "course_question_slots")
+@Getter
+@Setter
+@NoArgsConstructor
 public class CourseQuestionSlotEntity {
 
     @Id
@@ -42,9 +48,6 @@ public class CourseQuestionSlotEntity {
     @OneToMany(mappedBy = "questionSlot", fetch = FetchType.LAZY)
     private List<CourseQuestionSlotOptionEntity> options;
 
-    public CourseQuestionSlotEntity() {
-    }
-
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -55,61 +58,5 @@ public class CourseQuestionSlotEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
-    }
-
-    public Integer getSlotIndex() {
-        return slotIndex;
-    }
-
-    public void setSlotIndex(Integer slotIndex) {
-        this.slotIndex = slotIndex;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public CourseQuestionEntity getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(CourseQuestionEntity question) {
-        this.question = question;
-    }
-
-    public List<CourseQuestionSlotOptionEntity> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<CourseQuestionSlotOptionEntity> options) {
-        this.options = options;
     }
 }

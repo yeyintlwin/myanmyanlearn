@@ -4,9 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "registration_settings")
+@Getter
+@Setter
+@NoArgsConstructor
 public class RegistrationSettingsEntity {
 
     @Id
@@ -18,32 +24,4 @@ public class RegistrationSettingsEntity {
 
     @Column(name = "enforce_domain", nullable = false)
     private Boolean enforceDomain = false;
-
-    public RegistrationSettingsEntity() {
-    }
-
-    public Byte getId() {
-        return id;
-    }
-
-    public void setId(Byte id) {
-        this.id = id;
-    }
-
-    public String getAllowedDomain() {
-        return allowedDomain;
-    }
-
-    public void setAllowedDomain(String allowedDomain) {
-        this.allowedDomain = allowedDomain;
-    }
-
-    public Boolean getEnforceDomain() {
-        return enforceDomain;
-    }
-
-    public void setEnforceDomain(Boolean enforceDomain) {
-        this.enforceDomain = enforceDomain;
-    }
 }
-

@@ -1,10 +1,16 @@
 package com.barlarlar.myanmyanlearn.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "roles")
 @IdClass(RoleId.class)
+@Getter
+@Setter
+@NoArgsConstructor
 public class Role {
 
     @Id
@@ -19,38 +25,9 @@ public class Role {
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private Member member;
 
-    // Constructors
-    public Role() {
-    }
-
     public Role(String userId, String role) {
         this.userId = userId;
         this.role = role;
-    }
-
-    // Getters and Setters
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
     }
 
     @Override

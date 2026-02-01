@@ -9,11 +9,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "password_reset_token", indexes = {
         @Index(name = "idx_password_reset_email", columnList = "email")
 })
+@Getter
+@Setter
+@NoArgsConstructor
 public class PasswordResetToken {
 
     @Id
@@ -29,44 +35,9 @@ public class PasswordResetToken {
     @Column(name = "expire_time", nullable = false)
     private Instant expireTime;
 
-    public PasswordResetToken() {
-    }
-
     public PasswordResetToken(String token, String email, Instant expireTime) {
         this.token = token;
         this.email = email;
-        this.expireTime = expireTime;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Instant getExpireTime() {
-        return expireTime;
-    }
-
-    public void setExpireTime(Instant expireTime) {
         this.expireTime = expireTime;
     }
 }

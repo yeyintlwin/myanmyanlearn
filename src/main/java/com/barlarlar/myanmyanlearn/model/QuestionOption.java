@@ -1,8 +1,17 @@
 package com.barlarlar.myanmyanlearn.model;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class QuestionOption {
     private int optionIndex;
     private String optionContent;
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private boolean isCorrect;
 
     public QuestionOption() {}
@@ -11,22 +20,6 @@ public class QuestionOption {
         this.optionIndex = optionIndex;
         this.optionContent = optionContent;
         this.isCorrect = false;
-    }
-
-    public int getOptionIndex() {
-        return optionIndex;
-    }
-
-    public void setOptionIndex(int optionIndex) {
-        this.optionIndex = optionIndex;
-    }
-
-    public String getOptionContent() {
-        return optionContent;
-    }
-
-    public void setOptionContent(String optionContent) {
-        this.optionContent = optionContent;
     }
 
     public boolean getIsCorrect() {

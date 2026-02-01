@@ -10,9 +10,15 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "courses")
+@Getter
+@Setter
+@NoArgsConstructor
 public class CourseEntity {
 
     @Id
@@ -46,9 +52,6 @@ public class CourseEntity {
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<CourseChapterEntity> chapters;
 
-    public CourseEntity() {
-    }
-
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -62,85 +65,5 @@ public class CourseEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getCoverImageUrl() {
-        return coverImageUrl;
-    }
-
-    public void setCoverImageUrl(String coverImageUrl) {
-        this.coverImageUrl = coverImageUrl;
-    }
-
-    public String getTargetStudentsJson() {
-        return targetStudentsJson;
-    }
-
-    public void setTargetStudentsJson(String targetStudentsJson) {
-        this.targetStudentsJson = targetStudentsJson;
-    }
-
-    public Boolean getPublished() {
-        return published;
-    }
-
-    public void setPublished(Boolean published) {
-        this.published = published;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public List<CourseChapterEntity> getChapters() {
-        return chapters;
-    }
-
-    public void setChapters(List<CourseChapterEntity> chapters) {
-        this.chapters = chapters;
     }
 }

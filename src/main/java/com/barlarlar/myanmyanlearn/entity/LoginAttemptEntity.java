@@ -7,9 +7,15 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "login_attempts")
+@Getter
+@Setter
+@NoArgsConstructor
 public class LoginAttemptEntity {
 
     @Id
@@ -24,9 +30,6 @@ public class LoginAttemptEntity {
 
     @Column(name = "success", nullable = false)
     private Boolean success = false;
-
-    public LoginAttemptEntity() {
-    }
 
     @PrePersist
     public void prePersist() {
@@ -53,37 +56,4 @@ public class LoginAttemptEntity {
             lastAttempt = LocalDateTime.now();
         }
     }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Integer getAttemptCount() {
-        return attemptCount;
-    }
-
-    public void setAttemptCount(Integer attemptCount) {
-        this.attemptCount = attemptCount;
-    }
-
-    public LocalDateTime getLastAttempt() {
-        return lastAttempt;
-    }
-
-    public void setLastAttempt(LocalDateTime lastAttempt) {
-        this.lastAttempt = lastAttempt;
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
 }
-

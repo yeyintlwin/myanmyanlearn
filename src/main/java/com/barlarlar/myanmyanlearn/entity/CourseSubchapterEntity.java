@@ -13,9 +13,15 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "course_subchapters")
+@Getter
+@Setter
+@NoArgsConstructor
 public class CourseSubchapterEntity {
 
     @Id
@@ -48,9 +54,6 @@ public class CourseSubchapterEntity {
     @JoinColumn(name = "chapter_id", insertable = false, updatable = false)
     private CourseChapterEntity chapter;
 
-    public CourseSubchapterEntity() {
-    }
-
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -61,77 +64,5 @@ public class CourseSubchapterEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getChapterId() {
-        return chapterId;
-    }
-
-    public void setChapterId(Long chapterId) {
-        this.chapterId = chapterId;
-    }
-
-    public String getSubchapterUid() {
-        return subchapterUid;
-    }
-
-    public void setSubchapterUid(String subchapterUid) {
-        this.subchapterUid = subchapterUid;
-    }
-
-    public Integer getSubchapterNumber() {
-        return subchapterNumber;
-    }
-
-    public void setSubchapterNumber(Integer subchapterNumber) {
-        this.subchapterNumber = subchapterNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMarkdown() {
-        return markdown;
-    }
-
-    public void setMarkdown(String markdown) {
-        this.markdown = markdown;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public CourseChapterEntity getChapter() {
-        return chapter;
-    }
-
-    public void setChapter(CourseChapterEntity chapter) {
-        this.chapter = chapter;
     }
 }

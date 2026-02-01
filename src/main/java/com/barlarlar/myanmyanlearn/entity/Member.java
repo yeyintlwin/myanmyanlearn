@@ -3,9 +3,15 @@ package com.barlarlar.myanmyanlearn.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "members")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Member {
 
     @Id
@@ -51,127 +57,10 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OtpVerification> otpVerifications;
 
-    // Constructors
-    public Member() {
-    }
-
     public Member(String userId, String password, Boolean active) {
         this.userId = userId;
         this.password = password;
         this.active = active;
-    }
-
-    // Getters and Setters
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
-
-    public Boolean getEmailVerified() {
-        return emailVerified;
-    }
-
-    public void setEmailVerified(Boolean emailVerified) {
-        this.emailVerified = emailVerified;
-    }
-
-    public String getCurrentClass() {
-        return currentClass;
-    }
-
-    public void setCurrentClass(String currentClass) {
-        this.currentClass = currentClass;
-    }
-
-    public String getSchoolYear() {
-        return schoolYear;
-    }
-
-    public void setSchoolYear(String schoolYear) {
-        this.schoolYear = schoolYear;
-    }
-
-    public String getOtpCode() {
-        return otpCode;
-    }
-
-    public void setOtpCode(String otpCode) {
-        this.otpCode = otpCode;
-    }
-
-    public LocalDateTime getOtpExpiresAt() {
-        return otpExpiresAt;
-    }
-
-    public void setOtpExpiresAt(LocalDateTime otpExpiresAt) {
-        this.otpExpiresAt = otpExpiresAt;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public List<OtpVerification> getOtpVerifications() {
-        return otpVerifications;
-    }
-
-    public void setOtpVerifications(List<OtpVerification> otpVerifications) {
-        this.otpVerifications = otpVerifications;
     }
 
     @Override

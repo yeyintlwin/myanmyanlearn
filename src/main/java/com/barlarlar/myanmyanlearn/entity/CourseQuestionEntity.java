@@ -15,9 +15,15 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "course_questions")
+@Getter
+@Setter
+@NoArgsConstructor
 public class CourseQuestionEntity {
 
     @Id
@@ -57,9 +63,6 @@ public class CourseQuestionEntity {
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<CourseQuestionSlotEntity> slots;
 
-    public CourseQuestionEntity() {
-    }
-
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -70,93 +73,5 @@ public class CourseQuestionEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getChapterId() {
-        return chapterId;
-    }
-
-    public void setChapterId(Long chapterId) {
-        this.chapterId = chapterId;
-    }
-
-    public String getQuestionUid() {
-        return questionUid;
-    }
-
-    public void setQuestionUid(String questionUid) {
-        this.questionUid = questionUid;
-    }
-
-    public Integer getQuestionNumber() {
-        return questionNumber;
-    }
-
-    public void setQuestionNumber(Integer questionNumber) {
-        this.questionNumber = questionNumber;
-    }
-
-    public String getQuestionMarkdown() {
-        return questionMarkdown;
-    }
-
-    public void setQuestionMarkdown(String questionMarkdown) {
-        this.questionMarkdown = questionMarkdown;
-    }
-
-    public String getExplanationMarkdown() {
-        return explanationMarkdown;
-    }
-
-    public void setExplanationMarkdown(String explanationMarkdown) {
-        this.explanationMarkdown = explanationMarkdown;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public CourseChapterEntity getChapter() {
-        return chapter;
-    }
-
-    public void setChapter(CourseChapterEntity chapter) {
-        this.chapter = chapter;
-    }
-
-    public List<CourseQuestionOptionEntity> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<CourseQuestionOptionEntity> options) {
-        this.options = options;
-    }
-
-    public List<CourseQuestionSlotEntity> getSlots() {
-        return slots;
-    }
-
-    public void setSlots(List<CourseQuestionSlotEntity> slots) {
-        this.slots = slots;
     }
 }

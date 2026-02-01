@@ -14,9 +14,15 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "course_chapters")
+@Getter
+@Setter
+@NoArgsConstructor
 public class CourseChapterEntity {
 
     @Id
@@ -51,9 +57,6 @@ public class CourseChapterEntity {
     @OneToMany(mappedBy = "chapter", fetch = FetchType.LAZY)
     private List<CourseQuestionEntity> questions;
 
-    public CourseChapterEntity() {
-    }
-
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -64,85 +67,5 @@ public class CourseChapterEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getChapterUid() {
-        return chapterUid;
-    }
-
-    public void setChapterUid(String chapterUid) {
-        this.chapterUid = chapterUid;
-    }
-
-    public Integer getChapterNumber() {
-        return chapterNumber;
-    }
-
-    public void setChapterNumber(Integer chapterNumber) {
-        this.chapterNumber = chapterNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public CourseEntity getCourse() {
-        return course;
-    }
-
-    public void setCourse(CourseEntity course) {
-        this.course = course;
-    }
-
-    public List<CourseSubchapterEntity> getSubchapters() {
-        return subchapters;
-    }
-
-    public void setSubchapters(List<CourseSubchapterEntity> subchapters) {
-        this.subchapters = subchapters;
-    }
-
-    public List<CourseQuestionEntity> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<CourseQuestionEntity> questions) {
-        this.questions = questions;
     }
 }
