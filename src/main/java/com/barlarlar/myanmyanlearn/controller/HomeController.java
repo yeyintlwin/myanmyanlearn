@@ -107,8 +107,15 @@ public class HomeController {
         model.addAttribute("courses", courses);
 
         Map<String, Integer> courseProgress = new HashMap<>();
+        Map<String, Boolean> courseHasQuestions = new HashMap<>();
         for (Course course : courses) {
             if (course == null || course.getId() == null) {
+                continue;
+            }
+            boolean hasQuestions = courseService.countTotalQuestionsForCourse(course.getId()) > 0;
+            courseHasQuestions.put(course.getId(), hasQuestions);
+            if (!hasQuestions) {
+                courseProgress.put(course.getId(), 0);
                 continue;
             }
             Optional<JsonNode> scoreJsonOpt = scoreRecordService
@@ -120,6 +127,7 @@ public class HomeController {
             courseProgress.put(course.getId(), coursePercent);
         }
         model.addAttribute("courseProgress", courseProgress);
+        model.addAttribute("courseHasQuestions", courseHasQuestions);
 
         return "home";
     }

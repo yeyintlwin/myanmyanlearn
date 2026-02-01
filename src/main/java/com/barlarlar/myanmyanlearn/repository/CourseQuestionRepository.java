@@ -12,4 +12,6 @@ public interface CourseQuestionRepository extends JpaRepository<CourseQuestionEn
     CourseQuestionEntity findByChapterIdAndQuestionNumber(Long chapterId, Integer questionNumber);
 
     CourseQuestionEntity findByChapterIdAndQuestionUid(Long chapterId, String questionUid);
+
+    long countByChapterIdIn(List<Long> chapterIds);
 }

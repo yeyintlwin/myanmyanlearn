@@ -64,6 +64,7 @@
           </button>
           <button
             id="testTab"
+            th:if="${courseHasQuestions}"
             class="px-4 py-2 text-sm font-medium text-white/70 hover:text-white border-b-2 border-transparent hover:border-white/30 focus:outline-none transition-colors flex items-center gap-2"
             onclick="switchTab('test')"
           >
@@ -73,7 +74,11 @@
         </div>
 
         <!-- Test Tab Content -->
-        <div id="testContent" class="space-y-4 hidden">
+        <div
+          id="testContent"
+          class="space-y-4 hidden"
+          th:if="${courseHasQuestions}"
+        >
           <div class="flex justify-end mb-4 gap-3">
             <button
               id="randomSelectBtn"
@@ -168,10 +173,13 @@
             class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4 content-item"
           >
             <button
-              class="w-full flex items-start gap-3 sm:gap-4 text-left group content-toggle"
+              th:class="${courseHasQuestions} ? 'w-full flex items-start gap-3 sm:gap-4 text-left group content-toggle' : 'w-full flex items-start gap-2 sm:gap-3 text-left group content-toggle'"
               aria-expanded="false"
             >
-              <div class="relative w-10 h-10 sm:w-12 sm:h-12">
+              <div
+                class="relative w-10 h-10 sm:w-12 sm:h-12"
+                th:if="${courseHasQuestions}"
+              >
                 <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
                   <circle
                     cx="18"
@@ -216,7 +224,7 @@
               ></i>
             </button>
             <div
-              class="mt-2 pl-11 sm:pl-14 space-y-2 content-sublist max-h-0 overflow-hidden opacity-0 transition-all duration-300 ease-out"
+              th:class="${courseHasQuestions} ? 'mt-2 pl-11 sm:pl-14 space-y-2 content-sublist max-h-0 overflow-hidden opacity-0 transition-all duration-300 ease-out' : 'mt-2 pl-0 space-y-2 content-sublist max-h-0 overflow-hidden opacity-0 transition-all duration-300 ease-out'"
             >
               <a
                 class="block text-white/90 text-xs sm:text-sm cursor-pointer hover:text-white hover:underline hover:bg-white/5 rounded-md px-2 py-1 transition no-underline"
@@ -231,6 +239,7 @@
                   >
                   <div
                     class="w-3/12 ml-auto"
+                    th:if="${courseHasQuestions}"
                     th:with="pct=${subChapterProgress[content.order + '-' + sub.order] ?: 0}"
                   >
                     <div

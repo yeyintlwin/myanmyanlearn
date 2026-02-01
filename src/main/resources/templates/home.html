@@ -47,7 +47,7 @@
           >
             <div
               class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4 flex items-start gap-4 hover:bg-white/15 transition cursor-pointer"
-              th:with="pct=${courseProgress != null ? (courseProgress[course.id] ?: 0) : 0}"
+              th:with="pct=${courseProgress != null ? (courseProgress[course.id] ?: 0) : 0}, hasQ=${courseHasQuestions != null ? (courseHasQuestions[course.id] ?: false) : false}"
             >
               <!-- Image -->
               <div
@@ -76,7 +76,7 @@
                 </div>
               </div>
               <!-- Percentage Block -->
-              <div class="text-left flex flex-col items-start leading-tight">
+              <div class="text-left flex flex-col items-start leading-tight" th:if="${hasQ}">
                 <span
                   class="text-white/80 text-[10px] sm:text-xs"
                   th:text="#{home.youHave}"

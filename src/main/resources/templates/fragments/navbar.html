@@ -82,8 +82,10 @@
                 id="profileDropdown"
               >
                 <div class="rounded-xl border border-gray-200 bg-white">
-                  <div
-                    class="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-4 rounded-t-xl overflow-hidden"
+                  <a
+                    th:href="@{/profile}"
+                    href="/profile"
+                    class="block bg-gradient-to-r from-slate-700 to-slate-800 text-white p-4 rounded-t-xl overflow-hidden no-underline hover:from-slate-600 hover:to-slate-700 transition"
                   >
                     <div class="flex items-center gap-3">
                       <div
@@ -113,7 +115,7 @@
                         ></p>
                       </div>
                     </div>
-                  </div>
+                  </a>
                   <div class="py-2">
                     <a
                       href="/profile"

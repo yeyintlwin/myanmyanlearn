@@ -129,6 +129,28 @@ public class CourseService {
         return canMemberAccessTargets(entity, member);
     }
 
+    public long countTotalQuestionsForCourse(String courseId) {
+        if (courseId == null || courseId.isBlank()) {
+            return 0L;
+        }
+        List<CourseChapterEntity> chapters = courseChapterRepository
+                .findByCourseIdOrderByChapterNumberAsc(courseId.trim());
+        if (chapters == null || chapters.isEmpty()) {
+            return 0L;
+        }
+        List<Long> chapterIds = new ArrayList<>();
+        for (CourseChapterEntity c : chapters) {
+            if (c == null || c.getId() == null) {
+                continue;
+            }
+            chapterIds.add(c.getId());
+        }
+        if (chapterIds.isEmpty()) {
+            return 0L;
+        }
+        return courseQuestionRepository.countByChapterIdIn(chapterIds);
+    }
+
     public Course findByIdFromDatabase(String id) {
         if (id == null || id.isBlank()) {
             return null;

@@ -63,7 +63,10 @@ public class ContentsController {
 
         Map<String, Integer> subChapterProgress = new HashMap<>();
         Map<Integer, Integer> chapterProgress = new HashMap<>();
+        boolean courseHasQuestions = false;
         if (course != null) {
+            courseHasQuestions = course.getId() != null
+                    && courseService.countTotalQuestionsForCourse(course.getId()) > 0;
             Optional<JsonNode> scoreJsonOpt = scoreRecordService
                     .latestScoreJsonForCurrentUser(Optional.ofNullable(course.getId()));
             if (scoreJsonOpt.isPresent()) {
@@ -72,6 +75,7 @@ public class ContentsController {
                 subChapterProgress = computeSubChapterProgress(course, scoreJson, chapterProgress);
             }
         }
+        model.addAttribute("courseHasQuestions", courseHasQuestions);
         model.addAttribute("subChapterProgress", subChapterProgress);
         model.addAttribute("chapterProgress", chapterProgress);
         return "contents";
