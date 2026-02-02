@@ -4,8 +4,11 @@ import com.barlarlar.myanmyanlearn.entity.CourseChapterEntity;
 import com.barlarlar.myanmyanlearn.entity.CourseQuestionEntity;
 import com.barlarlar.myanmyanlearn.entity.CourseSubchapterEntity;
 import com.barlarlar.myanmyanlearn.repository.CourseChapterRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseQuestionOptionRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseQuestionRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseQuestionSlotOptionRepository;
+import com.barlarlar.myanmyanlearn.repository.CourseQuestionSlotRepository;
 import com.barlarlar.myanmyanlearn.repository.CourseSubchapterRepository;
 import com.barlarlar.myanmyanlearn.service.storage.StorageService;
 import java.io.IOException;
@@ -37,6 +40,9 @@ public class MarkdownEditorController {
     private final CourseChapterRepository courseChapterRepository;
     private final CourseSubchapterRepository courseSubchapterRepository;
     private final CourseQuestionRepository courseQuestionRepository;
+    private final CourseQuestionSlotRepository courseQuestionSlotRepository;
+    private final CourseQuestionSlotOptionRepository courseQuestionSlotOptionRepository;
+    private final CourseQuestionOptionRepository courseQuestionOptionRepository;
     private final StorageService storageService;
 
     @GetMapping("/markdown-editor")
@@ -75,6 +81,286 @@ public class MarkdownEditorController {
             }
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @Transactional
+    @GetMapping(value = "/markdown-editor/load", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> load(
+            @RequestParam(name = "courseId") String courseId,
+            @RequestParam(name = "chapterId") String chapterId,
+            @RequestParam(name = "kind") String kind,
+            @RequestParam(name = "subchapterId", required = false) String subchapterId,
+            @RequestParam(name = "questionId", required = false) String questionId) {
+        Map<String, Object> out = new HashMap<>();
+        try {
+            EditorTarget target = resolveTarget(courseId, chapterId, kind, subchapterId, questionId);
+            out.put("ok", true);
+            out.put("courseId", target.courseId());
+            out.put("chapterId", target.chapterUidOrNumber());
+            out.put("kind", target.kind());
+            out.put("subchapterId", target.subchapterUidOrNumber());
+            out.put("questionId", target.questionUidOrNumber());
+            out.put("markdown", target.markdown());
+            out.put("contextLabel", target.contextLabel());
+            return ResponseEntity.ok(out);
+        } catch (IllegalArgumentException e) {
+            out.put("ok", false);
+            out.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(out);
+        }
+    }
+
+    public record OutlineChapterRenameRequest(String courseId, String chapterId, String name) {
+    }
+
+    @Transactional
+    @PostMapping(value = "/markdown-editor/outline/chapter/rename", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> renameChapter(@RequestBody OutlineChapterRenameRequest req) {
+        Map<String, Object> out = new HashMap<>();
+        String courseId = req != null && req.courseId() != null ? req.courseId().trim() : "";
+        String chapterId = req != null && req.chapterId() != null ? req.chapterId().trim() : "";
+        String name = req != null && req.name() != null ? req.name().trim() : "";
+        if (courseId.isBlank() || chapterId.isBlank()) {
+            out.put("ok", false);
+            out.put("message", "Missing courseId or chapterId.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        CourseChapterEntity ch = findChapter(courseId, chapterId);
+        if (ch == null || ch.getId() == null) {
+            out.put("ok", false);
+            out.put("message", "Chapter not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        ch.setName(name);
+        courseChapterRepository.save(ch);
+        out.put("ok", true);
+        out.put("chapterId", ensureChapterUid(ch));
+        return ResponseEntity.ok(out);
+    }
+
+    public record OutlineSubchapterRenameRequest(String courseId, String chapterId, String subchapterId, String name) {
+    }
+
+    @Transactional
+    @PostMapping(value = "/markdown-editor/outline/subchapter/rename", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> renameSubchapter(@RequestBody OutlineSubchapterRenameRequest req) {
+        Map<String, Object> out = new HashMap<>();
+        String courseId = req != null && req.courseId() != null ? req.courseId().trim() : "";
+        String chapterId = req != null && req.chapterId() != null ? req.chapterId().trim() : "";
+        String subchapterId = req != null && req.subchapterId() != null ? req.subchapterId().trim() : "";
+        String name = req != null && req.name() != null ? req.name().trim() : "";
+        if (courseId.isBlank() || chapterId.isBlank() || subchapterId.isBlank()) {
+            out.put("ok", false);
+            out.put("message", "Missing ids.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        CourseChapterEntity ch = findChapter(courseId, chapterId);
+        if (ch == null || ch.getId() == null) {
+            out.put("ok", false);
+            out.put("message", "Chapter not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        CourseSubchapterEntity sc = findSubchapter(ch.getId(), subchapterId);
+        if (sc == null || sc.getId() == null) {
+            out.put("ok", false);
+            out.put("message", "Subchapter not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        sc.setName(name);
+        courseSubchapterRepository.save(sc);
+        out.put("ok", true);
+        out.put("subchapterId", ensureSubchapterUid(sc));
+        return ResponseEntity.ok(out);
+    }
+
+    public record OutlineChapterAddRequest(String courseId, String name) {
+    }
+
+    @Transactional
+    @PostMapping(value = "/markdown-editor/outline/chapter/add", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> addChapter(@RequestBody OutlineChapterAddRequest req) {
+        Map<String, Object> out = new HashMap<>();
+        String courseId = req != null && req.courseId() != null ? req.courseId().trim() : "";
+        String name = req != null && req.name() != null ? req.name().trim() : "";
+        if (courseId.isBlank()) {
+            out.put("ok", false);
+            out.put("message", "Missing courseId.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        if (courseRepository.findById(courseId).isEmpty()) {
+            out.put("ok", false);
+            out.put("message", "Course not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        int nextNumber = 1;
+        for (CourseChapterEntity ch : courseChapterRepository.findByCourseIdOrderByChapterNumberAsc(courseId)) {
+            if (ch != null && ch.getChapterNumber() != null) {
+                nextNumber = Math.max(nextNumber, ch.getChapterNumber() + 1);
+            }
+        }
+        CourseChapterEntity ch = new CourseChapterEntity();
+        ch.setCourseId(courseId);
+        ch.setChapterNumber(nextNumber);
+        ch.setName(name);
+        CourseChapterEntity savedChapter = courseChapterRepository.save(ch);
+        String chapterStableId = ensureChapterUid(savedChapter);
+
+        CourseSubchapterEntity sc = new CourseSubchapterEntity();
+        sc.setChapterId(savedChapter.getId());
+        sc.setSubchapterNumber(1);
+        sc.setName("New subchapter");
+        sc.setMarkdown("");
+        CourseSubchapterEntity savedSub = courseSubchapterRepository.save(sc);
+        String subStableId = ensureSubchapterUid(savedSub);
+
+        out.put("ok", true);
+        out.put("chapterId", chapterStableId);
+        out.put("subchapterId", subStableId);
+        return ResponseEntity.ok(out);
+    }
+
+    public record OutlineSubchapterAddRequest(String courseId, String chapterId, String name) {
+    }
+
+    @Transactional
+    @PostMapping(value = "/markdown-editor/outline/subchapter/add", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> addSubchapter(@RequestBody OutlineSubchapterAddRequest req) {
+        Map<String, Object> out = new HashMap<>();
+        String courseId = req != null && req.courseId() != null ? req.courseId().trim() : "";
+        String chapterId = req != null && req.chapterId() != null ? req.chapterId().trim() : "";
+        String name = req != null && req.name() != null ? req.name().trim() : "";
+        if (courseId.isBlank() || chapterId.isBlank()) {
+            out.put("ok", false);
+            out.put("message", "Missing courseId or chapterId.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        CourseChapterEntity ch = findChapter(courseId, chapterId);
+        if (ch == null || ch.getId() == null) {
+            out.put("ok", false);
+            out.put("message", "Chapter not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        int nextNumber = 1;
+        for (CourseSubchapterEntity sc : courseSubchapterRepository.findByChapterIdOrderBySubchapterNumberAsc(ch.getId())) {
+            if (sc != null && sc.getSubchapterNumber() != null) {
+                nextNumber = Math.max(nextNumber, sc.getSubchapterNumber() + 1);
+            }
+        }
+        CourseSubchapterEntity sc = new CourseSubchapterEntity();
+        sc.setChapterId(ch.getId());
+        sc.setSubchapterNumber(nextNumber);
+        sc.setName(name);
+        sc.setMarkdown("");
+        CourseSubchapterEntity saved = courseSubchapterRepository.save(sc);
+        out.put("ok", true);
+        out.put("chapterId", ensureChapterUid(ch));
+        out.put("subchapterId", ensureSubchapterUid(saved));
+        return ResponseEntity.ok(out);
+    }
+
+    public record OutlineSubchapterDeleteRequest(String courseId, String chapterId, String subchapterId) {
+    }
+
+    @Transactional
+    @PostMapping(value = "/markdown-editor/outline/subchapter/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> deleteSubchapter(@RequestBody OutlineSubchapterDeleteRequest req) {
+        Map<String, Object> out = new HashMap<>();
+        String courseId = req != null && req.courseId() != null ? req.courseId().trim() : "";
+        String chapterId = req != null && req.chapterId() != null ? req.chapterId().trim() : "";
+        String subchapterId = req != null && req.subchapterId() != null ? req.subchapterId().trim() : "";
+        if (courseId.isBlank() || chapterId.isBlank() || subchapterId.isBlank()) {
+            out.put("ok", false);
+            out.put("message", "Missing ids.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        CourseChapterEntity ch = findChapter(courseId, chapterId);
+        if (ch == null || ch.getId() == null) {
+            out.put("ok", false);
+            out.put("message", "Chapter not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        List<CourseSubchapterEntity> subs = courseSubchapterRepository.findByChapterIdOrderBySubchapterNumberAsc(ch.getId());
+        if (subs.size() <= 1) {
+            out.put("ok", false);
+            out.put("message", "Cannot delete the last subchapter. Delete the chapter instead.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        CourseSubchapterEntity sc = findSubchapter(ch.getId(), subchapterId);
+        if (sc == null || sc.getId() == null) {
+            out.put("ok", false);
+            out.put("message", "Subchapter not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        courseSubchapterRepository.delete(sc);
+        out.put("ok", true);
+        return ResponseEntity.ok(out);
+    }
+
+    public record OutlineChapterDeleteRequest(String courseId, String chapterId) {
+    }
+
+    @Transactional
+    @PostMapping(value = "/markdown-editor/outline/chapter/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> deleteChapter(@RequestBody OutlineChapterDeleteRequest req) {
+        Map<String, Object> out = new HashMap<>();
+        String courseId = req != null && req.courseId() != null ? req.courseId().trim() : "";
+        String chapterId = req != null && req.chapterId() != null ? req.chapterId().trim() : "";
+        if (courseId.isBlank() || chapterId.isBlank()) {
+            out.put("ok", false);
+            out.put("message", "Missing courseId or chapterId.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        List<CourseChapterEntity> chapters = courseChapterRepository.findByCourseIdOrderByChapterNumberAsc(courseId);
+        if (chapters.size() <= 1) {
+            out.put("ok", false);
+            out.put("message", "Cannot delete the last chapter.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        CourseChapterEntity ch = findChapter(courseId, chapterId);
+        if (ch == null || ch.getId() == null) {
+            out.put("ok", false);
+            out.put("message", "Chapter not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+
+        List<CourseQuestionEntity> questions = courseQuestionRepository.findByChapterIdOrderByQuestionNumberAsc(ch.getId());
+        for (CourseQuestionEntity q : questions) {
+            if (q == null || q.getId() == null) {
+                continue;
+            }
+            List<com.barlarlar.myanmyanlearn.entity.CourseQuestionSlotEntity> slots = courseQuestionSlotRepository
+                    .findByQuestionIdOrderBySlotIndexAsc(q.getId());
+            for (com.barlarlar.myanmyanlearn.entity.CourseQuestionSlotEntity s : slots) {
+                if (s == null || s.getId() == null) {
+                    continue;
+                }
+                List<com.barlarlar.myanmyanlearn.entity.CourseQuestionSlotOptionEntity> opts = courseQuestionSlotOptionRepository
+                        .findByQuestionSlotIdOrderByOptionIndexAsc(s.getId());
+                if (!opts.isEmpty()) {
+                    courseQuestionSlotOptionRepository.deleteAll(opts);
+                }
+            }
+            if (!slots.isEmpty()) {
+                courseQuestionSlotRepository.deleteAll(slots);
+            }
+
+            List<com.barlarlar.myanmyanlearn.entity.CourseQuestionOptionEntity> legacy = courseQuestionOptionRepository
+                    .findByQuestionIdOrderByOptionIndexAsc(q.getId());
+            if (!legacy.isEmpty()) {
+                courseQuestionOptionRepository.deleteAll(legacy);
+            }
+        }
+        if (!questions.isEmpty()) {
+            courseQuestionRepository.deleteAll(questions);
+        }
+
+        List<CourseSubchapterEntity> subs = courseSubchapterRepository.findByChapterIdOrderBySubchapterNumberAsc(ch.getId());
+        if (!subs.isEmpty()) {
+            courseSubchapterRepository.deleteAll(subs);
+        }
+        courseChapterRepository.delete(ch);
+        out.put("ok", true);
+        return ResponseEntity.ok(out);
     }
 
     public record SaveRequest(
@@ -389,6 +675,105 @@ public class MarkdownEditorController {
             out.put("message", "Failed to delete asset: " + e.getClass().getSimpleName());
             return ResponseEntity.internalServerError().body(out);
         }
+    }
+
+    public record OutlineSubchapter(
+            String id,
+            Integer number,
+            String name,
+            String href,
+            boolean active) {
+    }
+
+    public record OutlineChapter(
+            String id,
+            Integer number,
+            String name,
+            String href,
+            boolean active,
+            List<OutlineSubchapter> subchapters) {
+    }
+
+    @Transactional
+    @GetMapping(value = "/markdown-editor/outline", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> outline(
+            @RequestParam(name = "courseId") String courseId,
+            @RequestParam(name = "chapterId", required = false) String chapterId,
+            @RequestParam(name = "subchapterId", required = false) String subchapterId) {
+        Map<String, Object> out = new HashMap<>();
+        String course = courseId != null ? courseId.trim() : "";
+        String chapterRaw = chapterId != null ? chapterId.trim() : "";
+        String subRaw = subchapterId != null ? subchapterId.trim() : "";
+        if (course.isBlank()) {
+            out.put("ok", false);
+            out.put("message", "Missing courseId.");
+            return ResponseEntity.badRequest().body(out);
+        }
+        if (courseRepository.findById(course).isEmpty()) {
+            out.put("ok", false);
+            out.put("message", "Course not found.");
+            return ResponseEntity.badRequest().body(out);
+        }
+
+        String currentChapterStableId = "";
+        String currentSubchapterStableId = "";
+        if (!chapterRaw.isBlank()) {
+            CourseChapterEntity currentCh = findChapter(course, chapterRaw);
+            if (currentCh != null && currentCh.getId() != null) {
+                currentChapterStableId = ensureChapterUid(currentCh);
+                if (!subRaw.isBlank()) {
+                    CourseSubchapterEntity currentSc = findSubchapter(currentCh.getId(), subRaw);
+                    if (currentSc != null && currentSc.getId() != null) {
+                        currentSubchapterStableId = ensureSubchapterUid(currentSc);
+                    }
+                }
+            }
+        }
+
+        List<OutlineChapter> chapters = new ArrayList<>();
+        for (CourseChapterEntity ch : courseChapterRepository.findByCourseIdOrderByChapterNumberAsc(course)) {
+            if (ch == null || ch.getId() == null) {
+                continue;
+            }
+            String chId = ensureChapterUid(ch);
+            Integer chNumber = ch.getChapterNumber();
+            String chName = ch.getName() != null ? ch.getName().trim() : "";
+
+            List<OutlineSubchapter> subs = new ArrayList<>();
+            for (CourseSubchapterEntity sc : courseSubchapterRepository.findByChapterIdOrderBySubchapterNumberAsc(ch.getId())) {
+                if (sc == null || sc.getId() == null) {
+                    continue;
+                }
+                String scId = ensureSubchapterUid(sc);
+                Integer scNumber = sc.getSubchapterNumber();
+                String scName = sc.getName() != null ? sc.getName().trim() : "";
+                boolean active = !currentSubchapterStableId.isBlank() && currentSubchapterStableId.equals(scId);
+                String href = "/markdown-editor?courseId="
+                        + course
+                        + "&chapterId="
+                        + chId
+                        + "&kind=subchapter&subchapterId="
+                        + scId;
+                subs.add(new OutlineSubchapter(scId, scNumber, scName, href, active));
+            }
+
+            boolean active = !currentChapterStableId.isBlank() && currentChapterStableId.equals(chId);
+            String chapterHref = subs.isEmpty()
+                    ? ""
+                    : ("/markdown-editor?courseId="
+                            + course
+                            + "&chapterId="
+                            + chId
+                            + "&kind=subchapter&subchapterId="
+                            + subs.getFirst().id());
+            chapters.add(new OutlineChapter(chId, chNumber, chName, chapterHref, active, subs));
+        }
+
+        out.put("ok", true);
+        out.put("chapters", chapters);
+        out.put("currentChapterId", currentChapterStableId);
+        out.put("currentSubchapterId", currentSubchapterStableId);
+        return ResponseEntity.ok(out);
     }
 
     private record EditorTarget(

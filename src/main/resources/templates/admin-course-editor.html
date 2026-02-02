@@ -279,6 +279,8 @@
         var activeSlotByQuestion = {};
         var openChapterId = null;
         var lastFocus = null;
+        var autoSaveTimer = 0;
+        var autoSaveDirty = false;
 
         var courseEditorTitle = document.getElementById("courseEditorTitle");
         var courseEditorFlash = document.getElementById("courseEditorFlash");
@@ -969,6 +971,9 @@
 
             var t = document.createElement("div");
             t.className = "text-white font-semibold break-words";
+            t.setAttribute("data-subchapter-title", "1");
+            t.setAttribute("data-chapter-id", chapter.id);
+            t.setAttribute("data-subchapter-id", sc.id);
             t.textContent =
               String(sc.number || "") + ". " + (sc.name || "Untitled");
             left.appendChild(t);
@@ -1469,6 +1474,35 @@
           var course = findCourseById(courseId);
           renderCourseHeader(course);
           renderChapters(course);
+        }
+
+        function scheduleAutoSave() {
+          autoSaveDirty = true;
+          window.clearTimeout(autoSaveTimer);
+          autoSaveTimer = window.setTimeout(function () {
+            if (!autoSaveDirty) return;
+            if (saveCourseInFlight) {
+              scheduleAutoSave();
+              return;
+            }
+            var course = getActiveCourse();
+            if (!course) return;
+            autoSaveDirty = false;
+            normalizeState();
+            saveUiState();
+            saveCourseToServer(course)
+              .then(function () {
+                if (autoSaveDirty) scheduleAutoSave();
+              })
+              .catch(function (e) {
+                if (autoSaveDirty) scheduleAutoSave();
+                var msg =
+                  e && e.message
+                    ? String(e.message)
+                    : i18n.errorFailedToSaveToDatabase;
+                showFlash("error", msg);
+              });
+          }, 700);
         }
 
         function serializeCourseForSave(course) {
@@ -2075,6 +2109,7 @@
                 : null;
               if (!chapter) return;
               chapter.name = String(t.value || "");
+              scheduleAutoSave();
               return;
             }
 
@@ -2095,6 +2130,18 @@
               }
               if (!sub) return;
               sub.name = String(t.value || "");
+              var title = document.querySelector(
+                "[data-subchapter-title='1'][data-chapter-id='" +
+                  cssEscapeValue(chapterId) +
+                  "'][data-subchapter-id='" +
+                  cssEscapeValue(subId) +
+                  "']",
+              );
+              if (title) {
+                title.textContent =
+                  String(sub.number || "") + ". " + (sub.name || "Untitled");
+              }
+              scheduleAutoSave();
               return;
             }
 

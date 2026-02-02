@@ -168,19 +168,11 @@
       if (!raw) return;
       var loaded = safeJsonParse(raw);
       if (!loaded) return;
-      if (Array.isArray(loaded)) {
-        state.courses = loaded;
-        state.order = "oldest-first";
-        state.version = 2;
-        state.courses.reverse();
-        return;
-      }
       if (
         loaded &&
         typeof loaded === "object" &&
-        Array.isArray(loaded.courses)
+        (typeof loaded.order === "string" || typeof loaded.version === "number")
       ) {
-        state.courses = loaded.courses;
         state.order =
           typeof loaded.order === "string" && loaded.order.trim()
             ? loaded.order
@@ -189,11 +181,8 @@
           typeof loaded.version === "number" && loaded.version > 0
             ? loaded.version
             : 1;
-        if (state.order !== "oldest-first" || state.version < 2) {
-          state.courses.reverse();
-          state.order = "oldest-first";
-          state.version = 2;
-        }
+        state.order = "oldest-first";
+        state.version = 2;
       }
     } catch (e) {}
   }
@@ -201,7 +190,10 @@
   function saveState() {
     try {
       if (!storageKey) return;
-      storageSet(storageKey, JSON.stringify(state));
+      storageSet(
+        storageKey,
+        JSON.stringify({ version: state.version, order: state.order }),
+      );
     } catch (e) {}
   }
 
@@ -1135,7 +1127,7 @@
         })
         .catch(function () {
           showFlash("error", i18n.toastImportDbFailed);
-          saveState();
+          window.location.reload();
         });
     };
     reader.onerror = function () {
@@ -1361,25 +1353,11 @@
   } catch (e) {}
 
   loadState();
-  var localCourses = Array.isArray(state.courses) ? state.courses.slice() : [];
-
-  if (serverCourses.length) {
-    var localById = {};
-    for (var i = 0; i < localCourses.length; i++) {
-      var lc = localCourses[i];
-      if (lc && lc.id) localById[lc.id] = lc;
-    }
-    var merged = [];
-    for (var j = 0; j < serverCourses.length; j++) {
-      var sc = ensureCourseShape(serverCourses[j]);
-      var prev = sc && sc.id ? localById[sc.id] : null;
-      if (prev && prev.coverImageDataUrl && !sc.coverImageDataUrl) {
-        sc.coverImageDataUrl = prev.coverImageDataUrl;
-      }
-      merged.push(sc);
-    }
-    state.courses = merged;
+  var merged = [];
+  for (var j = 0; j < serverCourses.length; j++) {
+    merged.push(ensureCourseShape(serverCourses[j]));
   }
+  state.courses = merged;
 
   normalizeState();
   saveState();

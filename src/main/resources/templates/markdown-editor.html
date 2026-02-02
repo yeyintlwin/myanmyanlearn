@@ -259,13 +259,14 @@
               Document Editor
             </h1>
             <div
+              id="contextLabel"
               class="text-slate-500 text-sm mt-1 break-words"
               th:text="${contextLabel}"
             ></div>
           </div>
           <a
-            th:href="@{/admin(section='courses')}"
-            href="/admin?section=courses"
+            th:href="@{/admin/courses/{courseId}(courseId=${courseId})}"
+            href="/admin/courses/"
             id="backBtn"
             class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 h-10 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition no-underline flex-shrink-0"
           >
@@ -284,14 +285,64 @@
               class="border-b xl:border-b-0 xl:border-r border-slate-200 bg-white h-full min-h-0"
             >
               <div class="px-4 py-4 h-full flex flex-col min-h-0">
-                <div>
-                  <div
-                    class="text-xs font-semibold text-slate-500 tracking-wide uppercase"
+                <div id="asideTabs" class="hidden items-center gap-2">
+                  <button
+                    id="outlineTabBtn"
+                    type="button"
+                    class="inline-flex items-center justify-center h-9 px-3 rounded-lg border text-xs font-semibold transition bg-slate-900 border-slate-900 text-white"
+                    aria-pressed="true"
                   >
-                    Assets
-                  </div>
+                    Chapters
+                  </button>
+                  <button
+                    id="imagesTabBtn"
+                    type="button"
+                    class="inline-flex items-center justify-center h-9 px-3 rounded-lg border text-xs font-semibold transition bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                    aria-pressed="false"
+                  >
+                    Images
+                  </button>
+                </div>
 
-                  <div class="mt-4 flex items-center justify-between gap-2">
+                <div
+                  id="outlinePanel"
+                  class="hidden mt-4 flex-1 min-h-0 flex flex-col"
+                >
+                  <div class="flex items-center justify-between gap-2">
+                    <div
+                      class="text-xs font-semibold text-slate-500 tracking-wide uppercase"
+                    >
+                      Course outline
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button
+                        id="outlineAddChapterBtn"
+                        type="button"
+                        class="inline-flex items-center justify-center h-7 w-7 rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition"
+                        aria-label="Add chapter"
+                        title="Add chapter"
+                      >
+                        <i class="fas fa-plus text-[10px]"></i>
+                      </button>
+                      <button
+                        id="outlineRefreshBtn"
+                        type="button"
+                        class="inline-flex items-center justify-center h-7 w-7 rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition"
+                        aria-label="Refresh outline"
+                        title="Refresh outline"
+                      >
+                        <i class="fas fa-rotate-right text-[10px]"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    id="courseOutlineList"
+                    class="mt-3 space-y-2 flex-1 min-h-0 overflow-auto pr-1"
+                  ></div>
+                </div>
+
+                <div id="imagesPanel" class="mt-4 flex-1 min-h-0 flex flex-col">
+                  <div class="flex items-center justify-between gap-2">
                     <div
                       class="text-xs font-semibold text-slate-500 tracking-wide uppercase"
                     >
@@ -352,146 +403,16 @@
 
                     <div id="toolbar" class="flex items-center gap-1 flex-wrap">
                       <button
+                        id="markdownHelpBtn"
                         type="button"
-                        data-md-action="bold"
                         class="md-btn"
+                        aria-haspopup="dialog"
+                        aria-controls="markdownHelpModal"
+                        aria-label="Markdown help"
+                        title="Markdown ဘယ်လိုရေးမလဲ"
                       >
-                        <i class="fas fa-bold"></i>
-                      </button>
-                      <button
-                        type="button"
-                        data-md-action="italic"
-                        class="md-btn"
-                      >
-                        <i class="fas fa-italic"></i>
-                      </button>
-                      <button
-                        type="button"
-                        data-md-action="underline"
-                        class="md-btn"
-                      >
-                        <i class="fas fa-underline"></i>
-                      </button>
-                      <button
-                        type="button"
-                        data-md-action="strike"
-                        class="md-btn"
-                      >
-                        <i class="fas fa-strikethrough"></i>
-                      </button>
-                      <span class="w-px h-6 bg-slate-200 mx-1"></span>
-                      <div class="relative">
-                        <button
-                          id="headingMenuBtn"
-                          type="button"
-                          class="md-btn"
-                          aria-haspopup="menu"
-                          aria-expanded="false"
-                        >
-                          <i class="fas fa-heading"></i>
-                          <span class="hidden sm:inline">Heading</span>
-                          <i
-                            class="fas fa-chevron-down text-[10px] opacity-70"
-                          ></i>
-                        </button>
-                        <div
-                          id="headingMenu"
-                          class="hidden absolute left-0 mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden"
-                        >
-                          <div
-                            class="px-3 py-2 text-xs font-semibold text-slate-500 bg-slate-50 border-b border-slate-200"
-                          >
-                            Heading
-                          </div>
-                          <button
-                            type="button"
-                            data-md-action="h1"
-                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
-                          >
-                            # Heading 1
-                          </button>
-                          <button
-                            type="button"
-                            data-md-action="h2"
-                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
-                          >
-                            ## Heading 2
-                          </button>
-                          <button
-                            type="button"
-                            data-md-action="h3"
-                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
-                          >
-                            ### Heading 3
-                          </button>
-                          <button
-                            type="button"
-                            data-md-action="h4"
-                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
-                          >
-                            #### Heading 4
-                          </button>
-                          <button
-                            type="button"
-                            data-md-action="h5"
-                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
-                          >
-                            ##### Heading 5
-                          </button>
-                          <button
-                            type="button"
-                            data-md-action="h6"
-                            class="w-full text-left px-3 py-2 hover:bg-slate-50 transition text-sm text-slate-700 font-mono"
-                          >
-                            ###### Heading 6
-                          </button>
-                        </div>
-                      </div>
-                      <span class="w-px h-6 bg-slate-200 mx-1"></span>
-                      <button type="button" data-md-action="ul" class="md-btn">
-                        <i class="fas fa-list-ul"></i>
-                      </button>
-                      <button type="button" data-md-action="ol" class="md-btn">
-                        <i class="fas fa-list-ol"></i>
-                      </button>
-                      <button
-                        type="button"
-                        data-md-action="quote"
-                        class="md-btn"
-                      >
-                        <i class="fas fa-quote-left"></i>
-                      </button>
-                      <button
-                        type="button"
-                        data-md-action="code"
-                        class="md-btn"
-                      >
-                        <i class="fas fa-code"></i>
-                      </button>
-                      <button
-                        type="button"
-                        data-md-action="codeblock"
-                        class="md-btn"
-                      >
-                        <i class="fas fa-file-code"></i>
-                      </button>
-                      <button type="button" data-md-action="hr" class="md-btn">
-                        <i class="fas fa-minus"></i>
-                      </button>
-                      <span class="w-px h-6 bg-slate-200 mx-1"></span>
-                      <button
-                        type="button"
-                        data-md-action="link"
-                        class="md-btn"
-                      >
-                        <i class="fas fa-link"></i>
-                      </button>
-                      <button
-                        type="button"
-                        data-md-action="image"
-                        class="md-btn"
-                      >
-                        <i class="fas fa-image"></i>
+                        <i class="fas fa-circle-question"></i>
+                        <span class="hidden sm:inline">Markdown</span>
                       </button>
                       <span class="w-px h-6 bg-slate-200 mx-1"></span>
                       <div class="relative">
@@ -501,6 +422,8 @@
                           class="md-btn"
                           aria-haspopup="menu"
                           aria-expanded="false"
+                          aria-label="Outline"
+                          title="Heading တွေသွားရန်"
                         >
                           <i class="fas fa-list"></i>
                           <span class="hidden sm:inline">Outline</span>
@@ -524,6 +447,20 @@
                         </div>
                       </div>
                     </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                      <button
+                        id="modeToggleBtn"
+                        type="button"
+                        class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 h-10 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
+                        aria-pressed="false"
+                      >
+                        <i
+                          id="modeToggleIcon"
+                          class="fas fa-eye text-[12px]"
+                        ></i>
+                        <span id="modeToggleLabel">Preview</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div
@@ -533,54 +470,27 @@
                 </div>
               </div>
 
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 flex-1 min-h-0">
+              <div class="flex-1 min-h-0 relative overflow-hidden">
                 <div
-                  class="min-w-0 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col min-h-0"
+                  id="editorPane"
+                  class="absolute inset-0 p-4 transition-opacity duration-150"
                 >
-                  <div
-                    class="px-4 h-12 bg-slate-50 border-b border-slate-200 flex items-center"
-                  >
-                    <div
-                      class="text-xs font-semibold text-slate-600 tracking-wide uppercase"
-                    >
-                      Editor
-                    </div>
-                  </div>
-                  <div class="p-4 flex-1 min-h-0">
-                    <textarea
-                      id="editor"
-                      class="w-full h-full min-h-0 bg-white text-slate-900 text-sm rounded-xl px-4 py-3 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500/30 resize-none font-mono leading-6"
-                      th:text="${markdown}"
-                      spellcheck="false"
-                    ></textarea>
-                  </div>
+                  <textarea
+                    id="editor"
+                    class="w-full h-full min-h-0 bg-white text-slate-900 text-sm rounded-xl px-4 py-3 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500/30 resize-none font-mono leading-6"
+                    th:text="${markdown}"
+                    spellcheck="false"
+                  ></textarea>
                 </div>
 
-                <div class="min-w-0 flex flex-col min-h-0">
+                <div
+                  id="previewPane"
+                  class="absolute inset-0 p-4 transition-opacity duration-150 opacity-0 pointer-events-none"
+                >
                   <div
-                    class="px-4 h-12 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2"
-                  >
-                    <div
-                      class="text-xs font-semibold text-slate-600 tracking-wide uppercase"
-                    >
-                      Preview
-                    </div>
-                    <button
-                      id="previewScrollSync"
-                      type="button"
-                      class="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-2.5 h-8 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 transition"
-                      aria-pressed="true"
-                    >
-                      <i class="fas fa-arrows-up-down text-[12px]"></i>
-                      <span>Sync scroll</span>
-                    </button>
-                  </div>
-                  <div class="p-4 flex-1 min-h-0">
-                    <div
-                      id="preview"
-                      class="markdown-body h-full min-h-0 overflow-auto rounded-xl border border-slate-200 bg-white p-4"
-                    ></div>
-                  </div>
+                    id="preview"
+                    class="markdown-body h-full min-h-0 overflow-auto rounded-xl border border-slate-200 bg-white p-4"
+                  ></div>
                 </div>
               </div>
             </div>
@@ -597,10 +507,27 @@
         var saveBtn = document.getElementById("saveBtn");
         var imageInput = document.getElementById("imageInput");
         var statusEl = document.getElementById("status");
+        var contextLabelEl = document.getElementById("contextLabel");
         var backBtn = document.getElementById("backBtn");
+        var asideTabs = document.getElementById("asideTabs");
+        var outlineTabBtn = document.getElementById("outlineTabBtn");
+        var imagesTabBtn = document.getElementById("imagesTabBtn");
+        var outlinePanel = document.getElementById("outlinePanel");
+        var imagesPanel = document.getElementById("imagesPanel");
+        var courseOutlineList = document.getElementById("courseOutlineList");
+        var outlineAddChapterBtn = document.getElementById(
+          "outlineAddChapterBtn",
+        );
+        var outlineRefreshBtn = document.getElementById("outlineRefreshBtn");
         var previewEl = document.getElementById("preview");
         var toolbar = document.getElementById("toolbar");
+        var markdownHelpBtn = document.getElementById("markdownHelpBtn");
         var previewScrollSyncBtn = document.getElementById("previewScrollSync");
+        var editorPane = document.getElementById("editorPane");
+        var previewPane = document.getElementById("previewPane");
+        var modeToggleBtn = document.getElementById("modeToggleBtn");
+        var modeToggleLabel = document.getElementById("modeToggleLabel");
+        var modeToggleIcon = document.getElementById("modeToggleIcon");
         var assetsGallery = document.getElementById("assetsGallery");
         var assetsRefreshBtn = document.getElementById("assetsRefreshBtn");
         var assetPreviewModal = document.getElementById("assetPreviewModal");
@@ -630,10 +557,16 @@
           questionId: root.getAttribute("data-question-id") || "",
         };
 
+        var isCourseEdit =
+          String(ctx.kind || "")
+            .trim()
+            .toLowerCase() === "subchapter";
+
         var lastUrl = "";
-        var defaultBack = backBtn
-          ? backBtn.getAttribute("href")
-          : "/admin?section=courses";
+        var defaultBack =
+          "/admin/courses/" + encodeURIComponent(String(ctx.courseId || ""));
+        var isDirty = false;
+        var navBusy = false;
 
         function normalizeReturnTo(raw) {
           if (!raw) return "";
@@ -646,44 +579,216 @@
           }
         }
 
+        function setAsideTab(tab) {
+          if (!isCourseEdit) return;
+          var next = tab === "images" ? "images" : "outline";
+          if (outlineTabBtn) {
+            outlineTabBtn.className =
+              "inline-flex items-center justify-center h-9 px-3 rounded-lg border text-xs font-semibold transition " +
+              (next === "outline"
+                ? "bg-slate-900 border-slate-900 text-white"
+                : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50");
+            outlineTabBtn.setAttribute(
+              "aria-pressed",
+              next === "outline" ? "true" : "false",
+            );
+          }
+          if (imagesTabBtn) {
+            imagesTabBtn.className =
+              "inline-flex items-center justify-center h-9 px-3 rounded-lg border text-xs font-semibold transition " +
+              (next === "images"
+                ? "bg-slate-900 border-slate-900 text-white"
+                : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50");
+            imagesTabBtn.setAttribute(
+              "aria-pressed",
+              next === "images" ? "true" : "false",
+            );
+          }
+          if (outlinePanel)
+            outlinePanel.classList.toggle("hidden", next !== "outline");
+          if (imagesPanel)
+            imagesPanel.classList.toggle("hidden", next !== "images");
+          writeSession(storageKey("asideTab"), next);
+        }
+
+        function initAsideTabs() {
+          if (!asideTabs || !imagesPanel) return;
+          if (!isCourseEdit) {
+            asideTabs.classList.add("hidden");
+            if (outlinePanel) outlinePanel.classList.add("hidden");
+            imagesPanel.classList.remove("hidden");
+            return;
+          }
+          asideTabs.classList.remove("hidden");
+          asideTabs.classList.add("flex");
+
+          if (outlineTabBtn)
+            outlineTabBtn.addEventListener("click", function (e) {
+              e && e.preventDefault && e.preventDefault();
+              setAsideTab("outline");
+            });
+          if (imagesTabBtn)
+            imagesTabBtn.addEventListener("click", function (e) {
+              e && e.preventDefault && e.preventDefault();
+              setAsideTab("images");
+            });
+          var stored = readSession(storageKey("asideTab"));
+          setAsideTab(stored === "images" ? "images" : "outline");
+        }
+
+        function outlineDomId(stableId) {
+          return (
+            "outline_" + String(stableId || "").replace(/[^a-zA-Z0-9_-]/g, "_")
+          );
+        }
+
+        function renderCourseOutline(data) {
+          if (!courseOutlineList) return;
+          var chapters =
+            data && Array.isArray(data.chapters) ? data.chapters : [];
+          if (!chapters.length) {
+            courseOutlineList.innerHTML =
+              '<div class="text-sm text-slate-500">No chapters yet.</div>';
+            return;
+          }
+          var html = "";
+          for (var i = 0; i < chapters.length; i++) {
+            var ch = chapters[i] || {};
+            var subs = Array.isArray(ch.subchapters) ? ch.subchapters : [];
+            var open = !!ch.active;
+            for (var j = 0; !open && j < subs.length; j++) {
+              if (subs[j] && subs[j].active) open = true;
+            }
+            var secId = outlineDomId(ch.id);
+            var chNum =
+              ch.number != null && String(ch.number) !== ""
+                ? String(ch.number)
+                : "";
+            var chName = (ch.name || "").trim();
+            var chLabel = chNum ? "CH-" + chNum : "CH";
+            if (chName) chLabel += " " + chName;
+            html +=
+              '<div class="rounded-xl border border-slate-200 bg-white overflow-hidden">' +
+              '<div class="w-full px-3 py-2 flex items-center justify-between gap-2 hover:bg-slate-50 transition">' +
+              '<button type="button" data-outline-toggle="' +
+              escapeHtml(secId) +
+              '" class="min-w-0 flex-1 flex items-center justify-between gap-3 text-left">' +
+              '<div class="min-w-0">' +
+              '<div class="text-sm font-semibold text-slate-900 truncate">' +
+              escapeHtml(chLabel) +
+              "</div>" +
+              "</div>" +
+              '<i class="fas fa-chevron-down text-[11px] text-slate-400"></i>' +
+              "</button>" +
+              '<div class="flex items-center gap-1 flex-shrink-0">' +
+              '<button type="button" class="h-7 w-7 inline-flex items-center justify-center rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition" data-outline-action="add-subchapter" data-chapter-id="' +
+              escapeHtml(ch.id || "") +
+              '" aria-label="Add subchapter" title="Add subchapter"><i class="fas fa-plus text-[10px]"></i></button>' +
+              '<button type="button" class="h-7 w-7 inline-flex items-center justify-center rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition" data-outline-action="rename-chapter" data-chapter-id="' +
+              escapeHtml(ch.id || "") +
+              '" data-outline-name="' +
+              escapeHtml(chName) +
+              '" aria-label="Rename chapter" title="Rename chapter"><i class="fas fa-pen text-[10px]"></i></button>' +
+              '<button type="button" class="h-7 w-7 inline-flex items-center justify-center rounded-md border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition" data-outline-action="delete-chapter" data-chapter-id="' +
+              escapeHtml(ch.id || "") +
+              '" aria-label="Delete chapter" title="Delete chapter"><i class="fas fa-trash text-[10px]"></i></button>' +
+              "</div>" +
+              "</div>" +
+              '<div id="' +
+              escapeHtml(secId) +
+              '" class="' +
+              (open ? "" : "hidden ") +
+              'px-2 pb-2">';
+            if (!subs.length) {
+              html +=
+                '<div class="px-2 py-2 text-sm text-slate-500">No subchapters.</div>';
+            } else {
+              for (var k = 0; k < subs.length; k++) {
+                var sc = subs[k] || {};
+                var scNum =
+                  sc.number != null && String(sc.number) !== ""
+                    ? String(sc.number)
+                    : "";
+                var scName = (sc.name || "").trim();
+                var scLabel =
+                  (chNum && scNum ? chNum + "-" + scNum : scNum ? scNum : "") ||
+                  "";
+                if (scName) scLabel += (scLabel ? " " : "") + scName;
+                if (!scLabel) scLabel = "Subchapter";
+                var cls =
+                  "flex-1 block px-3 py-2 rounded-lg text-sm transition " +
+                  (sc.active
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-700 hover:bg-slate-50");
+                html +=
+                  '<div class="flex items-center gap-1 px-1">' +
+                  '<a href="' +
+                  escapeHtml(sc.href || "#") +
+                  '" class="' +
+                  cls +
+                  '">' +
+                  escapeHtml(scLabel) +
+                  "</a>" +
+                  '<button type="button" class="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition flex-shrink-0" data-outline-action="rename-subchapter" data-chapter-id="' +
+                  escapeHtml(ch.id || "") +
+                  '" data-subchapter-id="' +
+                  escapeHtml(sc.id || "") +
+                  '" data-outline-name="' +
+                  escapeHtml(scName) +
+                  '" aria-label="Rename subchapter" title="Rename subchapter"><i class="fas fa-pen text-[10px]"></i></button>' +
+                  '<button type="button" class="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition flex-shrink-0" data-outline-action="delete-subchapter" data-chapter-id="' +
+                  escapeHtml(ch.id || "") +
+                  '" data-subchapter-id="' +
+                  escapeHtml(sc.id || "") +
+                  '" aria-label="Delete subchapter" title="Delete subchapter"><i class="fas fa-trash text-[10px]"></i></button>' +
+                  "</div>";
+              }
+            }
+            html += "</div></div>";
+          }
+          courseOutlineList.innerHTML = html;
+        }
+
+        async function fetchCourseOutline() {
+          if (!isCourseEdit) return;
+          if (!courseOutlineList) return;
+          try {
+            var qs = new URLSearchParams({
+              courseId: ctx.courseId,
+              chapterId: ctx.chapterId,
+              subchapterId: ctx.subchapterId,
+            });
+            var res = await fetch("/markdown-editor/outline?" + qs.toString(), {
+              method: "GET",
+              headers: (function () {
+                var h = {};
+                if (csrfHeader && csrfToken) h[csrfHeader] = csrfToken;
+                return h;
+              })(),
+            });
+            var data = await res.json().catch(function () {
+              return null;
+            });
+            if (!res.ok || !data || !data.ok) {
+              throw new Error(
+                (data && data.message) || "Failed to load course outline.",
+              );
+            }
+            renderCourseOutline(data);
+            return data;
+          } catch (e) {
+            courseOutlineList.innerHTML =
+              '<div class="text-sm text-rose-600">Outline load failed.</div>';
+            return null;
+          }
+        }
+
         (function initBack() {
           if (!backBtn) return;
-          var params = new URLSearchParams(window.location.search || "");
-          var fromParam = normalizeReturnTo(params.get("returnTo"));
-          var fromReferrer = normalizeReturnTo(document.referrer);
-          var fromSession = normalizeReturnTo(
-            (window.sessionStorage || {}).getItem
-              ? window.sessionStorage.getItem("markdownEditor:returnTo")
-              : "",
-          );
-          var returnTo =
-            fromParam || fromReferrer || fromSession || defaultBack;
-          try {
-            if (window.sessionStorage && returnTo)
-              window.sessionStorage.setItem(
-                "markdownEditor:returnTo",
-                returnTo,
-              );
-          } catch (e) {}
-          backBtn.setAttribute("href", returnTo || defaultBack);
+          backBtn.setAttribute("href", defaultBack);
           backBtn.addEventListener("click", function (e) {
-            var href =
-              normalizeReturnTo(backBtn.getAttribute("href")) || defaultBack;
-            var ref = normalizeReturnTo(document.referrer);
-            if (
-              window.history &&
-              window.history.length > 1 &&
-              ref &&
-              ref === href
-            ) {
-              e.preventDefault();
-              window.history.back();
-              return;
-            }
-            if (href) {
-              e.preventDefault();
-              window.location.assign(href);
-            }
+            e.preventDefault();
+            window.location.assign(defaultBack);
           });
         })();
 
@@ -692,6 +797,365 @@
           statusEl.className =
             "text-xs min-h-[16px] " +
             (type === "error" ? "text-rose-600" : "text-slate-500");
+        }
+
+        async function postJson(url, payload) {
+          var res = await fetch(url, {
+            method: "POST",
+            headers: (function () {
+              var h = { "Content-Type": "application/json" };
+              if (csrfHeader && csrfToken) h[csrfHeader] = csrfToken;
+              return h;
+            })(),
+            body: JSON.stringify(payload || {}),
+          });
+          var data = await res.json().catch(function () {
+            return null;
+          });
+          if (!res.ok || !data || !data.ok) {
+            throw new Error(
+              (data && data.message) ||
+                "Request failed (" + String(res.status || "") + ").",
+            );
+          }
+          return data;
+        }
+
+        async function ensureSavedIfDirty() {
+          if (!isDirty) return true;
+          return await save();
+        }
+
+        function firstSubchapterTargetFromOutlineData(data) {
+          var chapters =
+            data && Array.isArray(data.chapters) ? data.chapters : [];
+          for (var i = 0; i < chapters.length; i++) {
+            var ch = chapters[i] || {};
+            var subs = Array.isArray(ch.subchapters) ? ch.subchapters : [];
+            if (subs.length && subs[0] && subs[0].id) {
+              return {
+                courseId: ctx.courseId,
+                chapterId: ch.id || "",
+                kind: "subchapter",
+                subchapterId: subs[0].id || "",
+                questionId: "",
+              };
+            }
+          }
+          return null;
+        }
+
+        async function addChapterFromOutline() {
+          if (!(await ensureSavedIfDirty())) return;
+          var name = window.prompt("Chapter name", "") || "";
+          try {
+            setStatus("Adding chapter...", "");
+            var data = await postJson("/markdown-editor/outline/chapter/add", {
+              courseId: ctx.courseId,
+              name: name,
+            });
+            if (data && data.chapterId && data.subchapterId) {
+              await loadEditorTarget(
+                {
+                  courseId: ctx.courseId,
+                  chapterId: data.chapterId,
+                  kind: "subchapter",
+                  subchapterId: data.subchapterId,
+                  questionId: "",
+                },
+                { push: true },
+              );
+            } else {
+              await fetchCourseOutline();
+              setStatus("Chapter added.", "");
+            }
+          } catch (e) {
+            setStatus(
+              e && e.message ? e.message : "Failed to add chapter.",
+              "error",
+            );
+          }
+        }
+
+        async function handleOutlineAction(
+          action,
+          chapterId,
+          subchapterId,
+          currentName,
+        ) {
+          if (!isCourseEdit) return;
+          if (!(await ensureSavedIfDirty())) return;
+
+          try {
+            if (action === "add-subchapter") {
+              var name = window.prompt("Subchapter name", "") || "";
+              setStatus("Adding subchapter...", "");
+              var a = await postJson(
+                "/markdown-editor/outline/subchapter/add",
+                {
+                  courseId: ctx.courseId,
+                  chapterId: chapterId,
+                  name: name,
+                },
+              );
+              if (a && a.chapterId && a.subchapterId) {
+                await loadEditorTarget(
+                  {
+                    courseId: ctx.courseId,
+                    chapterId: a.chapterId,
+                    kind: "subchapter",
+                    subchapterId: a.subchapterId,
+                    questionId: "",
+                  },
+                  { push: true },
+                );
+              } else {
+                await fetchCourseOutline();
+                setStatus("Subchapter added.", "");
+              }
+              return;
+            }
+
+            if (action === "rename-chapter") {
+              var next = window.prompt(
+                "Rename chapter",
+                String(currentName || ""),
+              );
+              if (next == null) return;
+              setStatus("Renaming...", "");
+              await postJson("/markdown-editor/outline/chapter/rename", {
+                courseId: ctx.courseId,
+                chapterId: chapterId,
+                name: String(next || ""),
+              });
+              await fetchCourseOutline();
+              setStatus("Renamed.", "");
+              return;
+            }
+
+            if (action === "rename-subchapter") {
+              var next = window.prompt(
+                "Rename subchapter",
+                String(currentName || ""),
+              );
+              if (next == null) return;
+              setStatus("Renaming...", "");
+              await postJson("/markdown-editor/outline/subchapter/rename", {
+                courseId: ctx.courseId,
+                chapterId: chapterId,
+                subchapterId: subchapterId,
+                name: String(next || ""),
+              });
+              var data = await fetchCourseOutline();
+              if (
+                data &&
+                String(subchapterId || "") === String(ctx.subchapterId || "") &&
+                !isDirty
+              ) {
+                await loadEditorTarget(
+                  {
+                    courseId: ctx.courseId,
+                    chapterId: ctx.chapterId,
+                    kind: "subchapter",
+                    subchapterId: ctx.subchapterId,
+                    questionId: "",
+                  },
+                  { replace: true },
+                );
+              } else {
+                setStatus("Renamed.", "");
+              }
+              return;
+            }
+
+            if (action === "delete-subchapter") {
+              var ok = window.confirm("Delete this subchapter?");
+              if (!ok) return;
+              setStatus("Deleting...", "");
+              await postJson("/markdown-editor/outline/subchapter/delete", {
+                courseId: ctx.courseId,
+                chapterId: chapterId,
+                subchapterId: subchapterId,
+              });
+              var data = await fetchCourseOutline();
+              if (
+                String(subchapterId || "") === String(ctx.subchapterId || "")
+              ) {
+                var next = firstSubchapterTargetFromOutlineData(data);
+                if (next) {
+                  await loadEditorTarget(next, { push: true });
+                } else {
+                  setStatus("Deleted.", "");
+                }
+              } else {
+                setStatus("Deleted.", "");
+              }
+              return;
+            }
+
+            if (action === "delete-chapter") {
+              var ok = window.confirm("Delete this chapter?");
+              if (!ok) return;
+              setStatus("Deleting...", "");
+              await postJson("/markdown-editor/outline/chapter/delete", {
+                courseId: ctx.courseId,
+                chapterId: chapterId,
+              });
+              var data = await fetchCourseOutline();
+              if (String(chapterId || "") === String(ctx.chapterId || "")) {
+                var next = firstSubchapterTargetFromOutlineData(data);
+                if (next) {
+                  await loadEditorTarget(next, { push: true });
+                } else {
+                  setStatus("Deleted.", "");
+                }
+              } else {
+                setStatus("Deleted.", "");
+              }
+              return;
+            }
+          } catch (e) {
+            setStatus(
+              e && e.message ? e.message : "Outline action failed.",
+              "error",
+            );
+          }
+        }
+
+        function editorUrlFromTarget(t) {
+          var qs = new URLSearchParams();
+          if (t && t.courseId) qs.set("courseId", String(t.courseId));
+          if (t && t.chapterId) qs.set("chapterId", String(t.chapterId));
+          if (t && t.kind) qs.set("kind", String(t.kind));
+          if (t && t.subchapterId)
+            qs.set("subchapterId", String(t.subchapterId));
+          if (t && t.questionId) qs.set("questionId", String(t.questionId));
+          return "/markdown-editor?" + qs.toString();
+        }
+
+        function targetFromHref(href) {
+          try {
+            var u = new URL(String(href || ""), window.location.origin);
+            if (u.origin !== window.location.origin) return null;
+            if (u.pathname !== "/markdown-editor") return null;
+            var p = u.searchParams;
+            return {
+              courseId: p.get("courseId") || "",
+              chapterId: p.get("chapterId") || "",
+              kind: p.get("kind") || "",
+              subchapterId: p.get("subchapterId") || "",
+              questionId: p.get("questionId") || "",
+            };
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function applyCtx(next) {
+          ctx.courseId = next.courseId || "";
+          ctx.chapterId = next.chapterId || "";
+          ctx.kind = next.kind || "";
+          ctx.subchapterId = next.subchapterId || "";
+          ctx.questionId = next.questionId || "";
+          root.setAttribute("data-course-id", ctx.courseId);
+          root.setAttribute("data-chapter-id", ctx.chapterId);
+          root.setAttribute("data-kind", ctx.kind);
+          root.setAttribute("data-subchapter-id", ctx.subchapterId);
+          root.setAttribute("data-question-id", ctx.questionId);
+          defaultBack =
+            "/admin/courses/" + encodeURIComponent(String(ctx.courseId || ""));
+          if (backBtn) backBtn.setAttribute("href", defaultBack);
+        }
+
+        async function loadEditorTarget(target, opts) {
+          if (!target) return;
+          if (!target.courseId || !target.chapterId || !target.kind) {
+            window.location.assign(editorUrlFromTarget(target));
+            return;
+          }
+          if (
+            String(target.kind || "")
+              .trim()
+              .toLowerCase() !== "subchapter"
+          ) {
+            window.location.assign(editorUrlFromTarget(target));
+            return;
+          }
+          if (navBusy) return;
+          navBusy = true;
+          try {
+            if (isDirty) {
+              var ok = await save();
+              if (!ok) return;
+            }
+
+            setStatus("Loading...", "");
+            var qs = new URLSearchParams({
+              courseId: String(target.courseId || ""),
+              chapterId: String(target.chapterId || ""),
+              kind: String(target.kind || ""),
+            });
+            if (target.subchapterId)
+              qs.set("subchapterId", String(target.subchapterId || ""));
+            if (target.questionId)
+              qs.set("questionId", String(target.questionId || ""));
+
+            var res = await fetch("/markdown-editor/load?" + qs.toString(), {
+              method: "GET",
+              headers: (function () {
+                var h = {};
+                if (csrfHeader && csrfToken) h[csrfHeader] = csrfToken;
+                return h;
+              })(),
+            });
+            var data = await res.json().catch(function () {
+              return null;
+            });
+            if (!res.ok || !data || !data.ok) {
+              throw new Error(
+                (data && data.message) || "Failed to load subchapter.",
+              );
+            }
+
+            applyCtx({
+              courseId: data.courseId || "",
+              chapterId: data.chapterId || "",
+              kind: data.kind || "",
+              subchapterId: data.subchapterId || "",
+              questionId: data.questionId || "",
+            });
+
+            if (contextLabelEl)
+              contextLabelEl.textContent = String(data.contextLabel || "");
+
+            if (editor) {
+              editor.value = String(data.markdown || "");
+              editor.scrollTop = 0;
+            }
+            if (previewEl) previewEl.scrollTop = 0;
+            renderPreview(editor ? editor.value : "");
+            isDirty = false;
+
+            if (!(opts && opts.skipHistory)) {
+              var url = editorUrlFromTarget(ctx);
+              if (opts && opts.replace)
+                window.history.replaceState({ mdEditor: ctx }, "", url);
+              else if (opts && opts.push)
+                window.history.pushState({ mdEditor: ctx }, "", url);
+            }
+
+            restoreUiState();
+            fetchAssets();
+            fetchCourseOutline();
+            setStatus("", "");
+          } catch (e) {
+            setStatus(
+              e && e.message ? e.message : "Failed to load subchapter.",
+              "error",
+            );
+          } finally {
+            navBusy = false;
+          }
         }
 
         function markdownImageForAsset(url, name) {
@@ -892,8 +1356,11 @@
               throw new Error((data && data.message) || "Save failed.");
             }
             setStatus("Saved.", "");
+            isDirty = false;
+            return true;
           } catch (e) {
             setStatus(e && e.message ? e.message : "Save failed.", "error");
+            return false;
           }
         }
 
@@ -1401,6 +1868,125 @@
         }
 
         var scrollSyncing = false;
+        var currentMode = "edit";
+
+        function storageKey(suffix) {
+          return (
+            "mdEditor:" +
+            (ctx.courseId || "") +
+            ":" +
+            (ctx.chapterId || "") +
+            ":" +
+            (ctx.kind || "") +
+            ":" +
+            (ctx.subchapterId || "") +
+            ":" +
+            (ctx.questionId || "") +
+            ":" +
+            suffix
+          );
+        }
+
+        function readSession(key) {
+          try {
+            return (window.sessionStorage || {}).getItem(key);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function writeSession(key, value) {
+          try {
+            (window.sessionStorage || {}).setItem(key, String(value));
+          } catch (e) {}
+        }
+
+        function readSessionNumber(key) {
+          var raw = readSession(key);
+          if (!raw) return null;
+          var n = Number(raw);
+          return Number.isFinite(n) ? n : null;
+        }
+
+        function updateModeToggleUi() {
+          if (!modeToggleBtn) return;
+          var isPreview = currentMode === "preview";
+          if (modeToggleLabel) {
+            modeToggleLabel.textContent = isPreview ? "Edit" : "Preview";
+          }
+          if (modeToggleIcon) {
+            modeToggleIcon.className = isPreview
+              ? "fas fa-pen-to-square text-[12px]"
+              : "fas fa-eye text-[12px]";
+          }
+          modeToggleBtn.setAttribute(
+            "aria-pressed",
+            isPreview ? "true" : "false",
+          );
+        }
+
+        function setMode(nextMode, opts) {
+          var mode = nextMode === "preview" ? "preview" : "edit";
+          var doSync = !(opts && opts.skipSync);
+          currentMode = mode;
+
+          if (mode === "preview") {
+            if (editor) {
+              try {
+                renderPreview(editor.value || "");
+              } catch (e) {}
+            }
+            if (doSync) {
+              try {
+                syncPreviewScroll();
+              } catch (e) {}
+            }
+            if (editorPane)
+              editorPane.classList.add("opacity-0", "pointer-events-none");
+            if (previewPane)
+              previewPane.classList.remove("opacity-0", "pointer-events-none");
+          } else {
+            if (doSync) {
+              try {
+                syncEditorScroll();
+              } catch (e) {}
+            }
+            if (previewPane)
+              previewPane.classList.add("opacity-0", "pointer-events-none");
+            if (editorPane)
+              editorPane.classList.remove("opacity-0", "pointer-events-none");
+            if (editor && !(opts && opts.focus === false)) {
+              try {
+                editor.focus();
+              } catch (e) {}
+            }
+          }
+
+          updateModeToggleUi();
+          writeSession(storageKey("mode"), currentMode);
+        }
+
+        function saveScrollState() {
+          if (editor)
+            writeSession(storageKey("editorScrollTop"), editor.scrollTop || 0);
+          if (previewEl)
+            writeSession(
+              storageKey("previewScrollTop"),
+              previewEl.scrollTop || 0,
+            );
+        }
+
+        function restoreUiState() {
+          var eTop = readSessionNumber(storageKey("editorScrollTop"));
+          var pTop = readSessionNumber(storageKey("previewScrollTop"));
+          if (editor && eTop != null) editor.scrollTop = eTop;
+          if (previewEl && pTop != null) previewEl.scrollTop = pTop;
+          var storedMode = readSession(storageKey("mode"));
+          setMode(storedMode === "preview" ? "preview" : "edit", {
+            skipSync: true,
+            focus: storedMode === "preview" ? false : true,
+          });
+        }
 
         function syncPreviewScroll() {
           if (!syncScroll) return;
@@ -1518,6 +2104,7 @@
           if (!e || e.key !== "Escape") return;
           closeModal("linkModal");
           closeModal("imageModal");
+          closeModal("markdownHelpModal");
           closeAssetPreview();
           closeHeadingMenu();
           closeOutlineMenu();
@@ -1601,6 +2188,12 @@
 
         if (saveBtn) saveBtn.addEventListener("click", save);
 
+        if (markdownHelpBtn)
+          markdownHelpBtn.addEventListener("click", function (e) {
+            e && e.preventDefault && e.preventDefault();
+            openModal("markdownHelpModal");
+          });
+
         if (imageInput)
           imageInput.addEventListener("change", function () {
             var file = imageInput.files && imageInput.files[0];
@@ -1674,13 +2267,39 @@
           var onEdit = debounce(function () {
             renderPreview(editor.value);
           }, 120);
-          editor.addEventListener("input", onEdit);
-          editor.addEventListener("scroll", debounce(syncPreviewScroll, 16));
+          editor.addEventListener("input", function () {
+            isDirty = true;
+            onEdit();
+          });
+          editor.addEventListener(
+            "scroll",
+            debounce(function () {
+              if (currentMode === "edit") {
+                syncPreviewScroll();
+              }
+              saveScrollState();
+            }, 16),
+          );
         }
 
         if (previewEl) {
-          previewEl.addEventListener("scroll", debounce(syncEditorScroll, 16));
+          previewEl.addEventListener(
+            "scroll",
+            debounce(function () {
+              if (currentMode === "preview") {
+                syncEditorScroll();
+              }
+              saveScrollState();
+            }, 16),
+          );
         }
+
+        if (modeToggleBtn)
+          modeToggleBtn.addEventListener("click", function (e) {
+            e && e.preventDefault && e.preventDefault();
+            setMode(currentMode === "preview" ? "edit" : "preview");
+            saveScrollState();
+          });
 
         if (linkInsertBtn)
           linkInsertBtn.addEventListener("click", insertLinkFromModal);
@@ -1691,6 +2310,68 @@
           assetsRefreshBtn.addEventListener("click", function () {
             fetchAssets();
             setStatus("Assets refreshed.", "");
+          });
+
+        if (outlineRefreshBtn)
+          outlineRefreshBtn.addEventListener("click", function () {
+            fetchCourseOutline();
+            setStatus("Outline refreshed.", "");
+          });
+
+        if (outlineAddChapterBtn)
+          outlineAddChapterBtn.addEventListener("click", function () {
+            if (!isCourseEdit) return;
+            addChapterFromOutline();
+          });
+
+        if (courseOutlineList)
+          courseOutlineList.addEventListener("click", async function (e) {
+            var actionBtn =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-outline-action]")
+                : null;
+            if (actionBtn) {
+              e && e.preventDefault && e.preventDefault();
+              e && e.stopPropagation && e.stopPropagation();
+              await handleOutlineAction(
+                actionBtn.getAttribute("data-outline-action") || "",
+                actionBtn.getAttribute("data-chapter-id") || "",
+                actionBtn.getAttribute("data-subchapter-id") || "",
+                actionBtn.getAttribute("data-outline-name") || "",
+              );
+              return;
+            }
+
+            var t =
+              e && e.target && e.target.closest
+                ? e.target.closest("[data-outline-toggle]")
+                : null;
+            if (t) {
+              e && e.preventDefault && e.preventDefault();
+              var id = t.getAttribute("data-outline-toggle") || "";
+              var panel = id ? document.getElementById(id) : null;
+              if (!panel) return;
+              panel.classList.toggle("hidden");
+              return;
+            }
+
+            var a =
+              e && e.target && e.target.closest
+                ? e.target.closest("a[href]")
+                : null;
+            if (!a) return;
+            var target = targetFromHref(a.getAttribute("href") || a.href || "");
+            if (!target) return;
+            if (
+              String(target.courseId || "") !== String(ctx.courseId || "") ||
+              String(target.kind || "")
+                .trim()
+                .toLowerCase() !== "subchapter"
+            ) {
+              return;
+            }
+            e && e.preventDefault && e.preventDefault();
+            await loadEditorTarget(target, { push: true });
           });
 
         if (assetsGallery)
@@ -1750,7 +2431,30 @@
           });
 
         renderPreview(editor ? editor.value : "");
+        initAsideTabs();
+        restoreUiState();
         fetchAssets();
+        fetchCourseOutline();
+
+        window.history.replaceState(
+          { mdEditor: ctx },
+          "",
+          editorUrlFromTarget(ctx),
+        );
+        window.addEventListener("popstate", function () {
+          if (window.location.pathname !== "/markdown-editor") return;
+          var target = targetFromHref(window.location.href);
+          if (!target) return;
+          if (
+            String(target.courseId || "") !== String(ctx.courseId || "") ||
+            String(target.kind || "")
+              .trim()
+              .toLowerCase() !== "subchapter"
+          ) {
+            return;
+          }
+          loadEditorTarget(target, { skipHistory: true });
+        });
       })();
     </script>
 
@@ -1887,6 +2591,104 @@
             >
               Insert
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="markdownHelpModal"
+      class="hidden fixed inset-0 z-50"
+      aria-hidden="true"
+    >
+      <div
+        class="absolute inset-0 bg-slate-900/40"
+        data-modal-close="markdownHelpModal"
+      ></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div
+          class="w-full max-w-3xl rounded-2xl bg-white border border-slate-200 shadow-xl overflow-hidden"
+        >
+          <div
+            class="px-5 py-4 border-b border-slate-200 flex items-center justify-between"
+          >
+            <div class="font-bold text-slate-900">Markdown လမ်းညွှန်</div>
+            <button
+              type="button"
+              data-modal-close="markdownHelpModal"
+              class="h-9 w-9 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition"
+              aria-label="Close"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+
+          <div
+            class="p-5 max-h-[72vh] overflow-auto space-y-5 text-sm text-slate-700"
+          >
+            <div>
+              <div class="text-xs font-semibold text-slate-500 mb-2">
+                Headings
+              </div>
+              <pre
+                class="rounded-xl bg-slate-900 text-slate-50 p-4 text-xs overflow-auto"
+              ><code># Heading 1
+## Heading 2
+### Heading 3</code></pre>
+            </div>
+
+            <div>
+              <div class="text-xs font-semibold text-slate-500 mb-2">
+                Bold / Italic
+              </div>
+              <pre
+                class="rounded-xl bg-slate-900 text-slate-50 p-4 text-xs overflow-auto"
+              ><code>**bold**
+*italic*</code></pre>
+            </div>
+
+            <div>
+              <div class="text-xs font-semibold text-slate-500 mb-2">Lists</div>
+              <pre
+                class="rounded-xl bg-slate-900 text-slate-50 p-4 text-xs overflow-auto"
+              ><code>- item
+- item
+
+1. first
+2. second</code></pre>
+            </div>
+
+            <div>
+              <div class="text-xs font-semibold text-slate-500 mb-2">
+                Link / Image
+              </div>
+              <pre
+                class="rounded-xl bg-slate-900 text-slate-50 p-4 text-xs overflow-auto"
+              ><code>[title](https://example.com)
+![alt](https://example.com/image.png)</code></pre>
+            </div>
+
+            <div>
+              <div class="text-xs font-semibold text-slate-500 mb-2">Code</div>
+              <pre
+                class="rounded-xl bg-slate-900 text-slate-50 p-4 text-xs overflow-auto"
+              ><code>`inline code`
+
+```js
+console.log("hello")
+```</code></pre>
+            </div>
+
+            <div>
+              <div class="text-xs font-semibold text-slate-500 mb-2">
+                Quote / Divider
+              </div>
+              <pre
+                class="rounded-xl bg-slate-900 text-slate-50 p-4 text-xs overflow-auto"
+              ><code>> quoted text
+
+---</code></pre>
+            </div>
           </div>
         </div>
       </div>
