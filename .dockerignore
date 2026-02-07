@@ -1,0 +1,10 @@
+**/.git
+**/.gradle
+**/build
+**/out
+**/.idea
+**/.vscode
+**/.DS_Store
+**/.myanmyanlearn
+**/.env
+src/main/resources/application.properties

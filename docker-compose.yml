@@ -26,15 +26,21 @@ services:
       mysql:
         condition: service_healthy
     environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_ADDITIONAL_LOCATION: file:/app/config/
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_0900_ai_ci
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      APP_JWT_RESET_SECRET: ${APP_JWT_RESET_SECRET:?set APP_JWT_RESET_SECRET}
+      APP_JWT_RESET_SECRET: ${APP_JWT_RESET_SECRET:-}
       APP_MYSQL_BACKUP_ENABLED: "false"
     ports:
       - "8080:8080"
     volumes:
       - app_uploads:/app/.myanmyanlearn/uploads
+      - ./src/main/resources/application.properties:/app/config/application.properties:ro
 
 volumes:
   mysql_data:
