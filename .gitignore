@@ -44,3 +44,4 @@ scripts/__pycache__/
 *.pyc
 cookies.txt
 .myanmyanlearn/
+.env

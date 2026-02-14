@@ -20,6 +20,7 @@ services:
       retries: 20
 
   app:
+    image: ${DOCKER_IMAGE:-myanmyanlearn/app:latest}
     build:
       context: .
     depends_on:
@@ -34,7 +35,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_0900_ai_ci
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      APP_JWT_RESET_SECRET: ${APP_JWT_RESET_SECRET:-}
       APP_MYSQL_BACKUP_ENABLED: "false"
     ports:
       - "8080:8080"
