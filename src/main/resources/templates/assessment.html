@@ -25,7 +25,7 @@
 
     /* Markdown typography */
 
-    #mdContainer h1 {
+    .markdown-content h1 {
       color: #0f172a;
       font-size: 2rem;
       line-height: 2.5rem;
@@ -33,7 +33,7 @@
       margin: 1.25rem 0 0.75rem;
     }
 
-    #mdContainer h2 {
+    .markdown-content h2 {
       color: #0f172a;
       font-size: 1.5rem;
       line-height: 2rem;
@@ -41,7 +41,7 @@
       margin: 1.2rem 0 0.7rem;
     }
 
-    #mdContainer h3 {
+    .markdown-content h3 {
       color: #0f172a;
       font-size: 1.25rem;
       line-height: 1.75rem;
@@ -49,7 +49,7 @@
       margin: 1.1rem 0 0.6rem;
     }
 
-    #mdContainer h4 {
+    .markdown-content h4 {
       color: #0f172a;
       font-size: 1.125rem;
       line-height: 1.6rem;
@@ -57,7 +57,7 @@
       margin: 1rem 0 0.5rem;
     }
 
-    #mdContainer h5 {
+    .markdown-content h5 {
       color: #0f172a;
       font-size: 1rem;
       line-height: 1.5rem;
@@ -65,7 +65,7 @@
       margin: 0.9rem 0 0.45rem;
     }
 
-    #mdContainer h6 {
+    .markdown-content h6 {
       color: #0f172a;
       font-size: 0.875rem;
       line-height: 1.25rem;
@@ -75,63 +75,63 @@
       margin: 0.8rem 0 0.4rem;
     }
 
-    #mdContainer p {
+    .markdown-content p {
       margin: 0.75rem 0;
       color: #334155;
     }
 
-    #mdContainer a {
+    .markdown-content a {
       color: #2563eb;
       text-decoration: underline;
       text-underline-offset: 2px;
     }
 
-    #mdContainer ul,
-    #mdContainer ol {
+    .markdown-content ul,
+    .markdown-content ol {
       margin: 0.75rem 0 0.75rem 1.25rem;
       padding-left: 1.25rem;
     }
 
-    #mdContainer ul {
+    .markdown-content ul {
       list-style-type: disc;
       list-style-position: outside;
     }
 
-    #mdContainer ul ul {
+    .markdown-content ul ul {
       list-style-type: circle;
     }
 
-    #mdContainer ul ul ul {
+    .markdown-content ul ul ul {
       list-style-type: square;
     }
 
-    #mdContainer ol {
+    .markdown-content ol {
       list-style-type: decimal;
       list-style-position: outside;
     }
 
-    #mdContainer ol ol {
+    .markdown-content ol ol {
       list-style-type: lower-alpha;
     }
 
-    #mdContainer ol ol ol {
+    .markdown-content ol ol ol {
       list-style-type: lower-roman;
     }
 
-    #mdContainer li {
+    .markdown-content li {
       margin: 0.25rem 0;
     }
 
-    #mdContainer li p {
+    .markdown-content li p {
       margin: 0.25rem 0;
     }
 
-    #mdContainer li>input[type="checkbox"] {
+    .markdown-content li>input[type="checkbox"] {
       margin-right: 0.5rem;
       vertical-align: middle;
     }
 
-    #mdContainer blockquote {
+    .markdown-content blockquote {
       border-left: 4px solid #e2e8f0;
       padding: 0.5rem 1rem;
       margin: 1rem 0;
@@ -140,7 +140,7 @@
       border-radius: 0.5rem;
     }
 
-    #mdContainer pre {
+    .markdown-content pre {
       background: #f6f8fa;
       border: 1px solid #e5e7eb;
       border-radius: 0.5rem;
@@ -148,49 +148,49 @@
       overflow: auto;
     }
 
-    #mdContainer code {
+    .markdown-content code {
       background: #f1f5f9;
       color: #0f172a;
       padding: 0.1rem 0.3rem;
       border-radius: 0.25rem;
     }
 
-    #mdContainer table {
+    .markdown-content table {
       width: 100%;
       border-collapse: collapse;
       margin: 1rem 0;
     }
 
-    #mdContainer th,
-    #mdContainer td {
+    .markdown-content th,
+    .markdown-content td {
       border: 1px solid #e5e7eb;
       padding: 0.5rem 0.6rem;
     }
 
-    #mdContainer th {
+    .markdown-content th {
       background: #f8fafc;
       text-align: left;
       color: #0f172a;
     }
 
-    #mdContainer hr {
+    .markdown-content hr {
       border: none;
       height: 1px;
       background: #e5e7eb;
       margin: 1.25rem 0;
     }
 
-    #mdContainer img,
-    #mdContainer svg,
-    #mdContainer video,
-    #mdContainer iframe {
+    .markdown-content img,
+    .markdown-content svg,
+    .markdown-content video,
+    .markdown-content iframe {
       display: block;
       max-width: min(100%, 720px);
       height: auto;
       margin: 0.5rem auto;
     }
 
-    #mdContainer img {
+    .markdown-content img {
       max-height: 60vh;
     }
 
@@ -326,7 +326,8 @@
             </div>
           </div>
           <div class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3">
-            <article class="prose max-w-none text-slate-800" th:attr="data-md-src=${q.questionContentPath}"></article>
+            <article class="markdown-content max-w-none text-slate-800" th:attr="data-md-src=${q.questionContentPath}">
+            </article>
           </div>
           <div class="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0" th:if="${q.slotCount > 0}">
             <div class="flex flex-wrap items-center gap-2 min-w-0"
@@ -644,6 +645,8 @@
             const isShowing = btn.dataset.showing === "true";
             const isLoading = btn.dataset.loading === "true";
 
+
+
             if (isLoading) return;
 
             if (isShowing) {
@@ -651,10 +654,12 @@
               revertCardTranslations(card);
               btn.dataset.showing = "false";
               updateBtnState(btn, { loading: false, active: false });
+              checkTranslationStatus();
             } else {
               // Translate
               btn.dataset.loading = "true";
               updateBtnState(btn, { loading: true, active: false });
+              checkTranslationStatus();
 
               try {
                 await translateCard(card);
@@ -667,10 +672,17 @@
                 alert(I18N.translateFailedPrefix + err.message);
                 btn.dataset.loading = "false";
                 updateBtnState(btn, { loading: false, active: false });
+              } finally {
+                checkTranslationStatus();
               }
             }
           });
         });
+      }
+
+      function checkTranslationStatus() {
+        const anyLoading = document.querySelector(".question-translate-btn[data-loading='true']");
+        isTranslationInProgress = !!anyLoading;
       }
 
       async function translateCard(card) {
@@ -773,6 +785,10 @@
 
       // Initialize
       initTranslation();
+
+      // --- TIMER LOGIC (Moved up to be accessible) ---
+      let isTranslationInProgress = false;
+
 
       function closeAllAnswerMenus(except) {
         document
@@ -944,6 +960,12 @@
 
       if (remainingSeconds > 0 && timerDisplay) {
         const updateTimer = () => {
+          if (isTranslationInProgress) {
+            timerDisplay.classList.add("text-yellow-400");
+            timerDisplay.classList.remove("text-red-400");
+            return;
+          }
+
           const m = Math.floor(remainingSeconds / 60);
           const s = remainingSeconds % 60;
           timerDisplay.textContent = `${String(m).padStart(2, "0")}:${String(

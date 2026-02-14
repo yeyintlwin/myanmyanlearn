@@ -352,7 +352,9 @@ public class ReaderController {
         String prompt = (sourceLang == null || sourceLang.isBlank())
                 ? "Translate the following Markdown to " + targetLabel + ". "
                 : "Translate the following Markdown from " + sourceLabel + " to " + targetLabel + ". ";
-        prompt += "Keep technical terms in English (e.g., programming keywords, API names, product names, identifiers, and code symbols). "
+        prompt += "Keep technical terms in English (e.g., programming keywords, API names, product names, "
+                + "identifiers, and code symbols). "
+                + "Do NOT translate or change enumerations like 'ア', 'イ', 'ウ', 'エ', 'オ' or corresponding numbering (e.g., maintain '1.', '2.', 'A.', 'B.', etc.). "
                 + "Preserve Markdown formatting, links, code blocks, and inline code. "
                 + "Do NOT render HTML/CSS code. Keep all code blocks explicitly wrapped in Markdown code fences (```). "
                 + "Return only the translated Markdown.\n\n" + text;
@@ -509,7 +511,9 @@ public class ReaderController {
             String prompt = "Translate the values of the following JSON object to " + languageLabel(targetLang) + ". "
                     + (sourceLang != null ? "Source language is " + languageLabel(sourceLang) + ". " : "")
                     + "Do NOT translate keys. Keep the JSON structure exactly the same. "
-                    + "Keep technical terms in English. Preserve Markdown formatting. "
+                    + "Keep technical terms in English (e.g., programming keywords, API names, product names, identifiers, and code symbols). "
+                    + "Do NOT translate or change enumerations like 'ア', 'イ', 'ウ', 'エ', 'オ' or corresponding numbering (e.g., maintain '1.', '2.', 'A.', 'B.', etc.). "
+                    + "Preserve Markdown formatting. "
                     + "Return ONLY the valid JSON object.\n\n" + jsonToTranslate;
 
             String translatedJson = translateTextGeneric(apiKey, prompt);

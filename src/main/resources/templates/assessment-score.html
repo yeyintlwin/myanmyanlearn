@@ -1,563 +1,691 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="#{assessmentScore.pageTitle}">
-      MYAN MYAN LEARN - View Score
-    </title>
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/js/tailwind-config.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      id="hljsThemeLight"
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
-    />
-    <link
-      id="hljsThemeDark"
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
-      disabled
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
-    />
-    <style>
-      article.prose img,
-      article.prose svg,
-      article.prose video,
-      article.prose iframe {
-        display: block;
-        max-width: min(100%, 560px);
-        height: auto;
-        margin: 0.5rem auto;
-      }
 
-      article.prose img {
-        max-height: 50vh;
-        border-radius: 0.75rem;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="#{assessmentScore.pageTitle}">
+    MYAN MYAN LEARN - View Score
+  </title>
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/js/tailwind-config.js"></script>
+  <script src="/js/ai-translate-btn.js"></script>
+  <script src="/js/thinking-border.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/ai-translate-btn.css" />
+  <link rel="stylesheet" href="/css/thinking-border.css" />
+  <link id="hljsThemeLight" rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  <link id="hljsThemeDark" rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" disabled />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <style>
+    article.prose img,
+    article.prose svg,
+    article.prose video,
+    article.prose iframe {
+      display: block;
+      max-width: min(100%, 560px);
+      height: auto;
+      margin: 0.5rem auto;
+    }
 
-      article.prose .mermaid {
-        max-width: min(100%, 560px);
-        margin: 0.5rem auto;
-        overflow: hidden;
-      }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.0/dist/markdown-it-sub.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-task-lists@2.1.1/dist/markdown-it-task-lists.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  </head>
+    article.prose img {
+      max-height: 50vh;
+      border-radius: 0.75rem;
+    }
 
-  <body
-    class="min-h-screen font-sans app-bg app-bg-solid flex flex-col"
-    th:attr="data-course-id=${courseId}"
-  >
-    <nav th:replace="fragments/navbar :: appNavbar('View Score')"></nav>
+    article.prose .mermaid {
+      max-width: min(100%, 560px);
+      margin: 0.5rem auto;
+      overflow: hidden;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.0/dist/markdown-it-sub.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-task-lists@2.1.1/dist/markdown-it-task-lists.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
 
-    <main class="flex-1 pt-28 pb-16">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-          <h1
-            class="text-white text-2xl sm:text-3xl font-bold flex items-center gap-3"
-          >
-            <span
-              class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 border border-white/10"
-            >
-              <i class="fas fa-chart-line text-white"></i>
-            </span>
-            <span th:text="#{assessmentScore.title}">View Score</span>
-          </h1>
-          <a
-            th:href="@{/contents(courseId=${courseId})}"
-            href="/contents"
-            class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0"
-          >
-            <i class="fas fa-arrow-left text-xs"></i>
-            <span th:text="#{assessment.backToContents}">Back to Contents</span>
-          </a>
-        </div>
+<body class="min-h-screen font-sans app-bg app-bg-solid flex flex-col" th:attr="data-course-id=${courseId}">
+  <nav th:replace="fragments/navbar :: appNavbar('View Score')"></nav>
 
-        <!-- Summary -->
-        <section
-          class="mb-6 bg-white/10 border border-white/10 rounded-xl p-4 sm:p-5"
-        >
-          <div
-            id="saveStatus"
-            class="hidden mb-3 text-sm rounded-lg px-3 py-2 border"
-          ></div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div
-                class="text-white/70 text-xs"
-                th:text="#{assessment.examTitle}"
-              >
-                Exam Title
-              </div>
-              <div
-                class="text-white font-medium"
-                id="examTitle"
-                th:text="${examTitle ?: #messages.msg('assessment.title')}"
-              >
-                Assessment
-              </div>
+  <main class="flex-1 pt-28 pb-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-white text-2xl sm:text-3xl font-bold flex items-center gap-3">
+          <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 border border-white/10">
+            <i class="fas fa-chart-line text-white"></i>
+          </span>
+          <span th:text="#{assessmentScore.title}">View Score</span>
+        </h1>
+        <a th:href="@{/contents(courseId=${courseId})}" href="/contents"
+          class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0">
+          <i class="fas fa-arrow-left text-xs"></i>
+          <span th:text="#{assessment.backToContents}">Back to Contents</span>
+        </a>
+      </div>
+
+      <!-- Summary -->
+      <section class="mb-6 bg-white/10 border border-white/10 rounded-xl p-4 sm:p-5">
+        <div id="saveStatus" class="hidden mb-3 text-sm rounded-lg px-3 py-2 border"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+            <div class="text-white/70 text-xs" th:text="#{assessment.examTitle}">
+              Exam Title
             </div>
-            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div
-                class="text-white/70 text-xs"
-                th:text="#{assessmentScore.yourScore}"
-              >
-                Your Score
-              </div>
-              <div class="text-white font-medium">
-                <span id="yourScore" th:text="${yourScore}">0</span>
-              </div>
-            </div>
-            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div
-                class="text-white/70 text-xs"
-                th:text="#{assessmentScore.totalPossible}"
-              >
-                Total Possible
-              </div>
-              <div class="text-white font-medium">
-                <span id="totalPossible" th:text="${totalPossible}">0</span>
-              </div>
+            <div class="text-white font-medium" id="examTitle"
+              th:text="${examTitle ?: #messages.msg('assessment.title')}">
+              Assessment
             </div>
           </div>
-          <div class="mt-3">
-            <div class="text-white/70 text-xs" th:text="#{assessment.chapters}">
-              Chapters
+          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+            <div class="text-white/70 text-xs" th:text="#{assessmentScore.yourScore}">
+              Your Score
             </div>
-            <div
-              class="text-white font-medium break-words"
-              id="chapters"
-              th:text="${#strings.listJoin(selectedChapters, ', ')}"
-            >
-              -
+            <div class="text-white font-medium">
+              <span id="yourScore" th:text="${yourScore}">0</span>
+            </div>
+          </div>
+          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+            <div class="text-white/70 text-xs" th:text="#{assessmentScore.totalPossible}">
+              Total Possible
+            </div>
+            <div class="text-white font-medium">
+              <span id="totalPossible" th:text="${totalPossible}">0</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3">
+          <div class="text-white/70 text-xs" th:text="#{assessment.chapters}">
+            Chapters
+          </div>
+          <div class="text-white font-medium break-words" id="chapters"
+            th:text="${#strings.listJoin(selectedChapters, ', ')}">
+            -
+          </div>
+        </div>
+      </section>
+
+      <textarea id="scoreJson" class="hidden" aria-hidden="true" th:text="${scoreJson}"></textarea>
+
+      <!-- Scored Questions -->
+      <div class="space-y-6" th:if="${scoredQuestions}">
+        <section class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
+          th:each="sq, iStat : ${scoredQuestions}" th:attr="data-mark=${sq.q.marks},data-updated-at=${sq.q.updatedAt}">
+          <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/10 gap-3">
+            <h2 class="text-white text-lg font-semibold flex items-center gap-3 min-w-0">
+              <span class="truncate"><span th:text="#{assessment.question}">Question</span>
+                [[${iStat.count}]]</span>
+            </h2>
+            <div class="flex items-center gap-3">
+              <button type="button" class="ai-translate-btn question-translate-btn scale-90 origin-right"
+                aria-pressed="false" th:title="#{reader.translate}">
+                <svg class="ai-translate-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true">
+                  <path
+                    d="M12 2l1.1 4.2L17 7.3l-3.9 1.1L12 12l-1.1-3.6L7 7.3l3.9-1.1L12 2zM19 10l.8 2.8L22 14l-2.2.6L19 17l-.8-2.4L16 14l2.2-1.2L19 10zM6 13l1 3.4L10 17l-3 .9L6 21l-1-3.1L2 17l3-0.6L6 13z"
+                    fill="currentColor" />
+                </svg>
+                <span th:text="#{reader.translate}">Translate</span>
+              </button>
+              <span class="text-white/80 text-sm question-mark-label whitespace-nowrap" data-mark-label>–</span>
+              <span class="mdError hidden"></span>
+            </div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-xl p-4 mb-3 shadow-sm">
+            <div class="text-slate-600 text-xs font-semibold mb-2" th:text="#{assessment.question}">
+              Question
+            </div>
+            <article class="prose max-w-none text-slate-800" th:attr="data-md-src=${sq.q.questionContentPath}">
+            </article>
+            <div class="mt-4 border-t border-slate-200 pt-3">
+              <div class="text-slate-600 text-xs font-semibold mb-2" th:text="#{assessmentScore.explanation}">
+                Explanation
+              </div>
+              <article class="prose max-w-none text-slate-800"
+                th:attr="data-md-src=${'/assessment/explain?courseId=' + sq.q.courseId + '&ch=' + sq.q.chapterId + '&q=' + sq.q.questionNumber}">
+              </article>
+            </div>
+          </div>
+          <div class="space-y-2" th:if="${sq.q.slotCount > 0}">
+            <div class="w-full bg-white/5 border border-white/10 rounded-lg p-3 flex items-center gap-3"
+              th:each="slot : ${sq.slots}">
+              <label class="text-white/90 text-sm"><span th:text="${slot.slotNum}"></span>.</label>
+              <i class="fas"
+                th:classappend="${slot.isCorrect} ? 'fa-check-circle text-green-300' : 'fa-times-circle text-red-300'"></i>
+              <div class="text-sm">
+                <span th:classappend="${slot.isCorrect} ? 'text-green-300' : 'text-red-300'">
+                  <span th:text="#{assessmentScore.yourAnswer}">Your answer</span>:
+                  <span th:text="${slot.selectedText}">-</span>
+                </span>
+                <span class="text-white/80" th:if="${!slot.isCorrect}">
+                  (<span th:text="#{assessmentScore.correct}">Correct</span>:
+                  <span th:text="${slot.correctText}">-</span>)
+                </span>
+              </div>
             </div>
           </div>
         </section>
-
-        <textarea
-          id="scoreJson"
-          class="hidden"
-          aria-hidden="true"
-          th:text="${scoreJson}"
-        ></textarea>
-
-        <!-- Scored Questions -->
-        <div class="space-y-6" th:if="${scoredQuestions}">
-          <section
-            class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
-            th:each="sq, iStat : ${scoredQuestions}"
-            th:attr="data-mark=${sq.q.marks}"
-          >
-            <div
-              class="flex items-center justify-between mb-3 pb-2 border-b border-white/10 gap-3"
-            >
-              <h2
-                class="text-white text-lg font-semibold flex items-center gap-3 min-w-0"
-              >
-                <span class="truncate"
-                  ><span th:text="#{assessment.question}">Question</span>
-                  [[${iStat.count}]]</span
-                >
-              </h2>
-              <div class="flex items-center gap-3">
-                <span
-                  class="text-white/80 text-sm question-mark-label whitespace-nowrap"
-                  data-mark-label
-                  >–</span
-                >
-                <span class="mdError hidden"></span>
-              </div>
-            </div>
-            <div
-              class="bg-white border border-slate-200 rounded-xl p-4 mb-3 shadow-sm"
-            >
-              <div
-                class="text-slate-600 text-xs font-semibold mb-2"
-                th:text="#{assessment.question}"
-              >
-                Question
-              </div>
-              <article
-                class="prose max-w-none text-slate-800"
-                th:attr="data-md-src=${sq.q.questionContentPath}"
-              ></article>
-              <div class="mt-4 border-t border-slate-200 pt-3">
-                <div
-                  class="text-slate-600 text-xs font-semibold mb-2"
-                  th:text="#{assessmentScore.explanation}"
-                >
-                  Explanation
-                </div>
-                <article
-                  class="prose max-w-none text-slate-800"
-                  th:attr="data-md-src=${'/assessment/explain?courseId=' + sq.q.courseId + '&ch=' + sq.q.chapterId + '&q=' + sq.q.questionNumber}"
-                ></article>
-              </div>
-            </div>
-            <div class="space-y-2" th:if="${sq.q.slotCount > 0}">
-              <div
-                class="w-full bg-white/5 border border-white/10 rounded-lg p-3 flex items-center gap-3"
-                th:each="slot : ${sq.slots}"
-              >
-                <label class="text-white/90 text-sm"
-                  ><span th:text="${slot.slotNum}"></span>.</label
-                >
-                <i
-                  class="fas"
-                  th:classappend="${slot.isCorrect} ? 'fa-check-circle text-green-300' : 'fa-times-circle text-red-300'"
-                ></i>
-                <div class="text-sm">
-                  <span
-                    th:classappend="${slot.isCorrect} ? 'text-green-300' : 'text-red-300'"
-                  >
-                    <span th:text="#{assessmentScore.yourAnswer}"
-                      >Your answer</span
-                    >:
-                    <span th:text="${slot.selectedText}">-</span>
-                  </span>
-                  <span class="text-white/80" th:if="${!slot.isCorrect}">
-                    (<span th:text="#{assessmentScore.correct}">Correct</span>:
-                    <span th:text="${slot.correctText}">-</span>)
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
       </div>
-    </main>
-    <script th:inline="javascript">
-      (function () {
-        const i18n = {
-          markSingular: /*[[#{assessment.mark.singular}]]*/ "mark",
-          markPlural: /*[[#{assessment.mark.plural}]]*/ "marks",
-          loadFailedPrefix:
+    </div>
+  </main>
+  <script th:inline="javascript">
+    (function () {
+      const i18n = {
+        markSingular: /*[[#{assessment.mark.singular}]]*/ "mark",
+        markPlural: /*[[#{assessment.mark.plural}]]*/ "marks",
+        loadFailedPrefix:
             /*[[#{assessmentScore.error.loadFailedPrefix}]]*/ "Failed to load markdown: ",
-        };
+        loadFailedPrefix:
+            /*[[#{assessmentScore.error.loadFailedPrefix}]]*/ "Failed to load markdown: ",
+        translate: /*[[#{reader.translate}]]*/ "Translate",
+        translateMissingApiKey: /*[[#{reader.translate.missingApiKey}]]*/ "Translation API key is not configured.",
+        translateFailedPrefix: /*[[#{reader.translate.failedPrefix}]]*/ "Translation failed: ",
+      };
 
+      try {
+        sessionStorage.setItem("blockAssessmentBack", "1");
+      } catch (_) { }
+
+      function lockHistory() {
         try {
-          sessionStorage.setItem("blockAssessmentBack", "1");
-        } catch (_) {}
+          history.replaceState({ _noBackScore: true }, "", location.href);
+          history.pushState({ _noBackScore: true }, "", location.href);
+        } catch (_) { }
+      }
 
-        function lockHistory() {
-          try {
-            history.replaceState({ _noBackScore: true }, "", location.href);
-            history.pushState({ _noBackScore: true }, "", location.href);
-          } catch (_) {}
+      function redirectAwayFromAssessment() {
+        try {
+          var cidEl = document.querySelector("[data-course-id]");
+          var cid = cidEl ? cidEl.getAttribute("data-course-id") : "";
+          var url =
+            "/contents" + (cid ? "?courseId=" + encodeURIComponent(cid) : "");
+          window.location.replace(url);
+        } catch (_) {
+          window.location.replace("/contents");
+        }
+      }
+
+      lockHistory();
+      window.addEventListener("popstate", redirectAwayFromAssessment);
+      window.addEventListener("pageshow", function (e) {
+        try {
+          if (e && e.persisted) lockHistory();
+        } catch (_) { }
+      });
+
+      function djb2Hash(str) {
+        var hash = 5381;
+        for (var i = 0; i < str.length; i++) {
+          hash = (hash << 5) + hash + str.charCodeAt(i);
+          hash = hash & 0xffffffff;
+        }
+        return String(hash);
+      }
+
+      async function persistScoreIfNeeded() {
+        var scoreEl = document.getElementById("scoreJson");
+        if (!scoreEl) return;
+        var raw = (scoreEl.value || scoreEl.textContent || "").trim();
+        if (!raw) return;
+
+        var hash = djb2Hash(raw);
+        try {
+          if (sessionStorage.getItem("assessmentScoreSavedHash") === hash) {
+            return;
+          }
+        } catch (_) { }
+
+        var tokenMeta = document.querySelector('meta[name="_csrf"]');
+        var headerMeta = document.querySelector('meta[name="_csrf_header"]');
+        var token = tokenMeta ? tokenMeta.getAttribute("content") : "";
+        var headerName = headerMeta ? headerMeta.getAttribute("content") : "";
+
+        var headers = {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        };
+        if (token && headerName) {
+          headers[headerName] = token;
         }
 
-        function redirectAwayFromAssessment() {
-          try {
-            var cidEl = document.querySelector("[data-course-id]");
-            var cid = cidEl ? cidEl.getAttribute("data-course-id") : "";
-            var url =
-              "/contents" + (cid ? "?courseId=" + encodeURIComponent(cid) : "");
-            window.location.replace(url);
-          } catch (_) {
-            window.location.replace("/contents");
-          }
-        }
-
-        lockHistory();
-        window.addEventListener("popstate", redirectAwayFromAssessment);
-        window.addEventListener("pageshow", function (e) {
-          try {
-            if (e && e.persisted) lockHistory();
-          } catch (_) {}
-        });
-
-        function djb2Hash(str) {
-          var hash = 5381;
-          for (var i = 0; i < str.length; i++) {
-            hash = (hash << 5) + hash + str.charCodeAt(i);
-            hash = hash & 0xffffffff;
-          }
-          return String(hash);
-        }
-
-        async function persistScoreIfNeeded() {
-          var scoreEl = document.getElementById("scoreJson");
-          if (!scoreEl) return;
-          var raw = (scoreEl.value || scoreEl.textContent || "").trim();
-          if (!raw) return;
-
-          var hash = djb2Hash(raw);
-          try {
-            if (sessionStorage.getItem("assessmentScoreSavedHash") === hash) {
-              return;
-            }
-          } catch (_) {}
-
-          var tokenMeta = document.querySelector('meta[name="_csrf"]');
-          var headerMeta = document.querySelector('meta[name="_csrf_header"]');
-          var token = tokenMeta ? tokenMeta.getAttribute("content") : "";
-          var headerName = headerMeta ? headerMeta.getAttribute("content") : "";
-
-          var headers = {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          };
-          if (token && headerName) {
-            headers[headerName] = token;
-          }
-
-          function setStatus(kind, text) {
-            var el = document.getElementById("saveStatus");
-            if (!el) return;
-            el.textContent = text;
-            el.classList.remove("hidden");
-            el.classList.remove(
+        function setStatus(kind, text) {
+          var el = document.getElementById("saveStatus");
+          if (!el) return;
+          el.textContent = text;
+          el.classList.remove("hidden");
+          el.classList.remove(
+            "bg-green-500/10",
+            "border-green-500/30",
+            "text-green-200",
+            "bg-red-500/10",
+            "border-red-500/30",
+            "text-red-200",
+          );
+          if (kind === "ok") {
+            el.classList.add(
               "bg-green-500/10",
               "border-green-500/30",
               "text-green-200",
-              "bg-red-500/10",
-              "border-red-500/30",
-              "text-red-200",
             );
-            if (kind === "ok") {
-              el.classList.add(
-                "bg-green-500/10",
-                "border-green-500/30",
-                "text-green-200",
-              );
-            } else {
-              el.classList.add("bg-red-500/10", "border-red-500/30", "text-red-200");
-            }
+          } else {
+            el.classList.add("bg-red-500/10", "border-red-500/30", "text-red-200");
           }
-
-          try {
-            var resp = await fetch("/api/assessment-scores", {
-              method: "POST",
-              headers: headers,
-              credentials: "same-origin",
-              body: raw,
-            });
-            if (!resp) {
-              setStatus("err", "Score save failed (no response).");
-              return;
-            }
-            if (resp.redirected || (resp.url && resp.url.indexOf("/login") >= 0)) {
-              setStatus("err", "Score save failed (login required).");
-              return;
-            }
-            if (!resp.ok) {
-              setStatus("err", "Score save failed (HTTP " + resp.status + ").");
-              return;
-            }
-            var data = null;
-            try {
-              data = await resp.json();
-            } catch (_) {}
-            if (!data || typeof data.id === "undefined") {
-              setStatus("err", "Score save failed (invalid server response).");
-              return;
-            }
-            try {
-              sessionStorage.setItem("assessmentScoreSavedHash", hash);
-            } catch (_) {}
-            setStatus("ok", "Score saved.");
-          } catch (_) {}
         }
-
-        persistScoreIfNeeded();
-        window.addEventListener("pageshow", function () {
-          persistScoreIfNeeded();
-        });
 
         try {
-          const isMarkdownDark =
-            localStorage.getItem("readerMarkdownDark") === "1";
-          const hljsLight = document.getElementById("hljsThemeLight");
-          const hljsDark = document.getElementById("hljsThemeDark");
-          if (hljsLight && hljsDark) {
-            hljsLight.disabled = !!isMarkdownDark;
-            hljsDark.disabled = !isMarkdownDark;
-          }
-        } catch (_) {}
-
-        const md = window.markdownit
-          ? window.markdownit({
-              html: true,
-              linkify: true,
-              breaks: true,
-              highlight: function (str, lang) {
-                try {
-                  if (window.hljs) {
-                    if (lang && hljs.getLanguage(lang)) {
-                      return hljs.highlight(str, {
-                        language: lang,
-                      }).value;
-                    }
-                    return hljs.highlightAuto(str).value;
-                  }
-                } catch (_) {}
-                return "";
-              },
-            })
-          : null;
-        if (md) {
-          try {
-            md.use(window.markdownitSub);
-          } catch (_) {}
-          try {
-            md.use(window.markdownitSup);
-          } catch (_) {}
-          try {
-            md.use(window.texmath, {
-              engine: window.katex,
-              delimiters: "dollars",
-              katexOptions: {
-                throwOnError: false,
-              },
-            });
-          } catch (_) {}
-          try {
-            md.use(window.markdownitTaskLists, {
-              enabled: true,
-              label: true,
-              labelAfter: true,
-            });
-          } catch (_) {}
-        }
-        const articles = Array.from(
-          document.querySelectorAll(
-            "article[data-md-src], article[data-content]"
-          )
-        );
-
-        function isAbsoluteUrl(u) {
-          return (
-            /^(?:[a-z]+:)?\/\//i.test(u) ||
-            u.startsWith("/") ||
-            u.startsWith("data:")
-          );
-        }
-
-        function fixRelativeUrls(container, mdSrc) {
-          try {
-            const raw = mdSrc || "";
-            const normalized = raw.startsWith("/") ? raw.substring(1) : raw;
-            const lastSlash = normalized.lastIndexOf("/");
-            const baseDir =
-              lastSlash >= 0 ? normalized.substring(0, lastSlash + 1) : "";
-            if (!baseDir) return;
-
-            container.querySelectorAll("img[src]").forEach((img) => {
-              const src = img.getAttribute("src");
-              if (!src || isAbsoluteUrl(src)) return;
-              img.setAttribute("src", "/" + baseDir + src);
-            });
-
-            container.querySelectorAll("a[href]").forEach((a) => {
-              const href = a.getAttribute("href");
-              if (!href || isAbsoluteUrl(href)) return;
-              a.setAttribute("href", "/" + baseDir + href);
-            });
-          } catch (_) {}
-        }
-
-        function renderMermaid(container) {
-          if (!window.mermaid) return;
-          try {
-            mermaid.initialize({ startOnLoad: false, theme: "default" });
-            const blocks = container.querySelectorAll(
-              "pre code.language-mermaid"
-            );
-            blocks.forEach((codeEl) => {
-              const graphDef = codeEl.textContent.trim();
-              const wrapper = document.createElement("div");
-              wrapper.className = "mermaid my-4";
-              wrapper.textContent = graphDef;
-              const pre = codeEl.closest("pre");
-              if (pre && pre.parentNode) {
-                pre.parentNode.replaceChild(wrapper, pre);
-              }
-            });
-          } catch (_) {}
-        }
-
-        function highlightCode(container) {
-          if (!window.hljs) return;
-          container.querySelectorAll("pre code").forEach((block) => {
-            try {
-              hljs.highlightElement(block);
-            } catch (_) {}
+          var resp = await fetch("/api/assessment-scores", {
+            method: "POST",
+            headers: headers,
+            credentials: "same-origin",
+            body: raw,
           });
-        }
+          if (!resp) {
+            setStatus("err", "Score save failed (no response).");
+            return;
+          }
+          if (resp.redirected || (resp.url && resp.url.indexOf("/login") >= 0)) {
+            setStatus("err", "Score save failed (login required).");
+            return;
+          }
+          if (!resp.ok) {
+            setStatus("err", "Score save failed (HTTP " + resp.status + ").");
+            return;
+          }
+          var data = null;
+          try {
+            data = await resp.json();
+          } catch (_) { }
+          if (!data || typeof data.id === "undefined") {
+            setStatus("err", "Score save failed (invalid server response).");
+            return;
+          }
+          try {
+            sessionStorage.setItem("assessmentScoreSavedHash", hash);
+          } catch (_) { }
+          setStatus("ok", "Score saved.");
+        } catch (_) { }
+      }
 
-        Promise.all(
-          articles.map(async (el) => {
-            const mdSrc = el.getAttribute("data-md-src");
-            const inlineSrc = el.getAttribute("data-content") || "";
-            const cardEl = el.closest(".question-card");
-            const errEl = cardEl ? cardEl.querySelector(".mdError") : null;
+      persistScoreIfNeeded();
+      window.addEventListener("pageshow", function () {
+        persistScoreIfNeeded();
+      });
+
+      try {
+        const isMarkdownDark =
+          localStorage.getItem("readerMarkdownDark") === "1";
+        const hljsLight = document.getElementById("hljsThemeLight");
+        const hljsDark = document.getElementById("hljsThemeDark");
+        if (hljsLight && hljsDark) {
+          hljsLight.disabled = !!isMarkdownDark;
+          hljsDark.disabled = !isMarkdownDark;
+        }
+      } catch (_) { }
+
+      const md = window.markdownit
+        ? window.markdownit({
+          html: true,
+          linkify: true,
+          breaks: true,
+          highlight: function (str, lang) {
             try {
-              let content = inlineSrc;
-              if (mdSrc) {
-                const resp = await fetch(mdSrc);
-                if (resp && !resp.ok) {
-                  throw new Error(i18n.loadFailedPrefix + mdSrc);
+              if (window.hljs) {
+                if (lang && hljs.getLanguage(lang)) {
+                  return hljs.highlight(str, {
+                    language: lang,
+                  }).value;
                 }
-                content = await resp.text();
+                return hljs.highlightAuto(str).value;
               }
-              el.innerHTML = md ? md.render(content) : content;
-              el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-                cb.disabled = true;
-                cb.setAttribute("aria-disabled", "true");
-              });
-              if (mdSrc) fixRelativeUrls(el, mdSrc);
-              renderMermaid(el);
-              highlightCode(el);
-              if (errEl) errEl.classList.add("hidden");
-            } catch (e) {
-              if (errEl) {
-                errEl.textContent =
-                  e && typeof e.message === "string" ? e.message : String(e);
-                errEl.classList.remove("hidden");
+            } catch (_) { }
+            return "";
+          },
+        })
+        : null;
+      if (md) {
+        try {
+          md.use(window.markdownitSub);
+        } catch (_) { }
+        try {
+          md.use(window.markdownitSup);
+        } catch (_) { }
+        try {
+          md.use(window.texmath, {
+            engine: window.katex,
+            delimiters: "dollars",
+            katexOptions: {
+              throwOnError: false,
+            },
+          });
+        } catch (_) { }
+        try {
+          md.use(window.markdownitTaskLists, {
+            enabled: true,
+            label: true,
+            labelAfter: true,
+          });
+        } catch (_) { }
+      }
+      const articles = Array.from(
+        document.querySelectorAll(
+          "article[data-md-src], article[data-content]"
+        )
+      );
+
+      function isAbsoluteUrl(u) {
+        return (
+          /^(?:[a-z]+:)?\/\//i.test(u) ||
+          u.startsWith("/") ||
+          u.startsWith("data:")
+        );
+      }
+
+      function fixRelativeUrls(container, mdSrc) {
+        try {
+          const raw = mdSrc || "";
+          const normalized = raw.startsWith("/") ? raw.substring(1) : raw;
+          const lastSlash = normalized.lastIndexOf("/");
+          const baseDir =
+            lastSlash >= 0 ? normalized.substring(0, lastSlash + 1) : "";
+          if (!baseDir) return;
+
+          container.querySelectorAll("img[src]").forEach((img) => {
+            const src = img.getAttribute("src");
+            if (!src || isAbsoluteUrl(src)) return;
+            img.setAttribute("src", "/" + baseDir + src);
+          });
+
+          container.querySelectorAll("a[href]").forEach((a) => {
+            const href = a.getAttribute("href");
+            if (!href || isAbsoluteUrl(href)) return;
+            a.setAttribute("href", "/" + baseDir + href);
+          });
+        } catch (_) { }
+      }
+
+      function renderMermaid(container) {
+        if (!window.mermaid) return;
+        try {
+          mermaid.initialize({ startOnLoad: false, theme: "default" });
+          const blocks = container.querySelectorAll(
+            "pre code.language-mermaid"
+          );
+          blocks.forEach((codeEl) => {
+            const graphDef = codeEl.textContent.trim();
+            const wrapper = document.createElement("div");
+            wrapper.className = "mermaid my-4";
+            wrapper.textContent = graphDef;
+            const pre = codeEl.closest("pre");
+            if (pre && pre.parentNode) {
+              pre.parentNode.replaceChild(wrapper, pre);
+            }
+          });
+        } catch (_) { }
+      }
+
+      function highlightCode(container) {
+        if (!window.hljs) return;
+        container.querySelectorAll("pre code").forEach((block) => {
+          try {
+            hljs.highlightElement(block);
+          } catch (_) { }
+        });
+      }
+
+      Promise.all(
+        articles.map(async (el) => {
+          const mdSrc = el.getAttribute("data-md-src");
+          const inlineSrc = el.getAttribute("data-content") || "";
+          const cardEl = el.closest(".question-card");
+          const errEl = cardEl ? cardEl.querySelector(".mdError") : null;
+          try {
+            let content = inlineSrc;
+            if (mdSrc) {
+              const resp = await fetch(mdSrc);
+              if (resp && !resp.ok) {
+                throw new Error(i18n.loadFailedPrefix + mdSrc);
+              }
+              content = await resp.text();
+            }
+            el.innerHTML = md ? md.render(content) : content;
+            el.setAttribute("data-raw-md", content);
+            el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+              cb.disabled = true;
+              cb.setAttribute("aria-disabled", "true");
+            });
+            if (mdSrc) fixRelativeUrls(el, mdSrc);
+            renderMermaid(el);
+            highlightCode(el);
+            if (errEl) errEl.classList.add("hidden");
+          } catch (e) {
+            if (errEl) {
+              errEl.textContent =
+                e && typeof e.message === "string" ? e.message : String(e);
+              errEl.classList.remove("hidden");
+            }
+          }
+        })
+      ).then(function () {
+        if (window.mermaid) {
+          try {
+            mermaid.run({ querySelector: ".mermaid" });
+          } catch (_) { }
+        }
+      });
+
+      // Populate per-question mark labels
+      const questionEls = Array.from(
+        document.querySelectorAll(".question-card")
+      );
+      questionEls.forEach((el) => {
+        const label = el.querySelector("[data-mark-label]");
+        const mark = parseFloat(el.dataset.mark);
+        const val = isNaN(mark) ? 0 : mark;
+        if (label)
+          label.textContent = `${val} ${val === 1 ? i18n.markSingular : i18n.markPlural
+            }`;
+
+      });
+
+      // --- TRANSLATION LOGIC ---
+      const courseId = document.body.getAttribute("data-course-id");
+      /*[[${course != null ? course.language : 'en'}]]*/
+      const courseLang = /*[[${courseLanguage}]]*/ "en";
+      const userLang = /*[[${#locale.language}]]*/ "en";
+
+      function getCacheKey(qId) {
+        return `assessmentScoreTranslate:${courseId}:${qId}:${courseLang}:${userLang}`;
+      }
+
+      function loadTranslation(qId, updatedAt) {
+        try {
+          const key = getCacheKey(qId);
+          const cached = localStorage.getItem(key);
+          if (!cached) return null;
+
+          const data = JSON.parse(cached);
+          if (updatedAt && data.serverUpdatedAt !== updatedAt) return null;
+          return data;
+        } catch (e) { return null; }
+      }
+
+      function saveTranslation(qId, data) {
+        try {
+          const key = getCacheKey(qId);
+          localStorage.setItem(key, JSON.stringify(data));
+        } catch (e) { }
+      }
+
+      async function translateBatch(items) {
+        const tokenMeta = document.querySelector('meta[name="_csrf"]');
+        const headerMeta = document.querySelector('meta[name="_csrf_header"]');
+        const token = tokenMeta ? tokenMeta.getAttribute("content") : "";
+        const headerName = headerMeta ? headerMeta.getAttribute("content") : "";
+
+        const headers = { "Content-Type": "application/json" };
+        if (token && headerName) headers[headerName] = token;
+
+        const res = await fetch("/reader/translate/batch", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            items: items,
+            sourceLang: courseLang,
+            targetLang: userLang
+          })
+        });
+
+        if (!res.ok) throw new Error(i18n.translateFailedPrefix);
+        return await res.json();
+      }
+
+      function updateBtnState(btn, state) {
+        if (window.aiTranslateBtn && window.aiTranslateBtn.setState) {
+          window.aiTranslateBtn.setState(btn, {
+            loading: state.loading,
+            active: state.active,
+            pressed: state.active
+          });
+        } else {
+          btn.classList.toggle("is-loading", state.loading);
+          btn.classList.toggle("is-active", state.active);
+          btn.setAttribute("aria-pressed", state.active);
+        }
+        const card = btn.closest(".question-card");
+        if (card) {
+          if (window.thinkingBorder && window.thinkingBorder.setLoading) {
+            window.thinkingBorder.setLoading(card, state.loading);
+          } else {
+            card.classList.toggle("thinking-border", state.loading);
+          }
+        }
+      }
+
+      function initTranslation() {
+        document.querySelectorAll(".question-translate-btn").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const card = btn.closest(".question-card");
+            if (!card) return;
+
+            const isShowing = btn.dataset.showing === "true";
+            const isLoading = btn.dataset.loading === "true";
+            if (isLoading) return;
+
+            if (isShowing) {
+              revertCardTranslations(card);
+              btn.dataset.showing = "false";
+              updateBtnState(btn, { loading: false, active: false });
+            } else {
+              btn.dataset.loading = "true";
+              updateBtnState(btn, { loading: true, active: false });
+              try {
+                await translateCard(card);
+                btn.dataset.loading = "false";
+                btn.dataset.showing = "true";
+                updateBtnState(btn, { loading: false, active: true });
+              } catch (err) {
+                console.error(err);
+                alert(err.message);
+                btn.dataset.loading = "false";
+                updateBtnState(btn, { loading: false, active: false });
               }
             }
-          })
-        ).then(function () {
-          if (window.mermaid) {
-            try {
-              mermaid.run({ querySelector: ".mermaid" });
-            } catch (_) {}
+          });
+        });
+      }
+
+      async function translateCard(card) {
+        const updatedAt = card.getAttribute("data-updated-at");
+        const articles = card.querySelectorAll("article[data-raw-md]");
+        if (articles.length === 0) return;
+
+        const questionArticle = articles[0];
+        const explanationArticle = articles.length > 1 ? articles[1] : null;
+
+        const qMdSrc = questionArticle.getAttribute("data-md-src");
+        const stableId = qMdSrc ? qMdSrc.replace(/[^a-zA-Z0-9]/g, '_') : "sq_unknown_" + Date.now();
+
+        const cachedData = loadTranslation(stableId, updatedAt);
+        if (cachedData) {
+          applyCardTranslations(card, cachedData.translations);
+          return;
+        }
+
+        const itemsToTranslate = {};
+        const localMap = {};
+
+        const qId = "q_text";
+        localMap[qId] = questionArticle.getAttribute("data-raw-md");
+        itemsToTranslate[qId] = localMap[qId];
+
+        if (explanationArticle) {
+          const eId = "q_explain";
+          localMap[eId] = explanationArticle.getAttribute("data-raw-md");
+          itemsToTranslate[eId] = localMap[eId];
+        }
+
+        if (Object.keys(itemsToTranslate).length > 0) {
+          const results = await translateBatch(itemsToTranslate);
+          saveTranslation(stableId, {
+            serverUpdatedAt: updatedAt,
+            translations: results
+          });
+          applyCardTranslations(card, results);
+        }
+      }
+
+      function applyCardTranslations(card, map) {
+        const articles = card.querySelectorAll("article[data-raw-md]");
+        if (articles.length === 0) return;
+
+        const questionArticle = articles[0];
+        const explanationArticle = articles.length > 1 ? articles[1] : null;
+
+        if (map['q_text']) {
+          questionArticle.innerHTML = md ? md.render(map['q_text']) : map['q_text'];
+          const mdSrc = questionArticle.getAttribute("data-md-src");
+          if (mdSrc) fixRelativeUrls(questionArticle, mdSrc);
+          highlightCode(questionArticle);
+          renderMermaid(questionArticle);
+        }
+
+        if (explanationArticle && map['q_explain']) {
+          explanationArticle.innerHTML = md ? md.render(map['q_explain']) : map['q_explain'];
+          const mdSrc = explanationArticle.getAttribute("data-md-src");
+          if (mdSrc) fixRelativeUrls(explanationArticle, mdSrc);
+          highlightCode(explanationArticle);
+          renderMermaid(explanationArticle);
+        }
+      }
+
+      function revertCardTranslations(card) {
+        const articles = card.querySelectorAll("article[data-raw-md]");
+        articles.forEach(article => {
+          const raw = article.getAttribute("data-raw-md");
+          if (raw) {
+            article.innerHTML = md ? md.render(raw) : raw;
+            const mdSrc = article.getAttribute("data-md-src");
+            if (mdSrc) fixRelativeUrls(article, mdSrc);
+            highlightCode(article);
+            renderMermaid(article);
           }
         });
+      }
 
-        // Populate per-question mark labels
-        const questionEls = Array.from(
-          document.querySelectorAll(".question-card")
-        );
-        questionEls.forEach((el) => {
-          const label = el.querySelector("[data-mark-label]");
-          const mark = parseFloat(el.dataset.mark);
-          const val = isNaN(mark) ? 0 : mark;
-          if (label)
-            label.textContent = `${val} ${
-              val === 1 ? i18n.markSingular : i18n.markPlural
-            }`;
-        });
-      })();
-    </script>
-    <script src="/js/navbar.js"></script>
-  </body>
+      initTranslation();
+    })();
+  </script>
+  <script src="/js/navbar.js"></script>
+</body>
+
 </html>
