@@ -31,18 +31,21 @@ public interface StorageService {
 
     record InMemoryMultipartFile(String originalFilename, String contentType, byte[] bytes) implements MultipartFile {
         @Override
+        @org.springframework.lang.NonNull
         public String getName() {
             return "file";
         }
 
         @Override
+        @org.springframework.lang.NonNull
         public String getOriginalFilename() {
-            return originalFilename;
+            return originalFilename != null ? originalFilename : "";
         }
 
         @Override
+        @org.springframework.lang.NonNull
         public String getContentType() {
-            return contentType;
+            return contentType != null ? contentType : "";
         }
 
         @Override
@@ -56,17 +59,20 @@ public interface StorageService {
         }
 
         @Override
+        @org.springframework.lang.NonNull
         public byte[] getBytes() throws IOException {
             return bytes != null ? bytes : new byte[0];
         }
 
         @Override
+        @org.springframework.lang.NonNull
         public InputStream getInputStream() throws IOException {
             return new ByteArrayInputStream(getBytes());
         }
 
         @Override
-        public void transferTo(java.io.File dest) throws IOException, IllegalStateException {
+        public void transferTo(@org.springframework.lang.NonNull java.io.File dest)
+                throws IOException, IllegalStateException {
             Objects.requireNonNull(dest, "dest");
             java.nio.file.Files.write(dest.toPath(), getBytes());
         }

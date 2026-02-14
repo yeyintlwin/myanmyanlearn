@@ -80,8 +80,8 @@ public class CourseService {
         }
         String courseId = id.trim();
         boolean canSeeAll = canSeeUnpublished(auth);
-        CourseEntity entity = (canSeeAll ? courseRepository.findById(courseId)
-                : courseRepository.findByCourseIdAndPublishedTrue(courseId)).orElse(null);
+        CourseEntity entity = (canSeeAll ? courseRepository.findById(Objects.requireNonNull(courseId))
+                : courseRepository.findByCourseIdAndPublishedTrue(Objects.requireNonNull(courseId))).orElse(null);
         if (entity == null) {
             return null;
         }
@@ -202,8 +202,8 @@ public class CourseService {
         List<String> allowedYears = ts != null && ts.schoolYears() != null ? ts.schoolYears() : List.of();
         List<String> allowedClasses = ts != null && ts.classes() != null ? ts.classes() : List.of();
 
-        boolean restrictYear = allowedYears != null && !allowedYears.isEmpty();
-        boolean restrictClass = allowedClasses != null && !allowedClasses.isEmpty();
+        boolean restrictYear = !allowedYears.isEmpty();
+        boolean restrictClass = !allowedClasses.isEmpty();
         if (!restrictYear && !restrictClass) {
             return true;
         }

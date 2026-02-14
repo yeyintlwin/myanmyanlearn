@@ -128,7 +128,7 @@ public class ProfileController {
         }
 
         String username = authentication.getName();
-        Optional<Member> memberOpt = memberRepository.findById(username);
+        Optional<Member> memberOpt = memberRepository.findById(Objects.requireNonNull(username));
         if (memberOpt.isEmpty()) {
             return "redirect:/profile";
         }
@@ -167,7 +167,7 @@ public class ProfileController {
         }
 
         String username = authentication.getName();
-        Optional<Member> memberOpt = memberRepository.findById(username);
+        Optional<Member> memberOpt = memberRepository.findById(Objects.requireNonNull(username));
         if (memberOpt.isEmpty()) {
             return "redirect:/profile";
         }
@@ -516,7 +516,7 @@ public class ProfileController {
 
     private String msg(String code) {
         Locale locale = LocaleContextHolder.getLocale();
-        return messageSource.getMessage(code, null, code, locale);
+        return messageSource.getMessage(Objects.requireNonNull(code), null, code, locale);
     }
 
     private String rootMessage(Throwable t) {

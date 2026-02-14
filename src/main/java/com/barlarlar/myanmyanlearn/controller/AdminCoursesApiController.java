@@ -1,6 +1,7 @@
 package com.barlarlar.myanmyanlearn.controller;
 
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -144,12 +145,22 @@ public class AdminCoursesApiController {
 
         String fileName = (String) result.getOrDefault("fileName", "export.bll");
         try {
-            org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(path.toUri());
+            java.net.URI uri = path.toUri();
+            if (uri == null)
+                throw new IOException("Invalid path URI");
+            org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(uri);
+
+            MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
+            if (contentType == null)
+                contentType = MediaType.APPLICATION_OCTET_STREAM; // Should not happen but satisfies null check
+
             return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentType(Objects.requireNonNull(contentType))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                     .body(resource);
         } catch (java.net.MalformedURLException e) {
+            return ResponseEntity.internalServerError().build();
+        } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -161,6 +172,9 @@ public class AdminCoursesApiController {
             importStatusService.createJob(jobId);
 
             java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("import-", ".bll");
+            if (tempFile == null)
+                throw new IOException("Failed to create temp file");
+
             file.transferTo(tempFile);
 
             db.importCourseBllAsync(jobId, tempFile);

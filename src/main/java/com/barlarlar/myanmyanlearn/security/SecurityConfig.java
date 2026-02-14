@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Objects;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -51,7 +52,7 @@ public class SecurityConfig {
         public UserDetailsService userDetailsService(MemberRepository memberRepository, RoleRepository roleRepository) {
                 return username -> {
                         // Login အတွက် user record ကို DB ထဲကနေ ဆွဲပြီး စစ်ဆေးပါတယ်
-                        var member = memberRepository.findById(username)
+                        var member = memberRepository.findById(Objects.requireNonNull(username))
                                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
                         // Email verify မပြီးရင် login မခွင့် (user မရှိသလိုပဲ ပြန်ပို့)

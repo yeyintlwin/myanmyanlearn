@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @ControllerAdvice
@@ -43,7 +44,8 @@ public class GlobalNavbarModel {
 
         if (!model.containsAttribute("userRoleLabel")) {
             String roleKey = resolveRoleKey(auth);
-            String label = messageSource.getMessage(roleKey, null, LocaleContextHolder.getLocale());
+            String label = messageSource.getMessage(Objects.requireNonNull(roleKey), null,
+                    LocaleContextHolder.getLocale());
             model.addAttribute("userRoleLabel", label);
         }
 

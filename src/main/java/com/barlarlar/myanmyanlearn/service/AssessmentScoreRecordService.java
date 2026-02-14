@@ -3,6 +3,7 @@ package com.barlarlar.myanmyanlearn.service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
@@ -170,7 +171,7 @@ public class AssessmentScoreRecordService {
     @Transactional
     public void deleteOwned(Long id) {
         AssessmentScoreRecord record = getOwned(id);
-        repository.delete(record);
+        repository.delete(Objects.requireNonNull(record));
     }
 
     private String normalizeCourseId(String courseId) {

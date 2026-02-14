@@ -542,7 +542,7 @@ public class HomeController {
             String year = normalizeNullable(schoolYear, 20);
             member.setSchoolYear(year);
         }
-        memberRepository.save(member);
+        memberRepository.save(Objects.requireNonNull(member));
 
         if (isAjax(request)) {
             return org.springframework.http.ResponseEntity.noContent().build();

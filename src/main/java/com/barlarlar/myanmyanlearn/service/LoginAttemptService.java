@@ -7,6 +7,7 @@ import com.barlarlar.myanmyanlearn.entity.LoginAttemptEntity;
 import com.barlarlar.myanmyanlearn.repository.LoginAttemptRepository;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -142,12 +143,13 @@ public class LoginAttemptService {
     private void recordUserFailedAttempt(String username) {
         try {
             LocalDateTime now = LocalDateTime.now();
-            LoginAttemptEntity entity = loginAttemptRepository.findById(username).orElseGet(() -> {
-                LoginAttemptEntity e = new LoginAttemptEntity();
-                e.setUsername(username);
-                e.setAttemptCount(0);
-                return e;
-            });
+            LoginAttemptEntity entity = loginAttemptRepository.findById(Objects.requireNonNull(username))
+                    .orElseGet(() -> {
+                        LoginAttemptEntity e = new LoginAttemptEntity();
+                        e.setUsername(username);
+                        e.setAttemptCount(0);
+                        return e;
+                    });
             int nextCount = (entity.getAttemptCount() != null ? entity.getAttemptCount() : 0) + 1;
             entity.setAttemptCount(nextCount);
             entity.setLastAttempt(now);
@@ -163,7 +165,7 @@ public class LoginAttemptService {
      */
     private int getUserFailedAttempts(String username) {
         try {
-            return loginAttemptRepository.findById(username)
+            return loginAttemptRepository.findById(Objects.requireNonNull(username))
                     .filter(a -> a.getLastAttempt() != null
                             && !a.getLastAttempt().isBefore(LocalDateTime.now().minusMinutes(TIME_WINDOW_MINUTES)))
                     .map(a -> a.getAttemptCount() != null ? a.getAttemptCount() : 0)
@@ -179,7 +181,7 @@ public class LoginAttemptService {
      */
     private void resetUserFailedAttempts(String username) {
         try {
-            loginAttemptRepository.deleteById(username);
+            loginAttemptRepository.deleteById(Objects.requireNonNull(username));
         } catch (Exception e) {
             log.error("Error resetting failed attempts for user {}", username, e);
         }

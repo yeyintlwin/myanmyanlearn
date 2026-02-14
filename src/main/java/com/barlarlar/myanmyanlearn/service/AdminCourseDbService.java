@@ -223,7 +223,7 @@ public class AdminCourseDbService {
         String targetStudentsJson = writeTargetStudents(meta.targetStudents());
         String coverUrl = normalizeCoverUrl(meta.coverImageDataUrl());
 
-        CourseEntity entity = courseRepository.findById(meta.id()).orElseGet(() -> {
+        CourseEntity entity = courseRepository.findById(Objects.requireNonNull(meta.id())).orElseGet(() -> {
             CourseEntity created = new CourseEntity();
             created.setCourseId(meta.id());
             return created;
@@ -514,7 +514,7 @@ public class AdminCourseDbService {
                         new ArrayList<>(uploadedUrlsByKey.keySet()));
             }
             if (!coverKey.isBlank() && uploadedUrlsByKey.containsKey(coverKey)) {
-                CourseEntity course = courseRepository.findById(editor.id()).orElse(null);
+                CourseEntity course = courseRepository.findById(Objects.requireNonNull(editor.id())).orElse(null);
                 if (course != null) {
                     course.setCoverImageUrl(normalizeCoverUrl(uploadedUrlsByKey.get(coverKey)));
                     courseRepository.save(course);

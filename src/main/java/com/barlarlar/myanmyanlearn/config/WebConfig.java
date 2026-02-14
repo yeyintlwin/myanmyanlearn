@@ -9,11 +9,8 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.lang.NonNull;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.unit.DataSize;
 
-import jakarta.servlet.MultipartConfigElement;
 import java.time.Duration;
 import java.util.Locale;
 import java.util.Objects;
@@ -56,7 +53,7 @@ public class WebConfig implements WebMvcConfigurer {
     public LocaleResolver localeResolver() {
         CookieLocaleResolver clr = new CookieLocaleResolver("selectedLanguage") {
             @Override
-            protected Locale parseLocaleValue(String localeValue) {
+            protected Locale parseLocaleValue(@NonNull String localeValue) {
                 if (localeValue != null && localeValue.trim().equalsIgnoreCase("bd")) {
                     localeValue = "bn";
                 }
@@ -69,15 +66,4 @@ public class WebConfig implements WebMvcConfigurer {
         return clr;
     }
 
-    /*
-     * // Removed to allow application.properties to control multipart limits
-     * 
-     * @Bean
-     * public MultipartConfigElement multipartConfigElement() {
-     * MultipartConfigFactory factory = new MultipartConfigFactory();
-     * factory.setMaxFileSize(DataSize.ofMegabytes(25));
-     * factory.setMaxRequestSize(DataSize.ofMegabytes(25));
-     * return factory.createMultipartConfig();
-     * }
-     */
 }
