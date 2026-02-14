@@ -2,7 +2,6 @@ package com.barlarlar.myanmyanlearn.controller;
 
 import java.util.Map;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +18,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.barlarlar.myanmyanlearn.service.AdminCourseDbService;
 import java.io.IOException;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 @RestController
 @RequestMapping("/api/admin/courses")
 public class AdminCoursesApiController {
     private final AdminCourseDbService db;
+    private final com.barlarlar.myanmyanlearn.service.ImportStatusService importStatusService;
 
-    public AdminCoursesApiController(AdminCourseDbService db) {
+    public AdminCoursesApiController(AdminCourseDbService db,
+            com.barlarlar.myanmyanlearn.service.ImportStatusService importStatusService) {
         this.db = db;
+        this.importStatusService = importStatusService;
     }
 
     @GetMapping("/{courseId}/editor")
@@ -107,39 +108,81 @@ public class AdminCoursesApiController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/{courseId}/export", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<StreamingResponseBody> exportCourse(@PathVariable String courseId) {
+    @GetMapping(value = "/{courseId}/export", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> exportCourse(@PathVariable String courseId) {
         String id = courseId != null ? courseId.trim() : "";
         if (id.isBlank()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(Map.of("ok", false, "message", "Missing course id"));
         }
-        StreamingResponseBody body = outputStream -> db.writeCourseBllArchive(id, outputStream);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDisposition(ContentDisposition.attachment().filename(id + ".bll").build());
-        return ResponseEntity.ok().headers(headers).body(body);
+
+        String jobId = java.util.UUID.randomUUID().toString();
+        importStatusService.createJob(jobId);
+        db.exportCourseBllAsync(jobId, id);
+
+        return ResponseEntity.ok(Map.of("ok", true, "jobId", jobId));
+    }
+
+    @GetMapping(value = "/export/{jobId}/download")
+    public ResponseEntity<org.springframework.core.io.Resource> downloadExport(@PathVariable String jobId) {
+        com.barlarlar.myanmyanlearn.service.ImportStatusService.ImportJobStatus status = importStatusService
+                .getJob(jobId);
+        if (status == null
+                || status.state() != com.barlarlar.myanmyanlearn.service.ImportStatusService.ImportState.COMPLETED) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Map<String, Object> result = status.result();
+        if (result == null || !result.containsKey("filePath")) {
+            return ResponseEntity.internalServerError().build();
+        }
+
+        String pathStr = (String) result.get("filePath");
+        java.nio.file.Path path = java.nio.file.Path.of(pathStr);
+        if (!java.nio.file.Files.exists(path)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String fileName = (String) result.getOrDefault("fileName", "export.bll");
+        try {
+            org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(path.toUri());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(resource);
+        } catch (java.net.MalformedURLException e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> importCourse(@RequestParam(name = "file") MultipartFile file) {
         try {
-            String courseId = db.importCourseBllArchive(file);
+            String jobId = java.util.UUID.randomUUID().toString();
+            importStatusService.createJob(jobId);
+
+            java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("import-", ".bll");
+            file.transferTo(tempFile);
+
+            db.importCourseBllAsync(jobId, tempFile);
+
             return ResponseEntity.ok(Map.of(
                     "ok", true,
-                    "courseId", courseId));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "ok", false,
-                    "message", e.getMessage() != null ? e.getMessage() : "Invalid request."));
-        } catch (IOException e) {
-            String msg = e.getMessage() != null ? e.getMessage().trim() : "";
-            return ResponseEntity.badRequest().body(Map.of(
-                    "ok", false,
-                    "message", msg.isBlank() ? "Failed to import archive." : msg));
+                    "jobId", jobId));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(Map.of(
                     "ok", false,
-                    "message", "Server error."));
+                    "message", "Server error: " + e.getMessage()));
         }
+    }
+
+    @GetMapping(value = "/import/status/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<com.barlarlar.myanmyanlearn.service.ImportStatusService.ImportJobStatus> getImportStatus(
+            @PathVariable String jobId) {
+        com.barlarlar.myanmyanlearn.service.ImportStatusService.ImportJobStatus status = importStatusService
+                .getJob(jobId);
+        if (status == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(status);
     }
 }

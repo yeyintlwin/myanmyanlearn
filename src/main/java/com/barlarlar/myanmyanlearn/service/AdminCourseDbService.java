@@ -50,6 +50,7 @@ public class AdminCourseDbService {
     private final CourseQuestionOptionRepository courseQuestionOptionRepository;
     private final EntityManager entityManager;
     private final StorageService storageService;
+    private final ImportStatusService importStatusService;
 
     public AdminCourseDbService(
             ObjectMapper objectMapper,
@@ -61,7 +62,8 @@ public class AdminCourseDbService {
             CourseQuestionSlotOptionRepository courseQuestionSlotOptionRepository,
             CourseQuestionOptionRepository courseQuestionOptionRepository,
             EntityManager entityManager,
-            StorageService storageService) {
+            StorageService storageService,
+            ImportStatusService importStatusService) {
         this.objectMapper = objectMapper;
         this.courseRepository = courseRepository;
         this.courseChapterRepository = courseChapterRepository;
@@ -72,6 +74,7 @@ public class AdminCourseDbService {
         this.courseQuestionOptionRepository = courseQuestionOptionRepository;
         this.entityManager = entityManager;
         this.storageService = storageService;
+        this.importStatusService = importStatusService;
     }
 
     public record TargetStudents(List<String> schoolYears, List<String> classes) {
@@ -423,80 +426,217 @@ public class AdminCourseDbService {
         }
     }
 
+    @org.springframework.scheduling.annotation.Async
     @Transactional
-    public String importCourseBllArchive(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) {
-            throw new IOException("No file uploaded.");
-        }
-        CourseEditor editor = null;
-        BllMeta meta = null;
-        Map<String, byte[]> assets = new LinkedHashMap<>();
+    public void importCourseBllAsync(String jobId, java.nio.file.Path filePath) {
+        importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, 5, "Starting import...");
+        try {
+            if (filePath == null) {
+                throw new IOException("No file uploaded.");
+            }
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, 10,
+                    "Reading archive...");
 
-        try (ZipInputStream zip = new ZipInputStream(file.getInputStream())) {
-            ZipEntry entry;
-            while ((entry = zip.getNextEntry()) != null) {
-                String name = entry.getName() != null ? entry.getName().trim() : "";
-                if (name.isBlank() || entry.isDirectory()) {
-                    zip.closeEntry();
-                    continue;
-                }
-                if ("course.json".equals(name)) {
-                    byte[] bytes = readAllBytes(zip, 25L * 1024L * 1024L);
-                    editor = objectMapper.readValue(bytes, CourseEditor.class);
-                    zip.closeEntry();
-                    continue;
-                }
-                if ("meta.json".equals(name)) {
-                    byte[] bytes = readAllBytes(zip, 2L * 1024L * 1024L);
-                    meta = objectMapper.readValue(bytes, BllMeta.class);
-                    zip.closeEntry();
-                    continue;
-                }
-                if (name.startsWith("assets/")) {
-                    String keyPart = name.substring("assets/".length());
-                    String normalizedKey = normalizeImportedAssetKey(keyPart);
-                    if (normalizedKey != null) {
+            CourseEditor editor = null;
+            BllMeta meta = null;
+            Map<String, byte[]> assets = new LinkedHashMap<>();
+
+            try (ZipInputStream zip = new ZipInputStream(java.nio.file.Files.newInputStream(filePath))) {
+                ZipEntry entry;
+                while ((entry = zip.getNextEntry()) != null) {
+                    String name = entry.getName() != null ? entry.getName().trim() : "";
+                    if (name.isBlank() || entry.isDirectory()) {
+                        zip.closeEntry();
+                        continue;
+                    }
+                    if ("course.json".equals(name)) {
                         byte[] bytes = readAllBytes(zip, 25L * 1024L * 1024L);
-                        assets.put(normalizedKey, bytes);
+                        editor = objectMapper.readValue(bytes, CourseEditor.class);
+                        zip.closeEntry();
+                        continue;
+                    }
+                    if ("meta.json".equals(name)) {
+                        byte[] bytes = readAllBytes(zip, 2L * 1024L * 1024L);
+                        meta = objectMapper.readValue(bytes, BllMeta.class);
+                        zip.closeEntry();
+                        continue;
+                    }
+                    if (name.startsWith("assets/")) {
+                        String keyPart = name.substring("assets/".length());
+                        String normalizedKey = normalizeImportedAssetKey(keyPart);
+                        if (normalizedKey != null) {
+                            byte[] bytes = readAllBytes(zip, 25L * 1024L * 1024L);
+                            assets.put(normalizedKey, bytes);
+                        }
+                        zip.closeEntry();
+                        continue;
                     }
                     zip.closeEntry();
+                }
+            }
+
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, 40,
+                    "Saving database records...");
+
+            if (editor == null || editor.id() == null || editor.id().isBlank()) {
+                throw new IOException("Invalid archive (missing course.json).");
+            }
+
+            saveCourseEditor(editor);
+
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, 60, "Saving assets...");
+
+            int totalAssets = assets.size();
+            int processedAssets = 0;
+            Map<String, String> uploadedUrlsByKey = new HashMap<>();
+
+            for (Map.Entry<String, byte[]> e : assets.entrySet()) {
+                String key = e.getKey();
+                byte[] bytes = e.getValue() != null ? e.getValue() : new byte[0];
+                String filename = lastPathSegment(key);
+                String contentType = contentTypeFromFilename(filename);
+                StorageService.StoredObject stored = storageService.putBytes(key, filename, contentType, bytes);
+                if (stored != null && stored.key() != null && stored.url() != null) {
+                    uploadedUrlsByKey.put(stored.key(), stored.url());
+                }
+
+                processedAssets++;
+                if (totalAssets > 0) {
+                    int progress = 60 + (int) ((processedAssets / (double) totalAssets) * 35); // 60% to 95%
+                    importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, progress,
+                            "Saving asset " + processedAssets + "/" + totalAssets);
+                }
+            }
+
+            String coverKey = meta != null && meta.coverImageKey() != null ? meta.coverImageKey().trim() : "";
+            if (coverKey.isBlank()) {
+                coverKey = resolveCoverImageKey(editor.coverImageDataUrl(),
+                        new ArrayList<>(uploadedUrlsByKey.keySet()));
+            }
+            if (!coverKey.isBlank() && uploadedUrlsByKey.containsKey(coverKey)) {
+                CourseEntity course = courseRepository.findById(editor.id()).orElse(null);
+                if (course != null) {
+                    course.setCoverImageUrl(normalizeCoverUrl(uploadedUrlsByKey.get(coverKey)));
+                    courseRepository.save(course);
+                }
+            }
+
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.COMPLETED, 100,
+                    "Import completed successfully.");
+
+        } catch (Exception e) {
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.FAILED, 0,
+                    "Error: " + e.getMessage());
+        } finally {
+            try {
+                java.nio.file.Files.deleteIfExists(filePath);
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
+    @org.springframework.scheduling.annotation.Async
+    public void exportCourseBllAsync(String jobId, String courseId) {
+        importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, 0, "Starting export...");
+        java.nio.file.Path tempFile = null;
+        try {
+            if (courseId == null || courseId.isBlank()) {
+                throw new IOException("course id is required");
+            }
+            CourseEditor editor = loadCourseEditor(courseId);
+            if (editor == null) {
+                throw new IOException("Course not found.");
+            }
+
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, 5,
+                    "preparing assets...");
+
+            String courseFolder = sanitizePathSegment(courseId);
+            String prefix = "courses/" + courseFolder + "/";
+            List<StorageService.StoredObject> objects = storageService.list(prefix);
+            List<String> keys = new ArrayList<>();
+            for (StorageService.StoredObject obj : objects) {
+                if (obj == null || obj.key() == null) {
                     continue;
                 }
-                zip.closeEntry();
+                String k = obj.key().trim();
+                if (!k.isBlank()) {
+                    keys.add(k);
+                }
             }
-        }
+            String coverImageKey = resolveCoverImageKey(editor.coverImageDataUrl(), keys);
 
-        if (editor == null || editor.id() == null || editor.id().isBlank()) {
-            throw new IOException("Invalid archive (missing course.json).");
-        }
+            BllMeta meta = new BllMeta(
+                    "bll-course-archive",
+                    1,
+                    java.time.Instant.now().toString(),
+                    courseId,
+                    coverImageKey,
+                    keys.size());
 
-        saveCourseEditor(editor);
+            tempFile = java.nio.file.Files.createTempFile("export-" + courseId + "-", ".bll");
 
-        Map<String, String> uploadedUrlsByKey = new HashMap<>();
-        for (Map.Entry<String, byte[]> e : assets.entrySet()) {
-            String key = e.getKey();
-            byte[] bytes = e.getValue() != null ? e.getValue() : new byte[0];
-            String filename = lastPathSegment(key);
-            String contentType = contentTypeFromFilename(filename);
-            StorageService.StoredObject stored = storageService.putBytes(key, filename, contentType, bytes);
-            if (stored != null && stored.key() != null && stored.url() != null) {
-                uploadedUrlsByKey.put(stored.key(), stored.url());
+            try (OutputStream out = java.nio.file.Files.newOutputStream(tempFile);
+                    ZipOutputStream zip = new ZipOutputStream(out)) {
+
+                importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, 10,
+                        "Writing metadata...");
+                putZipJson(zip, "meta.json", meta);
+                putZipJson(zip, "course.json", editor);
+
+                int totalAssets = keys.size();
+                int processedAssets = 0;
+
+                for (String key : keys) {
+                    String safeKey = normalizeZipKey(key);
+                    if (safeKey == null) {
+                        continue;
+                    }
+                    byte[] bytes = storageService.getBytes(key);
+                    ZipEntry entry = new ZipEntry("assets/" + safeKey);
+                    zip.putNextEntry(entry);
+                    zip.write(bytes);
+                    zip.closeEntry();
+
+                    processedAssets++;
+                    // Progress from 10% to 90%
+                    if (totalAssets > 0) {
+                        int progress = 10 + (int) ((processedAssets / (double) totalAssets) * 85);
+                        if (processedAssets % 5 == 0 || processedAssets == totalAssets) {
+                            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING,
+                                    progress,
+                                    "Archiving asset " + processedAssets + "/" + totalAssets);
+                        }
+                    }
+                }
+                zip.finish();
             }
-        }
 
-        String coverKey = meta != null && meta.coverImageKey() != null ? meta.coverImageKey().trim() : "";
-        if (coverKey.isBlank()) {
-            coverKey = resolveCoverImageKey(editor.coverImageDataUrl(), new ArrayList<>(uploadedUrlsByKey.keySet()));
-        }
-        if (!coverKey.isBlank() && uploadedUrlsByKey.containsKey(coverKey)) {
-            CourseEntity course = courseRepository.findById(editor.id()).orElse(null);
-            if (course != null) {
-                course.setCoverImageUrl(normalizeCoverUrl(uploadedUrlsByKey.get(coverKey)));
-                courseRepository.save(course);
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.PROCESSING, 95,
+                    "Finalizing package...");
+
+            // Move to a more permanent temporary location that the controller can read from
+            // For simplicity, we just keep the temp file path, but ideally we might move it
+            // to specific storage
+            // Here we assume the temp file is accessible.
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("filePath", tempFile.toAbsolutePath().toString());
+            result.put("fileName", courseId + ".bll");
+
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.COMPLETED, 100,
+                    "Export completed successfully.", result);
+
+        } catch (Exception e) {
+            if (tempFile != null) {
+                try {
+                    java.nio.file.Files.deleteIfExists(tempFile);
+                } catch (IOException ignored) {
+                }
             }
+            importStatusService.updateStatus(jobId, ImportStatusService.ImportState.FAILED, 0,
+                    "Error: " + e.getMessage());
         }
-
-        return editor.id();
     }
 
     private void deleteCourseChildren(String courseId) {

@@ -1,928 +1,827 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="#{assessment.pageTitle}">MYAN MYAN LEARN - Assessment</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/js/tailwind-config.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
-    />
-    <style>
-      .show {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateY(0) !important;
-      }
-      /* Markdown typography */
 
-      #mdContainer h1 {
-        color: #0f172a;
-        font-size: 2rem;
-        line-height: 2.5rem;
-        font-weight: 700;
-        margin: 1.25rem 0 0.75rem;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="#{assessment.pageTitle}">MYAN MYAN LEARN - Assessment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/js/tailwind-config.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <style>
+    .show {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(0) !important;
+    }
 
-      #mdContainer h2 {
-        color: #0f172a;
-        font-size: 1.5rem;
-        line-height: 2rem;
-        font-weight: 700;
-        margin: 1.2rem 0 0.7rem;
-      }
+    /* Markdown typography */
 
-      #mdContainer h3 {
-        color: #0f172a;
-        font-size: 1.25rem;
-        line-height: 1.75rem;
-        font-weight: 700;
-        margin: 1.1rem 0 0.6rem;
-      }
+    #mdContainer h1 {
+      color: #0f172a;
+      font-size: 2rem;
+      line-height: 2.5rem;
+      font-weight: 700;
+      margin: 1.25rem 0 0.75rem;
+    }
 
-      #mdContainer h4 {
-        color: #0f172a;
-        font-size: 1.125rem;
-        line-height: 1.6rem;
-        font-weight: 700;
-        margin: 1rem 0 0.5rem;
-      }
+    #mdContainer h2 {
+      color: #0f172a;
+      font-size: 1.5rem;
+      line-height: 2rem;
+      font-weight: 700;
+      margin: 1.2rem 0 0.7rem;
+    }
 
-      #mdContainer h5 {
-        color: #0f172a;
-        font-size: 1rem;
-        line-height: 1.5rem;
-        font-weight: 700;
-        margin: 0.9rem 0 0.45rem;
-      }
+    #mdContainer h3 {
+      color: #0f172a;
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+      font-weight: 700;
+      margin: 1.1rem 0 0.6rem;
+    }
 
-      #mdContainer h6 {
-        color: #0f172a;
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
-        margin: 0.8rem 0 0.4rem;
-      }
+    #mdContainer h4 {
+      color: #0f172a;
+      font-size: 1.125rem;
+      line-height: 1.6rem;
+      font-weight: 700;
+      margin: 1rem 0 0.5rem;
+    }
 
-      #mdContainer p {
-        margin: 0.75rem 0;
-        color: #334155;
-      }
+    #mdContainer h5 {
+      color: #0f172a;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 700;
+      margin: 0.9rem 0 0.45rem;
+    }
 
-      #mdContainer a {
-        color: #2563eb;
-        text-decoration: underline;
-        text-underline-offset: 2px;
-      }
+    #mdContainer h6 {
+      color: #0f172a;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin: 0.8rem 0 0.4rem;
+    }
 
-      #mdContainer ul,
-      #mdContainer ol {
-        margin: 0.75rem 0 0.75rem 1.25rem;
-        padding-left: 1.25rem;
-      }
+    #mdContainer p {
+      margin: 0.75rem 0;
+      color: #334155;
+    }
 
-      #mdContainer ul {
-        list-style-type: disc;
-        list-style-position: outside;
-      }
+    #mdContainer a {
+      color: #2563eb;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
 
-      #mdContainer ul ul {
-        list-style-type: circle;
-      }
+    #mdContainer ul,
+    #mdContainer ol {
+      margin: 0.75rem 0 0.75rem 1.25rem;
+      padding-left: 1.25rem;
+    }
 
-      #mdContainer ul ul ul {
-        list-style-type: square;
-      }
+    #mdContainer ul {
+      list-style-type: disc;
+      list-style-position: outside;
+    }
 
-      #mdContainer ol {
-        list-style-type: decimal;
-        list-style-position: outside;
-      }
+    #mdContainer ul ul {
+      list-style-type: circle;
+    }
 
-      #mdContainer ol ol {
-        list-style-type: lower-alpha;
-      }
+    #mdContainer ul ul ul {
+      list-style-type: square;
+    }
 
-      #mdContainer ol ol ol {
-        list-style-type: lower-roman;
-      }
+    #mdContainer ol {
+      list-style-type: decimal;
+      list-style-position: outside;
+    }
 
-      #mdContainer li {
-        margin: 0.25rem 0;
-      }
+    #mdContainer ol ol {
+      list-style-type: lower-alpha;
+    }
 
-      #mdContainer li p {
-        margin: 0.25rem 0;
-      }
+    #mdContainer ol ol ol {
+      list-style-type: lower-roman;
+    }
 
-      #mdContainer li > input[type="checkbox"] {
-        margin-right: 0.5rem;
-        vertical-align: middle;
-      }
+    #mdContainer li {
+      margin: 0.25rem 0;
+    }
 
-      #mdContainer blockquote {
-        border-left: 4px solid #e2e8f0;
-        padding: 0.5rem 1rem;
-        margin: 1rem 0;
-        color: #334155;
-        background: #f8fafc;
-        border-radius: 0.5rem;
-      }
+    #mdContainer li p {
+      margin: 0.25rem 0;
+    }
 
-      #mdContainer pre {
-        background: #f6f8fa;
-        border: 1px solid #e5e7eb;
-        border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        overflow: auto;
-      }
+    #mdContainer li>input[type="checkbox"] {
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
 
-      #mdContainer code {
-        background: #f1f5f9;
-        color: #0f172a;
-        padding: 0.1rem 0.3rem;
-        border-radius: 0.25rem;
-      }
+    #mdContainer blockquote {
+      border-left: 4px solid #e2e8f0;
+      padding: 0.5rem 1rem;
+      margin: 1rem 0;
+      color: #334155;
+      background: #f8fafc;
+      border-radius: 0.5rem;
+    }
 
-      #mdContainer table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1rem 0;
-      }
+    #mdContainer pre {
+      background: #f6f8fa;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      overflow: auto;
+    }
 
-      #mdContainer th,
-      #mdContainer td {
-        border: 1px solid #e5e7eb;
-        padding: 0.5rem 0.6rem;
-      }
+    #mdContainer code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 0.1rem 0.3rem;
+      border-radius: 0.25rem;
+    }
 
-      #mdContainer th {
-        background: #f8fafc;
-        text-align: left;
-        color: #0f172a;
-      }
+    #mdContainer table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
 
-      #mdContainer hr {
-        border: none;
-        height: 1px;
-        background: #e5e7eb;
-        margin: 1.25rem 0;
-      }
+    #mdContainer th,
+    #mdContainer td {
+      border: 1px solid #e5e7eb;
+      padding: 0.5rem 0.6rem;
+    }
 
-      #mdContainer img,
-      #mdContainer svg,
-      #mdContainer video,
-      #mdContainer iframe {
-        display: block;
-        max-width: min(100%, 720px);
-        height: auto;
-        margin: 0.5rem auto;
-      }
+    #mdContainer th {
+      background: #f8fafc;
+      text-align: left;
+      color: #0f172a;
+    }
 
-      #mdContainer img {
-        max-height: 60vh;
-      }
+    #mdContainer hr {
+      border: none;
+      height: 1px;
+      background: #e5e7eb;
+      margin: 1.25rem 0;
+    }
 
-      #mdError1,
-      #mdError2,
-      #mdError3 {
-        color: #fecaca;
-      }
+    #mdContainer img,
+    #mdContainer svg,
+    #mdContainer video,
+    #mdContainer iframe {
+      display: block;
+      max-width: min(100%, 720px);
+      height: auto;
+      margin: 0.5rem auto;
+    }
 
-      .question-card article img,
-      .question-card article svg,
-      .question-card article video,
-      .question-card article iframe {
-        display: block;
-        max-width: min(100%, 720px);
-        height: auto;
-        margin: 0.75rem auto;
-      }
+    #mdContainer img {
+      max-height: 60vh;
+    }
 
-      .question-card article img {
-        max-height: 60vh;
-        border-radius: 0.75rem;
-      }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.0/dist/markdown-it-sub.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-task-lists@2.1.1/dist/markdown-it-task-lists.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  </head>
+    #mdError1,
+    #mdError2,
+    #mdError3 {
+      color: #fecaca;
+    }
 
-  <body class="min-h-screen font-sans text-gray-800 flex flex-col">
-    <!-- Navbar -->
-    <nav th:replace="fragments/navbar :: appNavbar('Assessment')"></nav>
+    .question-card article img,
+    .question-card article svg,
+    .question-card article video,
+    .question-card article iframe {
+      display: block;
+      max-width: min(100%, 720px);
+      height: auto;
+      margin: 0.75rem auto;
+    }
 
-    <!-- Main Content -->
-    <main class="flex-1 pt-28 pb-16">
-      <!-- Sticky Timer -->
+    .question-card article img {
+      max-height: 60vh;
+      border-radius: 0.75rem;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-sub@1.0.0/dist/markdown-it-sub.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-sup@1.0.0/dist/markdown-it-sup.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-task-lists@2.1.1/dist/markdown-it-task-lists.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+
+<body class="min-h-screen font-sans text-gray-800 flex flex-col">
+  <!-- Navbar -->
+  <nav th:replace="fragments/navbar :: appNavbar('Assessment')"></nav>
+
+  <!-- Main Content -->
+  <main class="flex-1 pt-28 pb-16">
+    <!-- Sticky Timer -->
+    <div class="fixed top-20 left-0 w-full flex justify-center z-50 pointer-events-none">
       <div
-        class="fixed top-20 left-0 w-full flex justify-center z-50 pointer-events-none"
-      >
-        <div
-          class="bg-slate-800/95 backdrop-blur text-white px-6 py-2 rounded-full border border-white/20 shadow-2xl flex items-center gap-4 pointer-events-auto"
-        >
-          <i class="fas fa-clock text-yellow-400"></i>
-          <span
-            class="text-sm font-medium text-slate-300 uppercase tracking-wide"
-            th:text="#{assessment.timeLeft}"
-            >Time Left</span
-          >
-          <span
-            id="timerDisplay"
-            class="font-mono text-xl font-bold text-white tracking-wider"
-            >--:--</span
-          >
-          <input
-            type="hidden"
-            id="totalTimeSeconds"
-            th:value="${totalTimeSeconds}"
-          />
-        </div>
+        class="bg-slate-800/95 backdrop-blur text-white px-6 py-2 rounded-full border border-white/20 shadow-2xl flex items-center gap-4 pointer-events-auto">
+        <i class="fas fa-clock text-yellow-400"></i>
+        <span class="text-sm font-medium text-slate-300 uppercase tracking-wide" th:text="#{assessment.timeLeft}">Time
+          Left</span>
+        <span id="timerDisplay" class="font-mono text-xl font-bold text-white tracking-wider">--:--</span>
+        <input type="hidden" id="totalTimeSeconds" th:value="${totalTimeSeconds}" />
+      </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-white text-2xl sm:text-3xl font-bold flex items-center gap-3">
+          <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 border border-white/10">
+            <i class="fas fa-clipboard-check text-white"></i>
+          </span>
+          <span th:text="#{assessment.title}">Assessment</span>
+        </h1>
+        <a th:href="@{/contents(courseId=${courseId})}" href="/contents"
+          class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0">
+          <i class="fas fa-arrow-left text-xs"></i>
+          <span th:text="#{assessment.backToContents}">Back to Contents</span>
+        </a>
       </div>
 
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-          <h1
-            class="text-white text-2xl sm:text-3xl font-bold flex items-center gap-3"
-          >
+      <!-- Summary Card -->
+      <section class="mb-6 bg-white/10 border border-white/10 rounded-xl p-4 sm:p-5">
+        <div class="flex items-center justify-between">
+          <h2 class="text-white text-lg font-semibold flex items-center gap-2">
             <span
-              class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 border border-white/10"
-            >
-              <i class="fas fa-clipboard-check text-white"></i>
+              class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs">
+              <i class="fas fa-file-alt"></i>
             </span>
-            <span th:text="#{assessment.title}">Assessment</span>
-          </h1>
-          <a
-            th:href="@{/contents(courseId=${courseId})}"
-            href="/contents"
-            class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0"
-          >
-            <i class="fas fa-arrow-left text-xs"></i>
-            <span th:text="#{assessment.backToContents}">Back to Contents</span>
-          </a>
+            <span th:text="#{assessment.examSummary}">Exam Summary</span>
+          </h2>
         </div>
-
-        <!-- Summary Card -->
-        <section
-          class="mb-6 bg-white/10 border border-white/10 rounded-xl p-4 sm:p-5"
-        >
-          <div class="flex items-center justify-between">
-            <h2
-              class="text-white text-lg font-semibold flex items-center gap-2"
-            >
-              <span
-                class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs"
-              >
-                <i class="fas fa-file-alt"></i>
-              </span>
-              <span th:text="#{assessment.examSummary}">Exam Summary</span>
-            </h2>
+        <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+            <div class="text-white/70 text-xs" th:text="#{assessment.examTitle}">
+              Exam Title
+            </div>
+            <div class="text-white font-medium" id="examTitleVal" th:text="${examTitle}">
+              Assessment
+            </div>
           </div>
-          <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div class="text-white/70 text-xs" th:text="#{assessment.examTitle}">
-                Exam Title
-              </div>
-              <div
-                class="text-white font-medium"
-                id="examTitleVal"
-                th:text="${examTitle}"
-              >
-                Assessment
-              </div>
+          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+            <div class="text-white/70 text-xs" th:text="#{assessment.totalScore}">
+              Total Score
             </div>
-            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div class="text-white/70 text-xs" th:text="#{assessment.totalScore}">
-                Total Score
-              </div>
-              <div class="text-white font-medium">
-                <span id="totalScoreVal">0</span>
-              </div>
+            <div class="text-white font-medium">
+              <span id="totalScoreVal">0</span>
             </div>
-            <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-              <div class="text-white/70 text-xs" th:text="#{assessment.chapters}">
-                Chapters
-              </div>
-              <div
-                class="text-white font-medium break-words"
-                id="chaptersVal"
-                th:text="${#strings.listJoin(selectedChapters, ', ')}"
-              >
-                -
+          </div>
+          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
+            <div class="text-white/70 text-xs" th:text="#{assessment.chapters}">
+              Chapters
+            </div>
+            <div class="text-white font-medium break-words" id="chaptersVal"
+              th:text="${#strings.listJoin(selectedChapters, ', ')}">
+              -
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sample Questions and Answers -->
+      <div class="space-y-6" th:if="${questions}">
+        <section class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
+          th:each="q, iStat : ${questions}" th:attr="data-mark=${q.marks}">
+          <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/10 gap-3">
+            <h2 class="text-white text-lg font-semibold flex items-center gap-3 min-w-0">
+              <span class="truncate" th:text="|#{assessment.question} ${iStat.count}|">
+                Question
+              </span>
+            </h2>
+            <div class="flex items-center gap-3">
+              <span class="text-white/80 text-sm question-mark-label whitespace-nowrap" data-mark-label>–</span>
+              <span class="mdError hidden"></span>
+            </div>
+          </div>
+          <div class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3">
+            <article class="prose max-w-none text-slate-800" th:attr="data-md-src=${q.questionContentPath}"></article>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0" th:if="${q.slotCount > 0}">
+            <div class="flex flex-wrap items-center gap-2 min-w-0"
+              th:each="slotNum : ${#numbers.sequence(1, q.slotCount)}">
+              <label class="text-white/90 text-sm shrink-0"><span th:text="${slotNum}"></span>.
+              </label>
+              <div class="relative w-64 sm:w-80 max-w-full" data-answer-dropdown>
+                <input type="hidden" data-answer-field th:attr="name=${'q' + iStat.count + '-s' + slotNum}" value="" />
+                <button type="button"
+                  class="w-full bg-white/10 border border-white/10 text-white rounded-md px-3 py-2 flex items-start justify-between gap-3"
+                  data-answer-toggle>
+                  <span class="block text-left whitespace-normal break-words leading-snug" data-answer-label
+                    th:text="#{assessment.select}">Select</span>
+                  <i class="fas fa-chevron-down text-white/70 text-xs mt-1.5 shrink-0"></i>
+                </button>
+                <div
+                  class="absolute left-0 mt-2 w-full bg-slate-900 border border-white/10 rounded-lg shadow-xl hidden z-50 max-h-64 overflow-auto"
+                  data-answer-menu>
+                  <button type="button"
+                    class="w-full text-left px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
+                    data-value="" th:text="#{assessment.select}">
+                    Select
+                  </button>
+                  <button type="button"
+                    class="w-full text-left px-3 py-2 text-white/90 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
+                    th:each="opt : ${(q.slotOptions != null) ? q.slotOptions[slotNum - 1] : q.options}"
+                    th:attr="data-value=${opt.optionIndex}" th:text="${opt.optionContent}"></button>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Sample Questions and Answers -->
-        <div class="space-y-6" th:if="${questions}">
-          <section
-            class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
-            th:each="q, iStat : ${questions}"
-            th:attr="data-mark=${q.marks}"
-          >
-            <div
-              class="flex items-center justify-between mb-3 pb-2 border-b border-white/10 gap-3"
-            >
-              <h2
-                class="text-white text-lg font-semibold flex items-center gap-3 min-w-0"
-              >
-                <span
-                  class="truncate"
-                  th:text="${#messages.msg('assessment.question')} + ' ' + iStat.count"
-                >
-                  Question
-                </span>
-              </h2>
-              <div class="flex items-center gap-3">
-                <span
-                  class="text-white/80 text-sm question-mark-label whitespace-nowrap"
-                  data-mark-label
-                  >–</span
-                >
-                <span class="mdError hidden"></span>
-              </div>
-            </div>
-            <div
-              class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3"
-            >
-              <article
-                class="prose max-w-none text-slate-800"
-                th:attr="data-md-src=${q.questionContentPath}"
-              ></article>
-            </div>
-            <div
-              class="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0"
-              th:if="${q.slotCount > 0}"
-            >
-              <div
-                class="flex flex-wrap items-center gap-2 min-w-0"
-                th:each="slotNum : ${#numbers.sequence(1, q.slotCount)}"
-              >
-                <label class="text-white/90 text-sm shrink-0"
-                  ><span th:text="${slotNum}"></span>.
-                </label>
-                <div
-                  class="relative w-64 sm:w-80 max-w-full"
-                  data-answer-dropdown
-                >
-                  <input
-                    type="hidden"
-                    data-answer-field
-                    th:attr="name=${'q' + iStat.count + '-s' + slotNum}"
-                    value=""
-                  />
-                  <button
-                    type="button"
-                    class="w-full bg-white/10 border border-white/10 text-white rounded-md px-3 py-2 flex items-start justify-between gap-3"
-                    data-answer-toggle
-                  >
-                    <span
-                      class="block text-left whitespace-normal break-words leading-snug"
-                      data-answer-label
-                      th:text="#{assessment.select}"
-                      >Select</span
-                    >
-                    <i
-                      class="fas fa-chevron-down text-white/70 text-xs mt-1.5 shrink-0"
-                    ></i>
-                  </button>
-                  <div
-                    class="absolute left-0 mt-2 w-full bg-slate-900 border border-white/10 rounded-lg shadow-xl hidden z-50 max-h-64 overflow-auto"
-                    data-answer-menu
-                  >
-                    <button
-                      type="button"
-                      class="w-full text-left px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
-                      data-value=""
-                      th:text="#{assessment.select}"
-                    >
-                      Select
-                    </button>
-                    <button
-                      type="button"
-                      class="w-full text-left px-3 py-2 text-white/90 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
-                      th:each="opt : ${(q.slotOptions != null) ? q.slotOptions[slotNum - 1] : q.options}"
-                      th:attr="data-value=${opt.optionIndex}"
-                      th:text="${opt.optionContent}"
-                    ></button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Submit -->
-          <div class="pt-2">
-            <button
-              id="submitAssessment"
-              type="button"
-              class="w-full sm:w-auto px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-            >
-              <i class="fas fa-paper-plane"></i>
-              <span th:text="#{assessment.submit}">Submit</span>
-            </button>
-            <div
-              id="submitMessage"
-              class="mt-2 hidden text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2"
-            ></div>
-            <input
-              type="hidden"
-              id="csrfParameterName"
-              th:value="${_csrf.parameterName}"
-            />
-            <input
-              type="hidden"
-              id="csrfTokenValue"
-              th:value="${_csrf.token}"
-            />
-          </div>
+        <!-- Submit -->
+        <div class="pt-2">
+          <button id="submitAssessment" type="button"
+            class="w-full sm:w-auto px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
+            <i class="fas fa-paper-plane"></i>
+            <span th:text="#{assessment.submit}">Submit</span>
+          </button>
+          <div id="submitMessage"
+            class="mt-2 hidden text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2"></div>
+          <input type="hidden" id="csrfParameterName" th:value="${_csrf.parameterName}" />
+          <input type="hidden" id="csrfTokenValue" th:value="${_csrf.token}" />
         </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script th:inline="javascript">
-      (function () {
-        const I18N = {
-          validationMissingPrefix:
+  <script th:inline="javascript">
+    (function () {
+      const I18N = {
+        validationMissingPrefix:
             /*[[#{assessment.validation.missingPrefix}]]*/ "Please select options for question(s): ",
-          validationMissingItem:
+        validationMissingItem:
             /*[[#{assessment.validation.missingItem}]]*/ "{q} ({count} missing)",
-          alertTimeUpAutoSubmit:
+        alertTimeUpAutoSubmit:
             /*[[#{assessment.alert.timeUpAutoSubmit}]]*/ "Time is up! Submitting your assessment.",
-          title: /*[[#{assessment.title}]]*/ "Assessment",
-          select: /*[[#{assessment.select}]]*/ "Select",
-          markSingular: /*[[#{assessment.mark.singular}]]*/ "mark",
-          markPlural: /*[[#{assessment.mark.plural}]]*/ "marks",
-        };
+        title: /*[[#{assessment.title}]]*/ "Assessment",
+        select: /*[[#{assessment.select}]]*/ "Select",
+        markSingular: /*[[#{assessment.mark.singular}]]*/ "mark",
+        markPlural: /*[[#{assessment.mark.plural}]]*/ "marks",
+      };
 
-        function redirectIfBackBlocked() {
-          try {
-            if (sessionStorage.getItem("blockAssessmentBack") !== "1") {
-              return false;
-            }
-            const params = new URLSearchParams(window.location.search);
-            const cid = params.get("courseId") || "";
-            const url =
-              "/contents" + (cid ? "?courseId=" + encodeURIComponent(cid) : "");
-            window.location.replace(url);
-            return true;
-          } catch (_) {
+      function redirectIfBackBlocked() {
+        try {
+          if (sessionStorage.getItem("blockAssessmentBack") !== "1") {
             return false;
           }
+          const params = new URLSearchParams(window.location.search);
+          const cid = params.get("courseId") || "";
+          const url =
+            "/contents" + (cid ? "?courseId=" + encodeURIComponent(cid) : "");
+          window.location.replace(url);
+          return true;
+        } catch (_) {
+          return false;
         }
+      }
 
-        if (redirectIfBackBlocked()) return;
-        window.addEventListener("pageshow", function () {
-          redirectIfBackBlocked();
-        });
+      if (redirectIfBackBlocked()) return;
+      window.addEventListener("pageshow", function () {
+        redirectIfBackBlocked();
+      });
 
-        const md = window.markdownit
-          ? window.markdownit({
-              html: true,
-              linkify: true,
-              breaks: true,
-              highlight: function (str, lang) {
-                try {
-                  if (window.hljs) {
-                    if (lang && hljs.getLanguage(lang)) {
-                      return hljs.highlight(str, {
-                        language: lang,
-                      }).value;
-                    }
-                    return hljs.highlightAuto(str).value;
-                  }
-                } catch (_) {}
-                return "";
-              },
-            })
-          : null;
-        if (md) {
-          try {
-            md.use(window.markdownitSub);
-          } catch (_) {}
-          try {
-            md.use(window.markdownitSup);
-          } catch (_) {}
-          try {
-            md.use(window.texmath, {
-              engine: window.katex,
-              delimiters: "dollars",
-              katexOptions: {
-                throwOnError: false,
-              },
-            });
-          } catch (_) {}
-          try {
-            md.use(window.markdownitTaskLists, {
-              enabled: true,
-              label: true,
-              labelAfter: true,
-            });
-          } catch (_) {}
-        }
-
-        const prompts = [
-          '**Which sentence uses the correct form of \\"to be\\"?**\n\nRemember: singular subjects take **is**, plural subjects take **are**, and **I** takes **am**.\n\nExamples:\n- I **am** learning English.\n- She **is** reading.\n- They **are** studying.',
-          "**What does the following JavaScript function return?**\n\n```js\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nChoose the best description.",
-          "**Solve for $x$:** $2x + 3 = 9$\n\nShow your work if needed. The solution involves basic algebra: subtract, then divide.",
-        ];
-
-        const ids = ["mdQ1", "mdQ2", "mdQ3"];
-        const errs = ["mdError1", "mdError2", "mdError3"];
-        ids.forEach((id, i) => {
-          const el = document.getElementById(id);
-          const errEl = document.getElementById(errs[i]);
-          try {
-            if (el) {
-              el.innerHTML = md ? md.render(prompts[i]) : prompts[i];
-              el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-                cb.disabled = true;
-                cb.setAttribute("aria-disabled", "true");
-              });
-            }
-            errEl && errEl.classList.add("hidden");
-          } catch (e) {
-            if (errEl) {
-              errEl.textContent = e.message;
-              errEl.classList.remove("hidden");
-            }
-          }
-        });
-
-        const articles = Array.from(
-          document.querySelectorAll(
-            "article[data-md-src], article[data-content]",
-          ),
-        );
-
-        function resolveRelativeImages(container, mdSrc) {
-          if (!container || !mdSrc) return;
-          let base;
-          try {
-            base = new URL(mdSrc, window.location.origin);
-          } catch (_) {
-            return;
-          }
-          container.querySelectorAll("img[src]").forEach((img) => {
-            const src = img.getAttribute("src") || "";
-            if (!src) return;
-            if (/^(https?:|data:|blob:)/i.test(src)) return;
-            if (src.startsWith("/") || src.startsWith("#")) return;
+      const md = window.markdownit
+        ? window.markdownit({
+          html: true,
+          linkify: true,
+          breaks: true,
+          highlight: function (str, lang) {
             try {
-              img.setAttribute("src", new URL(src, base).toString());
-            } catch (_) {}
+              if (window.hljs) {
+                if (lang && hljs.getLanguage(lang)) {
+                  return hljs.highlight(str, {
+                    language: lang,
+                  }).value;
+                }
+                return hljs.highlightAuto(str).value;
+              }
+            } catch (_) { }
+            return "";
+          },
+        })
+        : null;
+      if (md) {
+        try {
+          md.use(window.markdownitSub);
+        } catch (_) { }
+        try {
+          md.use(window.markdownitSup);
+        } catch (_) { }
+        try {
+          md.use(window.texmath, {
+            engine: window.katex,
+            delimiters: "dollars",
+            katexOptions: {
+              throwOnError: false,
+            },
           });
-        }
+        } catch (_) { }
+        try {
+          md.use(window.markdownitTaskLists, {
+            enabled: true,
+            label: true,
+            labelAfter: true,
+          });
+        } catch (_) { }
+      }
 
-        articles.forEach(async (el) => {
-          const mdSrc = el.getAttribute("data-md-src");
-          const inlineSrc = el.getAttribute("data-content") || "";
-          const cardEl = el.closest(".question-card");
-          const errEl = cardEl ? cardEl.querySelector(".mdError") : null;
-          try {
-            let content = inlineSrc;
-            if (mdSrc) {
-              const resp = await fetch(mdSrc);
-              content = await resp.text();
-            }
-            el.innerHTML = md ? md.render(content) : content;
+      const prompts = [
+        '**Which sentence uses the correct form of \\"to be\\"?**\n\nRemember: singular subjects take **is**, plural subjects take **are**, and **I** takes **am**.\n\nExamples:\n- I **am** learning English.\n- She **is** reading.\n- They **are** studying.',
+        "**What does the following JavaScript function return?**\n\n```js\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nChoose the best description.",
+        "**Solve for $x$:** $2x + 3 = 9$\n\nShow your work if needed. The solution involves basic algebra: subtract, then divide.",
+      ];
+
+      const ids = ["mdQ1", "mdQ2", "mdQ3"];
+      const errs = ["mdError1", "mdError2", "mdError3"];
+      ids.forEach((id, i) => {
+        const el = document.getElementById(id);
+        const errEl = document.getElementById(errs[i]);
+        try {
+          if (el) {
+            el.innerHTML = md ? md.render(prompts[i]) : prompts[i];
             el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
               cb.disabled = true;
               cb.setAttribute("aria-disabled", "true");
             });
-            resolveRelativeImages(el, mdSrc);
-            if (errEl) errEl.classList.add("hidden");
-          } catch (e) {
-            if (errEl) {
-              errEl.textContent = e.message;
-              errEl.classList.remove("hidden");
-            }
           }
-        });
-
-        function closeAllAnswerMenus(except) {
-          document
-            .querySelectorAll("[data-answer-dropdown] [data-answer-menu]")
-            .forEach((menu) => {
-              if (except && except.contains(menu)) return;
-              menu.classList.add("hidden");
-            });
+          errEl && errEl.classList.add("hidden");
+        } catch (e) {
+          if (errEl) {
+            errEl.textContent = e.message;
+            errEl.classList.remove("hidden");
+          }
         }
+      });
 
-        document.addEventListener("click", function () {
-          closeAllAnswerMenus();
+      const articles = Array.from(
+        document.querySelectorAll(
+          "article[data-md-src], article[data-content]",
+        ),
+      );
+
+      function resolveRelativeImages(container, mdSrc) {
+        if (!container || !mdSrc) return;
+        let base;
+        try {
+          base = new URL(mdSrc, window.location.origin);
+        } catch (_) {
+          return;
+        }
+        container.querySelectorAll("img[src]").forEach((img) => {
+          const src = img.getAttribute("src") || "";
+          if (!src) return;
+          if (/^(https?:|data:|blob:)/i.test(src)) return;
+          if (src.startsWith("/") || src.startsWith("#")) return;
+          try {
+            img.setAttribute("src", new URL(src, base).toString());
+          } catch (_) { }
         });
+      }
 
-        document.querySelectorAll("[data-answer-dropdown]").forEach((dd) => {
-          const input = dd.querySelector("input[data-answer-field]");
-          const label = dd.querySelector("[data-answer-label]");
-          const toggle = dd.querySelector("[data-answer-toggle]");
-          const menu = dd.querySelector("[data-answer-menu]");
-
-          if (!input || !label || !toggle || !menu) return;
-
-          toggle.addEventListener("click", function (e) {
-            e.stopPropagation();
-            closeAllAnswerMenus(dd);
-            menu.classList.toggle("hidden");
+      articles.forEach(async (el) => {
+        const mdSrc = el.getAttribute("data-md-src");
+        const inlineSrc = el.getAttribute("data-content") || "";
+        const cardEl = el.closest(".question-card");
+        const errEl = cardEl ? cardEl.querySelector(".mdError") : null;
+        try {
+          let content = inlineSrc;
+          if (mdSrc) {
+            const resp = await fetch(mdSrc);
+            content = await resp.text();
+          }
+          el.innerHTML = md ? md.render(content) : content;
+          el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+            cb.disabled = true;
+            cb.setAttribute("aria-disabled", "true");
           });
+          resolveRelativeImages(el, mdSrc);
+          if (errEl) errEl.classList.add("hidden");
+        } catch (e) {
+          if (errEl) {
+            errEl.textContent = e.message;
+            errEl.classList.remove("hidden");
+          }
+        }
+      });
 
-          menu.addEventListener("click", function (e) {
-            e.stopPropagation();
-            const btn = e.target.closest("button[data-value]");
-            if (!btn) return;
-
-            const v = btn.getAttribute("data-value") || "";
-            input.value = v;
-            label.textContent = btn.textContent
-              ? btn.textContent.trim()
-              : I18N.select;
+      function closeAllAnswerMenus(except) {
+        document
+          .querySelectorAll("[data-answer-dropdown] [data-answer-menu]")
+          .forEach((menu) => {
+            if (except && except.contains(menu)) return;
             menu.classList.add("hidden");
           });
+      }
+
+      document.addEventListener("click", function () {
+        closeAllAnswerMenus();
+      });
+
+      document.querySelectorAll("[data-answer-dropdown]").forEach((dd) => {
+        const input = dd.querySelector("input[data-answer-field]");
+        const label = dd.querySelector("[data-answer-label]");
+        const toggle = dd.querySelector("[data-answer-toggle]");
+        const menu = dd.querySelector("[data-answer-menu]");
+
+        if (!input || !label || !toggle || !menu) return;
+
+        toggle.addEventListener("click", function (e) {
+          e.stopPropagation();
+          closeAllAnswerMenus(dd);
+          menu.classList.toggle("hidden");
         });
 
-        const submitBtn = document.getElementById("submitAssessment");
-        submitBtn &&
-          submitBtn.addEventListener("click", () => {
-            const cards = Array.from(
-              document.querySelectorAll(".question-card"),
+        menu.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const btn = e.target.closest("button[data-value]");
+          if (!btn) return;
+
+          const v = btn.getAttribute("data-value") || "";
+          input.value = v;
+          label.textContent = btn.textContent
+            ? btn.textContent.trim()
+            : I18N.select;
+          menu.classList.add("hidden");
+        });
+      });
+
+      const submitBtn = document.getElementById("submitAssessment");
+      submitBtn &&
+        submitBtn.addEventListener("click", () => {
+          const cards = Array.from(
+            document.querySelectorAll(".question-card"),
+          );
+          const results = cards.map((card, idx) => {
+            const answerFields = Array.from(
+              card.querySelectorAll("input[data-answer-field][name^='q']"),
             );
-            const results = cards.map((card, idx) => {
-              const answerFields = Array.from(
-                card.querySelectorAll("input[data-answer-field][name^='q']"),
-              );
-              const selected = answerFields.map((f) => {
-                const v = f.value;
-                return v === "" ? null : parseInt(v, 10);
-              });
-              return {
-                question: idx + 1,
-                selectedIndices: selected,
-              };
+            const selected = answerFields.map((f) => {
+              const v = f.value;
+              return v === "" ? null : parseInt(v, 10);
             });
-            const missing = results
-              .map((r) => ({
-                q: r.question,
-                missingCount: r.selectedIndices.filter((v) => v === null)
-                  .length,
-              }))
-              .filter((x) => x.missingCount > 0);
-            console.log("Assessment submission:", results);
-            if (missing.length) {
-              var msgEl = document.getElementById("submitMessage");
-              if (msgEl) {
-                var itemTemplate = I18N.validationMissingItem;
-                var text =
-                  I18N.validationMissingPrefix +
-                  missing
-                    .map(function (m) {
-                      return itemTemplate
-                        .replace("{q}", String(m.q))
-                        .replace("{count}", String(m.missingCount));
-                    })
-                    .join(", ");
-                msgEl.textContent = text;
-                msgEl.classList.remove("hidden");
-              }
-            } else {
-              const params = new URLSearchParams(window.location.search);
-              const courseId = params.get("courseId") || "";
-              const chapters = params.get("chapters") || "";
-              var examTitleEl = document.getElementById("examTitleVal");
-              var examTitle =
-                examTitleEl && examTitleEl.textContent
-                  ? examTitleEl.textContent.trim()
-                  : I18N.title;
-              var totalScoreEl = document.getElementById("totalScoreVal");
-              var totalScore = 0;
-              if (totalScoreEl && totalScoreEl.textContent) {
-                var ts = parseFloat(totalScoreEl.textContent);
-                totalScore = isNaN(ts) ? 0 : ts;
-              }
-              var payload = {
-                results: results,
-                meta: {
-                  examTitle: examTitle,
-                  totalScore: totalScore,
-                  courseId: courseId,
-                  chapters: chapters,
-                },
-              };
-              try {
-                sessionStorage.setItem(
-                  "assessmentResults",
-                  JSON.stringify(payload),
-                );
-              } catch (_) {}
-              var form = document.createElement("form");
-              form.method = "POST";
-              form.action = "/assessment/score";
-
-              function addField(n, v) {
-                var input = document.createElement("input");
-                input.type = "hidden";
-                input.name = n;
-                input.value = v;
-                form.appendChild(input);
-              }
-              if (courseId) addField("courseId", courseId);
-              if (chapters) addField("chapters", chapters);
-              try {
-                Array.from(
-                  document.querySelectorAll(
-                    "input[data-answer-field][name^='q']",
-                  ),
-                ).forEach(function (f) {
-                  if (f && f.name && f.value && f.value !== "") {
-                    addField(f.name, f.value);
-                  }
-                });
-              } catch (_) {}
-              var csrfParamEl = document.getElementById("csrfParameterName");
-              var csrfTokenEl = document.getElementById("csrfTokenValue");
-              if (csrfParamEl && csrfTokenEl) {
-                addField(csrfParamEl.value, csrfTokenEl.value);
-              }
-              document.body.appendChild(form);
-              form.submit();
-            }
+            return {
+              question: idx + 1,
+              selectedIndices: selected,
+            };
           });
-
-        // Compute total score from question marks
-        const totalScoreEl = document.getElementById("totalScoreVal");
-        const questionEls = Array.from(
-          document.querySelectorAll(".question-card"),
-        );
-        const totalScore = questionEls.reduce((sum, el) => {
-          const mark = parseFloat(el.dataset.mark);
-          return sum + (isNaN(mark) ? 0 : mark);
-        }, 0);
-        if (totalScoreEl) totalScoreEl.textContent = String(totalScore);
-
-        // Timer Logic
-        const totalTimeInput = document.getElementById("totalTimeSeconds");
-        const timerDisplay = document.getElementById("timerDisplay");
-        let remainingSeconds = totalTimeInput
-          ? parseInt(totalTimeInput.value, 10)
-          : 0;
-
-        if (remainingSeconds > 0 && timerDisplay) {
-          const updateTimer = () => {
-            const m = Math.floor(remainingSeconds / 60);
-            const s = remainingSeconds % 60;
-            timerDisplay.textContent = `${String(m).padStart(2, "0")}:${String(
-              s,
-            ).padStart(2, "0")}`;
-
-            if (remainingSeconds <= 300) {
-              // Red warning last 5 mins
-              timerDisplay.classList.remove("text-yellow-400");
-              timerDisplay.classList.add("text-red-400");
+          const missing = results
+            .map((r) => ({
+              q: r.question,
+              missingCount: r.selectedIndices.filter((v) => v === null)
+                .length,
+            }))
+            .filter((x) => x.missingCount > 0);
+          console.log("Assessment submission:", results);
+          if (missing.length) {
+            var msgEl = document.getElementById("submitMessage");
+            if (msgEl) {
+              var itemTemplate = I18N.validationMissingItem;
+              var text =
+                I18N.validationMissingPrefix +
+                missing
+                  .map(function (m) {
+                    return itemTemplate
+                      .replace("{q}", String(m.q))
+                      .replace("{count}", String(m.missingCount));
+                  })
+                  .join(", ");
+              msgEl.textContent = text;
+              msgEl.classList.remove("hidden");
             }
+          } else {
+            const params = new URLSearchParams(window.location.search);
+            const courseId = params.get("courseId") || "";
+            const chapters = params.get("chapters") || "";
+            var examTitleEl = document.getElementById("examTitleVal");
+            var examTitle =
+              examTitleEl && examTitleEl.textContent
+                ? examTitleEl.textContent.trim()
+                : I18N.title;
+            var totalScoreEl = document.getElementById("totalScoreVal");
+            var totalScore = 0;
+            if (totalScoreEl && totalScoreEl.textContent) {
+              var ts = parseFloat(totalScoreEl.textContent);
+              totalScore = isNaN(ts) ? 0 : ts;
+            }
+            var payload = {
+              results: results,
+              meta: {
+                examTitle: examTitle,
+                totalScore: totalScore,
+                courseId: courseId,
+                chapters: chapters,
+              },
+            };
+            try {
+              sessionStorage.setItem(
+                "assessmentResults",
+                JSON.stringify(payload),
+              );
+            } catch (_) { }
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = "/assessment/score";
 
-            if (remainingSeconds <= 0) {
-              clearInterval(timerInterval);
-              alert(I18N.alertTimeUpAutoSubmit);
-
-              // Force submit without validation
-              const submitBtn = document.getElementById("submitAssessment");
-              // Bypass validation check in the click handler by setting a flag or calling submit logic directly?
-              // The existing click handler does validation.
-              // Let's reuse the submit logic but perhaps we need to handle the 'missing answers' check.
-              // If time is up, we should probably submit whatever they have.
-
-              // Simplest way: Simulate click, but if validation fails, the user is stuck.
-              // Better way: Re-implement submission logic here or modify the click handler to accept a 'force' param.
-
-              // Let's modify the click handler slightly or just copy the submit logic for force submit.
-              // For now, let's trigger the click. If validation fails, they can't submit?
-              // Usually time-up auto-submit should ignore missing fields.
-
-              // I will extract the submission logic or copy it here for robust auto-submit.
-              // Copying the submission logic (lines 529-587) for safety.
-
-              const results = Array.from(
+            function addField(n, v) {
+              var input = document.createElement("input");
+              input.type = "hidden";
+              input.name = n;
+              input.value = v;
+              form.appendChild(input);
+            }
+            if (courseId) addField("courseId", courseId);
+            if (chapters) addField("chapters", chapters);
+            try {
+              Array.from(
                 document.querySelectorAll(
                   "input[data-answer-field][name^='q']",
                 ),
-              )
-                .map((el) => {
-                  const parts = el.name.match(/q(\d+)-s(\d+)/);
-                  if (!parts) return null;
-                  const qIdx = parseInt(parts[1], 10);
-                  const sIdx = parseInt(parts[2], 10);
-                  const val = el.value === "" ? null : parseInt(el.value, 10);
-                  return {
-                    qIdx,
-                    sIdx,
-                    val,
-                  };
-                })
-                .filter((x) => x);
-
-              // ... actually constructing the form is key.
-              // Let's just create the form and submit, ignoring the JSON payload for sessionStorage if needed,
-              // but the backend needs parameters.
-
-              var form = document.createElement("form");
-              form.method = "POST";
-              form.action = "/assessment/score";
-              var csrfParamEl = document.getElementById("csrfParameterName");
-              var csrfTokenEl = document.getElementById("csrfTokenValue");
-
-              if (csrfParamEl && csrfTokenEl) {
-                var input = document.createElement("input");
-                input.type = "hidden";
-                input.name = csrfParamEl.value;
-                input.value = csrfTokenEl.value;
-                form.appendChild(input);
-              }
-
-              const params = new URLSearchParams(window.location.search);
-              const cId = params.get("courseId");
-              const ch = params.get("chapters");
-
-              if (cId) {
-                var i = document.createElement("input");
-                i.type = "hidden";
-                i.name = "courseId";
-                i.value = cId;
-                form.appendChild(i);
-              }
-              if (ch) {
-                var i = document.createElement("input");
-                i.type = "hidden";
-                i.name = "chapters";
-                i.value = ch;
-                form.appendChild(i);
-              }
-
-              document
-                .querySelectorAll("input[data-answer-field][name^='q']")
-                .forEach((f) => {
-                  if (f.value) {
-                    var i = document.createElement("input");
-                    i.type = "hidden";
-                    i.name = f.name;
-                    i.value = f.value;
-                    form.appendChild(i);
-                  }
-                });
-
-              document.body.appendChild(form);
-              form.submit();
+              ).forEach(function (f) {
+                if (f && f.name && f.value && f.value !== "") {
+                  addField(f.name, f.value);
+                }
+              });
+            } catch (_) { }
+            var csrfParamEl = document.getElementById("csrfParameterName");
+            var csrfTokenEl = document.getElementById("csrfTokenValue");
+            if (csrfParamEl && csrfTokenEl) {
+              addField(csrfParamEl.value, csrfTokenEl.value);
             }
-            remainingSeconds--;
-          };
-
-          updateTimer(); // Initial call
-          var timerInterval = setInterval(updateTimer, 1000);
-        }
-
-        // Populate per-question mark labels
-        questionEls.forEach((el) => {
-          const label = el.querySelector("[data-mark-label]");
-          const mark = parseFloat(el.dataset.mark);
-          const val = isNaN(mark) ? 0 : mark;
-          if (label)
-            label.textContent = `${val} ${
-              val === 1 ? I18N.markSingular : I18N.markPlural
-            }`;
+            document.body.appendChild(form);
+            form.submit();
+          }
         });
 
-        // Populate chapters from URL if server-side missing
-        const chaptersEl = document.getElementById("chaptersVal");
-        if (
-          chaptersEl &&
-          (!chaptersEl.textContent ||
-            chaptersEl.textContent.trim() === "" ||
-            chaptersEl.textContent === "-")
-        ) {
-          const params = new URLSearchParams(window.location.search);
-          const ch = params.get("chapters");
-          if (ch) chaptersEl.textContent = ch;
-        }
-      })();
-    </script>
-    <script src="/js/navbar.js"></script>
-  </body>
+      // Compute total score from question marks
+      const totalScoreEl = document.getElementById("totalScoreVal");
+      const questionEls = Array.from(
+        document.querySelectorAll(".question-card"),
+      );
+      const totalScore = questionEls.reduce((sum, el) => {
+        const mark = parseFloat(el.dataset.mark);
+        return sum + (isNaN(mark) ? 0 : mark);
+      }, 0);
+      if (totalScoreEl) totalScoreEl.textContent = String(totalScore);
+
+      // Timer Logic
+      const totalTimeInput = document.getElementById("totalTimeSeconds");
+      const timerDisplay = document.getElementById("timerDisplay");
+      let remainingSeconds = totalTimeInput
+        ? parseInt(totalTimeInput.value, 10)
+        : 0;
+
+      if (remainingSeconds > 0 && timerDisplay) {
+        const updateTimer = () => {
+          const m = Math.floor(remainingSeconds / 60);
+          const s = remainingSeconds % 60;
+          timerDisplay.textContent = `${String(m).padStart(2, "0")}:${String(
+            s,
+          ).padStart(2, "0")}`;
+
+          if (remainingSeconds <= 300) {
+            // Red warning last 5 mins
+            timerDisplay.classList.remove("text-yellow-400");
+            timerDisplay.classList.add("text-red-400");
+          }
+
+          if (remainingSeconds <= 0) {
+            clearInterval(timerInterval);
+            alert(I18N.alertTimeUpAutoSubmit);
+
+            // Force submit without validation
+            const submitBtn = document.getElementById("submitAssessment");
+            // Bypass validation check in the click handler by setting a flag or calling submit logic directly?
+            // The existing click handler does validation.
+            // Let's reuse the submit logic but perhaps we need to handle the 'missing answers' check.
+            // If time is up, we should probably submit whatever they have.
+
+            // Simplest way: Simulate click, but if validation fails, the user is stuck.
+            // Better way: Re-implement submission logic here or modify the click handler to accept a 'force' param.
+
+            // Let's modify the click handler slightly or just copy the submit logic for force submit.
+            // For now, let's trigger the click. If validation fails, they can't submit?
+            // Usually time-up auto-submit should ignore missing fields.
+
+            // I will extract the submission logic or copy it here for robust auto-submit.
+            // Copying the submission logic (lines 529-587) for safety.
+
+            const results = Array.from(
+              document.querySelectorAll(
+                "input[data-answer-field][name^='q']",
+              ),
+            )
+              .map((el) => {
+                const parts = el.name.match(/q(\d+)-s(\d+)/);
+                if (!parts) return null;
+                const qIdx = parseInt(parts[1], 10);
+                const sIdx = parseInt(parts[2], 10);
+                const val = el.value === "" ? null : parseInt(el.value, 10);
+                return {
+                  qIdx,
+                  sIdx,
+                  val,
+                };
+              })
+              .filter((x) => x);
+
+            // ... actually constructing the form is key.
+            // Let's just create the form and submit, ignoring the JSON payload for sessionStorage if needed,
+            // but the backend needs parameters.
+
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = "/assessment/score";
+            var csrfParamEl = document.getElementById("csrfParameterName");
+            var csrfTokenEl = document.getElementById("csrfTokenValue");
+
+            if (csrfParamEl && csrfTokenEl) {
+              var input = document.createElement("input");
+              input.type = "hidden";
+              input.name = csrfParamEl.value;
+              input.value = csrfTokenEl.value;
+              form.appendChild(input);
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const cId = params.get("courseId");
+            const ch = params.get("chapters");
+
+            if (cId) {
+              var i = document.createElement("input");
+              i.type = "hidden";
+              i.name = "courseId";
+              i.value = cId;
+              form.appendChild(i);
+            }
+            if (ch) {
+              var i = document.createElement("input");
+              i.type = "hidden";
+              i.name = "chapters";
+              i.value = ch;
+              form.appendChild(i);
+            }
+
+            document
+              .querySelectorAll("input[data-answer-field][name^='q']")
+              .forEach((f) => {
+                if (f.value) {
+                  var i = document.createElement("input");
+                  i.type = "hidden";
+                  i.name = f.name;
+                  i.value = f.value;
+                  form.appendChild(i);
+                }
+              });
+
+            document.body.appendChild(form);
+            form.submit();
+          }
+          remainingSeconds--;
+        };
+
+        updateTimer(); // Initial call
+        var timerInterval = setInterval(updateTimer, 1000);
+      }
+
+      // Populate per-question mark labels
+      questionEls.forEach((el) => {
+        const label = el.querySelector("[data-mark-label]");
+        const mark = parseFloat(el.dataset.mark);
+        const val = isNaN(mark) ? 0 : mark;
+        if (label)
+          label.textContent = `${val} ${val === 1 ? I18N.markSingular : I18N.markPlural
+            }`;
+      });
+
+      // Populate chapters from URL if server-side missing
+      const chaptersEl = document.getElementById("chaptersVal");
+      if (
+        chaptersEl &&
+        (!chaptersEl.textContent ||
+          chaptersEl.textContent.trim() === "" ||
+          chaptersEl.textContent === "-")
+      ) {
+        const params = new URLSearchParams(window.location.search);
+        const ch = params.get("chapters");
+        if (ch) chaptersEl.textContent = ch;
+      }
+    })();
+  </script>
+  <script src="/js/navbar.js"></script>
+</body>
+
 </html>

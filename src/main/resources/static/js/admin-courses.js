@@ -140,7 +140,7 @@
   function storageSet(key, value) {
     try {
       localStorage.setItem(key, value);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function uid(prefix) {
@@ -184,7 +184,7 @@
         state.order = "oldest-first";
         state.version = 2;
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function saveState() {
@@ -194,7 +194,7 @@
         storageKey,
         JSON.stringify({ version: state.version, order: state.order }),
       );
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function slugify(s) {
@@ -314,6 +314,11 @@
   var courseCoverInput = document.getElementById("courseCover");
   var courseCoverPreview = document.getElementById("courseCoverPreview");
   var removeCourseCoverBtn = document.getElementById("removeCourseCoverBtn");
+
+  var importProgressModal = document.getElementById("importProgressModal");
+  var importProgressBar = document.getElementById("importProgressBar");
+  var importProgressText = document.getElementById("importProgressText");
+  var importProgressPercent = document.getElementById("importProgressPercent");
 
   var confirmDeleteModal = document.getElementById("confirmDeleteModal");
   var confirmDeleteTitle = document.getElementById("confirmDeleteTitle");
@@ -621,11 +626,11 @@
           : "border-amber-500/30 bg-amber-500/10 text-amber-50 hover:bg-amber-500/15");
       publishBtn.innerHTML = course.published
         ? '<i class="fas fa-eye text-[10px]"></i><span>' +
-          escapeHtml(i18n.itemStatusPublished) +
-          "</span>"
+        escapeHtml(i18n.itemStatusPublished) +
+        "</span>"
         : '<i class="fas fa-eye-slash text-[10px]"></i><span>' +
-          escapeHtml(i18n.itemStatusPrivate) +
-          "</span>";
+        escapeHtml(i18n.itemStatusPrivate) +
+        "</span>";
 
       var dropdown = document.createElement("div");
       dropdown.className = "relative flex-shrink-0";
@@ -942,37 +947,68 @@
     downloadCourseBll(courseId);
   }
 
+  function pollExportStatus(jobId) {
+    if (!jobId) return;
+    var pollInterval = setInterval(function () {
+      apiFetch("/api/admin/courses/import/status/" + encodeURIComponent(jobId), {
+        method: "GET",
+        headers: { Accept: "application/json" }
+      })
+        .then(function (res) {
+          if (!res.ok) return null;
+          return res.json();
+        })
+        .then(function (status) {
+          if (!status) return;
+
+          updateImportProgress(status.progressPercent, status.message);
+
+          if (status.state === "COMPLETED") {
+            clearInterval(pollInterval);
+            setTimeout(function () {
+              hideImportProgress();
+              window.location.assign("/api/admin/courses/export/" + encodeURIComponent(jobId) + "/download");
+              showFlash("success", i18n.toastCourseExported);
+            }, 600);
+          } else if (status.state === "FAILED") {
+            clearInterval(pollInterval);
+            hideImportProgress();
+            showFlash("error", status.message || "Export failed.");
+          }
+        })
+        .catch(function () { });
+    }, 1000);
+  }
+
   function downloadCourseBll(courseId) {
     var id = String(courseId || "").trim();
     if (!id) return;
+
+    showImportProgress();
+    if (importProgressText) importProgressText.textContent = "Starting export...";
+
     apiFetch("/api/admin/courses/" + encodeURIComponent(id) + "/export", {
       method: "GET",
-      headers: { Accept: "application/octet-stream" },
+      headers: { Accept: "application/json" },
     })
       .then(function (res) {
         if (!res || !res.ok) {
-          throw new Error(i18n.toastCourseNotFound);
+          return res.json().then(function (json) {
+            throw new Error(json.message || i18n.toastCourseNotFound);
+          }).catch(function () {
+            throw new Error(i18n.toastCourseNotFound);
+          });
         }
-        return res.blob();
+        return res.json();
       })
-      .then(function (blob) {
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url;
-        var ts = new Date()
-          .toISOString()
-          .replace(/[:.]/g, "-")
-          .replace("T", "_")
-          .slice(0, 19);
-        var safeId = id.replace(/[^a-z0-9_-]+/gi, "_").replace(/^_+|_+$/g, "");
-        a.download = (safeId || "course") + "_" + ts + ".bll";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        showFlash("success", i18n.toastCourseExported);
+      .then(function (json) {
+        if (!json || !json.ok || !json.jobId) {
+          throw new Error(json.message || "Invalid response");
+        }
+        pollExportStatus(json.jobId);
       })
       .catch(function (err) {
+        hideImportProgress();
         showFlash(
           "error",
           err && err.message ? String(err.message) : i18n.toastCourseNotFound,
@@ -987,99 +1023,123 @@
     return null;
   }
 
+  function showImportProgress() {
+    if (!importProgressModal) return;
+    if (importProgressBar) importProgressBar.style.width = "0%";
+    if (importProgressPercent) importProgressPercent.textContent = "0%";
+    if (importProgressText) importProgressText.textContent = "Uploading...";
+    openModal(importProgressModal);
+  }
+
+  function updateImportProgress(percent, message) {
+    if (importProgressBar) importProgressBar.style.width = Math.min(100, Math.max(0, percent)) + "%";
+    if (importProgressPercent) importProgressPercent.textContent = Math.min(100, Math.max(0, percent)) + "%";
+    if (importProgressText && message) importProgressText.textContent = message;
+  }
+
+  function hideImportProgress() {
+    if (!importProgressModal) return;
+    closeModal(importProgressModal);
+  }
+
+  function pollImportStatus(jobId) {
+    if (!jobId) return;
+
+    var pollInterval = setInterval(function () {
+      apiFetch("/api/admin/courses/import/status/" + encodeURIComponent(jobId), {
+        method: "GET",
+        headers: { Accept: "application/json" }
+      })
+        .then(function (res) {
+          if (!res.ok) return null;
+          return res.json();
+        })
+        .then(function (status) {
+          if (!status) return; // Retrying gracefully if transient error
+
+          updateImportProgress(status.progressPercent, status.message);
+
+          if (status.state === "COMPLETED") {
+            clearInterval(pollInterval);
+            setTimeout(function () {
+              hideImportProgress();
+
+              // Refresh course list logic
+              // Ideally we should refetch everything or just reload page since backend state changed significantly
+              window.location.reload();
+            }, 600);
+          } else if (status.state === "FAILED") {
+            clearInterval(pollInterval);
+            hideImportProgress();
+            showFlash("error", status.message || i18n.toastImportDbFailed);
+          }
+        })
+        .catch(function () {
+          // Silent catch on poll fail, will retry next tick
+        });
+    }, 1000);
+  }
+
   function importCourseBllFromFile(file) {
     if (!file) return;
+
+    showImportProgress();
+    importCoursesInput.value = ""; // Clear input
+
     var form = new FormData();
     form.append("file", file);
-    apiFetch("/api/admin/courses/import", {
-      method: "POST",
-      headers: { Accept: "application/json" },
-      body: form,
-    })
-      .then(function (res) {
-        if (!res) throw new Error(i18n.toastInvalidImportFormat);
-        var ct = String(
-          res.headers && res.headers.get
-            ? res.headers.get("content-type") || ""
-            : "",
-        ).toLowerCase();
-        var isJson = ct.indexOf("application/json") >= 0;
-        if (!res.ok) {
-          if (isJson) {
-            return res
-              .json()
-              .catch(function () {
-                return null;
-              })
-              .then(function (json) {
-                var msg = json && json.message ? String(json.message) : null;
-                throw new Error(msg || i18n.toastImportDbFailed);
-              });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/admin/courses/import", true);
+    xhr.setRequestHeader("Accept", "application/json");
+
+    var csrf = csrfHeaders();
+    for (var key in csrf) {
+      xhr.setRequestHeader(key, csrf[key]);
+    }
+
+    // Track upload progress
+    xhr.upload.onprogress = function (e) {
+      if (e.lengthComputable) {
+        var percentComplete = (e.loaded / e.total) * 100;
+        // Limit max upload progress visualization to 99% until server responds
+        var visualPercent = Math.min(99, Math.round(percentComplete));
+        updateImportProgress(visualPercent, "Uploading... " + visualPercent + "%");
+      }
+    };
+
+    xhr.onload = function () {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          var json = JSON.parse(xhr.responseText);
+          if (!json || !json.ok || !json.jobId) {
+            var msg = json && json.message ? String(json.message) : null;
+            throw new Error(msg || i18n.toastInvalidImportFormat);
           }
-          return res
-            .text()
-            .catch(function () {
-              return "";
-            })
-            .then(function () {
-              throw new Error(i18n.toastImportDbFailed);
-            });
+          // Job submitted successfully, start polling
+          updateImportProgress(0, "Processing on server..."); // Reset for server progress
+          pollImportStatus(json.jobId);
+        } catch (e) {
+          hideImportProgress();
+          showFlash("error", i18n.toastInvalidImportFormat);
         }
-        if (!isJson) throw new Error(i18n.toastImportDbFailed);
-        return res.json().catch(function () {
-          return null;
-        });
-      })
-      .then(function (json) {
-        if (!json || !json.ok || !json.courseId) {
-          var msg = json && json.message ? String(json.message) : null;
-          throw new Error(msg || i18n.toastInvalidImportFormat);
-        }
-        return apiFetch(
-          "/api/admin/courses/" + encodeURIComponent(json.courseId) + "/editor",
-          { method: "GET", headers: { Accept: "application/json" } },
-        ).then(function (res) {
-          if (!res || !res.ok) return null;
-          return res.json().catch(function () {
-            return null;
-          });
-        });
-      })
-      .then(function (editor) {
-        if (editor && editor.id) {
-          var meta = ensureCourseShape({
-            id: editor.id,
-            title: editor.title || i18n.itemUntitled,
-            description: editor.description || "",
-            language: editor.language || "",
-            published: !!editor.published,
-            targetStudents: editor.targetStudents || {
-              schoolYears: [],
-              classes: [],
-            },
-            coverImageDataUrl: editor.coverImageDataUrl || null,
-          });
-          var existing = findCourseById(meta.id);
-          if (existing) {
-            for (var k in meta) existing[k] = meta[k];
-          } else {
-            state.courses.push(meta);
-          }
-          normalizeState();
-          saveState();
-          renderList();
-        } else {
-          window.location.reload();
-          return;
-        }
-        showFlash("success", i18n.toastCoursesImported);
-      })
-      .catch(function (err) {
-        showFlash(
-          "error",
-          err && err.message ? String(err.message) : i18n.toastImportDbFailed,
-        );
-      });
+      } else {
+        hideImportProgress();
+        var msg = i18n.toastImportDbFailed;
+        try {
+          var json = JSON.parse(xhr.responseText);
+          if (json && json.message) msg = json.message;
+        } catch (e) { }
+        showFlash("error", msg);
+      }
+    };
+
+    xhr.onerror = function () {
+      hideImportProgress();
+      showFlash("error", i18n.toastImportDbFailed);
+    };
+
+    xhr.send(form);
   }
 
   function importCoursesFromFile(file) {
@@ -1350,7 +1410,7 @@
     var initialRaw = root.getAttribute("data-initial-courses") || "";
     var parsed = safeJsonParse(initialRaw);
     if (Array.isArray(parsed)) serverCourses = parsed;
-  } catch (e) {}
+  } catch (e) { }
 
   loadState();
   var merged = [];

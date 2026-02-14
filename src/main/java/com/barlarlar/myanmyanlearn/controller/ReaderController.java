@@ -353,6 +353,7 @@ public class ReaderController {
                 : "Translate the following Markdown from " + sourceLabel + " to " + targetLabel + ". ";
         prompt += "Keep technical terms in English (e.g., programming keywords, API names, product names, identifiers, and code symbols). "
                 + "Preserve Markdown formatting, links, code blocks, and inline code. "
+                + "Do NOT render HTML/CSS code. Keep all code blocks explicitly wrapped in Markdown code fences (```). "
                 + "Return only the translated Markdown.\n\n" + text;
 
         ObjectNode body = objectMapper.createObjectNode();
