@@ -15,8 +15,10 @@ public class Question {
     private String questionContentPath;
     private List<QuestionOption> options;
     private List<List<QuestionOption>> slotOptions;
+    private String updatedAt;
 
-    public Question() {}
+    public Question() {
+    }
 
     public float getMarks() {
         return (float) getSlotCount();

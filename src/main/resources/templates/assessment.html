@@ -4,12 +4,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <title th:text="#{assessment.pageTitle}">MYAN MYAN LEARN - Assessment</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/js/tailwind-config.js"></script>
+  <script src="/js/ai-translate-btn.js"></script>
+  <script src="/js/thinking-border.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <link rel="stylesheet" href="/css/ai-translate-btn.css" />
+  <link rel="stylesheet" href="/css/thinking-border.css" />
   <style>
     .show {
       opacity: 1 !important;
@@ -245,11 +251,13 @@
           </span>
           <span th:text="#{assessment.title}">Assessment</span>
         </h1>
-        <a th:href="@{/contents(courseId=${courseId})}" href="/contents"
-          class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0">
-          <i class="fas fa-arrow-left text-xs"></i>
-          <span th:text="#{assessment.backToContents}">Back to Contents</span>
-        </a>
+        <div class="flex items-center gap-3">
+          <a th:href="@{/contents(courseId=${courseId})}" href="/contents"
+            class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0">
+            <i class="fas fa-arrow-left text-xs"></i>
+            <span th:text="#{assessment.backToContents}">Back to Contents</span>
+          </a>
+        </div>
       </div>
 
       <!-- Summary Card -->
@@ -295,7 +303,7 @@
       <!-- Sample Questions and Answers -->
       <div class="space-y-6" th:if="${questions}">
         <section class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
-          th:each="q, iStat : ${questions}" th:attr="data-mark=${q.marks}">
+          th:each="q, iStat : ${questions}" th:attr="data-mark=${q.marks},data-updated-at=${q.updatedAt}">
           <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/10 gap-3">
             <h2 class="text-white text-lg font-semibold flex items-center gap-3 min-w-0">
               <span class="truncate" th:text="|#{assessment.question} ${iStat.count}|">
@@ -303,6 +311,16 @@
               </span>
             </h2>
             <div class="flex items-center gap-3">
+              <button type="button" class="ai-translate-btn question-translate-btn scale-90 origin-right"
+                aria-pressed="false" th:title="#{reader.translate}">
+                <svg class="ai-translate-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true">
+                  <path
+                    d="M12 2l1.1 4.2L17 7.3l-3.9 1.1L12 12l-1.1-3.6L7 7.3l3.9-1.1L12 2zM19 10l.8 2.8L22 14l-2.2.6L19 17l-.8-2.4L16 14l2.2-1.2L19 10zM6 13l1 3.4L10 17l-3 .9L6 21l-1-3.1L2 17l3-0.6L6 13z"
+                    fill="currentColor" />
+                </svg>
+                <span th:text="#{reader.translate}">Translate</span>
+              </button>
               <span class="text-white/80 text-sm question-mark-label whitespace-nowrap" data-mark-label>–</span>
               <span class="mdError hidden"></span>
             </div>
@@ -371,8 +389,12 @@
         select: /*[[#{assessment.select}]]*/ "Select",
         markSingular: /*[[#{assessment.mark.singular}]]*/ "mark",
         markPlural: /*[[#{assessment.mark.plural}]]*/ "marks",
+        translate: /*[[#{reader.translate}]]*/ "Translate",
+        translateMissingApiKey: /*[[#{reader.translate.missingApiKey}]]*/ "Translation API key is not configured.",
+        translateFailedPrefix: /*[[#{reader.translate.failedPrefix}]]*/ "Translation failed: ",
       };
 
+      // ... existing redirection code ...
       function redirectIfBackBlocked() {
         try {
           if (sessionStorage.getItem("blockAssessmentBack") !== "1") {
@@ -394,6 +416,7 @@
         redirectIfBackBlocked();
       });
 
+      // ... markdown-it setup ...
       const md = window.markdownit
         ? window.markdownit({
           html: true,
@@ -439,6 +462,7 @@
         } catch (_) { }
       }
 
+      // ... prompt rendering ...
       const prompts = [
         '**Which sentence uses the correct form of \\"to be\\"?**\n\nRemember: singular subjects take **is**, plural subjects take **are**, and **I** takes **am**.\n\nExamples:\n- I **am** learning English.\n- She **is** reading.\n- They **are** studying.',
         "**What does the following JavaScript function return?**\n\n```js\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nChoose the best description.",
@@ -452,6 +476,8 @@
         const errEl = document.getElementById(errs[i]);
         try {
           if (el) {
+            // Store raw markdown for translation
+            el.setAttribute("data-raw-md", prompts[i]);
             el.innerHTML = md ? md.render(prompts[i]) : prompts[i];
             el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
               cb.disabled = true;
@@ -467,6 +493,7 @@
         }
       });
 
+      // ... article rendering ...
       const articles = Array.from(
         document.querySelectorAll(
           "article[data-md-src], article[data-content]",
@@ -503,6 +530,9 @@
             const resp = await fetch(mdSrc);
             content = await resp.text();
           }
+          // Store raw content for translation
+          el.setAttribute("data-raw-md", content);
+
           el.innerHTML = md ? md.render(content) : content;
           el.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
             cb.disabled = true;
@@ -517,6 +547,232 @@
           }
         }
       });
+
+
+      // --- TRANSLATION LOGIC ---
+      const courseId = new URLSearchParams(window.location.search).get("courseId");
+      /*[[${course != null ? course.language : 'en'}]]*/
+      const courseLang = /*[[${courseLanguage}]]*/ "en";
+      const userLang = /*[[${#locale.language}]]*/ "en";
+
+      let translationsMap = {}; // ID -> Translated Text
+
+      function getCacheKey(qId) {
+        return `assessmentTranslate:${courseId}:${qId}:${courseLang}:${userLang}`;
+      }
+
+      function loadTranslation(qId, updatedAt) {
+        try {
+          const key = getCacheKey(qId);
+          const cached = localStorage.getItem(key);
+          if (!cached) return null;
+
+          const data = JSON.parse(cached);
+          // Check if server content has changed
+          if (updatedAt && data.serverUpdatedAt !== updatedAt) {
+            return null;
+          }
+          return data;
+        } catch (e) { return null; }
+      }
+
+      function saveTranslation(qId, data) {
+        try {
+          const key = getCacheKey(qId);
+          localStorage.setItem(key, JSON.stringify(data));
+        } catch (e) { }
+      }
+
+      async function translateBatch(items) {
+        const tokenMeta = document.querySelector('meta[name="_csrf"]');
+        const headerMeta = document.querySelector('meta[name="_csrf_header"]');
+        const token = tokenMeta ? tokenMeta.getAttribute("content") : "";
+        const headerName = headerMeta ? headerMeta.getAttribute("content") : "";
+
+        const headers = { "Content-Type": "application/json" };
+        if (token && headerName) {
+          headers[headerName] = token;
+        }
+
+        const res = await fetch("/reader/translate/batch", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            items: items,
+            sourceLang: courseLang,
+            targetLang: userLang
+          })
+        });
+
+        if (!res.ok) throw new Error("Translation failed");
+        return await res.json();
+      }
+
+      function updateBtnState(btn, state) {
+        // state: { loading, active }
+        if (window.aiTranslateBtn && window.aiTranslateBtn.setState) {
+          window.aiTranslateBtn.setState(btn, {
+            loading: state.loading,
+            active: state.active,
+            pressed: state.active
+          });
+        } else {
+          btn.classList.toggle("is-loading", state.loading);
+          btn.classList.toggle("is-active", state.active);
+          btn.setAttribute("aria-pressed", state.active);
+        }
+
+        // Toggle thinking border on the specific card
+        const card = btn.closest(".question-card");
+        if (card) {
+          if (window.thinkingBorder && window.thinkingBorder.setLoading) {
+            window.thinkingBorder.setLoading(card, state.loading);
+          } else {
+            card.classList.toggle("thinking-border", state.loading);
+          }
+        }
+      }
+
+      function initTranslation() {
+        document.querySelectorAll(".question-translate-btn").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const card = btn.closest(".question-card");
+            if (!card) return;
+
+            // Check current state stored on the button element
+            const isShowing = btn.dataset.showing === "true";
+            const isLoading = btn.dataset.loading === "true";
+
+            if (isLoading) return;
+
+            if (isShowing) {
+              // Revert
+              revertCardTranslations(card);
+              btn.dataset.showing = "false";
+              updateBtnState(btn, { loading: false, active: false });
+            } else {
+              // Translate
+              btn.dataset.loading = "true";
+              updateBtnState(btn, { loading: true, active: false });
+
+              try {
+                await translateCard(card);
+                // Success
+                btn.dataset.loading = "false";
+                btn.dataset.showing = "true";
+                updateBtnState(btn, { loading: false, active: true });
+              } catch (err) {
+                console.error(err);
+                alert(I18N.translateFailedPrefix + err.message);
+                btn.dataset.loading = "false";
+                updateBtnState(btn, { loading: false, active: false });
+              }
+            }
+          });
+        });
+      }
+
+      async function translateCard(card) {
+        // Unique ID for this question card (e.g. from DB or index)
+        // We prefer using DB ID if available, else index + chapter
+        // Here we use data-updated-at for cache invalidation
+        const updatedAt = card.getAttribute("data-updated-at");
+        // Generate a stable ID for caching
+        // We can use the index in loop + chapter ID if question ID is not exposed
+        // Let's rely on data-translate-id we generate, BUT it needs to be stable across reloads for caching to work
+        // The current generation "q_" + Math.random() is NOT stable. We need a stable ID.
+        // We can use the question content path (data-md-src) as a unique ID base.
+
+        const article = card.querySelector("article[data-raw-md]");
+        if (!article) return;
+
+        const mdSrc = article.getAttribute("data-md-src");
+        // Use mdSrc as stable ID key
+        const stableId = mdSrc ? mdSrc.replace(/[^a-zA-Z0-9]/g, '_') : "q_unknown_" + Date.now();
+
+        // Check Cache
+        const cachedData = loadTranslation(stableId, updatedAt);
+        if (cachedData) {
+          applyCardTranslations(card, cachedData.translations);
+          return;
+        }
+
+        const itemsToTranslate = {};
+        const localMap = {}; // Local map for this card
+
+        // 1. Question Content
+        const qId = "q_text";
+        localMap[qId] = article.getAttribute("data-raw-md");
+        itemsToTranslate[qId] = localMap[qId];
+
+        // 2. Options
+        card.querySelectorAll("button[data-value]").forEach((btn, idx) => {
+          const val = btn.getAttribute("data-value");
+          if (val === "") return;
+          const text = btn.textContent.trim();
+          if (!text) return;
+
+          const oId = "opt_" + idx;
+          // Store original
+          if (!btn.hasAttribute("data-original-text")) {
+            btn.setAttribute("data-original-text", text);
+          }
+
+          localMap[oId] = text;
+          itemsToTranslate[oId] = text;
+        });
+
+        if (Object.keys(itemsToTranslate).length > 0) {
+          const results = await translateBatch(itemsToTranslate);
+
+          // Save to Cache with Metadata
+          saveTranslation(stableId, {
+            serverUpdatedAt: updatedAt,
+            translations: results
+          });
+
+          applyCardTranslations(card, results);
+        }
+      }
+
+      function applyCardTranslations(card, map) {
+        // Apply to Question
+        // question text is under key 'q_text'
+        const article = card.querySelector("article[data-raw-md]");
+        if (article && map['q_text']) {
+          article.innerHTML = md ? md.render(map['q_text']) : map['q_text'];
+          const mdSrc = article.getAttribute("data-md-src");
+          if (mdSrc) resolveRelativeImages(article, mdSrc);
+        }
+
+        // Apply to Options
+        // options are 'opt_0', 'opt_1', etc.
+        card.querySelectorAll("button[data-value]").forEach((btn, idx) => {
+          const oId = "opt_" + idx;
+          if (map[oId]) {
+            btn.textContent = map[oId];
+          }
+        });
+      }
+
+      function revertCardTranslations(card) {
+        // Revert Question
+        const article = card.querySelector("article[data-raw-md]");
+        if (article) {
+          const raw = article.getAttribute("data-raw-md");
+          article.innerHTML = md ? md.render(raw) : raw;
+          const mdSrc = article.getAttribute("data-md-src");
+          if (mdSrc) resolveRelativeImages(article, mdSrc);
+        }
+        // Revert Options
+        card.querySelectorAll("button[data-original-text]").forEach(btn => {
+          btn.textContent = btn.getAttribute("data-original-text");
+        });
+      }
+
+      // Initialize
+      initTranslation();
 
       function closeAllAnswerMenus(except) {
         document
@@ -558,6 +814,8 @@
           menu.classList.add("hidden");
         });
       });
+
+      // ... rest of the existing script ...
 
       const submitBtn = document.getElementById("submitAssessment");
       submitBtn &&

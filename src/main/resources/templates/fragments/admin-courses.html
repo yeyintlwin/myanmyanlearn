@@ -1,13 +1,5 @@
-<div
-  xmlns:th="http://www.thymeleaf.org"
-  th:fragment="coursesSection"
-  class="space-y-4"
->
-  <div
-    id="coursesManagementRoot"
-    class="space-y-4"
-    data-storage-key="adminCoursesDraft_v1"
-    data-initial-courses="[]"
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="coursesSection" class="space-y-4">
+  <div id="coursesManagementRoot" class="space-y-4" data-storage-key="adminCoursesDraft_v1" data-initial-courses="[]"
     th:attr="data-initial-courses=${adminCoursesJson}?:'[]',
       data-i18n-item-untitled=#{adminCourses.item.untitled},
       data-i18n-item-no-description=#{adminCourses.item.noDescription},
@@ -40,42 +32,30 @@
       data-i18n-toast-invalid-import-format=#{adminCourses.toast.invalidImportFormat},
       data-i18n-toast-courses-imported=#{adminCourses.toast.coursesImported},
       data-i18n-toast-import-db-failed=#{adminCourses.toast.importDbFailed},
-      data-i18n-toast-import-read-failed=#{adminCourses.toast.importReadFailed}"
-  >
-    <div
-      class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3"
-    >
+      data-i18n-toast-import-read-failed=#{adminCourses.toast.importReadFailed},
+      data-i18n-import-status-uploading=#{adminCourses.import.status.uploading},
+      data-i18n-import-status-processing=#{adminCourses.import.status.processing},
+      data-i18n-export-status-starting=#{adminCourses.export.status.starting},
+      data-i18n-export-status-failed=#{adminCourses.export.status.failed}">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
       <div class="min-w-0">
         <h2 class="text-white text-2xl font-bold">
           <span th:text="#{adminPanel.courses}">Courses Management</span>
         </h2>
-        <p
-          class="text-white/70 text-sm mt-1"
-          th:text="#{adminCourses.subtitle}"
-        >
+        <p class="text-white/70 text-sm mt-1" th:text="#{adminCourses.subtitle}">
           Courses list from database.
         </p>
       </div>
       <div class="flex items-center justify-end gap-2 flex-wrap">
-        <input
-          id="importCoursesInput"
-          type="file"
-          accept="application/json,.json,.bll,application/octet-stream,application/zip"
-          class="hidden"
-        />
-        <button
-          id="importCoursesBtn"
-          type="button"
-          class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 h-10 text-sm font-semibold text-white/90 hover:bg-white/10 transition"
-        >
+        <input id="importCoursesInput" type="file"
+          accept="application/json,.json,.bll,application/octet-stream,application/zip" class="hidden" />
+        <button id="importCoursesBtn" type="button"
+          class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 h-10 text-sm font-semibold text-white/90 hover:bg-white/10 transition">
           <i class="fas fa-file-import text-xs"></i>
           <span th:text="#{adminCourses.import}">Import</span>
         </button>
-        <button
-          id="addCourseBtn"
-          type="button"
-          class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-4 h-10 text-sm font-semibold text-white hover:bg-white/15 transition flex-shrink-0"
-        >
+        <button id="addCourseBtn" type="button"
+          class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/10 px-4 h-10 text-sm font-semibold text-white hover:bg-white/15 transition flex-shrink-0">
           <i class="fas fa-plus text-xs"></i>
           <span th:text="#{adminCourses.add}">Add course</span>
         </button>
@@ -84,30 +64,21 @@
 
     <div id="coursesFlash" class="hidden"></div>
 
-    <div
-      class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-visible"
-    >
+    <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-visible">
       <div class="p-4">
         <div class="flex items-center justify-between gap-3">
-          <div
-            class="text-white font-semibold"
-            th:text="#{adminCourses.listTitle}"
-          >
+          <div class="text-white font-semibold" th:text="#{adminCourses.listTitle}">
             Courses
           </div>
-          <div
-            id="courseCountBadge"
-            class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-2.5 h-7 text-[11px] font-semibold text-white/90"
-          >
+          <div id="courseCountBadge"
+            class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-2.5 h-7 text-[11px] font-semibold text-white/90">
             0
           </div>
         </div>
 
-        <div
-          id="courseListEmpty"
+        <div id="courseListEmpty"
           class="mt-3 rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-white/70"
-          th:text="#{adminCourses.empty}"
-        >
+          th:text="#{adminCourses.empty}">
           No courses yet. Create one or import a JSON export.
         </div>
         <div id="courseList" class="mt-3 space-y-2"></div>
@@ -117,37 +88,23 @@
 </div>
 
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="coursesOverlays">
-  <div
-    id="addCourseModal"
-    class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/70"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="addCourseTitle"
-  >
+  <div id="addCourseModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/70" role="dialog" aria-modal="true"
+    aria-labelledby="addCourseTitle">
     <div class="min-h-full flex items-start justify-center p-4 sm:p-6">
-      <div
-        class="w-full max-w-xl rounded-2xl border border-white/15 bg-slate-950/90 backdrop-blur-xl shadow-2xl my-6"
-      >
+      <div class="w-full max-w-xl rounded-2xl border border-white/15 bg-slate-950/90 backdrop-blur-xl shadow-2xl my-6">
         <form id="addCourseForm" method="post" class="p-5 sm:p-6 space-y-4">
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0">
               <h3 id="addCourseTitle" class="text-white text-lg font-bold">
                 <span th:text="#{adminCourses.modal.addTitle}">Add course</span>
               </h3>
-              <p
-                class="text-white/75 text-sm mt-1"
-                th:text="#{adminCourses.modal.addSubtitle}"
-              >
+              <p class="text-white/75 text-sm mt-1" th:text="#{adminCourses.modal.addSubtitle}">
                 Title, description, and an optional cover image.
               </p>
             </div>
-            <button
-              id="addCourseClose"
-              type="button"
+            <button id="addCourseClose" type="button"
               class="h-10 w-10 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition inline-flex items-center justify-center flex-shrink-0"
-              th:attr="aria-label=#{adminCourses.modal.close}"
-              aria-label="Close"
-            >
+              th:attr="aria-label=#{adminCourses.modal.close}" aria-label="Close">
               <i class="fas fa-xmark"></i>
             </button>
           </div>
@@ -155,36 +112,18 @@
           <div id="addCourseError" class="hidden"></div>
 
           <div class="space-y-2">
-            <label
-              class="block text-xs font-medium text-white/80"
-              for="courseTitle"
-              th:text="#{adminCourses.field.title}"
-              >Course title</label
-            >
-            <input
-              id="courseTitle"
-              name="courseTitle"
-              type="text"
-              required
-              maxlength="120"
-              th:attr="placeholder=#{adminCourses.placeholder.title}"
-              placeholder="Japanese Netiquette"
-              class="bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40"
-            />
+            <label class="block text-xs font-medium text-white/80" for="courseTitle"
+              th:text="#{adminCourses.field.title}">Course title</label>
+            <input id="courseTitle" name="courseTitle" type="text" required maxlength="120"
+              th:attr="placeholder=#{adminCourses.placeholder.title}" placeholder="Japanese Netiquette"
+              class="bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40" />
           </div>
 
           <div class="space-y-2">
-            <label
-              class="block text-xs font-medium text-white/80"
-              for="courseLanguage"
-              th:text="#{adminCourses.field.language}"
-              >Course language</label
-            >
-            <select
-              id="courseLanguage"
-              name="courseLanguage"
-              class="bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full"
-            >
+            <label class="block text-xs font-medium text-white/80" for="courseLanguage"
+              th:text="#{adminCourses.field.language}">Course language</label>
+            <select id="courseLanguage" name="courseLanguage"
+              class="bg-white/10 text-white text-sm rounded-lg px-3 h-10 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full">
               <option value="" th:text="#{adminCourses.language.select}">
                 Select language
               </option>
@@ -222,99 +161,50 @@
           </div>
 
           <div class="space-y-2">
-            <label
-              class="block text-xs font-medium text-white/80"
-              th:text="#{adminCourses.field.targetStudents}"
-              >Target students</label
-            >
+            <label class="block text-xs font-medium text-white/80" th:text="#{adminCourses.field.targetStudents}">Target
+              students</label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div class="rounded-xl border border-white/10 bg-white/5 p-3">
-                <div
-                  class="text-white/70 text-xs font-semibold"
-                  th:text="#{adminCourses.target.schoolYears}"
-                >
+                <div class="text-white/70 text-xs font-semibold" th:text="#{adminCourses.target.schoolYears}">
                   School years
                 </div>
-                <div
-                  id="targetSchoolYearsOptions"
-                  class="mt-2 flex flex-wrap gap-2"
-                ></div>
+                <div id="targetSchoolYearsOptions" class="mt-2 flex flex-wrap gap-2"></div>
               </div>
               <div class="rounded-xl border border-white/10 bg-white/5 p-3">
-                <div
-                  class="text-white/70 text-xs font-semibold"
-                  th:text="#{adminCourses.target.classes}"
-                >
+                <div class="text-white/70 text-xs font-semibold" th:text="#{adminCourses.target.classes}">
                   Classes
                 </div>
-                <div
-                  id="targetClassesOptions"
-                  class="mt-2 flex flex-wrap gap-2 max-h-32 overflow-auto pr-1"
-                ></div>
+                <div id="targetClassesOptions" class="mt-2 flex flex-wrap gap-2 max-h-32 overflow-auto pr-1"></div>
               </div>
             </div>
-            <div
-              class="text-[11px] text-white/60"
-              th:text="#{adminCourses.target.hint}"
-            >
+            <div class="text-[11px] text-white/60" th:text="#{adminCourses.target.hint}">
               Leave empty to make the course visible to all students (UI only).
             </div>
           </div>
 
           <div class="space-y-2">
-            <label
-              class="block text-xs font-medium text-white/80"
-              for="courseDescription"
-              th:text="#{adminCourses.field.description}"
-              >Description</label
-            >
-            <textarea
-              id="courseDescription"
-              name="courseDescription"
-              rows="4"
-              maxlength="800"
-              th:attr="placeholder=#{adminCourses.placeholder.description}"
-              placeholder="What this course is about…"
-              class="bg-white/10 text-white text-sm rounded-lg px-3 py-2 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40 resize-none"
-            ></textarea>
+            <label class="block text-xs font-medium text-white/80" for="courseDescription"
+              th:text="#{adminCourses.field.description}">Description</label>
+            <textarea id="courseDescription" name="courseDescription" rows="4" maxlength="800"
+              th:attr="placeholder=#{adminCourses.placeholder.description}" placeholder="What this course is about…"
+              class="bg-white/10 text-white text-sm rounded-lg px-3 py-2 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40 resize-none"></textarea>
           </div>
 
           <div class="space-y-2">
-            <label
-              class="block text-xs font-medium text-white/80"
-              for="courseCover"
-              th:text="#{adminCourses.field.cover}"
-              >Cover image</label
-            >
+            <label class="block text-xs font-medium text-white/80" for="courseCover"
+              th:text="#{adminCourses.field.cover}">Cover image</label>
             <div class="flex items-start gap-4">
-              <img
-                id="courseCoverPreview"
-                th:attr="alt=#{adminCourses.coverPreview.alt}"
-                alt="Cover preview"
-                class="hidden h-20 w-28 rounded-xl border border-white/10 object-cover bg-white/5 flex-shrink-0"
-              />
+              <img id="courseCoverPreview" th:attr="alt=#{adminCourses.coverPreview.alt}" alt="Cover preview"
+                class="hidden h-20 w-28 rounded-xl border border-white/10 object-cover bg-white/5 flex-shrink-0" />
               <div class="min-w-0 flex-1 space-y-2">
-                <input
-                  id="courseCover"
-                  name="courseCover"
-                  type="file"
-                  accept="image/*"
-                  class="block w-full text-sm text-white/80 file:mr-3 file:rounded-lg file:border file:border-white/15 file:bg-white/10 file:px-3 file:h-10 file:text-white file:text-sm file:font-semibold hover:file:bg-white/15 file:transition"
-                />
-                <button
-                  id="removeCourseCoverBtn"
-                  type="button"
-                  class="hidden inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 h-9 text-xs font-semibold text-white/90 hover:bg-white/10 transition"
-                >
+                <input id="courseCover" name="courseCover" type="file" accept="image/*"
+                  class="block w-full text-sm text-white/80 file:mr-3 file:rounded-lg file:border file:border-white/15 file:bg-white/10 file:px-3 file:h-10 file:text-white file:text-sm file:font-semibold hover:file:bg-white/15 file:transition" />
+                <button id="removeCourseCoverBtn" type="button"
+                  class="hidden inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 h-9 text-xs font-semibold text-white/90 hover:bg-white/10 transition">
                   <i class="fas fa-image text-[10px]"></i>
-                  <span th:text="#{adminCourses.cover.remove}"
-                    >Remove cover</span
-                  >
+                  <span th:text="#{adminCourses.cover.remove}">Remove cover</span>
                 </button>
-                <div
-                  class="text-[11px] text-white/60"
-                  th:text="#{adminCourses.cover.hint}"
-                >
+                <div class="text-[11px] text-white/60" th:text="#{adminCourses.cover.hint}">
                   Images are stored locally in your browser for now.
                 </div>
               </div>
@@ -322,20 +212,14 @@
           </div>
 
           <div class="flex flex-col sm:flex-row gap-2 sm:justify-end pt-1">
-            <button
-              id="addCourseCancel"
-              type="button"
+            <button id="addCourseCancel" type="button"
               class="bg-white/10 hover:bg-white/15 text-white text-sm px-4 h-10 rounded-lg border border-white/10 transition inline-flex items-center justify-center"
-              th:text="#{adminCourses.action.cancel}"
-            >
+              th:text="#{adminCourses.action.cancel}">
               Cancel
             </button>
-            <button
-              id="addCourseSubmit"
-              type="submit"
+            <button id="addCourseSubmit" type="submit"
               class="bg-emerald-500/25 hover:bg-emerald-500/35 text-emerald-50 text-sm px-4 h-10 rounded-lg border border-emerald-500/40 transition inline-flex items-center justify-center font-semibold"
-              th:text="#{adminCourses.action.create}"
-            >
+              th:text="#{adminCourses.action.create}">
               Create course
             </button>
           </div>
@@ -344,52 +228,35 @@
     </div>
   </div>
 
-  <div
-    id="confirmDeleteModal"
-    class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/70"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="confirmDeleteTitle"
-  >
+  <div id="confirmDeleteModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/70" role="dialog"
+    aria-modal="true" aria-labelledby="confirmDeleteTitle">
     <div class="min-h-full flex items-start justify-center p-4 sm:p-6">
       <div
-        class="w-full max-w-lg rounded-2xl border border-rose-500/30 bg-slate-950/90 backdrop-blur-xl shadow-2xl my-6"
-      >
+        class="w-full max-w-lg rounded-2xl border border-rose-500/30 bg-slate-950/90 backdrop-blur-xl shadow-2xl my-6">
         <div class="p-5 sm:p-6">
           <div class="flex items-start gap-3">
             <div
-              class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center flex-shrink-0"
-            >
+              class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center flex-shrink-0">
               <i class="fas fa-trash text-rose-200"></i>
             </div>
             <div class="min-w-0">
               <h3 id="confirmDeleteTitle" class="text-white text-lg font-bold">
                 <span th:text="#{adminCourses.confirm.title}">Delete</span>
               </h3>
-              <p
-                id="confirmDeleteMessage"
-                class="text-white/80 text-sm mt-2"
-                th:text="#{adminCourses.confirm.message}"
-              >
+              <p id="confirmDeleteMessage" class="text-white/80 text-sm mt-2" th:text="#{adminCourses.confirm.message}">
                 Are you sure?
               </p>
             </div>
           </div>
           <div class="mt-5 flex flex-col sm:flex-row gap-2 sm:justify-end">
-            <button
-              id="confirmDeleteCancel"
-              type="button"
+            <button id="confirmDeleteCancel" type="button"
               class="bg-white/10 hover:bg-white/15 text-white text-sm px-4 h-10 rounded-lg border border-white/10 transition inline-flex items-center justify-center"
-              th:text="#{adminCourses.confirm.cancel}"
-            >
+              th:text="#{adminCourses.confirm.cancel}">
               Cancel
             </button>
-            <button
-              id="confirmDeleteConfirm"
-              type="button"
+            <button id="confirmDeleteConfirm" type="button"
               class="bg-rose-500/30 hover:bg-rose-500/40 text-rose-100 text-sm px-4 h-10 rounded-lg border border-rose-500/40 transition inline-flex items-center justify-center font-semibold"
-              th:text="#{adminCourses.confirm.confirm}"
-            >
+              th:text="#{adminCourses.confirm.confirm}">
               Delete
             </button>
           </div>
@@ -398,28 +265,25 @@
     </div>
   </div>
 
-  <div
-    id="importProgressModal"
-    class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/70"
-    role="dialog"
-    aria-modal="true"
-    data-backdrop="static"
-  >
+  <div id="importProgressModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/70" role="dialog"
+    aria-modal="true" data-backdrop="static">
     <div class="min-h-full flex items-center justify-center p-4 sm:p-6">
-      <div
-        class="w-full max-w-md rounded-2xl border border-white/15 bg-slate-950/90 backdrop-blur-xl shadow-2xl"
-      >
+      <div class="w-full max-w-md rounded-2xl border border-white/15 bg-slate-950/90 backdrop-blur-xl shadow-2xl">
         <div class="p-6 text-center space-y-4">
-          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-500/20 text-indigo-300 mb-2">
-             <i class="fas fa-circle-notch fa-spin text-xl"></i>
+          <div
+            class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-500/20 text-indigo-300 mb-2">
+            <i class="fas fa-circle-notch fa-spin text-xl"></i>
           </div>
-          <h3 class="text-white text-lg font-bold">Importing Course...</h3>
-          <p id="importProgressText" class="text-white/70 text-sm">Please wait while we process the archive.</p>
-          
+          <h3 class="text-white text-lg font-bold" th:text="#{adminCourses.import.progress.title}">Importing Course...
+          </h3>
+          <p id="importProgressText" class="text-white/70 text-sm" th:text="#{adminCourses.import.progress.text}">Please
+            wait while we process the archive.</p>
+
           <div class="w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
-            <div id="importProgressBar" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+            <div id="importProgressBar" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-300 ease-out"
+              style="width: 0%"></div>
           </div>
-          
+
           <p id="importProgressPercent" class="text-xs text-white/50 font-mono">0%</p>
         </div>
       </div>

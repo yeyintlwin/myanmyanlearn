@@ -422,6 +422,9 @@ public class CourseService {
                 qm.setQuestionNumber(q.getQuestionNumber());
                 qm.setQuestionContentPath("/assessment/md?courseId=" + courseId + "&ch=" + chapter.getChapterNumber()
                         + "&q=" + q.getQuestionNumber());
+                if (q.getUpdatedAt() != null) {
+                    qm.setUpdatedAt(q.getUpdatedAt().toString());
+                }
 
                 List<com.barlarlar.myanmyanlearn.entity.CourseQuestionSlotEntity> slots = courseQuestionSlotRepository
                         .findByQuestionIdOrderBySlotIndexAsc(q.getId());

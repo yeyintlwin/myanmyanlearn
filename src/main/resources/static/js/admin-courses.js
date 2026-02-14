@@ -84,6 +84,16 @@
     toastImportReadFailed:
       root.getAttribute("data-i18n-toast-import-read-failed") ||
       "Failed to read import file.",
+    importStatusUploading:
+      root.getAttribute("data-i18n-import-status-uploading") || "Uploading...",
+    importStatusProcessing:
+      root.getAttribute("data-i18n-import-status-processing") ||
+      "Processing on server...",
+    exportStatusStarting:
+      root.getAttribute("data-i18n-export-status-starting") ||
+      "Starting export...",
+    exportStatusFailed:
+      root.getAttribute("data-i18n-export-status-failed") || "Export failed.",
   };
 
   var csrfHeaderName = null;
@@ -973,7 +983,7 @@
           } else if (status.state === "FAILED") {
             clearInterval(pollInterval);
             hideImportProgress();
-            showFlash("error", status.message || "Export failed.");
+            showFlash("error", status.message || i18n.exportStatusFailed);
           }
         })
         .catch(function () { });
@@ -985,7 +995,8 @@
     if (!id) return;
 
     showImportProgress();
-    if (importProgressText) importProgressText.textContent = "Starting export...";
+    if (importProgressText)
+      importProgressText.textContent = i18n.exportStatusStarting;
 
     apiFetch("/api/admin/courses/" + encodeURIComponent(id) + "/export", {
       method: "GET",
@@ -1027,7 +1038,8 @@
     if (!importProgressModal) return;
     if (importProgressBar) importProgressBar.style.width = "0%";
     if (importProgressPercent) importProgressPercent.textContent = "0%";
-    if (importProgressText) importProgressText.textContent = "Uploading...";
+    if (importProgressText)
+      importProgressText.textContent = i18n.importStatusUploading;
     openModal(importProgressModal);
   }
 
@@ -1104,7 +1116,10 @@
         var percentComplete = (e.loaded / e.total) * 100;
         // Limit max upload progress visualization to 99% until server responds
         var visualPercent = Math.min(99, Math.round(percentComplete));
-        updateImportProgress(visualPercent, "Uploading... " + visualPercent + "%");
+        updateImportProgress(
+          visualPercent,
+          i18n.importStatusUploading + " " + visualPercent + "%",
+        );
       }
     };
 
@@ -1117,7 +1132,7 @@
             throw new Error(msg || i18n.toastInvalidImportFormat);
           }
           // Job submitted successfully, start polling
-          updateImportProgress(0, "Processing on server..."); // Reset for server progress
+          updateImportProgress(0, i18n.importStatusProcessing); // Reset for server progress
           pollImportStatus(json.jobId);
         } catch (e) {
           hideImportProgress();

@@ -31,6 +31,7 @@ import java.util.Comparator;
 import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -483,8 +484,111 @@ public class ReaderController {
         return v.substring(0, max);
     }
 
+    @PostMapping(value = "/reader/translate/batch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> translateBatch(@RequestBody BatchTranslateRequest req) {
+        if (req == null || req.items == null || req.items.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        String apiKey = googleStudioApiKey == null ? "" : googleStudioApiKey.trim();
+        if (apiKey.isEmpty()) {
+            return ResponseEntity.status(503).build();
+        }
+        String sourceLang = normalizeLang(req.sourceLang);
+        String targetLang = normalizeLang(req.targetLang);
+        if (targetLang == null || (sourceLang != null && sourceLang.equals(targetLang))) {
+            return ResponseEntity.ok(req.items);
+        }
+
+        try {
+            // We serve a single prompt with all items as a JSON object
+            // to get a JSON object back with translated values.
+            ObjectNode root = objectMapper.createObjectNode();
+            req.items.forEach(root::put);
+            String jsonToTranslate = objectMapper.writeValueAsString(root);
+
+            String prompt = "Translate the values of the following JSON object to " + languageLabel(targetLang) + ". "
+                    + (sourceLang != null ? "Source language is " + languageLabel(sourceLang) + ". " : "")
+                    + "Do NOT translate keys. Keep the JSON structure exactly the same. "
+                    + "Keep technical terms in English. Preserve Markdown formatting. "
+                    + "Return ONLY the valid JSON object.\n\n" + jsonToTranslate;
+
+            String translatedJson = translateTextGeneric(apiKey, prompt);
+
+            // Clean up code fences if the model adds them
+            translatedJson = translatedJson.trim();
+            if (translatedJson.startsWith("```json")) {
+                translatedJson = translatedJson.substring(7);
+            } else if (translatedJson.startsWith("```")) {
+                translatedJson = translatedJson.substring(3);
+            }
+            if (translatedJson.endsWith("```")) {
+                translatedJson = translatedJson.substring(0, translatedJson.length() - 3);
+            }
+
+            JsonNode resultNode = objectMapper.readTree(translatedJson);
+            Map<String, String> result = new java.util.HashMap<>();
+            if (resultNode.isObject()) {
+                resultNode.fieldNames().forEachRemaining(fieldName -> {
+                    result.put(fieldName, resultNode.get(fieldName).asText());
+                });
+            }
+            return ResponseEntity.ok(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Batch translation error: " + e.getMessage());
+            return ResponseEntity.status(502).build();
+        }
+    }
+
+    private String translateTextGeneric(String apiKey, String prompt) throws Exception {
+        String modelName = getGenerateContentModel(apiKey);
+        String url = "https://generativelanguage.googleapis.com/v1beta/" + modelName + ":generateContent?key="
+                + URLEncoder.encode(apiKey, StandardCharsets.UTF_8);
+
+        ObjectNode body = objectMapper.createObjectNode();
+        ArrayNode contents = body.putArray("contents");
+        ObjectNode content = contents.addObject();
+        content.put("role", "user");
+        ArrayNode parts = content.putArray("parts");
+        parts.addObject().put("text", prompt);
+
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body.toString(), StandardCharsets.UTF_8))
+                .build();
+        HttpResponse<String> resp = httpClient.send(request,
+                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        if (resp.statusCode() < 200 || resp.statusCode() >= 300) {
+            System.err.println("Google AI API Error: " + resp.statusCode() + " " + resp.body());
+            throw new IOException("HTTP " + resp.statusCode());
+        }
+
+        try {
+            JsonNode data = objectMapper.readTree(resp.body());
+            JsonNode partsNode = data.path("candidates").path(0).path("content").path("parts");
+            StringBuilder sb = new StringBuilder();
+            if (partsNode.isArray()) {
+                for (JsonNode p : partsNode) {
+                    sb.append(p.path("text").asText(""));
+                }
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            System.err.println("Failed to parse Google AI response: " + resp.body());
+            throw e;
+        }
+    }
+
     private static class TranslateRequest {
         public String text;
+        public String sourceLang;
+        public String targetLang;
+    }
+
+    private static class BatchTranslateRequest {
+        public Map<String, String> items;
         public String sourceLang;
         public String targetLang;
     }
