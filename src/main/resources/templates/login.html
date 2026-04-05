@@ -4,114 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="#{login.title}">MYAN MYAN LEARN - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/app.css" />
     <script src="/js/tailwind-config.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <style>
-      /* Fix autofill styling - Enhanced version */
-
-      input:-webkit-autofill,
-      input:-webkit-autofill:hover,
-      input:-webkit-autofill:focus,
-      input:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.1) inset !important;
-        -webkit-text-fill-color: white !important;
-        background-color: transparent !important;
-        background-image: none !important;
-        transition: background-color 5000s ease-in-out 0s !important;
-        -webkit-transition: background-color 5000s ease-in-out 0s !important;
-      }
-      /* Firefox autofill fix */
-
-      input:-moz-autofill {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        background-image: none !important;
-        color: white !important;
-        box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.1) inset !important;
-      }
-      /* Additional fix for all browsers */
-
-      input[type="text"]:autofill,
-      input[type="password"]:autofill {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        background-image: none !important;
-        color: white !important;
-        box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.1) inset !important;
-      }
-
-    </style>
   </head>
 
-  <body class="min-h-screen font-sans flex items-center justify-center p-3 sm:p-6">
+  <body class="min-vh-100 d-flex align-items-center justify-content-center p-2 p-sm-4">
     <!-- Navbar -->
-    <nav
-      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
-    >
-      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-14 sm:h-18">
-          <!-- Brand Section -->
-          <div class="flex items-center gap-2 group cursor-pointer">
-            <div class="relative">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-              ></div>
-              <div
-                class="relative p-2 group-hover:scale-105 transition-all duration-300"
-              >
-                <img
-                  th:src="@{/images/logo.svg}"
-                  alt="Myan Myan Learn"
-                  class="w-9 h-9 sm:w-12 sm:h-12 drop-shadow-lg"
-                />
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div
-                class="text-white font-bold text-sm sm:text-xl brand-font tracking-wide truncate"
-              >
-                Myan Myan Learn
-              </div>
-              <div
-                class="hidden sm:block text-white/70 text-xs font-medium tracking-wider uppercase"
-                th:text="#{nav.subtitle}"
-              >
-                Learning Platform
-              </div>
-            </div>
+    <nav class="navbar navbar-app fixed-top">
+      <div class="container-fluid px-3 px-sm-4">
+        <div class="navbar-brand d-flex align-items-center gap-2">
+          <img th:src="@{/images/logo.svg}" alt="Myan Myan Learn" style="width:2.25rem;height:2.25rem;" class="d-none d-sm-block" />
+          <img th:src="@{/images/logo.svg}" alt="Myan Myan Learn" style="width:2rem;height:2rem;" class="d-block d-sm-none" />
+          <div class="d-flex flex-column lh-sm">
+            <span class="brand-text brand-font">Myan Myan Learn</span>
+            <span class="brand-subtitle d-none d-sm-block" th:text="#{nav.subtitle}">Learning Platform</span>
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Auth Card -->
-    <div
-      class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl mt-16 sm:mt-20 relative overflow-hidden"
-    >
+    <div class="card-auth mt-5 position-relative overflow-hidden" style="max-width:28rem;width:100%;">
       <!-- Decorative Background -->
-      <div
-        class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 rounded-full -translate-y-16 translate-x-16"
-      ></div>
-      <div
-        class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-secondary-500/20 to-pink-500/20 rounded-full translate-y-12 -translate-x-12"
-      ></div>
+      <div class="decor-circle-tr"></div>
+      <div class="decor-circle-bl"></div>
 
       <!-- Header Section -->
-      <div class="relative z-10 text-center mb-8">
-        <div
-          class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
-        >
-          <i class="fas fa-user text-white text-xl"></i>
+      <div class="position-relative text-center mb-4" style="z-index:1;">
+        <div class="auth-icon-box mx-auto mb-3">
+          <i class="fas fa-user text-white fs-5"></i>
         </div>
-        <h1
-          class="text-2xl sm:text-3xl font-bold text-white mb-2"
-          th:text="#{login.welcomeBack}"
-        >
+        <h1 class="auth-heading mb-2" th:text="#{login.welcomeBack}">
           Welcome Back
         </h1>
-        <p class="text-sm text-white/80" th:text="#{login.signInPrompt}">
+        <p class="auth-subtitle" th:text="#{login.signInPrompt}">
           Sign in to continue your learning journey
         </p>
       </div>
@@ -120,17 +48,17 @@
         th:action="@{/authenticateTheUser}"
         method="post"
         action="#"
-        class="relative z-10"
+        class="position-relative"
+        style="z-index:1;"
       >
         <!-- Error Message -->
         <div
           th:if="${param.error}"
-          class="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-2xl backdrop-blur-sm"
+          class="alert alert-glass-danger mb-4"
         >
-          <div class="flex items-center">
-            <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
+          <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle me-3"></i>
             <div
-              class="text-red-200 text-sm font-medium"
               th:text="${errorMessage != null} ? errorMessage : #{login.errorInvalid}"
             >
               Invalid username or password. Please try again.
@@ -141,14 +69,11 @@
         <!-- Account Locked Message -->
         <div
           th:if="${locked}"
-          class="mb-6 p-4 bg-accent-500/20 border border-accent-500/30 rounded-2xl backdrop-blur-sm"
+          class="alert alert-glass-warning mb-4"
         >
-          <div class="flex items-center">
-            <i class="fas fa-lock text-accent-400 mr-3"></i>
-            <div
-              class="text-accent-200 text-sm font-medium"
-              th:text="#{login.locked}"
-            >
+          <div class="d-flex align-items-center">
+            <i class="fas fa-lock me-3"></i>
+            <div th:text="#{login.locked}">
               Your account has been locked. Please contact support for
               assistance.
             </div>
@@ -158,14 +83,11 @@
         <!-- Account Disabled Message -->
         <div
           th:if="${disabled}"
-          class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-2xl backdrop-blur-sm"
+          class="alert alert-glass-warning mb-4"
         >
-          <div class="flex items-center">
-            <i class="fas fa-user-slash text-yellow-400 mr-3"></i>
-            <div
-              class="text-yellow-200 text-sm font-medium"
-              th:text="#{login.disabled}"
-            >
+          <div class="d-flex align-items-center">
+            <i class="fas fa-user-slash me-3"></i>
+            <div th:text="#{login.disabled}">
               Your account has been disabled. Please contact support for
               assistance.
             </div>
@@ -175,14 +97,11 @@
         <!-- Account Expired Message -->
         <div
           th:if="${expired}"
-          class="mb-6 p-4 bg-secondary-500/20 border border-secondary-500/30 rounded-2xl backdrop-blur-sm"
+          class="alert alert-glass-warning mb-4"
         >
-          <div class="flex items-center">
-            <i class="fas fa-clock text-secondary-400 mr-3"></i>
-            <div
-              class="text-secondary-200 text-sm font-medium"
-              th:text="#{login.expired}"
-            >
+          <div class="d-flex align-items-center">
+            <i class="fas fa-clock me-3"></i>
+            <div th:text="#{login.expired}">
               Your account or password has expired. Please contact support or
               reset your password.
             </div>
@@ -190,15 +109,10 @@
         </div>
 
         <!-- General Error Message (for JavaScript validation) -->
-        <div
-          class="general-error hidden mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-2xl backdrop-blur-sm"
-        >
-          <div class="flex items-center">
-            <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
-            <div
-              class="text-red-200 text-sm font-medium"
-              th:text="#{login.generalError}"
-            >
+        <div class="general-error d-none alert alert-glass-danger mb-4">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle me-3"></i>
+            <div th:text="#{login.generalError}">
               Please fix the errors above before submitting.
             </div>
           </div>
@@ -207,14 +121,11 @@
         <!-- Logout Success Message -->
         <div
           th:if="${logout}"
-          class="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-2xl backdrop-blur-sm"
+          class="alert alert-glass-success mb-4"
         >
-          <div class="flex items-center">
-            <i class="fas fa-check-circle text-green-400 mr-3"></i>
-            <div
-              class="text-green-200 text-sm font-medium"
-              th:text="#{login.logoutSuccess}"
-            >
+          <div class="d-flex align-items-center">
+            <i class="fas fa-check-circle me-3"></i>
+            <div th:text="#{login.logoutSuccess}">
               You have been successfully logged out.
             </div>
           </div>
@@ -223,29 +134,23 @@
         <!-- Account Deleted Message -->
         <div
           th:if="${deleted}"
-          class="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-2xl backdrop-blur-sm"
+          class="alert alert-glass-success mb-4"
         >
-          <div class="flex items-center">
-            <i class="fas fa-check-circle text-green-400 mr-3"></i>
-            <div
-              class="text-green-200 text-sm font-medium"
-              th:text="#{login.deletedSuccess}"
-            >
+          <div class="d-flex align-items-center">
+            <i class="fas fa-check-circle me-3"></i>
+            <div th:text="#{login.deletedSuccess}">
               Your account has been deleted successfully.
             </div>
           </div>
         </div>
 
         <!-- Username Field -->
-        <div class="mb-6">
-          <label
-            for="username"
-            class="block text-sm font-semibold text-white mb-3"
-          >
-            <i class="fas fa-user text-white/80 mr-2"></i>
+        <div class="mb-4">
+          <label for="username" class="form-label text-white fw-semibold small">
+            <i class="fas fa-user text-white-70 me-2"></i>
             <span th:text="#{login.username}">Username</span>
           </label>
-          <div class="relative">
+          <div class="input-icon-wrap">
             <input
               id="username"
               name="username"
@@ -253,47 +158,37 @@
               minlength="3"
               maxlength="50"
               pattern="[A-Za-z0-9._]{3,50}"
-              class="w-full px-4 py-3 sm:py-4 pl-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50 autofill:bg-white/10 autofill:text-white"
+              class="form-control form-control-glass"
               th:placeholder="#{login.usernamePlaceholder}"
               placeholder="Enter your username"
               required
             />
-            <div
-              class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60"
-            >
-              <i class="fas fa-user"></i>
-            </div>
+            <span class="input-icon"><i class="fas fa-user"></i></span>
           </div>
         </div>
 
         <!-- Password Field -->
-        <div class="mb-6">
-          <label
-            for="password"
-            class="block text-sm font-semibold text-white mb-3"
-          >
-            <i class="fas fa-lock text-white/80 mr-2"></i>
+        <div class="mb-4">
+          <label for="password" class="form-label text-white fw-semibold small">
+            <i class="fas fa-lock text-white-70 me-2"></i>
             <span th:text="#{login.password}">Password</span>
           </label>
-          <div class="relative">
+          <div class="input-icon-wrap">
             <input
               id="password"
               name="password"
               type="password"
-              class="w-full px-4 py-3 sm:py-4 pl-12 pr-12 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 outline-none transition-all duration-300 focus:border-white/60 focus:ring-4 focus:ring-white/20 focus:bg-white/20 hover:border-white/50 autofill:bg-white/10 autofill:text-white"
+              class="form-control form-control-glass"
               th:placeholder="#{login.passwordPlaceholder}"
               placeholder="Enter your password"
               required
             />
-            <div
-              class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60"
-            >
-              <i class="fas fa-key"></i>
-            </div>
+            <span class="input-icon"><i class="fas fa-key"></i></span>
             <button
               type="button"
-              class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white/80 transition-colors duration-200"
+              class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-white-50 pe-3 border-0"
               onclick="togglePassword()"
+              style="z-index:3;"
             >
               <i class="fas fa-eye" id="passwordToggle"></i>
             </button>
@@ -301,75 +196,44 @@
         </div>
 
         <!-- Remember Me & Forgot Password -->
-        <div class="flex items-center justify-between mb-6">
-          <label class="flex items-center cursor-pointer group">
-            <div class="relative">
-              <input type="checkbox" name="remember-me" class="sr-only" />
-              <div
-                class="w-5 h-5 bg-white/10 border-2 border-white/30 rounded-md flex items-center justify-center transition-all duration-200 group-hover:bg-white/20 group-hover:border-white/50 group-hover:scale-105"
-              >
-                <svg
-                  class="w-3 h-3 text-white opacity-0 transition-opacity duration-200"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-            </div>
-            <span
-              class="ml-3 text-sm text-white/80 group-hover:text-white transition-colors duration-200"
-              th:text="#{login.rememberMe}"
-              >Remember me</span
-            >
-          </label>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="form-check">
+            <input type="checkbox" name="remember-me" class="form-check-input" id="rememberMe" />
+            <label class="form-check-label text-white-70 small" for="rememberMe"
+              th:text="#{login.rememberMe}">Remember me</label>
+          </div>
           <a
             href="/forget-password"
-            class="text-white/80 text-sm font-medium hover:text-white hover:underline transition-colors duration-200"
+            class="text-white-70 small fw-medium text-decoration-none"
             th:text="#{login.forgotPassword}"
             >Forgot password?</a
           >
         </div>
 
         <!-- Login Button -->
-        <div class="mb-6">
-          <button
-            type="submit"
-            class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-3 sm:py-4 text-sm sm:text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20"
-          >
-            <i class="fas fa-sign-in-alt mr-2"></i>
+        <div class="mb-4">
+          <button type="submit" class="btn btn-glass btn-lg w-100">
+            <i class="fas fa-sign-in-alt me-2"></i>
             <span th:text="#{login.signIn}">Sign In</span>
           </button>
         </div>
 
         <!-- Divider -->
-        <div class="relative mb-6">
-          <div class="relative flex justify-center text-sm">
-            <span
-              class="px-4 bg-transparent text-white/60"
-              th:text="#{login.newHere}"
-              >New to Myan Myan Learn?</span
-            >
-          </div>
+        <div class="text-center mb-4">
+          <span class="text-white-50 small" th:text="#{login.newHere}">New to Myan Myan Learn?</span>
         </div>
 
         <!-- Create Account Link -->
         <div class="text-center">
-          <a
-            href="/register"
-            class="inline-flex items-center justify-center w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-3 sm:py-4 text-sm sm:text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/20 hover:border-white/50"
-          >
-            <i class="fas fa-user-plus mr-2"></i>
+          <a href="/register" class="btn btn-glass-light btn-lg w-100">
+            <i class="fas fa-user-plus me-2"></i>
             <span th:text="#{login.createAccount}">Create Account</span>
           </a>
         </div>
       </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       function togglePassword() {
         const passwordInput = document.getElementById("password");
@@ -385,34 +249,6 @@
           passwordToggle.classList.add("fa-eye");
         }
       }
-
-      // Handle custom checkbox
-      document.addEventListener("DOMContentLoaded", function () {
-        const checkbox = document.querySelector('input[name="remember-me"]');
-        const checkboxVisual = checkbox.nextElementSibling;
-        const checkmark = checkboxVisual.querySelector("svg");
-
-        checkbox.addEventListener("change", function () {
-          if (this.checked) {
-            checkboxVisual.classList.add("bg-white/20", "border-white/50");
-            checkboxVisual.classList.remove("bg-white/10", "border-white/30");
-            checkmark.classList.remove("opacity-0");
-            checkmark.classList.add("opacity-100");
-          } else {
-            checkboxVisual.classList.remove("bg-white/20", "border-white/50");
-            checkboxVisual.classList.add("bg-white/10", "border-white/30");
-            checkmark.classList.remove("opacity-100");
-            checkmark.classList.add("opacity-0");
-          }
-        });
-
-        // Handle click on visual checkbox
-        checkboxVisual.addEventListener("click", function (e) {
-          e.preventDefault();
-          checkbox.checked = !checkbox.checked;
-          checkbox.dispatchEvent(new Event("change"));
-        });
-      });
 
       // Login Form Validation
       const loginForm =
@@ -490,13 +326,12 @@
         // Add error message
         const errorDiv = document.createElement("div");
         errorDiv.className =
-          "field-error text-red-300 text-xs mt-1 flex items-center";
-        errorDiv.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i>${message}`;
+          "field-error text-danger small mt-1 d-flex align-items-center";
+        errorDiv.innerHTML = `<i class="fas fa-exclamation-circle me-1"></i>${message}`;
         field.parentNode.appendChild(errorDiv);
 
         // Add error styling to field
-        field.classList.add("border-red-400", "bg-red-500/10");
-        field.classList.remove("border-white/30", "bg-white/10");
+        field.classList.add("is-invalid");
       }
 
       function clearFieldError(field) {
@@ -504,8 +339,7 @@
         if (existingError) {
           existingError.remove();
         }
-        field.classList.remove("border-red-400", "bg-red-500/10");
-        field.classList.add("border-white/30", "bg-white/10");
+        field.classList.remove("is-invalid");
       }
 
       // Username validation
@@ -522,7 +356,7 @@
 
       if (usernameInput) {
         usernameInput.addEventListener("input", function () {
-          if (this.classList.contains("border-red-400")) {
+          if (this.classList.contains("is-invalid")) {
             const validation = validateUsername(this.value);
             if (validation.valid) {
               clearFieldError(this);
@@ -545,7 +379,7 @@
 
       if (passwordInput) {
         passwordInput.addEventListener("input", function () {
-          if (this.classList.contains("border-red-400")) {
+          if (this.classList.contains("is-invalid")) {
             const validation = validatePassword(this.value);
             if (validation.valid) {
               clearFieldError(this);
@@ -586,7 +420,7 @@
           if (hasErrors) {
             const generalError = document.querySelector(".general-error");
             if (generalError) {
-              generalError.classList.remove("hidden");
+              generalError.classList.remove("d-none");
             }
             return;
           }
@@ -600,7 +434,7 @@
         input.addEventListener("input", function () {
           const generalError = document.querySelector(".general-error");
           if (generalError) {
-            generalError.classList.add("hidden");
+            generalError.classList.add("d-none");
           }
         });
       });
@@ -610,7 +444,7 @@
         loginForm.addEventListener("submit", function () {
           submitButton.disabled = true;
           submitButton.innerHTML =
-            '<i class="fas fa-spinner fa-spin mr-2"></i>Signing In...';
+            '<i class="fas fa-spinner fa-spin me-2"></i>Signing In...';
         });
       }
     </script>

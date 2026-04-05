@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="#{verifySuccess.title}">MYAN MYAN LEARN - Email Verified</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/app.css" />
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -11,127 +12,89 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
-  <body
-    class="min-h-screen bg-gradient-to-br from-secondary-900 via-secondary-700 to-primary-600 font-sans flex items-center justify-center p-3 sm:p-6"
-  >
+
+  <body class="min-vh-100 bg-gradient-to-br from-secondary-900 via-secondary-700 to-primary-600 d-flex align-items-center justify-content-center p-2 p-sm-4">
     <!-- Navbar -->
-    <nav
-      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
-    >
-      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-14 sm:h-18">
-          <!-- Brand Section -->
-          <div class="flex items-center gap-2 group cursor-pointer">
-            <div class="relative">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-              ></div>
-              <div
-                class="relative p-2 group-hover:scale-105 transition-all duration-300"
-              >
-                <img
-                  th:src="@{/images/logo.svg}"
-                  alt="Myan Myan Learn"
-                  class="w-9 h-9 sm:w-12 sm:h-12 drop-shadow-lg"
-                />
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div
-                class="text-white font-bold text-sm sm:text-xl brand-font tracking-wide truncate"
-              >
-                Myan Myan Learn
-              </div>
-              <div class="hidden sm:block text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
-            </div>
+    <nav class="navbar navbar-app fixed-top">
+      <div class="container-fluid px-3 px-sm-4">
+        <div class="navbar-brand d-flex align-items-center gap-2">
+          <img th:src="@{/images/logo.svg}" alt="Myan Myan Learn" style="width:2.25rem;height:2.25rem;" />
+          <div class="d-flex flex-column lh-sm">
+            <span class="brand-text brand-font">Myan Myan Learn</span>
+            <span class="brand-subtitle d-none d-sm-block" th:text="#{nav.subtitle}">Learning Platform</span>
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Success Card -->
-    <div
-      class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl mt-16 sm:mt-20 relative overflow-hidden"
-    >
-      <!-- Decorative Background -->
-      <div
-        class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500/20 to-primary-500/20 rounded-full -translate-y-16 translate-x-16"
-      ></div>
-      <div
-        class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-secondary-500/20 to-pink-500/20 rounded-full translate-y-12 -translate-x-12"
-      ></div>
+    <div class="card-auth p-4 p-sm-5 mt-4 mt-sm-5" style="max-width:28rem;width:100%;">
+      <div class="decor-circle-tr"></div>
+      <div class="decor-circle-bl"></div>
 
       <!-- Header Section -->
-      <div class="relative z-10 text-center mb-8">
-        <div
-          class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 text-4xl text-white shadow-2xl animate-pulse"
-        >
-          <i class="fas fa-check text-2xl"></i>
+      <div class="position-relative text-center mb-4" style="z-index:1;">
+        <div class="auth-icon-box auth-icon-box-lg mx-auto mb-3">
+          <i class="fas fa-check text-white fs-4"></i>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3" th:text="#{verifySuccess.header}">Email Verified!</h1>
-        <p class="text-base text-white/80 mb-8 leading-relaxed" th:text="#{verifySuccess.message}">Congratulations! Your email address has been successfully verified. Your account is now active and ready to use.</p>
+        <h1 class="auth-heading" th:text="#{verifySuccess.header}">Email Verified!</h1>
+        <p class="auth-subtitle mb-4" th:text="#{verifySuccess.message}">Congratulations! Your email address has been successfully verified. Your account is now active and ready to use.</p>
       </div>
 
       <!-- Success Message -->
-      <div class="relative z-10 mb-8">
-        <div
-          class="bg-white/10 border-2 border-white/30 rounded-2xl p-6 text-left"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"
-            >
-              <i class="fas fa-check text-white text-sm"></i>
+      <div class="position-relative mb-4" style="z-index:1;">
+        <div class="alert alert-glass-success p-3 text-start">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <div class="auth-icon-box-sm">
+              <i class="fas fa-check text-white small"></i>
             </div>
-            <h4 class="text-white text-sm font-bold" th:text="#{verifySuccess.activated}">Account Successfully Activated</h4>
+            <h4 class="text-white small fw-bold mb-0" th:text="#{verifySuccess.activated}">Account Successfully Activated</h4>
           </div>
-          <p class="text-white/80 text-sm leading-relaxed" th:text="#{verifySuccess.details}">Your email verification is complete. You can now access all features of your account and start your learning journey.</p>
+          <p class="text-white-70 small mb-0" th:text="#{verifySuccess.details}">Your email verification is complete. You can now access all features of your account and start your learning journey.</p>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="relative z-10 flex flex-col gap-3 mb-8">
+      <div class="position-relative d-flex flex-column gap-2 mb-4" style="z-index:1;">
         <a
           href="/login"
-          class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-3 sm:py-4 text-sm sm:text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20 text-center no-underline"
+          class="btn btn-glass btn-lg w-100 text-decoration-none"
           id="loginBtn"
         >
-          <i class="fas fa-sign-in-alt mr-2"></i>
+          <i class="fas fa-sign-in-alt me-2"></i>
           <span th:text="#{verifySuccess.signInNow}">Sign In Now</span>
         </a>
         <a
           href="/"
-          class="w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-3 sm:py-4 text-sm sm:text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/20 hover:border-white/50 text-center no-underline"
+          class="btn btn-glass-light btn-lg w-100 text-decoration-none"
         >
-          <i class="fas fa-home mr-2"></i>
+          <i class="fas fa-home me-2"></i>
           <span th:text="#{verifySuccess.goHome}">Go to Home</span>
         </a>
       </div>
 
       <!-- Next Steps -->
-      <div class="relative z-10 mb-6">
-        <div
-          class="bg-white/10 border-2 border-white/30 rounded-2xl p-6 text-left"
-        >
-          <div class="flex items-center gap-2 mb-4">
-            <i class="fas fa-lightbulb text-white/80"></i>
-            <h5 class="text-white text-sm font-bold" th:text="#{verifySuccess.whatsNext}">What's Next?</h5>
+      <div class="position-relative mb-3" style="z-index:1;">
+        <div class="alert alert-glass-info p-3 text-start">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <i class="fas fa-lightbulb text-white-70"></i>
+            <h5 class="text-white small fw-bold mb-0" th:text="#{verifySuccess.whatsNext}">What's Next?</h5>
           </div>
-          <ul class="text-white/80 text-sm leading-relaxed space-y-2">
-            <li class="flex items-center gap-2">
-              <i class="fas fa-arrow-right text-white/80 text-xs"></i>
+          <ul class="list-unstyled text-white-70 small mb-0">
+            <li class="d-flex align-items-center gap-2 mb-2">
+              <i class="fas fa-arrow-right text-white-70 small"></i>
               <span th:text="#{verifySuccess.next.signIn}">Sign in with your email and password</span>
             </li>
-            <li class="flex items-center gap-2">
-              <i class="fas fa-arrow-right text-white/80 text-xs"></i>
+            <li class="d-flex align-items-center gap-2 mb-2">
+              <i class="fas fa-arrow-right text-white-70 small"></i>
               <span th:text="#{verifySuccess.next.profile}">Complete your profile setup</span>
             </li>
-            <li class="flex items-center gap-2">
-              <i class="fas fa-arrow-right text-white/80 text-xs"></i>
+            <li class="d-flex align-items-center gap-2 mb-2">
+              <i class="fas fa-arrow-right text-white-70 small"></i>
               <span th:text="#{verifySuccess.next.explore}">Explore available courses and content</span>
             </li>
-            <li class="flex items-center gap-2">
-              <i class="fas fa-arrow-right text-white/80 text-xs"></i>
+            <li class="d-flex align-items-center gap-2">
+              <i class="fas fa-arrow-right text-white-70 small"></i>
               <span th:text="#{verifySuccess.next.start}">Start your personalized learning journey</span>
             </li>
           </ul>
@@ -139,20 +102,19 @@
       </div>
 
       <!-- Countdown -->
-      <div class="relative z-10 text-center">
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full"
-        >
-          <i class="fas fa-clock text-white/80 text-sm"></i>
-          <span class="text-sm text-white/80 font-semibold" id="countdown">
+      <div class="position-relative text-center" style="z-index:1;">
+        <div class="d-inline-flex align-items-center gap-2 auth-timer-pill">
+          <i class="fas fa-clock text-white-70 small"></i>
+          <span class="small text-white-70 fw-semibold" id="countdown">
             <span th:text="#{verifySuccess.redirectPrefix}">Redirecting to login in</span>
-            <span id="timer" class="text-white font-bold">5</span>
+            <span id="timer" class="text-white fw-bold">5</span>
             <span th:text="#{verifySuccess.redirectSuffix}">seconds...</span>
           </span>
         </div>
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script th:inline="javascript">
       let timeLeft = 5;
       const timerElement = document.getElementById("timer");

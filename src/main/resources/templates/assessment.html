@@ -7,6 +7,7 @@
   <meta name="_csrf" th:content="${_csrf.token}" />
   <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <title th:text="#{assessment.pageTitle}">MYAN MYAN LEARN - Assessment</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/css/app.css" />
   <script src="/js/tailwind-config.js"></script>
   <script src="/js/ai-translate-btn.js"></script>
@@ -224,93 +225,99 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 
-<body class="min-h-screen font-sans text-gray-800 flex flex-col">
+<body class="min-vh-100 font-sans text-gray-800 d-flex flex-column">
   <!-- Navbar -->
   <nav th:replace="fragments/navbar :: appNavbar('Assessment')"></nav>
 
   <!-- Main Content -->
-  <main class="flex-1 pt-20 sm:pt-28 pb-10 sm:pb-16">
+  <main class="flex-grow-1 pb-4 pb-sm-5" style="padding-top:5rem;">
     <!-- Sticky Timer -->
-    <div class="fixed top-20 left-0 w-full flex justify-center z-50 pointer-events-none">
+    <div class="fixed-top d-flex justify-content-center" style="top:5rem;z-index:50;pointer-events:none;">
       <div
-        class="bg-slate-800/95 backdrop-blur text-white px-6 py-2 rounded-full border border-white/20 shadow-2xl flex items-center gap-4 pointer-events-auto">
+        class="bg-dark bg-opacity-75 text-white px-4 py-2 rounded-pill border border-white border-opacity-25 shadow d-flex align-items-center gap-3" style="pointer-events:auto;backdrop-filter:blur(8px);">
         <i class="fas fa-clock text-yellow-400"></i>
-        <span class="text-sm font-medium text-slate-300 uppercase tracking-wide" th:text="#{assessment.timeLeft}">Time
+        <span class="small fw-medium text-uppercase" style="letter-spacing:.05em;color:#cbd5e1;" th:text="#{assessment.timeLeft}">Time
           Left</span>
-        <span id="timerDisplay" class="font-mono text-xl font-bold text-white tracking-wider">--:--</span>
+        <span id="timerDisplay" class="font-monospace fs-5 fw-bold text-white" style="letter-spacing:.05em;">--:--</span>
         <input type="hidden" id="totalTimeSeconds" th:value="${totalTimeSeconds}" />
       </div>
     </div>
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="container" style="max-width:64rem;">
       <!-- Header -->
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-white text-2xl sm:text-3xl font-bold flex items-center gap-3">
-          <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 border border-white/10">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="text-white fw-bold fs-4 d-flex align-items-center gap-3 mb-0">
+          <span class="d-inline-flex align-items-center justify-content-center rounded-3 card-glass" style="width:2.5rem;height:2.5rem;">
             <i class="fas fa-clipboard-check text-white"></i>
           </span>
           <span th:text="#{assessment.title}">Assessment</span>
         </h1>
-        <div class="flex items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
           <a th:href="@{/contents(courseId=${courseId})}" href="/contents"
-            class="flex items-center gap-2 text-white/80 hover:text-white transition bg-white/10 hover:bg-white/15 px-3 py-2 rounded-lg no-underline flex-shrink-0">
-            <i class="fas fa-arrow-left text-xs"></i>
+            class="btn-back d-flex align-items-center gap-2 text-decoration-none flex-shrink-0">
+            <i class="fas fa-arrow-left small"></i>
             <span th:text="#{assessment.backToContents}">Back to Contents</span>
           </a>
         </div>
       </div>
 
       <!-- Summary Card -->
-      <section class="mb-6 bg-white/10 border border-white/10 rounded-xl p-4 sm:p-5">
-        <div class="flex items-center justify-between">
-          <h2 class="text-white text-lg font-semibold flex items-center gap-2">
+      <section class="mb-4 card-glass p-3 p-sm-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <h2 class="text-white fs-5 fw-semibold d-flex align-items-center gap-2 mb-0">
             <span
-              class="inline-flex items-center justify-center w-6 h-6 rounded bg-white/10 border border-white/10 text-xs">
+              class="d-inline-flex align-items-center justify-content-center rounded card-glass" style="width:1.5rem;height:1.5rem;font-size:.75rem;">
               <i class="fas fa-file-alt"></i>
             </span>
             <span th:text="#{assessment.examSummary}">Exam Summary</span>
           </h2>
         </div>
-        <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-            <div class="text-white/70 text-xs" th:text="#{assessment.examTitle}">
-              Exam Title
-            </div>
-            <div class="text-white font-medium" id="examTitleVal" th:text="${examTitle}">
-              Assessment
-            </div>
-          </div>
-          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-            <div class="text-white/70 text-xs" th:text="#{assessment.totalScore}">
-              Total Score
-            </div>
-            <div class="text-white font-medium">
-              <span id="totalScoreVal">0</span>
+        <div class="row g-3 mt-2">
+          <div class="col-12 col-sm-4">
+            <div class="card-glass rounded-3 p-3">
+              <div class="text-white-70 small" th:text="#{assessment.examTitle}">
+                Exam Title
+              </div>
+              <div class="text-white fw-medium" id="examTitleVal" th:text="${examTitle}">
+                Assessment
+              </div>
             </div>
           </div>
-          <div class="bg-white/10 border border-white/10 rounded-lg p-3">
-            <div class="text-white/70 text-xs" th:text="#{assessment.chapters}">
-              Chapters
+          <div class="col-12 col-sm-4">
+            <div class="card-glass rounded-3 p-3">
+              <div class="text-white-70 small" th:text="#{assessment.totalScore}">
+                Total Score
+              </div>
+              <div class="text-white fw-medium">
+                <span id="totalScoreVal">0</span>
+              </div>
             </div>
-            <div class="text-white font-medium break-words" id="chaptersVal"
-              th:text="${#strings.listJoin(selectedChapters, ', ')}">
-              -
+          </div>
+          <div class="col-12 col-sm-4">
+            <div class="card-glass rounded-3 p-3">
+              <div class="text-white-70 small" th:text="#{assessment.chapters}">
+                Chapters
+              </div>
+              <div class="text-white fw-medium" style="word-wrap:break-word;" id="chaptersVal"
+                th:text="${#strings.listJoin(selectedChapters, ', ')}">
+                -
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Sample Questions and Answers -->
-      <div class="space-y-6" th:if="${questions}">
-        <section class="question-card bg-white/10 border border-white/10 rounded-xl p-4 sm:p-6"
+      <div class="d-flex flex-column gap-4" th:if="${questions}">
+        <section class="question-card card-glass p-3 p-sm-4"
           th:each="q, iStat : ${questions}" th:attr="data-mark=${q.marks},data-updated-at=${q.updatedAt}">
-          <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/10 gap-3">
-            <h2 class="text-white text-lg font-semibold flex items-center gap-3 min-w-0">
-              <span class="truncate" th:text="|#{assessment.question} ${iStat.count}|">
+          <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-white border-opacity-10 gap-3">
+            <h2 class="text-white fs-5 fw-semibold d-flex align-items-center gap-3 min-w-0 mb-0">
+              <span class="text-truncate" th:text="|#{assessment.question} ${iStat.count}|">
                 Question
               </span>
             </h2>
-            <div class="flex items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
               <button type="button" class="ai-translate-btn question-translate-btn scale-90 origin-right"
                 aria-pressed="false" th:title="#{reader.translate}">
                 <svg class="ai-translate-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -321,38 +328,38 @@
                 </svg>
                 <span th:text="#{reader.translate}">Translate</span>
               </button>
-              <span class="text-white/80 text-sm question-mark-label whitespace-nowrap" data-mark-label>–</span>
+              <span class="text-white-70 small question-mark-label text-nowrap" data-mark-label>–</span>
               <span class="mdError hidden"></span>
             </div>
           </div>
-          <div class="bg-amber-50 border border-slate-200 rounded-xl p-3 mb-3">
+          <div class="bg-warning bg-opacity-10 border rounded-3 p-3 mb-3" style="background-color:#fffbeb !important;">
             <article class="markdown-content max-w-none text-slate-800" th:attr="data-md-src=${q.questionContentPath}">
             </article>
           </div>
-          <div class="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0" th:if="${q.slotCount > 0}">
-            <div class="flex flex-wrap items-center gap-2 min-w-0"
+          <div class="d-flex flex-wrap align-items-center gap-2 min-w-0" th:if="${q.slotCount > 0}">
+            <div class="d-flex flex-wrap align-items-center gap-2 min-w-0"
               th:each="slotNum : ${#numbers.sequence(1, q.slotCount)}">
-              <label class="text-white/90 text-sm shrink-0"><span th:text="${slotNum}"></span>.
+              <label class="text-white small flex-shrink-0" style="opacity:.9;"><span th:text="${slotNum}"></span>.
               </label>
-              <div class="relative w-64 sm:w-80 max-w-full" data-answer-dropdown>
+              <div class="position-relative" style="width:16rem;max-width:100%;" data-answer-dropdown>
                 <input type="hidden" data-answer-field th:attr="name=${'q' + iStat.count + '-s' + slotNum}" value="" />
                 <button type="button"
-                  class="w-full bg-white/10 border border-white/10 text-white rounded-md px-3 py-2 flex items-start justify-between gap-3"
+                  class="w-100 card-glass text-white rounded px-3 py-2 d-flex align-items-start justify-content-between gap-3"
                   data-answer-toggle>
-                  <span class="block text-left whitespace-normal break-words leading-snug" data-answer-label
+                  <span class="d-block text-start" style="white-space:normal;word-wrap:break-word;line-height:1.4;" data-answer-label
                     th:text="#{assessment.select}">Select</span>
-                  <i class="fas fa-chevron-down text-white/70 text-xs mt-1.5 shrink-0"></i>
+                  <i class="fas fa-chevron-down text-white-70 small" style="margin-top:.375rem;flex-shrink:0;"></i>
                 </button>
                 <div
-                  class="absolute left-0 mt-2 w-full bg-slate-900 border border-white/10 rounded-lg shadow-xl hidden z-50 max-h-64 overflow-auto"
+                  class="position-absolute start-0 mt-2 w-100 bg-dark border border-white border-opacity-10 rounded-3 shadow hidden" style="z-index:50;max-height:16rem;overflow:auto;"
                   data-answer-menu>
                   <button type="button"
-                    class="w-full text-left px-3 py-2 text-white/80 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
+                    class="w-100 text-start px-3 py-2 text-white-70 border-0 bg-transparent" style="white-space:normal;word-wrap:break-word;line-height:1.4;"
                     data-value="" th:text="#{assessment.select}">
                     Select
                   </button>
                   <button type="button"
-                    class="w-full text-left px-3 py-2 text-white/90 hover:text-white hover:bg-white/10 whitespace-normal break-words leading-snug"
+                    class="w-100 text-start px-3 py-2 text-white border-0 bg-transparent" style="white-space:normal;word-wrap:break-word;line-height:1.4;"
                     th:each="opt : ${(q.slotOptions != null) ? q.slotOptions[slotNum - 1] : q.options}"
                     th:attr="data-value=${opt.optionIndex}" th:text="${opt.optionContent}"></button>
                 </div>
@@ -364,12 +371,12 @@
         <!-- Submit -->
         <div class="pt-2">
           <button id="submitAssessment" type="button"
-            class="w-full sm:w-auto px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
+            class="btn btn-success d-flex align-items-center justify-content-center gap-2 w-100 w-sm-auto px-4 py-2">
             <i class="fas fa-paper-plane"></i>
             <span th:text="#{assessment.submit}">Submit</span>
           </button>
           <div id="submitMessage"
-            class="mt-2 hidden text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2"></div>
+            class="mt-2 hidden text-red-300 bg-red-500/10 border border-red-500/20 rounded-3 px-3 py-2"></div>
           <input type="hidden" id="csrfParameterName" th:value="${_csrf.parameterName}" />
           <input type="hidden" id="csrfTokenValue" th:value="${_csrf.token}" />
         </div>
@@ -485,11 +492,11 @@
               cb.setAttribute("aria-disabled", "true");
             });
           }
-          errEl && errEl.classList.add("hidden");
+          errEl && errEl.classList.add("d-none");
         } catch (e) {
           if (errEl) {
             errEl.textContent = e.message;
-            errEl.classList.remove("hidden");
+            errEl.classList.remove("d-none");
           }
         }
       });
@@ -540,11 +547,11 @@
             cb.setAttribute("aria-disabled", "true");
           });
           resolveRelativeImages(el, mdSrc);
-          if (errEl) errEl.classList.add("hidden");
+          if (errEl) errEl.classList.add("d-none");
         } catch (e) {
           if (errEl) {
             errEl.textContent = e.message;
-            errEl.classList.remove("hidden");
+            errEl.classList.remove("d-none");
           }
         }
       });
@@ -686,21 +693,12 @@
       }
 
       async function translateCard(card) {
-        // Unique ID for this question card (e.g. from DB or index)
-        // We prefer using DB ID if available, else index + chapter
-        // Here we use data-updated-at for cache invalidation
         const updatedAt = card.getAttribute("data-updated-at");
-        // Generate a stable ID for caching
-        // We can use the index in loop + chapter ID if question ID is not exposed
-        // Let's rely on data-translate-id we generate, BUT it needs to be stable across reloads for caching to work
-        // The current generation "q_" + Math.random() is NOT stable. We need a stable ID.
-        // We can use the question content path (data-md-src) as a unique ID base.
 
         const article = card.querySelector("article[data-raw-md]");
         if (!article) return;
 
         const mdSrc = article.getAttribute("data-md-src");
-        // Use mdSrc as stable ID key
         const stableId = mdSrc ? mdSrc.replace(/[^a-zA-Z0-9]/g, '_') : "q_unknown_" + Date.now();
 
         // Check Cache
@@ -711,7 +709,7 @@
         }
 
         const itemsToTranslate = {};
-        const localMap = {}; // Local map for this card
+        const localMap = {};
 
         // 1. Question Content
         const qId = "q_text";
@@ -726,7 +724,6 @@
           if (!text) return;
 
           const oId = "opt_" + idx;
-          // Store original
           if (!btn.hasAttribute("data-original-text")) {
             btn.setAttribute("data-original-text", text);
           }
@@ -738,7 +735,6 @@
         if (Object.keys(itemsToTranslate).length > 0) {
           const results = await translateBatch(itemsToTranslate);
 
-          // Save to Cache with Metadata
           saveTranslation(stableId, {
             serverUpdatedAt: updatedAt,
             translations: results
@@ -749,8 +745,6 @@
       }
 
       function applyCardTranslations(card, map) {
-        // Apply to Question
-        // question text is under key 'q_text'
         const article = card.querySelector("article[data-raw-md]");
         if (article && map['q_text']) {
           article.innerHTML = md ? md.render(map['q_text']) : map['q_text'];
@@ -758,8 +752,6 @@
           if (mdSrc) resolveRelativeImages(article, mdSrc);
         }
 
-        // Apply to Options
-        // options are 'opt_0', 'opt_1', etc.
         card.querySelectorAll("button[data-value]").forEach((btn, idx) => {
           const oId = "opt_" + idx;
           if (map[oId]) {
@@ -769,7 +761,6 @@
       }
 
       function revertCardTranslations(card) {
-        // Revert Question
         const article = card.querySelector("article[data-raw-md]");
         if (article) {
           const raw = article.getAttribute("data-raw-md");
@@ -777,7 +768,6 @@
           const mdSrc = article.getAttribute("data-md-src");
           if (mdSrc) resolveRelativeImages(article, mdSrc);
         }
-        // Revert Options
         card.querySelectorAll("button[data-original-text]").forEach(btn => {
           btn.textContent = btn.getAttribute("data-original-text");
         });
@@ -795,7 +785,7 @@
           .querySelectorAll("[data-answer-dropdown] [data-answer-menu]")
           .forEach((menu) => {
             if (except && except.contains(menu)) return;
-            menu.classList.add("hidden");
+            menu.classList.add("d-none");
           });
       }
 
@@ -814,7 +804,7 @@
         toggle.addEventListener("click", function (e) {
           e.stopPropagation();
           closeAllAnswerMenus(dd);
-          menu.classList.toggle("hidden");
+          menu.classList.toggle("d-none");
         });
 
         menu.addEventListener("click", function (e) {
@@ -827,7 +817,7 @@
           label.textContent = btn.textContent
             ? btn.textContent.trim()
             : I18N.select;
-          menu.classList.add("hidden");
+          menu.classList.add("d-none");
         });
       });
 
@@ -874,7 +864,7 @@
                   })
                   .join(", ");
               msgEl.textContent = text;
-              msgEl.classList.remove("hidden");
+              msgEl.classList.remove("d-none");
             }
           } else {
             const params = new URLSearchParams(window.location.search);
@@ -982,20 +972,6 @@
             clearInterval(timerInterval);
             alert(I18N.alertTimeUpAutoSubmit);
 
-            // Force submit without validation
-            const submitBtn = document.getElementById("submitAssessment");
-            // Bypass validation check in the click handler by setting a flag or calling submit logic directly?
-            // The existing click handler does validation.
-            // Let's reuse the submit logic but perhaps we need to handle the 'missing answers' check.
-            // If time is up, we should probably submit whatever they have.
-
-            // Simplest way: Simulate click, but if validation fails, the user is stuck.
-            // Better way: Re-implement submission logic here or modify the click handler to accept a 'force' param.
-
-            // Let's modify the click handler slightly or just copy the submit logic for force submit.
-            // For now, let's trigger the click. If validation fails, they can't submit?
-            // Usually time-up auto-submit should ignore missing fields.
-
             // I will extract the submission logic or copy it here for robust auto-submit.
             // Copying the submission logic (lines 529-587) for safety.
 
@@ -1102,6 +1078,7 @@
     })();
   </script>
   <script src="/js/navbar.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

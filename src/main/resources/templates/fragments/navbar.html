@@ -1,411 +1,107 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <body>
-    <!-- Reusable Navbar Fragment (full Home navbar) -->
     <nav
       th:fragment="appNavbar(subtitle)"
-      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
+      class="navbar navbar-app navbar-expand fixed-top"
     >
-      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-14 sm:h-18">
-          <!-- Brand Section -->
-          <a
-            th:href="@{/home}"
-            class="flex items-center gap-2 group cursor-pointer no-underline min-w-0"
-          >
-            <div class="relative flex-shrink-0">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-              ></div>
-              <div
-                class="relative p-1 sm:p-2 group-hover:scale-105 transition-all duration-300"
-              >
-                <img
-                  th:src="@{/images/logo.svg}"
-                  alt="Myan Myan Learn"
-                  class="w-9 h-9 sm:w-12 sm:h-12 drop-shadow-lg"
-                />
-              </div>
+      <div class="container-fluid px-3 px-sm-4">
+        <!-- Brand -->
+        <a th:href="@{/home}" class="navbar-brand d-flex align-items-center gap-2">
+          <img th:src="@{/images/logo.svg}" alt="Myan Myan Learn" class="d-block" />
+          <div class="d-flex flex-column lh-sm">
+            <span class="brand-text brand-font">Myan Myan Learn</span>
+            <span class="brand-subtitle d-none d-sm-block" th:text="#{nav.subtitle}">Learning Platform</span>
+          </div>
+        </a>
+
+        <!-- Profile dropdown -->
+        <div class="dropdown">
+          <button class="btn-profile" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="profileMenu">
+            <div th:if="${userProfileImage != null and !#strings.isEmpty(userProfileImage)}" class="avatar">
+              <img th:src="${userProfileImage}" class="w-100 h-100 object-fit-cover" alt="Profile" />
             </div>
-            <div class="flex flex-col min-w-0">
-              <div
-                class="text-white font-bold text-sm sm:text-xl brand-font tracking-wide truncate"
-              >
-                Myan Myan Learn
-              </div>
-              <div
-                class="hidden sm:block text-white/70 text-xs font-medium tracking-wider uppercase"
-                th:text="#{nav.subtitle}"
-              >
-                Learning Platform
-              </div>
+            <div th:if="${userProfileImage == null or #strings.isEmpty(userProfileImage)}" class="avatar-placeholder">
+              <span th:text="${userInitials ?: 'U'}">U</span>
             </div>
-          </a>
-          <div class="flex items-center">
-            <!-- User Profile (structure only) -->
-            <div
-              class="relative flex items-center gap-2 sm:gap-3 h-11 sm:h-12 px-2.5 sm:px-3 py-2 rounded-xl cursor-pointer transition-all duration-300 text-white font-medium text-sm hover:bg-white/15 active:bg-white/20 hover:shadow-xl border border-white/10 group"
-              id="profileMenu"
-            >
-              <div class="relative flex items-center gap-2">
-                <div
-                  class="w-8 h-8 rounded-lg shadow-lg overflow-hidden flex-shrink-0"
-                >
-                  <img
-                    th:if="${userProfileImage != null and !#strings.isEmpty(userProfileImage)}"
-                    th:src="${userProfileImage}"
-                    class="w-full h-full object-cover"
-                    alt="Profile photo"
-                  />
-                  <div
-                    th:if="${userProfileImage == null or #strings.isEmpty(userProfileImage)}"
-                    class="w-full h-full bg-gradient-to-br from-primary-500 to-secondary-600 flex items-center justify-center text-white font-semibold text-sm"
-                  >
-                    <span th:text="${userInitials ?: 'U'}">U</span>
-                  </div>
-                </div>
-                <div class="hidden sm:flex flex-col">
-                  <span
-                    class="text-sm font-semibold"
-                    th:text="${userFullName ?: username ?: 'User'}"
-                  ></span>
-                  <span class="text-xs opacity-70" th:text="${userRoleLabel}"
-                    >Member</span
-                  >
-                </div>
-                <i
-                  class="fas fa-chevron-down text-xs opacity-60 transition-transform duration-200"
-                ></i>
+            <div class="d-none d-sm-flex flex-column lh-sm">
+              <span class="fw-semibold small" th:text="${userFullName ?: username ?: 'User'}"></span>
+              <span class="small text-white-70" th:text="${userRoleLabel}">Member</span>
+            </div>
+            <i class="fas fa-chevron-down small opacity-50"></i>
+          </button>
+
+          <div class="dropdown-menu dropdown-menu-end dropdown-menu-profile" id="profileDropdown">
+            <!-- Header -->
+            <a th:href="@{/profile}" href="/profile" class="dropdown-header-card d-flex align-items-center gap-3 text-decoration-none">
+              <div th:if="${userProfileImage != null and !#strings.isEmpty(userProfileImage)}" class="rounded-2 overflow-hidden" style="width:3rem;height:3rem;">
+                <img th:src="${userProfileImage}" class="w-100 h-100 object-fit-cover" alt="Profile" />
               </div>
-              <div
-                class="fixed sm:absolute top-[3.75rem] sm:top-full right-2 sm:right-0 left-2 sm:left-auto mt-0 sm:mt-2 shadow-2xl sm:min-w-[280px] overflow-visible opacity-0 invisible transform -translate-y-2 transition-all duration-300 z-[1001]"
-                id="profileDropdown"
-              >
-                <div class="rounded-xl border border-gray-200 bg-white">
-                  <a
-                    th:href="@{/profile}"
-                    href="/profile"
-                    class="block bg-gradient-to-r from-slate-700 to-slate-800 text-white p-4 rounded-t-xl overflow-hidden no-underline hover:from-slate-600 hover:to-slate-700 transition"
-                  >
-                    <div class="flex items-center gap-3">
-                      <div
-                        class="w-12 h-12 rounded-lg bg-white/20 shadow-lg overflow-hidden"
-                      >
-                        <img
-                          th:if="${userProfileImage != null and !#strings.isEmpty(userProfileImage)}"
-                          th:src="${userProfileImage}"
-                          class="w-full h-full object-cover"
-                          alt="Profile photo"
-                        />
-                        <div
-                          th:if="${userProfileImage == null or #strings.isEmpty(userProfileImage)}"
-                          class="w-full h-full flex items-center justify-center text-white font-bold text-lg"
-                        >
-                          <span th:text="${userInitials ?: 'U'}">U</span>
-                        </div>
-                      </div>
+              <div th:if="${userProfileImage == null or #strings.isEmpty(userProfileImage)}" class="rounded-2 d-flex align-items-center justify-content-center text-white fw-bold fs-5" style="width:3rem;height:3rem;background:rgba(255,255,255,.2);">
+                <span th:text="${userInitials ?: 'U'}">U</span>
+              </div>
+              <div>
+                <div class="fw-semibold small text-white" th:text="${userFullName ?: username}"></div>
+                <div class="small opacity-75 text-white" th:text="${userEmail ?: 'user@example.com'}"></div>
+              </div>
+            </a>
+
+            <!-- Menu items -->
+            <div class="py-2">
+              <a href="/profile" class="dropdown-item">
+                <span class="dropdown-icon bg-primary bg-opacity-10"><i class="fas fa-user text-primary"></i></span>
+                <span th:text="#{nav.profile}">My Profile</span>
+              </a>
+              <a th:if="${canSeeAdminPanel}" th:href="@{/admin}" href="/admin" class="dropdown-item">
+                <span class="dropdown-icon" style="background:rgba(100,116,139,.1);"><i class="fas fa-shield-halved" style="color:#64748b;"></i></span>
+                <span th:text="#{nav.admin}">Admin</span>
+              </a>
+
+              <!-- Languages submenu -->
+              <div class="dropstart" id="languagesItem">
+                <button class="dropdown-item w-100 border-0 bg-transparent" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="dropdown-icon" style="background:rgba(16,185,129,.1);"><i class="fas fa-globe" style="color:#10b981;"></i></span>
+                  <span class="flex-grow-1 text-start" th:text="#{nav.languages}">Languages</span>
+                  <span id="currentLanguageSmall" class="small text-muted me-1">EN</span>
+                  <i class="fas fa-chevron-left small text-muted"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-profile" id="languageSubmenu">
+                  <div class="dropdown-header-card py-2 px-3">
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="dropdown-icon bg-white bg-opacity-25"><i class="fas fa-globe text-white small"></i></span>
                       <div>
-                        <h3
-                          class="font-semibold text-sm"
-                          th:text="${userFullName ?: username}"
-                        ></h3>
-                        <p
-                          class="text-xs opacity-80"
-                          th:text="${userEmail ?: 'user@example.com'}"
-                        ></p>
+                        <div class="fw-semibold small text-white" th:text="#{nav.languages}">Languages</div>
+                        <div class="small opacity-75 text-white" th:text="#{nav.chooseLanguage}">Choose language</div>
                       </div>
                     </div>
-                  </a>
-                  <div class="py-2">
-                    <a
-                      href="/profile"
-                      class="flex items-center gap-3 px-4 py-2 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-slate-50 hover:text-slate-800 group"
-                    >
-                      <div
-                        class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center"
-                      >
-                        <i class="fas fa-user text-primary-600 text-sm"></i>
-                      </div>
-                      <div class="flex-1">
-                        <div
-                          class="font-medium text-sm"
-                          th:text="#{nav.profile}"
-                        >
-                          My Profile
-                        </div>
-                      </div>
-                      <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                    </a>
-                    <a
-                      th:if="${canSeeAdminPanel}"
-                      th:href="@{/admin}"
-                      href="/admin"
-                      class="flex items-center gap-3 px-4 py-2 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-slate-50 hover:text-slate-800 group"
-                    >
-                      <div
-                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center"
-                      >
-                        <i
-                          class="fas fa-shield-halved text-slate-600 text-sm"
-                        ></i>
-                      </div>
-                      <div class="flex-1">
-                        <div
-                          class="font-medium text-sm"
-                          th:text="#{nav.admin}"
-                        >
-                          Admin
-                        </div>
-                      </div>
-                      <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                    </a>
-                    <!-- Languages submenu (hover to open) -->
-                    <div class="relative group mt-1">
-                      <div
-                        class="flex items-center gap-3 px-4 py-2 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-slate-50 hover:text-slate-800 cursor-default"
-                        id="languagesItem"
-                      >
-                        <div
-                          class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center"
-                        >
-                          <i class="fas fa-globe text-emerald-600 text-sm"></i>
-                        </div>
-                        <div class="flex-1">
-                          <div
-                            class="font-medium text-sm"
-                            th:text="#{nav.languages}"
-                          >
-                            Languages
-                          </div>
-                          <div
-                            class="text-xs text-gray-500"
-                            th:text="#{nav.chooseLanguage}"
-                          >
-                            Choose language
-                          </div>
-                        </div>
-                        <span
-                          id="currentLanguageSmall"
-                          class="text-xs text-gray-500 mr-2"
-                          >EN</span
-                        >
-                        <i
-                          class="fas fa-chevron-right text-xs text-gray-400"
-                        ></i>
-                      </div>
-                      <!-- Submenu panel -->
-                      <div
-                        id="languageSubmenu"
-                        class="sm:absolute relative top-auto sm:top-0 right-auto sm:right-full sm:mr-2 bg-white rounded-xl shadow-2xl sm:min-w-[240px] overflow-hidden opacity-0 invisible transform -translate-y-2 transition-all duration-200 z-[1002] border border-gray-200"
-                      >
-                        <div
-                          class="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-3"
-                        >
-                          <div class="flex items-center gap-2">
-                            <div
-                              class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center"
-                            >
-                              <i class="fas fa-globe text-white text-sm"></i>
-                            </div>
-                            <div>
-                              <h3
-                                class="font-semibold text-sm"
-                                th:text="#{nav.languages}"
-                              >
-                                Languages
-                              </h3>
-                              <p
-                                class="text-xs opacity-80"
-                                th:text="#{nav.chooseLanguage}"
-                              >
-                                Choose language
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="py-1 max-h-60 overflow-y-auto">
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="en"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-primary-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇺🇸</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">English</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="my"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-green-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇲🇲</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">မြန်မာ</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="zh"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-red-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇨🇳</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">中文</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="ne"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-accent-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇳🇵</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">नेपाली</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="vi"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-yellow-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇻🇳</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">Tiếng Việt</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="uz"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-teal-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇺🇿</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">O'zbek</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="si"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-secondary-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇱🇰</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">සිංහල</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="hi"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-secondary-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇮🇳</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">हिन्दी</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="ja"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-pink-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇯🇵</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">日本語</div>
-                            </div>
-                          </div>
-                          <div
-                            class="flex items-center gap-3 px-4 py-2 text-gray-700 text-sm cursor-pointer transition-all duration-200 hover:bg-slate-50 hover:text-slate-800 group language-item"
-                            data-lang="bn"
-                          >
-                            <div
-                              class="w-6 h-6 rounded-md bg-green-50 flex items-center justify-center text-sm"
-                            >
-                              <span class="text-sm">🇧🇩</span>
-                            </div>
-                            <div class="flex-1">
-                              <div class="font-medium text-sm">বাংলা</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="h-px bg-gray-200 my-2"></div>
-                    <a
-                      th:href="@{/about}"
-                      href="/about"
-                      class="flex items-center gap-3 px-4 py-2 text-gray-700 no-underline transition-all duration-200 text-sm hover:bg-slate-50 hover:text-slate-800 group"
-                    >
-                      <div
-                        class="w-8 h-8 rounded-lg bg-secondary-50 flex items-center justify-center"
-                      >
-                        <i
-                          class="fas fa-circle-info text-secondary-600 text-sm"
-                        ></i>
-                      </div>
-                      <div class="flex-1 text-left">
-                        <div class="font-medium text-sm" th:text="#{nav.about}">
-                          About
-                        </div>
-                      </div>
-                      <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                    </a>
-                    <div class="h-px bg-gray-200 my-2"></div>
-                    <form th:action="@{/logout}" method="POST" class="w-full">
-                      <button
-                        type="submit"
-                        class="w-full flex items-center gap-3 px-4 py-2 text-red-600 no-underline transition-all duration-200 text-sm hover:bg-red-50 hover:text-red-700 group text-left"
-                      >
-                        <div
-                          class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center"
-                        >
-                          <i
-                            class="fas fa-sign-out-alt text-red-600 text-sm"
-                          ></i>
-                        </div>
-                        <div class="flex-1 text-left">
-                          <div
-                            class="font-medium text-sm"
-                            th:text="#{nav.logout}"
-                          >
-                            Logout
-                          </div>
-                        </div>
-                        <i
-                          class="fas fa-chevron-right text-xs text-red-400"
-                        ></i>
-                      </button>
-                    </form>
+                  </div>
+                  <div class="py-1" style="max-height:15rem;overflow-y:auto;">
+                    <div class="dropdown-item language-item" data-lang="en"><span class="me-2">🇺🇸</span> English</div>
+                    <div class="dropdown-item language-item" data-lang="my"><span class="me-2">🇲🇲</span> မြန်မာ</div>
+                    <div class="dropdown-item language-item" data-lang="zh"><span class="me-2">🇨🇳</span> 中文</div>
+                    <div class="dropdown-item language-item" data-lang="ne"><span class="me-2">🇳🇵</span> नेपाली</div>
+                    <div class="dropdown-item language-item" data-lang="vi"><span class="me-2">🇻🇳</span> Tiếng Việt</div>
+                    <div class="dropdown-item language-item" data-lang="uz"><span class="me-2">🇺🇿</span> O'zbek</div>
+                    <div class="dropdown-item language-item" data-lang="si"><span class="me-2">🇱🇰</span> සිංහල</div>
+                    <div class="dropdown-item language-item" data-lang="hi"><span class="me-2">🇮🇳</span> हिन्दी</div>
+                    <div class="dropdown-item language-item" data-lang="ja"><span class="me-2">🇯🇵</span> 日本語</div>
+                    <div class="dropdown-item language-item" data-lang="bn"><span class="me-2">🇧🇩</span> বাংলা</div>
                   </div>
                 </div>
               </div>
+
+              <hr class="my-2" />
+              <a th:href="@{/about}" href="/about" class="dropdown-item">
+                <span class="dropdown-icon" style="background:rgba(var(--secondary-rgb),.1);"><i class="fas fa-circle-info" style="color:var(--secondary);"></i></span>
+                <span th:text="#{nav.about}">About</span>
+              </a>
+              <hr class="my-2" />
+              <form th:action="@{/logout}" method="POST" class="w-100">
+                <button type="submit" class="dropdown-item text-danger w-100 border-0 bg-transparent">
+                  <span class="dropdown-icon" style="background:rgba(239,68,68,.1);"><i class="fas fa-sign-out-alt text-danger small"></i></span>
+                  <span th:text="#{nav.logout}">Logout</span>
+                </button>
+              </form>
             </div>
           </div>
         </div>

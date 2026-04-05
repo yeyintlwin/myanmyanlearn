@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="#{linkExpired.title}">MYAN MYAN LEARN - Link Expired</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/app.css" />
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -11,41 +12,41 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
-  <body
-    class="min-h-screen bg-black font-sans flex items-center justify-center p-3 sm:p-6"
-  >
+
+  <body class="min-vh-100 d-flex align-items-center justify-content-center p-2 p-sm-4">
     <!-- Card -->
-    <div
-      class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl mt-4 relative overflow-hidden"
-    >
-      <div class="relative z-10 text-center">
-        <div
-          class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
-        >
-          <i class="fas fa-link-slash text-white text-xl"></i>
+    <div class="card-auth p-4 p-sm-5" style="max-width:28rem;width:100%;">
+      <div class="decor-circle-tr"></div>
+      <div class="decor-circle-bl"></div>
+
+      <div class="position-relative text-center" style="z-index:1;">
+        <div class="auth-icon-box mx-auto mb-3">
+          <i class="fas fa-link-slash text-white fs-5"></i>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2" th:text="#{linkExpired.header}">Link Invalid</h1>
-        <p class="text-sm text-white/80 max-w-sm mx-auto" th:text="#{linkExpired.message}">This password reset link is invalid, has expired, or has already been used. Please request a new password reset link.</p>
+        <h1 class="auth-heading" th:text="#{linkExpired.header}">Link Invalid</h1>
+        <p class="auth-subtitle mx-auto" style="max-width:22rem;" th:text="#{linkExpired.message}">This password reset link is invalid, has expired, or has already been used. Please request a new password reset link.</p>
 
         <!-- Actions -->
-        <div class="mt-8 flex flex-col gap-3">
+        <div class="mt-4 d-flex flex-column gap-2">
           <a
             href="/forget-password"
-            class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-3 sm:py-4 text-sm sm:text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20 text-center no-underline"
+            class="btn btn-glass btn-lg w-100 text-decoration-none"
           >
-            <i class="fas fa-paper-plane mr-2"></i>
+            <i class="fas fa-paper-plane me-2"></i>
             <span th:text="#{linkExpired.requestNew}">Request new link</span>
           </a>
 
           <a
             href="/login"
-            class="w-full bg-transparent text-white border-2 border-white/30 rounded-2xl px-6 py-3 sm:py-4 text-sm sm:text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-white/50 text-center no-underline"
+            class="btn btn-glass-light btn-lg w-100 text-decoration-none"
           >
-            <i class="fas fa-sign-in-alt mr-2"></i>
+            <i class="fas fa-sign-in-alt me-2"></i>
             <span th:text="#{linkExpired.backToSignIn}">Back to Sign In</span>
           </a>
         </div>
       </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

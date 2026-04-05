@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="#{appIntro.pageTitle}">Welcome to Myan Myan Learn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/app.css" />
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -11,119 +12,98 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
-  <body
-    class="min-h-screen font-sans flex flex-col"
-  >
+  <body class="min-vh-100 d-flex flex-column">
     <!-- Navbar -->
-    <nav
-      class="fixed top-0 left-0 right-0 z-50 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-2xl"
-    >
-      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-14 sm:h-18">
-          <!-- Brand Section -->
-          <div class="flex items-center gap-2 group cursor-pointer">
-            <div class="relative">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-              ></div>
-              <div
-                class="relative p-2 group-hover:scale-105 transition-all duration-300"
-              >
-                <img
-                  th:src="@{/images/logo.svg}"
-                  alt="Myan Myan Learn"
-                  class="w-9 h-9 sm:w-12 sm:h-12 drop-shadow-lg"
-                />
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div
-                class="text-white font-bold text-sm sm:text-xl brand-font tracking-wide truncate"
-              >
-                Myan Myan Learn
-              </div>
-              <div class="hidden sm:block text-white/70 text-xs font-medium tracking-wider uppercase" th:text="#{nav.subtitle}">Learning Platform</div>
-            </div>
+    <nav class="navbar navbar-app fixed-top">
+      <div class="container-fluid px-3 px-sm-4" style="max-width:80rem;">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+          <img
+            th:src="@{/images/logo.svg}"
+            alt="Myan Myan Learn"
+          />
+          <div class="d-flex flex-column">
+            <span class="brand-text brand-font">Myan Myan Learn</span>
+            <span class="d-none d-sm-block brand-subtitle" th:text="#{nav.subtitle}">Learning Platform</span>
           </div>
-          <!-- Skip Introduction Button -->
-          <div class="flex items-center">
-            <a
-              href="#"
-              onclick="skipIntroduction()"
-              class="group relative inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-4 py-2.5 rounded-xl text-sm font-semibold no-underline transition-all duration-300 hover:bg-white/20 hover:border-white/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-white/10"
-            >
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-secondary-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              ></div>
-              <div class="relative flex items-center gap-2">
-                <i class="fas fa-forward text-xs"></i>
-                <span th:text="#{appIntro.skip}">Skip Introduction</span>
-              </div>
-            </a>
-          </div>
+        </a>
+        <!-- Skip Introduction Button -->
+        <div class="d-flex align-items-center">
+          <a
+            href="#"
+            onclick="skipIntroduction()"
+            class="btn btn-glass-light btn-sm d-inline-flex align-items-center gap-2 rounded-3 px-3 py-2"
+          >
+            <i class="fas fa-forward" style="font-size:.75rem;"></i>
+            <span th:text="#{appIntro.skip}">Skip Introduction</span>
+          </a>
         </div>
       </div>
     </nav>
 
-    <div
-      class="w-full max-w-6xl px-3 sm:px-5 py-20 sm:py-32 text-white mx-auto flex-1 flex flex-col justify-center"
-    >
+    <div class="container flex-grow-1 d-flex flex-column justify-content-center text-white" style="max-width:72rem;padding-top:5rem;padding-bottom:2rem;">
       <div
-        class="relative w-full h-[24rem] sm:h-[32rem] overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl mb-6 sm:mb-8"
+        class="position-relative w-100 overflow-hidden rounded-3 rounded-sm-4 mb-4 mb-sm-5"
+        style="height:24rem;box-shadow:0 25px 50px rgba(0,0,0,.25);"
       >
         <!-- Carousel Slides -->
         <div
-          class="flex w-full h-full transition-transform duration-500 ease-in-out"
+          class="d-flex w-100 h-100"
           id="carouselSlides"
+          style="transition:transform .5s ease-in-out;"
         >
           <!-- Slide 1: Welcome -->
           <div
-            class="slide w-1/4 h-full flex flex-col items-center justify-center px-4 sm:px-8 text-center bg-gradient-to-br from-primary-500 to-primary-700"
+            class="slide h-100 d-flex flex-column align-items-center justify-content-center px-3 px-sm-5 text-center"
+            style="background:linear-gradient(to bottom right,var(--primary),#b91c1c);"
           >
-            <div class="text-5xl sm:text-8xl mb-4 sm:mb-6 text-white/90">
+            <div class="mb-3 mb-sm-4" style="font-size:3rem;color:rgba(255,255,255,.9);">
               <i class="fas fa-graduation-cap"></i>
             </div>
-            <h2 class="text-xl sm:text-4xl font-bold mb-2 sm:mb-4 text-white leading-tight" th:text="#{appIntro.s1.title}">Welcome to Myan Myan Learn</h2>
-            <p class="text-sm sm:text-xl leading-relaxed text-white/90 max-w-md mx-auto" th:text="#{appIntro.s1.body}">Your gateway to multilingual learning. Discover a world of knowledge and connect with learners from around the globe.</p>
+            <h2 class="fs-4 fs-sm-2 fw-bold mb-2 text-white" th:text="#{appIntro.s1.title}">Welcome to Myan Myan Learn</h2>
+            <p class="small text-white-70 mx-auto" style="max-width:28rem;" th:text="#{appIntro.s1.body}">Your gateway to multilingual learning. Discover a world of knowledge and connect with learners from around the globe.</p>
           </div>
 
           <!-- Slide 2: Multi-Language -->
           <div
-            class="slide w-1/4 h-full flex flex-col items-center justify-center px-4 sm:px-8 text-center bg-gradient-to-br from-pink-500 to-red-500"
+            class="slide h-100 d-flex flex-column align-items-center justify-content-center px-3 px-sm-5 text-center"
+            style="background:linear-gradient(to bottom right,#ec4899,#ef4444);"
           >
-            <div class="text-5xl sm:text-8xl mb-4 sm:mb-6 text-white/90">
+            <div class="mb-3 mb-sm-4" style="font-size:3rem;color:rgba(255,255,255,.9);">
               <i class="fas fa-globe"></i>
             </div>
-            <h2 class="text-xl sm:text-4xl font-bold mb-2 sm:mb-4 text-white leading-tight" th:text="#{appIntro.s2.title}">Multi-Language Support</h2>
-            <p class="text-sm sm:text-xl leading-relaxed text-white/90 max-w-md mx-auto" th:text="#{appIntro.s2.body}">Learn in 9+ languages including English, Myanmar, Chinese, Hindi, Japanese, and more. Choose your preferred language.</p>
+            <h2 class="fs-4 fs-sm-2 fw-bold mb-2 text-white" th:text="#{appIntro.s2.title}">Multi-Language Support</h2>
+            <p class="small text-white-70 mx-auto" style="max-width:28rem;" th:text="#{appIntro.s2.body}">Learn in 9+ languages including English, Myanmar, Chinese, Hindi, Japanese, and more. Choose your preferred language.</p>
           </div>
 
           <!-- Slide 3: Expert Courses -->
           <div
-            class="slide w-1/4 h-full flex flex-col items-center justify-center px-4 sm:px-8 text-center bg-gradient-to-br from-secondary-500 to-primary-500"
+            class="slide h-100 d-flex flex-column align-items-center justify-content-center px-3 px-sm-5 text-center"
+            style="background:linear-gradient(to bottom right,var(--secondary),var(--primary));"
           >
-            <div class="text-5xl sm:text-8xl mb-4 sm:mb-6 text-white/90">
+            <div class="mb-3 mb-sm-4" style="font-size:3rem;color:rgba(255,255,255,.9);">
               <i class="fas fa-book-open"></i>
             </div>
-            <h2 class="text-xl sm:text-4xl font-bold mb-2 sm:mb-4 text-white leading-tight" th:text="#{appIntro.s3.title}">Expert Courses</h2>
-            <p class="text-sm sm:text-xl leading-relaxed text-white/90 max-w-md mx-auto" th:text="#{appIntro.s3.body}">Access high-quality educational content created by language experts and native speakers from around the world.</p>
+            <h2 class="fs-4 fs-sm-2 fw-bold mb-2 text-white" th:text="#{appIntro.s3.title}">Expert Courses</h2>
+            <p class="small text-white-70 mx-auto" style="max-width:28rem;" th:text="#{appIntro.s3.body}">Access high-quality educational content created by language experts and native speakers from around the world.</p>
           </div>
 
           <!-- Slide 4: Community & Progress -->
           <div
-            class="slide w-1/4 h-full flex flex-col items-center justify-center px-4 sm:px-8 text-center bg-gradient-to-br from-green-500 to-teal-500"
+            class="slide h-100 d-flex flex-column align-items-center justify-content-center px-3 px-sm-5 text-center"
+            style="background:linear-gradient(to bottom right,#22c55e,#14b8a6);"
           >
-            <div class="text-5xl sm:text-8xl mb-4 sm:mb-6 text-white/90">
+            <div class="mb-3 mb-sm-4" style="font-size:3rem;color:rgba(255,255,255,.9);">
               <i class="fas fa-users"></i>
             </div>
-            <h2 class="text-xl sm:text-4xl font-bold mb-2 sm:mb-4 text-white leading-tight" th:text="#{appIntro.s4.title}">Community & Progress</h2>
-            <p class="text-sm sm:text-xl leading-relaxed text-white/90 max-w-md mx-auto" th:text="#{appIntro.s4.body}">Join a vibrant community of learners, practice with native speakers, and track your progress with detailed analytics.</p>
+            <h2 class="fs-4 fs-sm-2 fw-bold mb-2 text-white" th:text="#{appIntro.s4.title}">Community & Progress</h2>
+            <p class="small text-white-70 mx-auto" style="max-width:28rem;" th:text="#{appIntro.s4.body}">Join a vibrant community of learners, practice with native speakers, and track your progress with detailed analytics.</p>
           </div>
         </div>
 
         <!-- Previous Button -->
         <button
-          class="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm border border-white/30 text-white w-12 h-12 rounded-full cursor-pointer flex items-center justify-center text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+          class="position-absolute top-50 translate-middle-y d-flex align-items-center justify-content-center rounded-circle border-0 text-white"
+          style="left:1.5rem;width:3rem;height:3rem;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);cursor:pointer;z-index:2;"
           id="prevBtn"
           onclick="changeSlide(-1)"
         >
@@ -132,33 +112,18 @@
 
         <!-- Indicators -->
         <div
-          class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2"
+          class="position-absolute bottom-0 start-50 translate-middle-x d-flex gap-2 mb-3"
         >
-          <span
-            class="pager-dot w-4 h-4 rounded-full bg-white/40 cursor-pointer transition-all duration-300 hover:bg-white/60 hover:scale-110"
-            onclick="currentSlide(1)"
-            id="dot-1"
-          ></span>
-          <span
-            class="pager-dot w-4 h-4 rounded-full bg-white/40 cursor-pointer transition-all duration-300 hover:bg-white/60 hover:scale-110"
-            onclick="currentSlide(2)"
-            id="dot-2"
-          ></span>
-          <span
-            class="pager-dot w-4 h-4 rounded-full bg-white/40 cursor-pointer transition-all duration-300 hover:bg-white/60 hover:scale-110"
-            onclick="currentSlide(3)"
-            id="dot-3"
-          ></span>
-          <span
-            class="pager-dot w-4 h-4 rounded-full bg-white/40 cursor-pointer transition-all duration-300 hover:bg-white/60 hover:scale-110"
-            onclick="currentSlide(4)"
-            id="dot-4"
-          ></span>
+          <span class="pager-dot" onclick="currentSlide(1)" id="dot-1"></span>
+          <span class="pager-dot" onclick="currentSlide(2)" id="dot-2"></span>
+          <span class="pager-dot" onclick="currentSlide(3)" id="dot-3"></span>
+          <span class="pager-dot" onclick="currentSlide(4)" id="dot-4"></span>
         </div>
 
         <!-- Next Button -->
         <button
-          class="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm border border-white/30 text-white w-12 h-12 rounded-full cursor-pointer flex items-center justify-center text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+          class="position-absolute top-50 translate-middle-y d-flex align-items-center justify-content-center rounded-circle border-0 text-white"
+          style="right:1.5rem;width:3rem;height:3rem;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);cursor:pointer;z-index:2;"
           id="nextBtn"
           onclick="changeSlide(1)"
         >
@@ -166,26 +131,33 @@
         </button>
       </div>
 
-      <button
-        class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 rounded-full text-lg font-bold cursor-pointer transition-all duration-300 flex items-center gap-2.5 mx-auto shadow-2xl hover:-translate-y-1 hover:shadow-3xl hover:bg-white/30 hover:border-white/50"
-        onclick="continueToLogin()"
-      >
-        <i class="fas fa-arrow-right text-base"></i> <span th:text="#{appIntro.getStarted}">Get Started</span>
-      </button>
+      <div class="text-center">
+        <button
+          class="btn btn-glass btn-lg px-5 py-3 d-inline-flex align-items-center gap-2 mx-auto"
+          onclick="continueToLogin()"
+        >
+          <i class="fas fa-arrow-right"></i>
+          <span th:text="#{appIntro.getStarted}">Get Started</span>
+        </button>
+      </div>
     </div>
 
     <style>
+      .pager-dot {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .pager-dot:hover {
+        background: rgba(255, 255, 255, 0.6);
+        transform: scale(1.1);
+      }
       .pager-dot.active {
         background-color: white !important;
         transform: scale(1.25);
-      }
-
-      .pager-dot {
-        transition: all 0.3s ease;
-      }
-
-      .pager-dot:hover {
-        transform: scale(1.1);
       }
 
       .slide {
@@ -195,15 +167,6 @@
 
       #carouselSlides {
         width: 400% !important;
-      }
-
-      /* Individual Button Styling */
-      #prevBtn,
-      #nextBtn {
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
       #prevBtn:hover:not(:disabled),
@@ -219,6 +182,15 @@
         cursor: not-allowed !important;
         transform: translateY(-50%) !important;
         background: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      @media (min-width: 576px) {
+        .position-relative[style*="height:24rem"] {
+          height: 32rem !important;
+        }
+        .slide .mb-3 { font-size: 5rem !important; }
+        .slide h2 { font-size: 2.25rem !important; }
+        .slide p { font-size: 1.125rem !important; }
       }
     </style>
 

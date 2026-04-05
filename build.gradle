@@ -46,22 +46,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-// Tailwind CSS build (standalone CLI — no Node.js required)
-tasks.register('tailwind') {
-	description = 'Compile Tailwind CSS'
-	def input  = file('src/main/resources/static/css/tailwind-src.css')
-	def output = file('src/main/resources/static/css/app.css')
-	inputs.file(input)
-	inputs.files(fileTree('src/main/resources/templates') { include '**/*.html' })
-	outputs.file(output)
-	doLast {
-		exec {
-			commandLine 'bin/tailwindcss', '-i', input.path, '-o', output.path
-		}
-	}
-}
-
-tasks.named('processResources') {
-	dependsOn 'tailwind'
-}
