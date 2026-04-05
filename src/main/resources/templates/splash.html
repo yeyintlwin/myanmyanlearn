@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="#{splash.pageTitle}">MYAN MYAN LEARN - Loading</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/app.css" />
     <script src="/js/tailwind-config.js"></script>
     <link
@@ -28,37 +27,35 @@
   </head>
 
   <body
-    class="vh-100 d-flex align-items-center justify-content-center overflow-hidden"
+    class="h-screen font-sans flex items-center justify-center overflow-hidden"
   >
-    <div class="w-100 d-flex flex-column align-items-center text-center px-3 px-sm-5" style="max-width:56rem;">
+    <div class="w-full max-w-4xl px-4 sm:px-8 flex flex-col items-center text-center">
       <img
         th:src="@{/images/logo.svg}"
         th:alt="#{splash.logoAlt}"
         alt="Myan Myan Learn"
-        style="width:12rem;height:auto;"
-        class="mb-4"
+        class="w-48 h-auto mb-8 drop-shadow-lg"
       />
       <div
-        class="fs-2 fw-bold text-white mb-4 brand-font"
+        class="text-2xl sm:text-4xl font-black text-white mb-6 sm:mb-8 tracking-wider brand-font"
         th:text="#{app.brand}"
       >
         Myan Myan Learn
       </div>
 
       <!-- Progress Bar -->
-      <div class="w-100" style="max-width:20rem;">
-        <div class="progress" style="height:.5rem;background:rgba(255,255,255,.2);border-radius:9999px;">
+      <div class="w-full max-w-xs">
+        <div
+          class="bg-white/20 backdrop-blur-sm rounded-full h-2 overflow-hidden relative"
+        >
           <div
-            class="progress-bar position-relative overflow-hidden"
-            role="progressbar"
+            class="bg-white/80 h-full rounded-full transition-all duration-300 relative overflow-hidden"
             id="progressBar"
-            style="width:0%;background:rgba(255,255,255,.8);border-radius:9999px;transition:width .3s;"
-            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+            style="width: 0%"
           >
             <!-- Loading animation shimmer effect -->
             <div
-              class="position-absolute top-0 start-0 w-100 h-100 shimmer-animation"
-              style="background:linear-gradient(to right,transparent,rgba(255,255,255,.3),transparent);"
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse shimmer-animation"
             ></div>
           </div>
         </div>

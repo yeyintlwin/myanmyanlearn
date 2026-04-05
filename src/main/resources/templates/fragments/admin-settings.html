@@ -1,9 +1,9 @@
 <div
   xmlns:th="http://www.thymeleaf.org"
   th:fragment="settingsSection"
-  class="d-flex flex-column gap-2"
+  class="space-y-2"
 >
-  <h2 class="section-heading">
+  <h2 class="text-white text-2xl font-bold">
     <span th:text="#{adminPanel.settings}">Settings</span>
   </h2>
 
@@ -11,7 +11,7 @@
     th:if="${isAdmin}"
     th:action="@{/admin/settings/registration-domain}"
     method="post"
-    class="mt-3 d-flex flex-column gap-3" style="max-width:36rem;"
+    class="mt-4 max-w-xl space-y-4"
   >
     <input
       type="hidden"
@@ -19,25 +19,25 @@
       th:value="${_csrf.token}"
     />
 
-    <div class="admin-card-inner p-3 d-flex flex-column gap-3">
-      <div class="d-flex align-items-center justify-content-between gap-3">
+    <div class="rounded-2xl border border-white/15 bg-white/5 p-4 space-y-3">
+      <div class="flex items-center justify-between gap-3">
         <div class="min-w-0">
-          <div class="d-flex align-items-center gap-2">
+          <div class="flex items-center gap-2">
             <span
-              class="text-white fw-semibold small"
+              class="text-white font-semibold text-sm"
               th:text="#{adminSettings.registrationDomain.title}"
             >
               Limit registration by email domain
             </span>
             <span
-              class="badge-info-admin"
+              class="inline-flex items-center rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white/70"
               th:text="#{adminSettings.registrationDomain.badge}"
             >
               Admin only
             </span>
           </div>
           <p
-            class="text-white-70 mb-0 mt-1" style="font-size:.75rem;"
+            class="text-white/70 text-xs mt-1"
             th:text="#{adminSettings.registrationDomain.description}"
           >
             When enabled, only email addresses ending with the specified domain
@@ -45,28 +45,36 @@
           </p>
         </div>
 
-        <div class="form-check form-switch form-switch-glass mb-0 flex-shrink-0">
+        <label
+          class="relative inline-flex cursor-pointer items-center flex-shrink-0"
+        >
           <input
             type="checkbox"
             name="enforceDomain"
-            class="form-check-input"
-            role="switch"
+            class="sr-only peer"
             th:checked="${registrationDomainEnforced}"
           />
-        </div>
+          <div
+            class="relative h-5 w-10 rounded-full border border-white/10 bg-white/10 transition peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-white/20 peer-checked:border-emerald-500/40 peer-checked:bg-emerald-500/30 after:absolute after:left-0.5 after:top-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white/70 after:transition-all peer-checked:after:translate-x-5"
+          ></div>
+        </label>
       </div>
 
-      <div class="d-flex flex-column gap-1">
+      <div class="space-y-1">
         <label
           for="allowedDomain"
-          class="form-label small fw-medium text-white-70 mb-0"
+          class="block text-xs font-medium text-white/80"
           th:text="#{adminSettings.allowedDomain.label}"
         >
           Allowed email domain
         </label>
-        <div class="d-flex flex-column flex-sm-row gap-2">
-          <div class="input-icon-wrap flex-grow-1 min-w-0">
-            <span class="input-icon" style="font-size:.75rem;">@</span>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <div class="relative flex-1 min-w-0">
+            <div
+              class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-white/60 text-xs"
+            >
+              @
+            </div>
             <input
               id="allowedDomain"
               name="allowedDomain"
@@ -76,36 +84,35 @@
               th:attr="placeholder=#{adminSettings.allowedDomain.placeholder}"
               placeholder="school.edu"
               th:value="${registrationDomainDisplay}"
-              class="form-control form-control-admin"
-              style="padding-left:2rem;"
+              class="bg-white/10 text-white text-sm rounded-lg pl-7 pr-3 h-9 border border-white/15 focus:outline-none focus:ring-2 focus:ring-white/25 w-full placeholder:text-white/40"
             />
           </div>
         </div>
-        <p class="text-white-50 mb-0" style="font-size:.6875rem;" th:text="#{adminSettings.allowedDomain.hint}">
+        <p class="text-[11px] text-white/60" th:text="#{adminSettings.allowedDomain.hint}">
           Enter a domain like school.edu. Users will only be able to register
           with emails ending in this domain when the toggle is on.
         </p>
       </div>
     </div>
 
-    <div class="d-flex align-items-center gap-2">
+    <div class="flex items-center gap-2">
       <button
         type="submit"
-        class="btn btn-success-admin"
+        class="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/25 px-4 h-9 text-sm font-medium text-emerald-50 hover:bg-emerald-500/35 transition"
       >
-        <i class="fas fa-save" style="font-size:.75rem;"></i>
+        <i class="fas fa-save text-xs"></i>
         <span th:text="#{adminSettings.action.save}">Save settings</span>
       </button>
 
       <div
         th:if="${registrationDomainEnforced}"
-        class="badge-warning-pill"
+        class="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 h-8 text-[11px] font-medium text-amber-100"
       >
-        <i class="fas fa-circle-info" style="font-size:.75rem;"></i>
+        <i class="fas fa-circle-info text-xs"></i>
         <span>
           <span th:text="#{adminSettings.registrationLimitedPrefix}"
             >Registration limited to @</span
-          ><span class="font-monospace" th:text="${registrationDomainDisplay}"
+          ><span class="font-mono" th:text="${registrationDomainDisplay}"
             >domain.com</span
           >
         </span>
@@ -115,15 +122,15 @@
 
   <div
     th:if="${!isAdmin}"
-    class="mt-3 admin-card-inner p-3 small text-white-70" style="max-width:36rem;"
+    class="mt-4 max-w-xl rounded-2xl border border-white/15 bg-white/5 p-4 text-sm text-white/75"
   >
     <div
-      class="fw-semibold text-white"
+      class="font-semibold text-white"
       th:text="#{adminSettings.nonAdmin.title}"
     >
       Registration email domain
     </div>
-    <p class="mt-1 mb-0 text-white-70" style="font-size:.75rem;" th:text="#{adminSettings.nonAdmin.body}">
+    <p class="mt-1 text-xs text-white/70" th:text="#{adminSettings.nonAdmin.body}">
       Only Admin users can change registration domain settings. Please contact
       an Admin if you need to update this policy.
     </p>

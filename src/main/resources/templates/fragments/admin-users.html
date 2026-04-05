@@ -1,32 +1,44 @@
 <div
   xmlns:th="http://www.thymeleaf.org"
   th:fragment="usersSection"
-  class="d-flex flex-column gap-2"
+  class="space-y-2"
 >
-  <h2 class="section-heading">
+  <h2 class="text-white text-2xl font-bold">
     <span th:text="#{adminPanel.userManagement}">User Management</span>
   </h2>
-  <form th:action="@{/admin}" action="/admin" method="get" class="mt-2">
+  <form th:action="@{/admin}" action="/admin" method="get" class="mt-3">
     <input type="hidden" name="section" value="users" />
-    <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-2">
-      <div class="input-icon-wrap flex-sm-grow-1" style="max-width:360px;min-width:0;">
-        <span class="input-icon text-white-50"><i class="fas fa-magnifying-glass"></i></span>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
+      <div class="relative w-full sm:max-w-[360px] sm:flex-1 min-w-0">
+        <div
+          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-white/60"
+        >
+          <i class="fas fa-magnifying-glass"></i>
+        </div>
         <input
           name="q"
           th:value="${userQ}"
           type="text"
           th:attr="placeholder=#{adminUsers.search.placeholder}"
           placeholder="Search users..."
-          class="form-control form-control-admin"
-          style="padding-left:2.25rem;"
+          class="bg-white/10 text-white text-sm rounded-lg pl-9 pr-3 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 w-full"
         />
       </div>
 
-      <div class="flex-shrink-0" style="width:auto;">
+      <div class="relative w-full sm:w-[120px] flex-shrink-0">
+        <div
+          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2 text-white/60"
+        >
+          <i class="fas fa-filter text-xs"></i>
+        </div>
+        <div
+          class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-white/60"
+        >
+          <i class="fas fa-chevron-down text-xs"></i>
+        </div>
         <select
           name="field"
-          class="form-select form-select-admin form-select-sm"
-          style="width:120px;"
+          class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-7 pr-6 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 w-full cursor-pointer"
         >
           <option
             value="name"
@@ -52,11 +64,20 @@
         </select>
       </div>
 
-      <div class="flex-shrink-0" style="width:auto;">
+      <div class="relative w-full sm:w-[104px] flex-shrink-0">
+        <div
+          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2 text-white/60"
+        >
+          <i class="fas fa-users text-xs"></i>
+        </div>
+        <div
+          class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-white/60"
+        >
+          <i class="fas fa-chevron-down text-xs"></i>
+        </div>
         <select
           name="role"
-          class="form-select form-select-admin form-select-sm"
-          style="width:104px;"
+          class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-7 pr-6 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 w-full cursor-pointer"
         >
           <option
             value=""
@@ -91,26 +112,25 @@
 
       <button
         type="submit"
-        class="btn btn-admin-sm w-100 w-sm-auto"
+        class="bg-white/15 hover:bg-white/20 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition w-full sm:w-auto inline-flex items-center justify-center gap-2 flex-shrink-0"
       >
-        <i class="fas fa-magnifying-glass" style="font-size:.75rem;"></i>
+        <i class="fas fa-magnifying-glass text-xs"></i>
         <span th:text="#{adminUsers.action.search}">Search</span>
       </button>
 
       <a
         th:href="@{/admin(section='users')}"
         href="/admin?section=users"
-        class="btn btn-admin-sm w-100 w-sm-auto"
-        style="background:rgba(255,255,255,.1);"
+        class="bg-white/10 hover:bg-white/15 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition no-underline inline-flex items-center justify-center gap-2 w-full sm:w-auto flex-shrink-0"
       >
-        <i class="fas fa-rotate-left" style="font-size:.75rem;"></i>
+        <i class="fas fa-rotate-left text-xs"></i>
         <span th:text="#{adminUsers.action.clear}">Clear</span>
       </a>
     </div>
   </form>
 
   <div
-    class="text-white-70 small"
+    class="text-white/70 text-sm"
     th:with="userCount=${adminUsers != null ? adminUsers.size() : 0}"
     th:text="#{adminUsers.count(${userCount})}"
   >
@@ -118,33 +138,83 @@
   </div>
 
   <div th:if="${adminUsers == null || adminUsers.isEmpty()}">
-    <p class="text-white-70 small" th:text="#{adminUsers.empty}">
+    <p class="text-white/70 text-sm" th:text="#{adminUsers.empty}">
       No users found.
     </p>
   </div>
 
   <div
     th:if="${adminUsers != null && !adminUsers.isEmpty()}"
-    class="mt-2 table-responsive card-glass"
+    class="mt-2 w-full min-w-0 overflow-x-auto rounded-xl border border-white/10"
   >
-    <table class="table table-borderless table-admin mb-0">
-      <thead>
+    <table class="min-w-max text-left text-sm">
+      <thead class="bg-white/10 text-white/80">
         <tr>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.userId}">User ID</th>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.name}">Name</th>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.email}">Email</th>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.roles}">Roles</th>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.class}">Class</th>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.schoolYear}">School Year</th>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.active}">Active</th>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.emailVerified}">Email Verified</th>
-          <th class="px-3 py-2" th:text="#{adminUsers.table.actions}">Actions</th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.userId}"
+          >
+            User ID
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.name}"
+          >
+            Name
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.email}"
+          >
+            Email
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.roles}"
+          >
+            Roles
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.class}"
+          >
+            Class
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.schoolYear}"
+          >
+            School Year
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.active}"
+          >
+            Active
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.emailVerified}"
+          >
+            Email Verified
+          </th>
+          <th
+            class="px-4 py-3 font-semibold whitespace-nowrap"
+            th:text="#{adminUsers.table.actions}"
+          >
+            Actions
+          </th>
         </tr>
       </thead>
-      <tbody>
-        <tr th:each="u : ${adminUsers}">
-          <td class="px-3 py-2 fw-medium text-white" th:text="${u.userId}">user</td>
-          <td class="px-3 py-2">
+      <tbody class="divide-y divide-white/10 text-white/80">
+        <tr th:each="u : ${adminUsers}" class="hover:bg-white/5">
+          <td
+            class="px-4 py-3 font-medium text-white whitespace-nowrap"
+            th:text="${u.userId}"
+          >
+            user
+          </td>
+          <td class="px-4 py-3 whitespace-nowrap">
             <span
               th:with="firstName=${u.firstName != null ? u.firstName : ''},lastName=${u.lastName != null ? u.lastName : ''},fullName=${(firstName + ' ' + lastName).trim()}"
               th:text="${fullName}"
@@ -153,30 +223,32 @@
             </span>
           </td>
           <td
-            class="px-3 py-2"
+            class="px-4 py-3 whitespace-nowrap"
             th:with="emailValue=${u.email != null ? #strings.trim(u.email) : null}"
             th:text="${emailValue} ?: '-'"
           >
             email
           </td>
-          <td class="px-3 py-2">
+          <td class="px-4 py-3 whitespace-nowrap">
             <span
-              class="badge"
-              th:classappend="${u.roleKey == 'ADMIN'} ? ' badge-role-admin' : (${u.roleKey == 'TEACHER'} ? ' badge-role-teacher' : ' badge-role-student')"
+              class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold border"
+              th:classappend="${u.roleKey == 'ADMIN'} ? ' bg-rose-500/20 text-rose-200 border-rose-500/30' : (${u.roleKey == 'TEACHER'} ? ' bg-sky-500/20 text-sky-200 border-sky-500/30' : ' bg-emerald-500/20 text-emerald-200 border-emerald-500/30')"
               th:text="${u.roleKey != null && !u.roleKey.isBlank() ? u.roleKey : 'STUDENT'}"
             >
               STUDENT
             </span>
           </td>
-          <td class="px-3 py-2">
-            <span th:if="${u.roleKey == 'ADMIN' || u.roleKey == 'TEACHER'}">-</span>
+          <td class="px-4 py-3 whitespace-nowrap">
+            <span th:if="${u.roleKey == 'ADMIN' || u.roleKey == 'TEACHER'}"
+              >-</span
+            >
             <form
               th:if="${u.roleKey != 'ADMIN' and u.roleKey != 'TEACHER'}"
               method="post"
               action="/admin/users/student-meta"
               th:action="@{/admin/users/student-meta}"
               data-async="true"
-              class="d-inline-flex align-items-center"
+              class="inline-flex items-center"
             >
               <input
                 type="hidden"
@@ -187,51 +259,116 @@
               <input type="hidden" name="q" th:value="${userQ}" />
               <input type="hidden" name="field" th:value="${userField}" />
               <input type="hidden" name="roleFilter" th:value="${userRole}" />
-              <select
-                name="currentClass"
-                onchange="submitAsyncForm(this.form)"
-                class="form-select form-select-admin form-select-sm"
-                style="width:90px;"
-              >
-                <option value="" th:selected="${u.currentClass == null || u.currentClass.isBlank()}">-</option>
-                <option value="A" th:selected="${u.currentClass == 'A'}">A</option>
-                <option value="B" th:selected="${u.currentClass == 'B'}">B</option>
-                <option value="C" th:selected="${u.currentClass == 'C'}">C</option>
-                <option value="D" th:selected="${u.currentClass == 'D'}">D</option>
-                <option value="E" th:selected="${u.currentClass == 'E'}">E</option>
-                <option value="F" th:selected="${u.currentClass == 'F'}">F</option>
-                <option value="G" th:selected="${u.currentClass == 'G'}">G</option>
-                <option value="H" th:selected="${u.currentClass == 'H'}">H</option>
-                <option value="I" th:selected="${u.currentClass == 'I'}">I</option>
-                <option value="J" th:selected="${u.currentClass == 'J'}">J</option>
-                <option value="K" th:selected="${u.currentClass == 'K'}">K</option>
-                <option value="L" th:selected="${u.currentClass == 'L'}">L</option>
-                <option value="M" th:selected="${u.currentClass == 'M'}">M</option>
-                <option value="N" th:selected="${u.currentClass == 'N'}">N</option>
-                <option value="O" th:selected="${u.currentClass == 'O'}">O</option>
-                <option value="P" th:selected="${u.currentClass == 'P'}">P</option>
-                <option value="Q" th:selected="${u.currentClass == 'Q'}">Q</option>
-                <option value="R" th:selected="${u.currentClass == 'R'}">R</option>
-                <option value="S" th:selected="${u.currentClass == 'S'}">S</option>
-                <option value="T" th:selected="${u.currentClass == 'T'}">T</option>
-                <option value="U" th:selected="${u.currentClass == 'U'}">U</option>
-                <option value="V" th:selected="${u.currentClass == 'V'}">V</option>
-                <option value="W" th:selected="${u.currentClass == 'W'}">W</option>
-                <option value="X" th:selected="${u.currentClass == 'X'}">X</option>
-                <option value="Y" th:selected="${u.currentClass == 'Y'}">Y</option>
-                <option value="Z" th:selected="${u.currentClass == 'Z'}">Z</option>
-              </select>
+              <div class="relative">
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-white/60"
+                >
+                  <i class="fas fa-chevron-down text-xs"></i>
+                </div>
+                <select
+                  name="currentClass"
+                  onchange="submitAsyncForm(this.form)"
+                  class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-2 pr-7 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 cursor-pointer w-[90px]"
+                >
+                  <option
+                    value=""
+                    th:selected="${u.currentClass == null || u.currentClass.isBlank()}"
+                  >
+                    -
+                  </option>
+                  <option value="A" th:selected="${u.currentClass == 'A'}">
+                    A
+                  </option>
+                  <option value="B" th:selected="${u.currentClass == 'B'}">
+                    B
+                  </option>
+                  <option value="C" th:selected="${u.currentClass == 'C'}">
+                    C
+                  </option>
+                  <option value="D" th:selected="${u.currentClass == 'D'}">
+                    D
+                  </option>
+                  <option value="E" th:selected="${u.currentClass == 'E'}">
+                    E
+                  </option>
+                  <option value="F" th:selected="${u.currentClass == 'F'}">
+                    F
+                  </option>
+                  <option value="G" th:selected="${u.currentClass == 'G'}">
+                    G
+                  </option>
+                  <option value="H" th:selected="${u.currentClass == 'H'}">
+                    H
+                  </option>
+                  <option value="I" th:selected="${u.currentClass == 'I'}">
+                    I
+                  </option>
+                  <option value="J" th:selected="${u.currentClass == 'J'}">
+                    J
+                  </option>
+                  <option value="K" th:selected="${u.currentClass == 'K'}">
+                    K
+                  </option>
+                  <option value="L" th:selected="${u.currentClass == 'L'}">
+                    L
+                  </option>
+                  <option value="M" th:selected="${u.currentClass == 'M'}">
+                    M
+                  </option>
+                  <option value="N" th:selected="${u.currentClass == 'N'}">
+                    N
+                  </option>
+                  <option value="O" th:selected="${u.currentClass == 'O'}">
+                    O
+                  </option>
+                  <option value="P" th:selected="${u.currentClass == 'P'}">
+                    P
+                  </option>
+                  <option value="Q" th:selected="${u.currentClass == 'Q'}">
+                    Q
+                  </option>
+                  <option value="R" th:selected="${u.currentClass == 'R'}">
+                    R
+                  </option>
+                  <option value="S" th:selected="${u.currentClass == 'S'}">
+                    S
+                  </option>
+                  <option value="T" th:selected="${u.currentClass == 'T'}">
+                    T
+                  </option>
+                  <option value="U" th:selected="${u.currentClass == 'U'}">
+                    U
+                  </option>
+                  <option value="V" th:selected="${u.currentClass == 'V'}">
+                    V
+                  </option>
+                  <option value="W" th:selected="${u.currentClass == 'W'}">
+                    W
+                  </option>
+                  <option value="X" th:selected="${u.currentClass == 'X'}">
+                    X
+                  </option>
+                  <option value="Y" th:selected="${u.currentClass == 'Y'}">
+                    Y
+                  </option>
+                  <option value="Z" th:selected="${u.currentClass == 'Z'}">
+                    Z
+                  </option>
+                </select>
+              </div>
             </form>
           </td>
-          <td class="px-3 py-2">
-            <span th:if="${u.roleKey == 'ADMIN' || u.roleKey == 'TEACHER'}">-</span>
+          <td class="px-4 py-3 whitespace-nowrap">
+            <span th:if="${u.roleKey == 'ADMIN' || u.roleKey == 'TEACHER'}"
+              >-</span
+            >
             <form
               th:if="${u.roleKey != 'ADMIN' and u.roleKey != 'TEACHER'}"
               method="post"
               action="/admin/users/student-meta"
               th:action="@{/admin/users/student-meta}"
               data-async="true"
-              class="d-inline-flex align-items-center"
+              class="inline-flex items-center"
             >
               <input
                 type="hidden"
@@ -242,31 +379,62 @@
               <input type="hidden" name="q" th:value="${userQ}" />
               <input type="hidden" name="field" th:value="${userField}" />
               <input type="hidden" name="roleFilter" th:value="${userRole}" />
-              <select
-                name="schoolYear"
-                onchange="submitAsyncForm(this.form)"
-                class="form-select form-select-admin form-select-sm"
-                style="width:112px;"
-              >
-                <option value="" th:selected="${u.schoolYear == null || u.schoolYear.isBlank()}">-</option>
-                <option value="1" th:selected="${u.schoolYear == '1'}">1</option>
-                <option value="2" th:selected="${u.schoolYear == '2'}">2</option>
-                <option value="3" th:selected="${u.schoolYear == '3'}">3</option>
-                <option value="4" th:selected="${u.schoolYear == '4'}">4</option>
-                <option value="5" th:selected="${u.schoolYear == '5'}">5</option>
-                <option value="6" th:selected="${u.schoolYear == '6'}">6</option>
-                <option value="7" th:selected="${u.schoolYear == '7'}">7</option>
-                <option value="8" th:selected="${u.schoolYear == '8'}">8</option>
-                <option value="9" th:selected="${u.schoolYear == '9'}">9</option>
-                <option value="10" th:selected="${u.schoolYear == '10'}">10</option>
-              </select>
+              <div class="relative">
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-white/60"
+                >
+                  <i class="fas fa-chevron-down text-xs"></i>
+                </div>
+                <select
+                  name="schoolYear"
+                  onchange="submitAsyncForm(this.form)"
+                  class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-3 pr-7 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 cursor-pointer w-[112px]"
+                >
+                  <option
+                    value=""
+                    th:selected="${u.schoolYear == null || u.schoolYear.isBlank()}"
+                  >
+                    -
+                  </option>
+                  <option value="1" th:selected="${u.schoolYear == '1'}">
+                    1
+                  </option>
+                  <option value="2" th:selected="${u.schoolYear == '2'}">
+                    2
+                  </option>
+                  <option value="3" th:selected="${u.schoolYear == '3'}">
+                    3
+                  </option>
+                  <option value="4" th:selected="${u.schoolYear == '4'}">
+                    4
+                  </option>
+                  <option value="5" th:selected="${u.schoolYear == '5'}">
+                    5
+                  </option>
+                  <option value="6" th:selected="${u.schoolYear == '6'}">
+                    6
+                  </option>
+                  <option value="7" th:selected="${u.schoolYear == '7'}">
+                    7
+                  </option>
+                  <option value="8" th:selected="${u.schoolYear == '8'}">
+                    8
+                  </option>
+                  <option value="9" th:selected="${u.schoolYear == '9'}">
+                    9
+                  </option>
+                  <option value="10" th:selected="${u.schoolYear == '10'}">
+                    10
+                  </option>
+                </select>
+              </div>
             </form>
           </td>
-          <td class="px-3 py-2">
-            <div class="d-flex align-items-center gap-2">
+          <td class="px-4 py-3 whitespace-nowrap">
+            <div class="flex items-center gap-3">
               <span
-                class="badge"
-                th:classappend="${u.active != null && u.active} ? ' badge-active' : ' badge-inactive'"
+                class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold"
+                th:classappend="${u.active != null && u.active} ? ' bg-emerald-500/20 text-emerald-200' : ' bg-rose-500/20 text-rose-200'"
                 th:text="${u.active != null && u.active} ? #{adminUsers.status.active} : #{adminUsers.status.inactive}"
               >
                 Active
@@ -278,7 +446,7 @@
                 th:action="@{/admin/users/active}"
                 th:if="${u.roleKey != 'ADMIN'}"
                 data-async="true"
-                class="d-flex align-items-center"
+                class="flex items-center"
               >
                 <input
                   type="hidden"
@@ -294,11 +462,10 @@
                 <input type="hidden" name="q" th:value="${userQ}" />
                 <input type="hidden" name="field" th:value="${userField}" />
                 <input type="hidden" name="roleFilter" th:value="${userRole}" />
-                <div class="form-check form-switch form-switch-glass mb-0">
+                <label class="relative inline-flex cursor-pointer items-center">
                   <input
                     type="checkbox"
-                    class="form-check-input"
-                    role="switch"
+                    class="sr-only peer"
                     th:checked="${u.active != null && u.active}"
                     th:attr="data-label-active=#{adminUsers.status.active},data-label-inactive=#{adminUsers.status.inactive}"
                     onchange="
@@ -320,38 +487,46 @@
                           ? activeLabel
                           : inactiveLabel;
                         badge.classList.remove(
-                          'badge-active',
-                          'badge-inactive',
+                          'bg-emerald-500/20',
+                          'text-emerald-200',
+                          'bg-rose-500/20',
+                          'text-rose-200',
                         );
                         badge.classList.add(
-                          this.checked ? 'badge-active' : 'badge-inactive',
+                          this.checked ? 'bg-emerald-500/20' : 'bg-rose-500/20',
+                        );
+                        badge.classList.add(
+                          this.checked ? 'text-emerald-200' : 'text-rose-200',
                         );
                       }
                       submitAsyncForm(this.form);
                     "
                   />
-                </div>
+                  <div
+                    class="relative h-5 w-10 rounded-full border border-white/10 bg-white/10 transition peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-white/20 peer-checked:border-emerald-500/40 peer-checked:bg-emerald-500/30 after:absolute after:left-0.5 after:top-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white/70 after:transition-all peer-checked:after:translate-x-5"
+                  ></div>
+                </label>
               </form>
             </div>
           </td>
-          <td class="px-3 py-2">
+          <td class="px-4 py-3 whitespace-nowrap">
             <span
-              class="badge"
-              th:classappend="${u.emailVerified != null && u.emailVerified} ? ' badge-verified' : ' badge-unverified'"
+              class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold"
+              th:classappend="${u.emailVerified != null && u.emailVerified} ? ' bg-emerald-500/20 text-emerald-200' : ' bg-amber-500/20 text-amber-200'"
               th:text="${u.emailVerified != null && u.emailVerified} ? #{adminUsers.emailStatus.verified} : #{adminUsers.emailStatus.unverified}"
             >
               Verified
             </span>
           </td>
-          <td class="px-3 py-2">
-            <div class="d-flex align-items-center gap-2 flex-nowrap">
+          <td class="px-4 py-3 whitespace-nowrap">
+            <div class="flex items-center gap-2 flex-nowrap overflow-x-auto">
               <form
                 method="post"
                 action="/admin/users/role"
                 th:action="@{/admin/users/role}"
                 th:if="${currentUserId == null || u.userId != currentUserId}"
                 onsubmit="return confirmAdminAssign(this);"
-                class="d-flex align-items-center gap-2 flex-nowrap flex-shrink-0"
+                class="flex items-center gap-2 flex-nowrap flex-shrink-0"
               >
                 <input
                   type="hidden"
@@ -362,35 +537,42 @@
                 <input type="hidden" name="q" th:value="${userQ}" />
                 <input type="hidden" name="field" th:value="${userField}" />
                 <input type="hidden" name="roleFilter" th:value="${userRole}" />
-                <select
-                  name="role"
-                  class="form-select form-select-admin form-select-sm"
-                >
-                  <option
-                    value="ADMIN"
-                    th:selected="${u.roleKey == 'ADMIN'}"
-                    th:text="#{adminUsers.search.role.admin}"
+                <div class="relative">
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-white/60"
                   >
-                    Admin
-                  </option>
-                  <option
-                    value="TEACHER"
-                    th:selected="${u.roleKey == 'TEACHER'}"
-                    th:text="#{adminUsers.search.role.teacher}"
+                    <i class="fas fa-chevron-down text-xs"></i>
+                  </div>
+                  <select
+                    name="role"
+                    class="appearance-none bg-white/10 text-white text-xs rounded-lg pl-2 pr-7 h-9 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 cursor-pointer"
                   >
-                    Teacher
-                  </option>
-                  <option
-                    value="STUDENT"
-                    th:selected="${u.roleKey == 'STUDENT' || u.roleKey == null || u.roleKey.isBlank()}"
-                    th:text="#{adminUsers.search.role.student}"
-                  >
-                    Student
-                  </option>
-                </select>
+                    <option
+                      value="ADMIN"
+                      th:selected="${u.roleKey == 'ADMIN'}"
+                      th:text="#{adminUsers.search.role.admin}"
+                    >
+                      Admin
+                    </option>
+                    <option
+                      value="TEACHER"
+                      th:selected="${u.roleKey == 'TEACHER'}"
+                      th:text="#{adminUsers.search.role.teacher}"
+                    >
+                      Teacher
+                    </option>
+                    <option
+                      value="STUDENT"
+                      th:selected="${u.roleKey == 'STUDENT' || u.roleKey == null || u.roleKey.isBlank()}"
+                      th:text="#{adminUsers.search.role.student}"
+                    >
+                      Student
+                    </option>
+                  </select>
+                </div>
                 <button
                   type="submit"
-                  class="btn btn-admin-sm"
+                  class="bg-white/15 hover:bg-white/20 text-white text-xs px-3 h-9 rounded-lg border border-white/10 transition inline-flex items-center justify-center gap-2 flex-shrink-0"
                 >
                   <span th:text="#{adminUsers.action.update}">Update</span>
                 </button>
@@ -420,15 +602,14 @@
                 <input type="hidden" name="roleFilter" th:value="${userRole}" />
                 <button
                   type="submit"
-                  class="btn btn-danger-sm"
+                  class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 text-xs px-3 h-9 rounded-lg border border-rose-500/30 transition inline-flex items-center justify-center flex-shrink-0"
                 >
                   <span th:text="#{adminUsers.action.delete}">Delete</span>
                 </button>
               </form>
               <span
                 th:if="${currentUserId != null && u.userId == currentUserId}"
-                class="d-inline-flex align-items-center text-white-50 small flex-shrink-0"
-                style="height:2.25rem;"
+                class="inline-flex items-center text-white/50 text-xs h-9 flex-shrink-0"
                 >-</span
               >
             </div>
@@ -440,49 +621,54 @@
 </div>
 
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="usersOverlays">
-  <!-- Assign Admin Modal -->
   <div
     id="assignAdminModal"
-    class="modal fade modal-glass"
-    tabindex="-1"
+    class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/70"
     role="dialog"
+    aria-modal="true"
     aria-labelledby="assignAdminTitle"
-    aria-hidden="true"
   >
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content" style="border-color:rgba(244,63,94,.3);">
-        <div class="modal-body p-4 p-sm-5">
-          <div class="d-flex align-items-start gap-3">
-            <div class="modal-danger-icon">
-              <i class="fas fa-triangle-exclamation" style="color:#fecdd3;"></i>
+    <div class="min-h-full flex items-start justify-center p-4 sm:p-6">
+      <div
+        class="w-full max-w-lg rounded-2xl border border-rose-500/30 bg-slate-950/90 backdrop-blur-xl shadow-2xl my-6"
+      >
+        <div class="p-5 sm:p-6">
+          <div class="flex items-start gap-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center flex-shrink-0"
+            >
+              <i class="fas fa-triangle-exclamation text-rose-200"></i>
             </div>
             <div class="min-w-0">
               <h3
                 id="assignAdminTitle"
-                class="text-white fs-5 fw-bold"
+                class="text-white text-lg sm:text-xl font-bold"
                 th:text="#{adminUsers.assignAdmin.title}"
               >
                 Assign Admin role?
               </h3>
-              <p class="text-white-70 small mt-2">
+              <p class="text-white/80 text-sm mt-2">
                 <span th:text="#{adminUsers.assignAdmin.bodyPrefix}"
                   >You are about to assign the Admin role to</span
                 >
                 <span
                   id="assignAdminTargetUserId"
-                  class="fw-semibold text-white"
+                  class="font-semibold text-white"
                 ></span
                 >.
               </p>
-              <div class="modal-warning-box mt-3">
+              <div
+                class="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4"
+              >
                 <div
-                  class="fw-semibold small" style="color:#fde68a;"
+                  class="text-amber-200 font-semibold text-sm"
                   th:text="#{adminUsers.assignAdmin.warningTitle}"
                 >
-                  Your role will be changed to Teacher and you will be logged out.
+                  Your role will be changed to Teacher and you will be logged
+                  out.
                 </div>
                 <div
-                  class="text-white-70 small mt-1"
+                  class="text-white/75 text-sm mt-1"
                   th:text="#{adminUsers.assignAdmin.warningBody}"
                 >
                   This is required to ensure there is always at least one Admin.
@@ -490,11 +676,11 @@
               </div>
             </div>
           </div>
-          <div class="mt-4 d-flex flex-column flex-sm-row gap-2 justify-content-sm-end">
+          <div class="mt-5 flex flex-col sm:flex-row gap-2 sm:justify-end">
             <button
               id="assignAdminCancel"
               type="button"
-              class="btn btn-admin"
+              class="bg-white/10 hover:bg-white/15 text-white text-sm px-4 h-10 rounded-lg border border-white/10 transition inline-flex items-center justify-center"
               th:text="#{adminUsers.assignAdmin.cancel}"
             >
               Cancel
@@ -502,7 +688,7 @@
             <button
               id="assignAdminConfirm"
               type="button"
-              class="btn btn-danger-admin"
+              class="bg-rose-500/30 hover:bg-rose-500/40 text-rose-100 text-sm px-4 h-10 rounded-lg border border-rose-500/40 transition inline-flex items-center justify-center"
               th:text="#{adminUsers.assignAdmin.confirm}"
             >
               Assign Admin &amp; Log out
@@ -515,8 +701,10 @@
 
   <div
     id="adminAsyncToast"
-    class="admin-toast"
+    class="fixed bottom-4 right-4 z-[60] hidden items-center gap-2 rounded-xl border border-white/15 bg-slate-950/90 px-4 py-3 text-sm text-white shadow-2xl backdrop-blur"
   >
-    <span id="adminAsyncToastText" th:text="#{adminUsers.toast.saved}">Saved</span>
+    <span id="adminAsyncToastText" th:text="#{adminUsers.toast.saved}"
+      >Saved</span
+    >
   </div>
 </div>
