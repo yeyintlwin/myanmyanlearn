@@ -38,6 +38,7 @@ out/
 
 ### Application Configuration ###
 src/main/resources/application.properties
+config/application.properties
 .DS_Store
 scripts/backups/
 scripts/__pycache__/
