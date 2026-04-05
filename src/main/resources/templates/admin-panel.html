@@ -26,10 +26,10 @@
   <body class="min-h-screen font-sans text-gray-800 flex flex-col">
     <nav th:replace="fragments/navbar :: appNavbar(#{nav.adminPanel})"></nav>
 
-    <main class="flex-1 pt-28 pb-16">
+    <main class="flex-1 pt-20 sm:pt-28 pb-10 sm:pb-16">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between gap-4 mb-6">
-          <h1 class="text-white text-3xl sm:text-4xl font-extrabold">
+          <h1 class="text-white text-2xl sm:text-3xl lg:text-4xl font-extrabold">
             <span th:text="#{nav.adminPanel}">Admin Panel</span>
           </h1>
           <a

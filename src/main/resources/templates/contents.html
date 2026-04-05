@@ -22,7 +22,7 @@
   <body class="min-h-screen font-sans text-gray-800 flex flex-col">
     <nav th:replace="fragments/navbar :: appNavbar('Learning Platform')"></nav>
 
-    <main class="flex-1 pt-28 pb-16">
+    <main class="flex-1 pt-20 sm:pt-28 pb-10 sm:pb-16">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between mb-6">
           <h1
@@ -45,7 +45,7 @@
         </div>
 
         <!-- Tabs -->
-        <div class="flex border-b border-white/20 mb-6">
+        <div class="flex border-b border-white/20 mb-4 sm:mb-6 overflow-x-auto">
           <button
             id="learnTab"
             class="px-4 py-2 text-sm font-medium text-white border-b-2 border-primary-400 focus:outline-none transition-colors flex items-center gap-2"
@@ -79,7 +79,7 @@
           class="space-y-4 hidden"
           th:if="${courseHasQuestions}"
         >
-          <div class="flex justify-end mb-4 gap-3">
+          <div class="flex flex-wrap justify-end mb-4 gap-2 sm:gap-3">
             <button
               id="randomSelectBtn"
               class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors flex items-center gap-2"

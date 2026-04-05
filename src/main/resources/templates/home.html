@@ -25,7 +25,7 @@
     <nav th:replace="fragments/navbar :: appNavbar('Learning Platform')"></nav>
 
     <!-- Main Content -->
-    <main class="flex-1 pt-28 pb-16">
+    <main class="flex-1 pt-20 sm:pt-28 pb-10 sm:pb-16">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Our Courses Title -->
         <div class="flex items-center justify-between mb-6">
@@ -47,12 +47,12 @@
             class="block no-underline"
           >
             <div
-              class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4 flex items-start gap-4 hover:bg-white/15 transition cursor-pointer"
+              class="bg-white/10 border border-white/10 rounded-xl p-3 sm:p-4 flex items-start gap-2.5 sm:gap-4 hover:bg-white/15 transition cursor-pointer"
               th:with="pct=${courseProgress != null ? (courseProgress[course.id] ?: 0) : 0}, hasQ=${courseHasQuestions != null ? (courseHasQuestions[course.id] ?: false) : false}"
             >
               <!-- Image -->
               <div
-                class="w-24 h-28 sm:w-28 sm:h-32 rounded-xl bg-white/10 overflow-hidden flex-shrink-0"
+                class="w-16 h-20 sm:w-28 sm:h-32 rounded-lg sm:rounded-xl bg-white/10 overflow-hidden flex-shrink-0"
               >
                 <img
                   th:src="${course.logo}"
@@ -64,20 +64,20 @@
               <!-- Text -->
               <div class="flex-1 min-w-0">
                 <div
-                  class="text-white font-semibold text-2xl sm:text-3xl truncate mb-2"
+                  class="text-white font-semibold text-base sm:text-2xl lg:text-3xl truncate mb-1 sm:mb-2"
                   th:text="${course.title}"
                 >
                   Course Title
                 </div>
                 <div
-                  class="text-white/80 text-sm sm:text-base mt-2 leading-relaxed line-clamp-2"
+                  class="text-white/80 text-xs sm:text-sm lg:text-base mt-1 sm:mt-2 leading-relaxed line-clamp-2"
                   th:text="${course.description}"
                 >
                   Course description
                 </div>
               </div>
               <!-- Percentage Block -->
-              <div class="text-left flex flex-col items-start leading-tight" th:if="${hasQ}">
+              <div class="hidden sm:flex text-left flex-col items-start leading-tight" th:if="${hasQ}">
                 <span
                   class="text-white/80 text-[10px] sm:text-xs"
                   th:text="#{home.youHave}"
