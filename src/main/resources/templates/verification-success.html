@@ -12,7 +12,7 @@
     />
   </head>
   <body
-    class="min-h-screen bg-gradient-to-br from-secondary-900 via-secondary-700 to-primary-600 font-sans flex items-center justify-center p-6"
+    class="min-h-screen bg-gradient-to-br from-secondary-900 via-secondary-700 to-primary-600 font-sans flex items-center justify-center p-3 sm:p-6"
   >
     <!-- Navbar -->
     <nav
@@ -51,7 +51,7 @@
 
     <!-- Success Card -->
     <div
-      class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl mt-20 relative overflow-hidden"
+      class="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl mt-20 relative overflow-hidden"
     >
       <!-- Decorative Background -->
       <div
@@ -68,7 +68,7 @@
         >
           <i class="fas fa-check text-2xl"></i>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-3" th:text="#{verifySuccess.header}">Email Verified!</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3" th:text="#{verifySuccess.header}">Email Verified!</h1>
         <p class="text-base text-white/80 mb-8 leading-relaxed" th:text="#{verifySuccess.message}">Congratulations! Your email address has been successfully verified. Your account is now active and ready to use.</p>
       </div>
 
@@ -93,7 +93,7 @@
       <div class="relative z-10 flex flex-col gap-3 mb-8">
         <a
           href="/login"
-          class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20 text-center no-underline"
+          class="w-full bg-white/20 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-3 sm:py-4 text-sm sm:text-base font-bold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/30 hover:border-white/50 focus:ring-4 focus:ring-white/20 text-center no-underline"
           id="loginBtn"
         >
           <i class="fas fa-sign-in-alt mr-2"></i>
@@ -101,7 +101,7 @@
         </a>
         <a
           href="/"
-          class="w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-4 text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/20 hover:border-white/50 text-center no-underline"
+          class="w-full bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-2xl px-6 py-3 sm:py-4 text-sm sm:text-base font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white/20 hover:border-white/50 text-center no-underline"
         >
           <i class="fas fa-home mr-2"></i>
           <span th:text="#{verifySuccess.goHome}">Go to Home</span>

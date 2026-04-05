@@ -224,6 +224,45 @@
     plugins: [
       function (_ref) {
         var addUtilities = _ref.addUtilities;
+        var addBase = _ref.addBase;
+
+        /* ── Cross-browser fixes ─────────────────────────────────── */
+
+        addBase({
+          /* Windows browsers render native <select> dropdown options
+             with a white background. When text-white is set on the
+             <select>, the options inherit white text → invisible.
+             macOS Safari handles this natively; Windows does not. */
+          "select option": {
+            "background-color": "#1e293b",
+            color: "#e2e8f0",
+          },
+
+          /* Scrollbar hiding: Firefox uses scrollbar-width,
+             WebKit uses ::-webkit-scrollbar pseudo-element */
+          ".scrollbar-none": {
+            "-ms-overflow-style": "none",
+            "scrollbar-width": "none",
+          },
+          ".scrollbar-none::-webkit-scrollbar": {
+            display: "none",
+          },
+        });
+
+        /* backdrop-filter fallback: when not supported, give
+           glass elements a solid dark background so content
+           remains readable instead of becoming transparent. */
+        var style = document.createElement("style");
+        style.textContent =
+          "@supports not (backdrop-filter: blur(1px)) {" +
+          "  nav, .backdrop-blur-xl, .backdrop-blur-sm, .backdrop-blur, .glass, .glass-dark {" +
+          "    background-color: rgba(15, 23, 42, 0.95) !important;" +
+          "  }" +
+          "}";
+        if (document.head) document.head.appendChild(style);
+
+        /* ── Utility classes ─────────────────────────────────────── */
+
         var newUtilities = {
           ".glass": {
             background: "rgba(255, 255, 255, 0.1)",
