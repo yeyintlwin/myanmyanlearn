@@ -1,0 +1,15 @@
+#! kustomization.yaml
+# Generated code, do not edit
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - 0-myanmyanlearn-namespace.yaml
+    - app-app_uploads-persistentVolumeClaim.yaml
+    - app-deployment.yaml
+    - app-expose.yaml
+    - app-service.yaml
+    - default-network-policy.yaml
+    - mysql-deployment.yaml
+    - mysql-expose.yaml
+    - mysql-mysql_data-persistentVolumeClaim.yaml
+    - mysql-service.yaml

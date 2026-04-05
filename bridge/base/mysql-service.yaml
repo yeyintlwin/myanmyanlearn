@@ -1,0 +1,19 @@
+#! mysql-service.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: Service
+metadata:
+    name: mysql-published
+    namespace: myanmyanlearn
+    labels:
+        com.docker.compose.project: myanmyanlearn
+        com.docker.compose.service: mysql
+spec:
+    selector:
+        com.docker.compose.project: myanmyanlearn
+        com.docker.compose.service: mysql
+    ports:
+        - name: mysql-3306
+          port: 3306
+          protocol: TCP
+          targetPort: mysql-3306

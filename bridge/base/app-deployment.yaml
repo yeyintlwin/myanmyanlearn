@@ -1,0 +1,65 @@
+#! app-deployment.yaml
+# Generated code, do not edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: app
+    namespace: myanmyanlearn
+    labels:
+        com.docker.compose.project: myanmyanlearn
+        com.docker.compose.service: app
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            com.docker.compose.project: myanmyanlearn
+            com.docker.compose.service: app
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                com.docker.compose.project: myanmyanlearn
+                com.docker.compose.service: app
+                com.docker.compose.network.default: "true"
+        spec:
+            containers:
+                - name: app
+                  image: yeyintlwin/myanmyanlearn:latest
+                  imagePullPolicy: IfNotPresent
+                  env:
+                    - name: APP_MYSQL_BACKUP_ENABLED
+                      value: "false"
+                    - name: MYSQL_DATABASE
+                      value: "user_directory"
+                    - name: MYSQL_PASSWORD
+                      value: "mmlearn@barlarlar123"
+                    - name: MYSQL_USER
+                      value: "mmlearn"
+                    - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+                      value: "file:/app/config/"
+                    - name: SPRING_DATASOURCE_PASSWORD
+                      value: "mmlearn@barlarlar123"
+                    - name: SPRING_DATASOURCE_URL
+                      value: "jdbc:mysql://mysql:3306/user_directory?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_0900_ai_ci"
+                    - name: SPRING_DATASOURCE_USERNAME
+                      value: "mmlearn"
+                    - name: SPRING_PROFILES_ACTIVE
+                      value: "docker"
+                  ports:
+                    - name: app-8080
+                      containerPort: 8080
+                  volumeMounts:
+                    - name: app--myanmyanlearn-uploads
+                      mountPath: /app/.myanmyanlearn/uploads
+                    - name: app-config-application-properties
+                      mountPath: /app/config/application.properties
+                      readOnly: true
+            volumes:
+                - name: app--myanmyanlearn-uploads
+                  persistentVolumeClaim:
+                    claimName: app-app-uploads
+                - name: app-config-application-properties
+                  hostPath:
+                    path: /Users/yeyintlwin/Desktop/dev/myanmyanlearn/src/main/resources/application.properties
+                  readOnly: true

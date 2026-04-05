@@ -1,0 +1,59 @@
+#! mysql-deployment.yaml
+# Generated code, do not edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mysql
+    namespace: myanmyanlearn
+    labels:
+        com.docker.compose.project: myanmyanlearn
+        com.docker.compose.service: mysql
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            com.docker.compose.project: myanmyanlearn
+            com.docker.compose.service: mysql
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                com.docker.compose.project: myanmyanlearn
+                com.docker.compose.service: mysql
+                com.docker.compose.network.default: "true"
+        spec:
+            containers:
+                - name: mysql
+                  image: mysql:8.0
+                  imagePullPolicy: IfNotPresent
+                  args:
+                    - --character-set-server=utf8mb4
+                    - --collation-server=utf8mb4_0900_ai_ci
+                  env:
+                    - name: MYSQL_DATABASE
+                      value: "user_directory"
+                    - name: MYSQL_PASSWORD
+                      value: "mmlearn@barlarlar123"
+                    - name: MYSQL_ROOT_PASSWORD
+                      value: "root"
+                    - name: MYSQL_USER
+                      value: "mmlearn"
+                  livenessProbe:
+                    exec:
+                        command: [mysqladmin ping -h 127.0.0.1 -uroot -proot]
+                    periodSeconds: 5
+                    timeoutSeconds: 5
+                    failureThreshold: 20
+                  ports:
+                    - name: mysql-3306
+                      containerPort: 3306
+                    - name: mysql-33060
+                      containerPort: 33060
+                  volumeMounts:
+                    - name: var-lib-mysql
+                      mountPath: /var/lib/mysql
+            volumes:
+                - name: var-lib-mysql
+                  persistentVolumeClaim:
+                    claimName: mysql-mysql-data
