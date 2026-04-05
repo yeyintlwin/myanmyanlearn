@@ -5,7 +5,13 @@ COPY gradlew settings.gradle build.gradle /workspace/
 COPY gradle /workspace/gradle
 RUN chmod +x /workspace/gradlew
 
+COPY tailwind.config.js /workspace/
 COPY src /workspace/src
+
+RUN mkdir -p bin && \
+    curl -sL https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4.17/tailwindcss-linux-x64 -o bin/tailwindcss && \
+    chmod +x bin/tailwindcss
+
 RUN /workspace/gradlew bootJar -x test --no-daemon
 
 FROM eclipse-temurin:21-jre
