@@ -7,6 +7,7 @@ import com.barlarlar.myanmyanlearn.repository.OtpVerificationRepository;
 import com.barlarlar.myanmyanlearn.repository.PasswordResetTokenRepository;
 import com.barlarlar.myanmyanlearn.repository.RoleRepository;
 import com.barlarlar.myanmyanlearn.service.LoginAttemptService;
+import com.barlarlar.myanmyanlearn.service.PasswordValidationService;
 import com.barlarlar.myanmyanlearn.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,7 @@ public class ProfileController {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final AssessmentScoreRecordRepository assessmentScoreRecordRepository;
     private final LoginAttemptService loginAttemptService;
+    private final PasswordValidationService passwordValidationService;
     private final StorageService storageService;
 
     private static final int NAME_MIN_LENGTH = 2;
@@ -293,7 +295,9 @@ public class ProfileController {
     @DeleteMapping("/profile/delete")
     @ResponseBody
     @Transactional
-    public ResponseEntity<Map<String, Object>> deleteAccount(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Map<String, Object>> deleteAccount(
+            @RequestBody(required = false) Map<String, String> requestBody,
+            HttpServletRequest request, HttpServletResponse response) {
         log.info("ProfileController.deleteAccount() called");
 
         Map<String, Object> body = new HashMap<>();
@@ -309,6 +313,23 @@ public class ProfileController {
             }
 
             String username = authentication.getName();
+
+            // Require password confirmation for account deletion
+            String currentPassword = requestBody != null ? requestBody.get("currentPassword") : null;
+            if (currentPassword == null || currentPassword.isBlank()) {
+                body.put("success", false);
+                body.put("message", msg("profile.deleteAccount.msg.passwordRequired"));
+                return ResponseEntity.badRequest().body(body);
+            }
+
+            // Verify password before deletion
+            Optional<Member> pwCheckOpt = memberRepository.findById(Objects.requireNonNull(username));
+            if (pwCheckOpt.isPresent() && !passwordEncoder.matches(currentPassword, pwCheckOpt.get().getPassword())) {
+                body.put("success", false);
+                body.put("message", msg("profile.deleteAccount.msg.passwordIncorrect"));
+                return ResponseEntity.badRequest().body(body);
+            }
+
             log.info("Deleting account for user: {}", username);
 
             // Find the user in database
@@ -463,10 +484,12 @@ public class ProfileController {
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Validate new password length
-            if (newPassword.length() < 8) {
+            // Validate new password strength
+            PasswordValidationService.PasswordValidationResult passwordResult =
+                    passwordValidationService.validatePassword(newPassword);
+            if (!passwordResult.isValid()) {
                 response.put("success", false);
-                response.put("message", msg("profile.changePassword.msg.minLength"));
+                response.put("message", String.join(". ", passwordResult.getErrors()));
                 return ResponseEntity.badRequest().body(response);
             }
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="#{profile.pageTitle}">MYAN MYAN LEARN - Profile</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/app.css" />
     <script src="/js/tailwind-config.js"></script>
     <link
       rel="stylesheet"
@@ -641,6 +641,21 @@
             >
           </p>
 
+          <!-- Password Confirmation -->
+          <div class="mb-4">
+            <label
+              for="deletePassword"
+              class="block text-white/80 text-sm font-medium mb-2"
+              >Enter your password to confirm:</label
+            >
+            <input
+              type="password"
+              id="deletePassword"
+              class="w-full px-4 py-3 bg-white/10 backdrop-blur-md rounded-xl text-white border border-white/20 focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all duration-300"
+              placeholder="Your current password"
+            />
+          </div>
+
           <!-- Confirmation Text Input -->
           <div class="mb-6">
             <label
@@ -886,10 +901,12 @@
             headers[csrfHeader] = csrfToken;
           }
 
+          const deletePasswordVal = document.getElementById("deletePassword").value;
           fetch("/profile/delete", {
             method: "DELETE",
             headers,
             credentials: "same-origin",
+            body: JSON.stringify({ currentPassword: deletePasswordVal }),
           })
             .then(async (response) => {
               const text = await response.text();

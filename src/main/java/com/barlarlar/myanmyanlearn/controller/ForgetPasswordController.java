@@ -10,6 +10,7 @@ import com.barlarlar.myanmyanlearn.repository.MemberRepository;
 import com.barlarlar.myanmyanlearn.repository.PasswordResetTokenRepository;
 import com.barlarlar.myanmyanlearn.service.EmailService;
 import com.barlarlar.myanmyanlearn.service.JwtService;
+import com.barlarlar.myanmyanlearn.service.PasswordValidationService;
 import com.barlarlar.myanmyanlearn.entity.Member;
 import com.barlarlar.myanmyanlearn.entity.PasswordResetToken;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ForgetPasswordController {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final PasswordValidationService passwordValidationService;
 
     @GetMapping("/forget-password")
     public String showForgetPasswordPage(Model model) {
@@ -134,7 +136,8 @@ public class ForgetPasswordController {
 
     @PostMapping("/reset-password")
     public String handleResetPassword(@RequestParam("token") String token,
-            @RequestParam("password") String newPassword) {
+            @RequestParam("password") String newPassword,
+            Model model) {
 
         // Check if token exists in database
         var tokenOpt = passwordResetTokenRepository.findByToken(token);
@@ -162,6 +165,15 @@ public class ForgetPasswordController {
             return "reset-link-expired";
         }
         String email = emailFromToken;
+
+        // Server-side password strength validation
+        PasswordValidationService.PasswordValidationResult passwordResult =
+                passwordValidationService.validatePassword(newPassword);
+        if (!passwordResult.isValid()) {
+            model.addAttribute("token", token);
+            model.addAttribute("error", String.join(". ", passwordResult.getErrors()));
+            return "reset-password";
+        }
 
         var memberOpt = memberRepository.findByEmail(email);
         if (memberOpt.isEmpty()) {

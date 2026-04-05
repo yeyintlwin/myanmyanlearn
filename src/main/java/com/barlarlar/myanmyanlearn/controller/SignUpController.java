@@ -1,6 +1,7 @@
 package com.barlarlar.myanmyanlearn.controller;
 
 import com.barlarlar.myanmyanlearn.entity.Member;
+import com.barlarlar.myanmyanlearn.service.PasswordValidationService;
 import com.barlarlar.myanmyanlearn.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SignUpController {
 
     private final RegistrationService registrationService;
+    private final PasswordValidationService passwordValidationService;
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -52,6 +54,7 @@ public class SignUpController {
     public String processRegistration(
             @RequestParam("username") String username,
             @RequestParam("password") String password,
+            @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
             @RequestParam("firstName") String firstName,
             @RequestParam("lastName") String lastName,
             @RequestParam("email") String email,
@@ -61,6 +64,18 @@ public class SignUpController {
         log.info("Registration attempt for user: {}, email: {}", username, email);
 
         try {
+            // Server-side password confirmation check
+            if (confirmPassword != null && !password.equals(confirmPassword)) {
+                throw new IllegalArgumentException("Passwords do not match.");
+            }
+
+            // Server-side password strength validation
+            PasswordValidationService.PasswordValidationResult passwordResult =
+                    passwordValidationService.validatePassword(password);
+            if (!passwordResult.isValid()) {
+                throw new IllegalArgumentException(String.join(". ", passwordResult.getErrors()));
+            }
+
             // Register the user
             Member member = registrationService.registerUser(username, password, firstName, lastName, email);
             log.info("User registered successfully: {}", member.getUserId());
